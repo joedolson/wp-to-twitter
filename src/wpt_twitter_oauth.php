@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once( 'WP_OAuth.php' );
+require_once( 'class-wp-oauth.php' );
 
 if ( ! class_exists( 'wpt_TwitterOAuth' ) ) {
 

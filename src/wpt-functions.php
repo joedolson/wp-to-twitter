@@ -1106,3 +1106,10 @@ function jd_addTwitterAdminStyles() {
 function jd_doTwitterAPIPost( $twit, $auth = false, $id = false, $media = false ) {
 	return wpt_post_to_twitter( $twit, $auth, $id, $media );
 }
+
+/**
+ * Back compatibility function.
+ */
+function jd_update_oauth_settings( $auth = false, $post = false ) {
+	return wpt_update_oauth_settings( $auth, $post );
+}

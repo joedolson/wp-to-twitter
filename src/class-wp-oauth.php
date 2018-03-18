@@ -1,16 +1,24 @@
 <?php
-// vim: foldmethod=marker
+/**
+ * WP OAuth class adapted from Abraham.
+ *
+ * @package     WP to Twitter
+ * @author      Joe Dolson
+ * @copyright   2012-2018 Joe Dolson
+ * @license     GPL-2.0+
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 if ( ! class_exists( 'WPOAuthException' ) ) {
 
-	/* Generic exception class
+	/**
+	 * Generic exception class
 	 */
-
 	class WPOAuthException extends Exception {
-		// pass
+		// pass.
 	}
 
 	class WPOAuthConsumer {
@@ -29,13 +37,15 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	}
 
 	class WPOAuthToken {
-		// access tokens and request tokens
+		// access tokens and request tokens.
 		public $key;
 		public $secret;
 
 		/**
-		 * key = the token
-		 * secret = the token secret
+		 * Construct token.
+		 *
+		 * @param string $key = the token.
+		 * @param string $secret = the token secret.
 		 */
 		function __construct( $key, $secret ) {
 			$this->key    = $key;
@@ -47,10 +57,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * would respond to request_token and access_token calls with
 		 */
 		function to_string() {
-			return "oauth_token=" .
-			       WPOAuthUtil::urlencode_rfc3986( $this->key ) .
-			       "&oauth_token_secret=" .
-			       WPOAuthUtil::urlencode_rfc3986( $this->secret );
+			return 'oauth_token=' . WPOAuthUtil::urlencode_rfc3986( $this->key ) . '&oauth_token_secret=' . WPOAuthUtil::urlencode_rfc3986( $this->secret );
 		}
 
 		function __toString() {

@@ -67,7 +67,8 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.3.3 =
 
 * Removed: upgrade paths from version 2.4.x
-* 
+* Removed: support for YOURLS version 1.3
+* Removed: support for Twitter Friendly Links (plug-in not updated in 8 years)
 
 = 3.3.2 =
 

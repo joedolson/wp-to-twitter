@@ -3,7 +3,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// function to test credentials
+/**
+ * function to test credentials
+ *
+ * @param mixed int/boolean $auth Current author
+ * @param string            $context Use context.
+ *
+ * @return Is authenticated.
+ */
 function wtt_oauth_test( $auth = false, $context = '' ) {
 	if ( ! $auth ) {
 		return ( wtt_oauth_credentials_to_hash() == get_option( 'wtt_oauth_hash' ) );
@@ -17,6 +24,13 @@ function wtt_oauth_test( $auth = false, $context = '' ) {
 	}
 }
 
+/**
+ * Get user verification hash.
+ *
+ * @param mixed int $auth Current author
+ *
+ * @return author hash.
+ */
 function wpt_get_user_verification( $auth ) {
 	if ( get_option( 'jd_individual_twitter_users' ) != '1' ) {
 		return false;
@@ -27,7 +41,13 @@ function wpt_get_user_verification( $auth ) {
 	}
 }
 
-// function to make connection
+/**
+ * Establish an OAuth connection to Twitter.
+ *
+ * @param mixed int/boolean $auth Current author.
+ *
+ * @return mixed $connection or false
+ */
 function wtt_oauth_connection( $auth = false ) {
 	if ( ! $auth ) {
 		$ack = get_option( 'app_consumer_key' );
@@ -51,7 +71,13 @@ function wtt_oauth_connection( $auth = false ) {
 	}
 }
 
-// convert credentials to md5 hash
+/**
+ * Convert oauth credentials to hash value for storage.
+ *
+ * @param mixed int/boolean $auth Author.
+ *
+ * @return hash.
+ */
 function wtt_oauth_credentials_to_hash( $auth = false ) {
 	if ( ! $auth ) {
 		$hash = md5( get_option( 'app_consumer_key' ) . get_option( 'app_consumer_secret' ) . get_option( 'oauth_token' ) . get_option( 'oauth_token_secret' ) );
@@ -63,13 +89,11 @@ function wtt_oauth_credentials_to_hash( $auth = false ) {
 }
 
 /**
- * Back compat
+ * Update OAuth settings.
+ *
+ * @param mixed int/boolean $auth Author.
+ * @param mixed array/boolean $post POST data.
  */
-function jd_update_oauth_settings( $auth = false, $post = false ) {
-	return wpt_update_oauth_settings( $auth, $post );
-}
-
-// response to settings updates
 function wpt_update_oauth_settings( $auth = false, $post = false ) {
 	if ( isset( $post['oauth_settings'] ) ) {
 		switch ( $post['oauth_settings'] ) {
@@ -78,9 +102,9 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 					wp_die( 'Oops, please try again.' );
 				}
 				if ( ! empty( $post['wtt_app_consumer_key'] )
-				     && ! empty( $post['wtt_app_consumer_secret'] )
-				     && ! empty( $post['wtt_oauth_token'] )
-				     && ! empty( $post['wtt_oauth_token_secret'] )
+					&& ! empty( $post['wtt_app_consumer_secret'] )
+					&& ! empty( $post['wtt_oauth_token'] )
+					&& ! empty( $post['wtt_oauth_token_secret'] )
 				) {
 					$ack = trim( $post['wtt_app_consumer_key'] );
 					$acs = trim( $post['wtt_app_consumer_secret'] );
@@ -98,7 +122,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 						update_user_meta( $auth, 'oauth_token_secret', $ots );
 					}
 					$message = 'failed';
-					if ( $connection = wtt_oauth_connection( $auth ) ) {
+					if ( wtt_oauth_connection( $auth ) = $connection ) {
 						$data = $connection->get( 'https://api.twitter.com/1.1/account/verify_credentials.json' );
 						if ( $connection->http_code != '200' ) {
 							$data  = json_decode( $data );
@@ -108,9 +132,9 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 						} else {
 							delete_option( 'wpt_error' );
 						}
-						if ( $connection->http_code == '200' ) {
+						if ( '200' == $connection->http_code ) {
 							$error_information = '';
-							$decode            = json_decode( $data );
+							$decode = json_decode( $data );
 							if ( ! $auth ) {
 								update_option( 'wtt_twitter_username', stripslashes( $decode->screen_name ) );
 							} else {
@@ -124,30 +148,30 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 							}
 							$message = 'success';
 							delete_option( 'wpt_curl_error' );
-						} elseif ( $connection->http_code == 0 ) {
-							$error_information = __( "WP to Twitter was unable to establish a connection to Twitter.", 'wp-to-twitter' );
+						} elseif ( 0 == $connection->http_code ) {
+							$error_information = __( 'WP to Twitter was unable to establish a connection to Twitter.', 'wp-to-twitter' );
 							update_option( 'wpt_curl_error', "$error_information" );
 						} else {
-							$status = ( isset( $connection->http_header['status'] ) ) ? $connection->http_header['status'] : '404';
+							$status            = ( isset( $connection->http_header['status'] ) ) ? $connection->http_header['status'] : '404';
 							$error_information = array(
-								"http_code" => $connection->http_code,
-								"status"    => $status
+								'http_code' => $connection->http_code,
+								'status'    => $status,
 							);
-							$error_code        = sprintf( __( "Twitter response: http_code %s", 'wp-to-twitter' ), "$error_information[http_code] - $error_information[status]" );
+							$error_code        = sprintf( __( 'Twitter response: http_code %s', 'wp-to-twitter' ), "$error_information[http_code] - $error_information[status]" );
 							update_option( 'wpt_curl_error', $error_code );
 						}
-						if ( get_option( 'wp_debug_oauth' ) == '1' ) {
-							echo "<pre><strong>Summary Connection Response:</strong><br />";
+						if ( '1' == get_option( 'wp_debug_oauth' ) ) {
+							echo '<pre><strong>Summary Connection Response:</strong><br />';
 							print_r( $error_information );
-							echo "<br /><strong>Account Verification Data:</strong><br />";
+							echo '<br /><strong>Account Verification Data:</strong><br />';
 							print_r( $data );
-							echo "<br /><strong>Full Connection Response:</strong><br />";
+							echo '<br /><strong>Full Connection Response:</strong><br />';
 							print_r( $connection );
-							echo "</pre>";
+							echo '</pre>';
 						}
 					}
 				} else {
-					$message = "nodata";
+					$message = 'nodata';
 				}
 				if ( $message == 'failed' && ( time() < strtotime( $connection->http_header['date'] ) - 300 || time() > strtotime( $connection->http_header['date'] ) + 300 ) ) {
 					$message = 'nosync';
@@ -172,7 +196,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 					delete_user_meta( $auth, 'oauth_token_secret' );
 					delete_user_meta( $auth, 'wtt_twitter_username' );
 				}
-				$message = "cleared";
+				$message = 'cleared';
 
 				return $message;
 				break;
@@ -182,7 +206,11 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 	return '';
 }
 
-// connect or disconnect form
+/**
+ * Connect or disconnect from OAuth form.
+ *
+ * @param mixed int/boolean $auth Current author.
+ */
 function wtt_connect_oauth( $auth = false ) {
 	if ( ! $auth ) {
 		echo '<div class="ui-sortable meta-box-sortables">';
@@ -192,7 +220,7 @@ function wtt_connect_oauth( $auth = false ) {
 	if ( $auth ) {
 		wpt_update_authenticated_users();
 	}
-	
+
 	$class = ( $auth ) ? 'wpt-profile' : 'wpt-settings';
 	$form  = ( ! $auth ) ? '<form action="" method="post">' : '';
 	$nonce = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
@@ -237,7 +265,7 @@ function wtt_connect_oauth( $auth = false ) {
 						<li>' . __( 'Copy your Access token and Access token secret from the "Your Access Token" section.', 'wp-to-twitter' ) . '</li>
 						</ul>
 			' . $form . '
-				<fieldset class="options">						
+				<fieldset class="options">
 					<div class="tokens">
 					<p>
 						<label for="wtt_app_consumer_key">' . __( 'API Key', 'wp-to-twitter' ) . '</label>
@@ -264,7 +292,7 @@ function wtt_connect_oauth( $auth = false ) {
 				' . $submit . '
 				<input type="hidden" name="oauth_settings" value="wtt_oauth_test" class="hidden" style="display: none;" />
 				' . $nonce . '
-			</div>	
+			</div>
 				' );
 	} elseif ( wtt_oauth_test( $auth ) ) {
 		$ack   = ( ! $auth ) ? get_option( 'app_consumer_key' ) : get_user_meta( $auth, 'app_consumer_key', true );
@@ -273,12 +301,10 @@ function wtt_connect_oauth( $auth = false ) {
 		$ots   = ( ! $auth ) ? get_option( 'oauth_token_secret' ) : get_user_meta( $auth, 'oauth_token_secret', true );
 		$uname = ( ! $auth ) ? get_option( 'wtt_twitter_username' ) : get_user_meta( $auth, 'wtt_twitter_username', true );
 		$nonce = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
-		if ( ! $auth ) {			
-			$submit = '
-					<input type="submit" name="submit" class="button-primary" value="' . __( 'Disconnect your WordPress and Twitter Account', 'wp-to-twitter' ) . '" />
-					<input type="hidden" name="oauth_settings" value="wtt_twitter_disconnect" class="hidden" />
-				';
-		} else {			
+		if ( ! $auth ) {
+			$submit = '<input type="submit" name="submit" class="button-primary" value="' . __( 'Disconnect your WordPress and Twitter Account', 'wp-to-twitter' ) . '" />
+					<input type="hidden" name="oauth_settings" value="wtt_twitter_disconnect" class="hidden" />';
+		} else {
 			$submit = '<input type="checkbox" name="oauth_settings" value="wtt_twitter_disconnect" id="disconnect" /> <label for="disconnect">' . __( 'Disconnect your WordPress and Twitter Account', 'wp-to-twitter' ) . '</label>';
 		}
 
@@ -299,30 +325,44 @@ function wtt_connect_oauth( $auth = false ) {
 					<div>
 					' . $submit . '
 					</div>
-				</div>		
+				</div>
 				' . $nonce . '
 			</div>' );
 
 	}
 	if ( ! $auth ) {
-		echo '</div>';
-		echo '</div>';
+		echo '</div>
+		</div>';
 	}
 }
 
+/**
+ * Update stored set of authenticated users.
+ */
 function wpt_update_authenticated_users() {
-	$args  = array( 'meta_query' => array( array( 'key' => 'wtt_twitter_username', 'compare' => 'EXISTS' ) ) );
-	// get all authorized users
-	$users = get_users( $args );
+	$args            = array(
+		'meta_query' => array(
+			array(
+				'key' => 'wtt_twitter_username',
+				'compare' => 'EXISTS',
+				),
+			),
+		);
+	// get all authorized users.
+	$users            = get_users( $args );
 	$authorized_users = array();
 	if ( is_array( $users ) ) {
 		foreach ( $users as $this_user ) {
-			if ( wtt_oauth_test( $this_user->ID,'verify' ) ) {
+			if ( wtt_oauth_test( $this_user->ID, 'verify' ) ) {
 				$twitter = get_user_meta( $this_user->ID, 'wtt_twitter_username', true );
-				$authorized_users[] = array( 'ID'=>$this_user->ID, 'name'=>$this_user->display_name, 'twitter'=>$twitter ); 
+				$authorized_users[] = array(
+					'ID'      => $this_user->ID,
+					'name'    => $this_user->display_name,
+					'twitter' => $twitter,
+				);
 			}
 		}
 	}
-	
-	update_option( 'wpt_authorized_users', $authorized_users );	
+
+	update_option( 'wpt_authorized_users', $authorized_users );
 }
