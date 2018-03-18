@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // based on StormTwitter; significantly modified
 
-require_once( 'wpt_twitter_oauth.php' );
+require_once( 'class-wpt-twitteroauth.php' );
 
 class WPT_TwitterFeed {
 
