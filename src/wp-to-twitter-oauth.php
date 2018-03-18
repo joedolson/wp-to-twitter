@@ -61,7 +61,7 @@ function wtt_oauth_connection( $auth = false ) {
 		$ots = get_user_meta( $auth, 'oauth_token_secret', true );
 	}
 	if ( ! empty( $ack ) && ! empty( $acs ) && ! empty( $ot ) && ! empty( $ots ) ) {
-		require_once( plugin_dir_path( __FILE__ ) . 'wpt_twitter_oauth.php' );
+		require_once( plugin_dir_path( __FILE__ ) . 'class-wpt-twitteroauth.php' );
 		$connection            = new wpt_TwitterOAuth( $ack, $acs, $ot, $ots );
 		$connection->useragent = get_option( 'blogname' ) . ' ' . home_url();
 
@@ -122,7 +122,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 						update_user_meta( $auth, 'oauth_token_secret', $ots );
 					}
 					$message = 'failed';
-					if ( wtt_oauth_connection( $auth ) = $connection ) {
+					if ( wtt_oauth_connection( $auth ) == $connection ) {
 						$data = $connection->get( 'https://api.twitter.com/1.1/account/verify_credentials.json' );
 						if ( $connection->http_code != '200' ) {
 							$data  = json_decode( $data );

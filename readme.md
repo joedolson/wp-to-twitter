@@ -2,7 +2,7 @@
 
 Automatically send your posts as Tweets.
 
-[![Build Status](https://travis-ci.org/joedolson/wp-to-twitter.svg)](https://travis-ci.org/joedolson/wp-to-twitter) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)]
+[![Build Status](https://travis-ci.org/joedolson/wp-to-twitter.svg)](https://travis-ci.org/joedolson/wp-to-twitter) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)](https://www.gnu.org/license/gpl-2.0.html)
 
 ## WP to Twitter Build Environment
 
