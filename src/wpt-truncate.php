@@ -1,4 +1,14 @@
 <?php
+/**
+ * Construct and check lengths of Tweets - WP to Twitter
+ *
+ * @category Core
+ * @package  WP to Twitter
+ * @author   Joe Dolson
+ * @license  GPLv2 or later
+ * @link     https://www.joedolson.com/wp-to-twitter/
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

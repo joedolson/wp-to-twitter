@@ -1,4 +1,14 @@
 <?php
+/**
+ * WP to Twitter Widget Classes
+ *
+ * @category Widgets
+ * @package  WP to Twitter
+ * @author   Joe Dolson
+ * @license  GPLv2 or later
+ * @link     https://www.joedolson.com/wp-to-twitter/
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

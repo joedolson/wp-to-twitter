@@ -1,8 +1,17 @@
 <?php
+/**
+ * Rate limiting in WP to Twitter
+ *
+ * @category Core
+ * @package  WP to Twitter
+ * @author   Joe Dolson
+ * @license  GPLv2 or later
+ * @link     https://www.joedolson.com/wp-to-twitter/
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 
 /**
  * Hourly cron job to reset rate limits

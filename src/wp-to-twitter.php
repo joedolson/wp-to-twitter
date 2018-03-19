@@ -51,7 +51,7 @@ require_once( plugin_dir_path( __FILE__ ) . '/wp-to-twitter-oauth.php' );
 require_once( plugin_dir_path( __FILE__ ) . '/wp-to-twitter-shorteners.php' );
 require_once( plugin_dir_path( __FILE__ ) . '/wp-to-twitter-manager.php' );
 require_once( plugin_dir_path( __FILE__ ) . '/wpt-truncate.php' );
-require_once( plugin_dir_path( __FILE__ ) . '/wpt-feed.php' );
+require_once( plugin_dir_path( __FILE__ ) . '/class-wpt-twitterfeed.php.php' );
 require_once( plugin_dir_path( __FILE__ ) . '/wpt-widget.php' );
 require_once( plugin_dir_path( __FILE__ ) . '/wpt-rate-limiting.php' );
 

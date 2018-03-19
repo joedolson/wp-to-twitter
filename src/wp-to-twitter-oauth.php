@@ -1,4 +1,14 @@
 <?php
+/**
+ * Connect OAuth for WP to Twitter
+ *
+ * @category OAuth
+ * @package  WP to Twitter
+ * @author   Joe Dolson
+ * @license  GPLv2 or later
+ * @link     https://www.joedolson.com/wp-to-twitter/
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

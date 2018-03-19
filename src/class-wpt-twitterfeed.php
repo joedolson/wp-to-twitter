@@ -1,14 +1,21 @@
 <?php
+/**
+ * WP to Twitter Twitter Feed Class
+ *
+ * @category Widgets
+ * @package  WP to Twitter
+ * @author   Joe Dolson
+ * @license  GPLv2 or later
+ * @link     https://www.joedolson.com/wp-to-twitter/
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /*
-* Version 2.0.3, Twitter Feed for Developers by Storm Consultancy (Liam Gladdy)
+* Based on Version 2.0.3, Twitter Feed for Developers by Storm Consultancy (Liam Gladdy)
 * The base class for the storm twitter feed for developers.
 */
-
-// based on StormTwitter; significantly modified
-
 require_once( 'class-wpt-twitteroauth.php' );
 
 class WPT_TwitterFeed {

@@ -1,5 +1,13 @@
 <?php
-// This file contains secondary functions supporting WP to Twitter
+/**
+ * Core support functions WP to Twitter
+ *
+ * @category Core
+ * @package  WP to Twitter
+ * @author   Joe Dolson
+ * @license  GPLv2 or later
+ * @link     https://www.joedolson.com/wp-to-twitter/
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -104,8 +112,8 @@ function wpt_settings_tabs() {
 	$default = ( get_option( 'wtt_twitter_username' ) == '' ) ? 'connection' : 'basic';
 	$current = ( isset( $_GET['tab'] ) ) ? $_GET['tab'] : $default;
 	$pro_text = ( function_exists( 'wpt_pro_exists' ) ) ? __( 'Pro Settings', 'wp-to-twitter' ) : __( 'Get WP Tweets PRO', 'wp-to-twitter' );
-	$pages = array( 
-		'connection'=> __( 'Twitter Connection', 'wp-to-twitter' ), 
+	$pages = array(
+		'connection'=> __( 'Twitter Connection', 'wp-to-twitter' ),
 		'basic'=> __( 'Basic Settings', 'wp-to-twitter' ),
 		'shortener'=> __( 'URL Shortener', 'wp-to-twitter' ),
 		'advanced' => __( 'Advanced Settings', 'wp-to-twitter' ),
@@ -115,7 +123,7 @@ function wpt_settings_tabs() {
 	if ( get_option( 'jd_donations' ) == '1' && ! function_exists( 'wpt_pro_exists' ) ) {
 		unset( $pages['pro'] );
 	}
-	
+
 	$pages = apply_filters( 'wpt_settings_tabs_pages', $pages, $current );
 	$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 
@@ -156,7 +164,7 @@ function wpt_handle_errors() {
 	if ( get_option( 'wp_url_failure' ) == '1' ) {
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 		$nonce = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
-		$error = '<div class="error">' . 
+		$error = '<div class="error">' .
 			__( "<p>The query to the URL shortener API failed, and your URL was not shrunk. The full post URL was attached to your Tweet. Check with your URL shortening provider to see if there are any known issues.</p>", 'wp-to-twitter' ) .
 			'<form method="post" action="' . $admin_url . '">
 				<div>
@@ -227,7 +235,7 @@ function wpt_show_debug() {
 				$( this ).attr( 'aria-expanded', 'false' );
 			} else {
 				$( this ).next( 'pre' ).show();
-				$( this ).attr( 'aria-expanded', 'true' );				
+				$( this ).attr( 'aria-expanded', 'true' );
 			}
 		});
 	})
@@ -237,7 +245,7 @@ function wpt_show_debug() {
 		<li><input type='checkbox' name='wpt-delete-debug' value='true' id='wpt-delete-debug'> <label for='wpt-delete-debug'>" . __( 'Delete debugging logs on this post', 'wp-to-twitter' ) . "</label></li>
 		<li><input type='checkbox' name='wpt-delete-all-debug' value='true' id='wpt-delete-all-debug'> <label for='wpt-delete-all-debug'>" . __( 'Delete debugging logs for all posts', 'wp-to-twitter' ) . "</label></li>
 		</ul>";
-	
+
 		echo ( $records != '' ) ? "$script<div class='wpt-debug-log'><h3>Debugging Log:</h3><ul>$records</ul></div>$delete" : '';
 	}
 }
@@ -293,15 +301,16 @@ function wpt_is_valid_url( $url ) {
 // Fetch a remote page. Input url, return content
 function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $return = 'body' ) {
 	$request = new WP_Http;
-	$result  = $request->request( $url, array( 'method'     => $method,
-	                                           'body'       => $body,
-	                                           'headers'    => $headers,
-	                                           'sslverify'  => false,
-	                                           'user-agent' => 'WP to Twitter/http://www.joedolson.com/wp-to-twitter/'
-		) );
+	$result  = $request->request( $url, array(
+		'method'     => $method,
+	   'body'       => $body,
+	   'headers'    => $headers,
+	   'sslverify'  => false,
+	   'user-agent' => 'WP to Twitter/http://www.joedolson.com/wp-to-twitter/',
+	) );
 	// Success?
 	if ( ! is_wp_error( $result ) && isset( $result['body'] ) ) {
-		if ( $result['response']['code'] == 200 ) {
+		if ( 200 == $result['response']['code'] ) {
 			if ( $return == 'body' ) {
 				return $result['body'];
 			} else {
@@ -310,63 +319,63 @@ function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $retur
 		} else {
 			return $result['response']['code'];
 		}
-		// Failure (server problem...)
+		// Failure (server problem...).
 	} else {
 		return false;
 	}
 }
 
 if ( ! function_exists( 'mb_substr_split_unicode' ) ) {
-	function mb_substr_split_unicode( $str, $splitPos ) {
-		if ( $splitPos == 0 ) {
+	function mb_substr_split_unicode( $str, $split_pos ) {
+		if ( 0 == $split_pos ) {
 			return 0;
-        }
-        $byteLen = strlen( $str );
+		}
+		$byte_len = strlen( $str );
 
-        if ( $splitPos > 0 ) {
-            if ( $splitPos > 256 ) {
-                // Optimize large string offsets by skipping ahead N bytes.
-                // This will cut out most of our slow time on Latin-based text,
-                // and 1/2 to 1/3 on East European and Asian scripts.
-                $bytePos = $splitPos;
-                while ( $bytePos < $byteLen && $str[$bytePos] >= "\x80" && $str[$bytePos] < "\xc0" ) {
-                    ++$bytePos;
-                }
-                $charPos = mb_strlen( substr( $str, 0, $bytePos ) );
-            } else {
-                $charPos = 0;
-                $bytePos = 0;
-            }
+		if ( $split_pos > 0 ) {
+			if ( $split_pos > 256 ) {
+				// Optimize large string offsets by skipping ahead N bytes.
+				// This will cut out most of our slow time on Latin-based text,
+				// and 1/2 to 1/3 on East European and Asian scripts.
+				$byte_pos = $split_pos;
+				while ( $byte_pos < $byte_len && $str[ $byte_pos ] >= "\x80" && $str[ $byte_pos ] < "\xc0" ) {
+					++$byte_pos;
+				}
+				$char_pos = mb_strlen( substr( $str, 0, $byte_pos ) );
+			} else {
+				$char_pos = 0;
+				$byte_pos = 0;
+			}
 
-            while ( $charPos++ < $splitPos ) {
-                ++$bytePos;
-                // Move past any tail bytes
-                while ( $bytePos < $byteLen && $str[$bytePos] >= "\x80" && $str[$bytePos] < "\xc0" ) {
-                    ++$bytePos;
-                }
-            }
-        } else {
-            $splitPosX = $splitPos + 1;
-            $charPos = 0; // relative to end of string; we don't care about the actual char position here
-            $bytePos = $byteLen;
-            while ( $bytePos > 0 && $charPos-- >= $splitPosX ) {
-                --$bytePos;
-                // Move past any tail bytes
-                while ( $bytePos > 0 && $str[$bytePos] >= "\x80" && $str[$bytePos] < "\xc0" ) {
-                    --$bytePos;
-                }
-            }
-        }
+			while ( $char_pos++ < $split_pos ) {
+				++$byte_pos;
+				// Move past any tail bytes
+				while ( $byte_pos < $byte_len && $str[ $byte_pos ] >= "\x80" && $str[ $byte_pos ] < "\xc0" ) {
+					++$byte_pos;
+				}
+			}
+		} else {
+			$split_posx = $split_pos + 1;
+			$char_pos = 0; // relative to end of string; we don't care about the actual char position here
+			$byte_pos = $byte_len;
+			while ( $byte_pos > 0 && $char_pos-- >= $split_posx ) {
+				--$byte_pos;
+				// Move past any tail bytes
+				while ( $byte_pos > 0 && $str[ $byte_pos ] >= "\x80" && $str[ $byte_pos ] < "\xc0" ) {
+					--$byte_pos;
+				}
+			}
+		}
 
-        return $bytePos;
-    }	
+		return $byte_pos;
+	}
 }
 
 // filter_var substitution for PHP <5.2
 if ( ! function_exists( 'filter_var' ) ) {
 	function filter_var( $url ) {
 		// this does not emulate filter_var; merely the usage of filter_var in WP to Twitter.
-		return ( stripos( $url, 'https:' ) !== false || stripos( $url, 'http:' ) !== false ) ? true : false;
+		return ( false !== stripos( $url, 'https:' ) || false !== stripos( $url, 'http:' ) ) ? true : false;
 	}
 }
 
@@ -374,9 +383,9 @@ if ( ! function_exists( 'mb_strrpos' ) ) {
 	/**
 	 * Fallback implementation of mb_strrpos, hardcoded to UTF-8.
 	 *
-	 * @param $haystack String
-	 * @param $needle String
-	 * @param $offset integer: optional start position
+	 * @param string $haystack String
+	 * @param string $needle String
+	 * @param int    $offset integer: optional start position
 	 *
 	 * @return int
 	 */
@@ -387,7 +396,7 @@ if ( ! function_exists( 'mb_strrpos' ) ) {
 		preg_match_all( '/' . $needle . '/u', $haystack, $ar, PREG_OFFSET_CAPTURE, $offset );
 
 		if ( isset( $ar[0] ) && count( $ar[0] ) > 0 &&
-		     isset( $ar[0][ count( $ar[0] ) - 1 ][1] )
+			isset( $ar[0][ count( $ar[0] ) - 1 ][1] )
 		) {
 			return $ar[0][ count( $ar[0] ) - 1 ][1];
 		} else {
@@ -473,12 +482,12 @@ function wtt_option_selected( $field, $value, $type = 'checkbox' ) {
 
 /**
  * Compares two dates to identify which is earlier. Used to differentiate between post edits and original publication.
- * 
+ *
  * @param string $modified
  * @param string $late
- * 
+ *
  * @return integer 1|0
- */ 
+ */
 function wpt_date_compare( $modified, $postdate ) {
 	$modifier  = apply_filters( 'wpt_edit_sensitivity', 0 ); // alter time in seconds to modified date.
 	$mod_date  = strtotime( $modified );
@@ -520,7 +529,7 @@ function wpt_post_attachment( $post_ID ) {
 			$return = false;
 		}
 	}
-	
+
 	return apply_filters( 'wpt_post_attachment', $return, $post_ID );
 }
 
@@ -627,7 +636,7 @@ $plugins_string
 		if ( ! $has_read_faq ) {
 			echo "<div class='notice error'><p>" . __( 'Please read the FAQ and other Help documents before making a support request.', 'wp-to-twitter' ) . '</p></div>';
 		} elseif ( ! $response_email ) {
-			echo "<div class='notice error'><p>" . __( 'Please supply a valid email where you can receive support responses.', 'wp-to-twitter' ) . '</p></div>';			
+			echo "<div class='notice error'><p>" . __( 'Please supply a valid email where you can receive support responses.', 'wp-to-twitter' ) . '</p></div>';
 		} elseif ( ! $request ) {
 			echo "<div class='notice error'><p>" . __( 'Please describe your problem. I\'m not psychic.', 'wp-to-twitter' ) . '</p></div>';
 		} else {
@@ -650,7 +659,7 @@ $plugins_string
 	}
 	$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 	$admin_url = add_query_arg( 'tab', 'support', $admin_url );
-	
+
 	echo "
 	<form method='post' action='$admin_url'>
 		<div><input type='hidden' name='_wpnonce' value='" . wp_create_nonce( 'wp-to-twitter-nonce' ) . "' /></div>
@@ -669,19 +678,19 @@ $plugins_string
 		</p>
 		<p>
 		<input type='checkbox' name='has_read_faq' id='has_read_faq' value='on' required='required' aria-required='true' /> <label for='has_read_faq'>" . sprintf( __( 'I have read <a href="%1$s">the FAQ for this plug-in</a> <span>(required)</span>', 'wp-to-twitter' ), 'http://www.joedolson.com/wp-to-twitter/support-2/' ) . "
-        </p>
-        <p>
-        <input type='checkbox' name='has_donated' id='has_donated' value='on' $checked /> <label for='has_donated'>" . __( 'I made a donation or purchase to help support this plug-in', 'wp-to-twitter' ) . "</label>
-        </p>
-        <p>
-        <label for='support_request'>" . __( 'Support Request:', 'wp-to-twitter' ) . "</label><br /><textarea class='support-request' name='support_request' id='support_request' cols='80' rows='10' class='widefat'>" . stripslashes( esc_attr( $request ) ) . "</textarea>
+		</p>
+		<p>
+		<input type='checkbox' name='has_donated' id='has_donated' value='on' $checked /> <label for='has_donated'>" . __( 'I made a donation or purchase to help support this plug-in', 'wp-to-twitter' ) . "</label>
+		</p>
+		<p>
+		<label for='support_request'>" . __( 'Support Request:', 'wp-to-twitter' ) . "</label><br /><textarea class='support-request' name='support_request' id='support_request' cols='80' rows='10' class='widefat'>" . stripslashes( esc_attr( $request ) ) . "</textarea>
 		</p>
 		<p>
 		<input type='submit' value='" . __( 'Send Support Request', 'wp-to-twitter' ) . "' name='wpt_support' class='button-primary' />
 		</p>
 		<p>" .
-	     __( 'The following additional information will be sent with your support request:', 'wp-to-twitter' )
-	     . "</p>
+		__( 'The following additional information will be sent with your support request:', 'wp-to-twitter' )
+		. "</p>
 		<div class='mc_support'>
 		" . wpautop( $data ) . "
 		</div>
@@ -707,268 +716,268 @@ function wpt_is_writable( $file ) {
  */
 class WPT_Normalizer
 {
-    const
+	const
 
-    NONE = 1,
-    FORM_D  = 2, NFD  = 2,
-    FORM_KD = 3, NFKD = 3,
-    FORM_C  = 4, NFC  = 4,
-    FORM_KC = 5, NFKC = 5;
-
-
-    protected static
-
-    $C, $D, $KD, $cC,
-    $ulen_mask = array("\xC0" => 2, "\xD0" => 2, "\xE0" => 3, "\xF0" => 4),
-    $ASCII = "\x20\x65\x69\x61\x73\x6E\x74\x72\x6F\x6C\x75\x64\x5D\x5B\x63\x6D\x70\x27\x0A\x67\x7C\x68\x76\x2E\x66\x62\x2C\x3A\x3D\x2D\x71\x31\x30\x43\x32\x2A\x79\x78\x29\x28\x4C\x39\x41\x53\x2F\x50\x22\x45\x6A\x4D\x49\x6B\x33\x3E\x35\x54\x3C\x44\x34\x7D\x42\x7B\x38\x46\x77\x52\x36\x37\x55\x47\x4E\x3B\x4A\x7A\x56\x23\x48\x4F\x57\x5F\x26\x21\x4B\x3F\x58\x51\x25\x59\x5C\x09\x5A\x2B\x7E\x5E\x24\x40\x60\x7F\x00\x01\x02\x03\x04\x05\x06\x07\x08\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F";
+	NONE = 1,
+	FORM_D  = 2, NFD  = 2,
+	FORM_KD = 3, NFKD = 3,
+	FORM_C  = 4, NFC  = 4,
+	FORM_KC = 5, NFKC = 5;
 
 
-    static function isNormalized($s, $form = self::NFC)
-    {
-        if (strspn($s, self::$ASCII) === strlen($s)) return true;
-        if (self::NFC === $form && preg_match('//u', $s) && !preg_match('/[^\x00-\x{2FF}]/u', $s)) return true;
-        return false; // Pretend false as quick checks implementented in PHP won't be so quick
-    }
+	protected static
 
-    static function normalize($s, $form = self::NFC)
-    {
-        if (!preg_match('//u', $s)) return false;
+	$C, $D, $KD, $cC,
+	$ulen_mask = array("\xC0" => 2, "\xD0" => 2, "\xE0" => 3, "\xF0" => 4),
+	$ASCII = "\x20\x65\x69\x61\x73\x6E\x74\x72\x6F\x6C\x75\x64\x5D\x5B\x63\x6D\x70\x27\x0A\x67\x7C\x68\x76\x2E\x66\x62\x2C\x3A\x3D\x2D\x71\x31\x30\x43\x32\x2A\x79\x78\x29\x28\x4C\x39\x41\x53\x2F\x50\x22\x45\x6A\x4D\x49\x6B\x33\x3E\x35\x54\x3C\x44\x34\x7D\x42\x7B\x38\x46\x77\x52\x36\x37\x55\x47\x4E\x3B\x4A\x7A\x56\x23\x48\x4F\x57\x5F\x26\x21\x4B\x3F\x58\x51\x25\x59\x5C\x09\x5A\x2B\x7E\x5E\x24\x40\x60\x7F\x00\x01\x02\x03\x04\x05\x06\x07\x08\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F";
 
-        switch ($form)
-        {
-        case self::NONE: return $s;
-        case self::NFC:  $C = true;  $K = false; break;
-        case self::NFD:  $C = false; $K = false; break;
-        case self::NFKC: $C = true;  $K = true;  break;
-        case self::NFKD: $C = false; $K = true;  break;
-        default: return false;
-        }
 
-        if (!strlen($s)) return '';
+	static function isNormalized($s, $form = self::NFC)
+	{
+		if (strspn($s, self::$ASCII) === strlen($s)) return true;
+		if (self::NFC === $form && preg_match('//u', $s) && !preg_match('/[^\x00-\x{2FF}]/u', $s)) return true;
+		return false; // Pretend false as quick checks implementented in PHP won't be so quick
+	}
 
-        if ($K && empty(self::$KD)) self::$KD = self::getData('compatibilityDecomposition');
+	static function normalize($s, $form = self::NFC)
+	{
+		if (!preg_match('//u', $s)) return false;
 
-        if (empty(self::$D))
-        {
-            self::$D = self::getData('canonicalDecomposition');
-            self::$cC = self::getData('combiningClass');
-        }
+		switch ($form)
+		{
+		case self::NONE: return $s;
+		case self::NFC:  $C = true;  $K = false; break;
+		case self::NFD:  $C = false; $K = false; break;
+		case self::NFKC: $C = true;  $K = true;  break;
+		case self::NFKD: $C = false; $K = true;  break;
+		default: return false;
+		}
 
-        if ($C)
-        {
-            if (empty(self::$C)) self::$C = self::getData('canonicalComposition');
-            return self::recompose(self::decompose($s, $K));
-        }
-        else return self::decompose($s, $K);
-    }
+		if (!strlen($s)) return '';
 
-    protected static function recompose($s)
-    {
-        $ASCII = self::$ASCII;
-        $compMap = self::$C;
-        $combClass = self::$cC;
-        $ulen_mask = self::$ulen_mask;
+		if ($K && empty(self::$KD)) self::$KD = self::getData('compatibilityDecomposition');
 
-        $result = $tail = '';
+		if (empty(self::$D))
+		{
+			self::$D = self::getData('canonicalDecomposition');
+			self::$cC = self::getData('combiningClass');
+		}
 
-        $i = $s[0] < "\x80" ? 1 : $ulen_mask[$s[0] & "\xF0"];
-        $len = strlen($s);
+		if ($C)
+		{
+			if (empty(self::$C)) self::$C = self::getData('canonicalComposition');
+			return self::recompose(self::decompose($s, $K));
+		}
+		else return self::decompose($s, $K);
+	}
 
-        $last_uchr = substr($s, 0, $i);
-        $last_ucls = isset($combClass[$last_uchr]) ? 256 : 0;
+	protected static function recompose($s)
+	{
+		$ASCII = self::$ASCII;
+		$compMap = self::$C;
+		$combClass = self::$cC;
+		$ulen_mask = self::$ulen_mask;
 
-        while ($i < $len)
-        {
-            if ($s[$i] < "\x80")
-            {
-                // ASCII chars
+		$result = $tail = '';
 
-                if ($tail)
-                {
-                    $last_uchr .= $tail;
-                    $tail = '';
-                }
+		$i = $s[0] < "\x80" ? 1 : $ulen_mask[$s[0] & "\xF0"];
+		$len = strlen($s);
 
-                if ($j = strspn($s, $ASCII, $i+1))
-                {
-                    $last_uchr .= substr($s, $i, $j);
-                    $i += $j;
-                }
+		$last_uchr = substr($s, 0, $i);
+		$last_ucls = isset($combClass[$last_uchr]) ? 256 : 0;
 
-                $result .= $last_uchr;
-                $last_uchr = $s[$i];
-                ++$i;
-            }
-            else
-            {
-                $ulen = $ulen_mask[$s[$i] & "\xF0"];
-                $uchr = substr($s, $i, $ulen);
+		while ($i < $len)
+		{
+			if ($s[$i] < "\x80")
+			{
+				// ASCII chars
 
-                if ($last_uchr < "\xE1\x84\x80" || "\xE1\x84\x92" < $last_uchr
-                    ||   $uchr < "\xE1\x85\xA1" || "\xE1\x85\xB5" < $uchr
-                    || $last_ucls)
-                {
-                    // Table lookup and combining chars composition
+				if ($tail)
+				{
+					$last_uchr .= $tail;
+					$tail = '';
+				}
 
-                    $ucls = isset($combClass[$uchr]) ? $combClass[$uchr] : 0;
+				if ($j = strspn($s, $ASCII, $i+1))
+				{
+					$last_uchr .= substr($s, $i, $j);
+					$i += $j;
+				}
 
-                    if (isset($compMap[$last_uchr . $uchr]) && (!$last_ucls || $last_ucls < $ucls))
-                    {
-                        $last_uchr = $compMap[$last_uchr . $uchr];
-                    }
-                    elseif ($last_ucls = $ucls) $tail .= $uchr;
-                    else
-                    {
-                        if ($tail)
-                        {
-                            $last_uchr .= $tail;
-                            $tail = '';
-                        }
+				$result .= $last_uchr;
+				$last_uchr = $s[$i];
+				++$i;
+			}
+			else
+			{
+				$ulen = $ulen_mask[$s[$i] & "\xF0"];
+				$uchr = substr($s, $i, $ulen);
 
-                        $result .= $last_uchr;
-                        $last_uchr = $uchr;
-                    }
-                }
-                else
-                {
-                    // Hangul chars
+				if ($last_uchr < "\xE1\x84\x80" || "\xE1\x84\x92" < $last_uchr
+					||   $uchr < "\xE1\x85\xA1" || "\xE1\x85\xB5" < $uchr
+					|| $last_ucls)
+				{
+					// Table lookup and combining chars composition
 
-                    $L = ord($last_uchr[2]) - 0x80;
-                    $V = ord($uchr[2]) - 0xA1;
-                    $T = 0;
+					$ucls = isset($combClass[$uchr]) ? $combClass[$uchr] : 0;
 
-                    $uchr = substr($s, $i + $ulen, 3);
+					if (isset($compMap[$last_uchr . $uchr]) && (!$last_ucls || $last_ucls < $ucls))
+					{
+						$last_uchr = $compMap[$last_uchr . $uchr];
+					}
+					elseif ($last_ucls = $ucls) $tail .= $uchr;
+					else
+					{
+						if ($tail)
+						{
+							$last_uchr .= $tail;
+							$tail = '';
+						}
 
-                    if ("\xE1\x86\xA7" <= $uchr && $uchr <= "\xE1\x87\x82")
-                    {
-                        $T = ord($uchr[2]) - 0xA7;
-                        0 > $T && $T += 0x40;
-                        $ulen += 3;
-                    }
+						$result .= $last_uchr;
+						$last_uchr = $uchr;
+					}
+				}
+				else
+				{
+					// Hangul chars
 
-                    $L = 0xAC00 + ($L * 21 + $V) * 28 + $T;
-                    $last_uchr = chr(0xE0 | $L>>12) . chr(0x80 | $L>>6 & 0x3F) . chr(0x80 | $L & 0x3F);
-                }
+					$L = ord($last_uchr[2]) - 0x80;
+					$V = ord($uchr[2]) - 0xA1;
+					$T = 0;
 
-                $i += $ulen;
-            }
-        }
+					$uchr = substr($s, $i + $ulen, 3);
 
-        return $result . $last_uchr . $tail;
-    }
+					if ("\xE1\x86\xA7" <= $uchr && $uchr <= "\xE1\x87\x82")
+					{
+						$T = ord($uchr[2]) - 0xA7;
+						0 > $T && $T += 0x40;
+						$ulen += 3;
+					}
 
-    protected static function decompose($s, $c)
-    {
-        $result = '';
+					$L = 0xAC00 + ($L * 21 + $V) * 28 + $T;
+					$last_uchr = chr(0xE0 | $L>>12) . chr(0x80 | $L>>6 & 0x3F) . chr(0x80 | $L & 0x3F);
+				}
 
-        $ASCII = self::$ASCII;
-        $decompMap = self::$D;
-        $combClass = self::$cC;
-        $ulen_mask = self::$ulen_mask;
-        if ($c) $compatMap = self::$KD;
+				$i += $ulen;
+			}
+		}
 
-        $c = array();
-        $i = 0;
-        $len = strlen($s);
+		return $result . $last_uchr . $tail;
+	}
 
-        while ($i < $len) {
-            if ($s[$i] < "\x80") {
-                // ASCII chars
+	protected static function decompose($s, $c)
+	{
+		$result = '';
 
-                if ($c) {
-                    ksort($c);
-                    $result .= implode('', $c);
-                    $c = array();
-                }
+		$ASCII = self::$ASCII;
+		$decompMap = self::$D;
+		$combClass = self::$cC;
+		$ulen_mask = self::$ulen_mask;
+		if ($c) $compatMap = self::$KD;
 
-                $j = 1 + strspn($s, $ASCII, $i+1);
-                $result .= substr($s, $i, $j);
-                $i += $j;
-            } else {
-                $ulen = $ulen_mask[$s[$i] & "\xF0"];
-                $uchr = substr($s, $i, $ulen);
-                $i += $ulen;
+		$c = array();
+		$i = 0;
+		$len = strlen($s);
 
-                if (isset($combClass[$uchr])) {
-                    // Combining chars, for sorting
+		while ($i < $len) {
+			if ($s[$i] < "\x80") {
+				// ASCII chars
 
-                    isset($c[$combClass[$uchr]]) || $c[$combClass[$uchr]] = '';
-                    $c[$combClass[$uchr]] .= isset($compatMap[$uchr]) ? $compatMap[$uchr] : (isset($decompMap[$uchr]) ? $decompMap[$uchr] : $uchr);
-                } else {
-                    if ($c) {
-                        ksort($c);
-                        $result .= implode('', $c);
-                        $c = array();
-                    }
+				if ($c) {
+					ksort($c);
+					$result .= implode('', $c);
+					$c = array();
+				}
 
-                    if ($uchr < "\xEA\xB0\x80" || "\xED\x9E\xA3" < $uchr) {
-                        // Table lookup
+				$j = 1 + strspn($s, $ASCII, $i+1);
+				$result .= substr($s, $i, $j);
+				$i += $j;
+			} else {
+				$ulen = $ulen_mask[$s[$i] & "\xF0"];
+				$uchr = substr($s, $i, $ulen);
+				$i += $ulen;
 
-                        $j = isset($compatMap[$uchr]) ? $compatMap[$uchr] : (isset($decompMap[$uchr]) ? $decompMap[$uchr] : $uchr);
+				if (isset($combClass[$uchr])) {
+					// Combining chars, for sorting
 
-                        if ($uchr != $j) {
-                            $uchr = $j;
+					isset($c[$combClass[$uchr]]) || $c[$combClass[$uchr]] = '';
+					$c[$combClass[$uchr]] .= isset($compatMap[$uchr]) ? $compatMap[$uchr] : (isset($decompMap[$uchr]) ? $decompMap[$uchr] : $uchr);
+				} else {
+					if ($c) {
+						ksort($c);
+						$result .= implode('', $c);
+						$c = array();
+					}
 
-                            $j = strlen($uchr);
-                            $ulen = $uchr[0] < "\x80" ? 1 : $ulen_mask[$uchr[0] & "\xF0"];
+					if ($uchr < "\xEA\xB0\x80" || "\xED\x9E\xA3" < $uchr) {
+						// Table lookup
 
-                            if ($ulen != $j)
-                            {
-                                // Put trailing chars in $s
+						$j = isset($compatMap[$uchr]) ? $compatMap[$uchr] : (isset($decompMap[$uchr]) ? $decompMap[$uchr] : $uchr);
 
-                                $j -= $ulen;
-                                $i -= $j;
+						if ($uchr != $j) {
+							$uchr = $j;
 
-                                if (0 > $i)
-                                {
-                                    $s = str_repeat(' ', -$i) . $s;
-                                    $len -= $i;
-                                    $i = 0;
-                                }
+							$j = strlen($uchr);
+							$ulen = $uchr[0] < "\x80" ? 1 : $ulen_mask[$uchr[0] & "\xF0"];
 
-                                while ($j--) $s[$i+$j] = $uchr[$ulen+$j];
+							if ($ulen != $j)
+							{
+								// Put trailing chars in $s
 
-                                $uchr = substr($uchr, 0, $ulen);
-                            }
-                        }
-                    } else {
-                        // Hangul chars
+								$j -= $ulen;
+								$i -= $j;
 
-                        $uchr = unpack('C*', $uchr);
-                        $j = (($uchr[1]-224) << 12) + (($uchr[2]-128) << 6) + $uchr[3] - 0xAC80;
+								if (0 > $i)
+								{
+									$s = str_repeat(' ', -$i) . $s;
+									$len -= $i;
+									$i = 0;
+								}
 
-                        $uchr = "\xE1\x84" . chr(0x80 + (int)  ($j / 588))
-                              . "\xE1\x85" . chr(0xA1 + (int) (($j % 588) / 28));
+								while ($j--) $s[$i+$j] = $uchr[$ulen+$j];
 
-                        if ($j %= 28)
-                        {
-                            $uchr .= $j < 25
-                                ? ("\xE1\x86" . chr(0xA7 + $j))
-                                : ("\xE1\x87" . chr(0x67 + $j));
-                        }
-                    }
+								$uchr = substr($uchr, 0, $ulen);
+							}
+						}
+					} else {
+						// Hangul chars
 
-                    $result .= $uchr;
-                }
-            }
-        }
+						$uchr = unpack('C*', $uchr);
+						$j = (($uchr[1]-224) << 12) + (($uchr[2]-128) << 6) + $uchr[3] - 0xAC80;
 
-        if ( $c ) {
-            ksort($c);
-            $result .= implode('', $c);
-        }
+						$uchr = "\xE1\x84" . chr(0x80 + (int)  ($j / 588))
+							  . "\xE1\x85" . chr(0xA1 + (int) (($j % 588) / 28));
 
-        return $result;
-    }
+						if ($j %= 28)
+						{
+							$uchr .= $j < 25
+								? ("\xE1\x86" . chr(0xA7 + $j))
+								: ("\xE1\x87" . chr(0x67 + $j));
+						}
+					}
 
-    protected static function getData($file) {
-        $file = __DIR__ . '/unidata/' . $file . '.ser';
-        if ( file_exists( $file ) ) { 
+					$result .= $uchr;
+				}
+			}
+		}
+
+		if ( $c ) {
+			ksort($c);
+			$result .= implode('', $c);
+		}
+
+		return $result;
+	}
+
+	protected static function getData($file) {
+		$file = __DIR__ . '/unidata/' . $file . '.ser';
+		if ( file_exists( $file ) ) {
 			return unserialize( file_get_contents( $file ) );
-        } else {
+		} else {
 			return false;
 		}
-    }
+	}
 }
 
 
@@ -978,20 +987,20 @@ class WPT_Normalizer
 add_action( 'load-post.php', 'wpt_migrate_url_meta' );
 function wpt_migrate_url_meta() {
 	$post_id = isset( $_GET['post'] ) ? intval( $_GET['post'] ) : false;
-	if ( ! $post_id ) { 
+	if ( ! $post_id ) {
 		// if this is a new post screen, no migration
 		return;
 	}
-	
+
 	$post = get_post( $post_id );
 	if ( strtotime( $post->post_date ) > 1449764285 ) {
 		// if this post was added after the migration function was added, it will not need to be migrated. Guaranteed.
 		return;
 	}
-	
+
 	$short = get_post_meta( $post_id, '_wpt_short_url', true );
-	if ( $short != '' ) { 
-		return; 
+	if ( $short != '' ) {
+		return;
 	}
 	if ( $short == '' ) {
 		$short = get_post_meta( $post_id, '_wp_jd_goo', true );
@@ -1029,16 +1038,16 @@ function wpt_migrate_url_meta() {
 		$short = get_post_meta( $post_id, '_wp_jd_clig', true );
 		delete_post_meta( $post_id, '_wp_jd_clig' );
 	}
-	
+
 	if ( $short == '' ) {
 		$short = get_permalink( $post_id );
 	}
-	
+
 	update_post_meta( $post_id, '_wpt_short_url', $short );
 }
 
 function wp_get_curl( $url ) {
-	
+
 	$curl = curl_init( $url );
 
 	curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
