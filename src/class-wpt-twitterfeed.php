@@ -12,12 +12,13 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+require_once( 'class-wpt-twitteroauth.php' );
+
 /*
 * Based on Version 2.0.3, Twitter Feed for Developers by Storm Consultancy (Liam Gladdy)
 * The base class for the storm twitter feed for developers.
 */
-require_once( 'class-wpt-twitteroauth.php' );
-
 class WPT_TwitterFeed {
 
 	private $defaults = array(
@@ -27,7 +28,7 @@ class WPT_TwitterFeed {
 		'token'        => '',
 		'token_secret' => '',
 		'screenname'   => false,
-		'cache_expire' => 1800
+		'cache_expire' => 1800,
 	);
 
 	public $st_last_error = false;
@@ -40,7 +41,7 @@ class WPT_TwitterFeed {
 		return print_r( $this->defaults, true );
 	}
 
-	//I'd prefer to put username before count, but for backwards compatibility it's not really viable. :(
+	// I'd prefer to put username before count, but for backwards compatibility it's not really viable.
 	function getTweets( $count = 20, $screenname = false, $options = false ) {
 		if ( $count > 20 ) {
 			/**
@@ -56,20 +57,24 @@ class WPT_TwitterFeed {
 			$count = 1;
 		}
 
-		$default_options = array( 'trim_user' => true, 'exclude_replies' => true, 'include_rts' => false );
+		$default_options = array(
+			'trim_user'       => true,
+			'exclude_replies' => true,
+			'include_rts'     => false,
+		);
 
-		if ( $options === false || ! is_array( $options ) ) {
+		if ( false === $options || ! is_array( $options ) ) {
 			$options = $default_options;
 		} else {
 			$options = array_merge( $default_options, $options );
 		}
 
-		if ( $screenname == false ) {
+		if ( false === $screenname ) {
 			$screenname = get_option( 'wtt_twitter_username' );
 		}
 
 		$result = $this->checkValidCache( $screenname, $options );
-		if ( $result !== false ) {
+		if ( false !== $result ) {
 			return $this->cropTweets( $result, $count );
 		}
 
@@ -120,17 +125,17 @@ class WPT_TwitterFeed {
 		} else {
 			delete_transient( 'wpt_cache' );
 		}
-	}	
-	
+	}
+
 	private function checkValidCache( $screenname, $options ) {
 		$delete_cache = get_option( 'wpt_delete_cache' );
-		$file = $this->getCacheLocation();
-		
-		if ( $delete_cache == 'true' ) {
+		$file         = $this->getCacheLocation();
+
+		if ( 'true' == $delete_cache ) {
 			update_option( 'wpt_delete_cache', 'false' );
 			$this->delete_cache( $file );
 		}
-		
+
 		if ( is_file( $file ) ) {
 			$cache = file_get_contents( $file );
 			$cache = @json_decode( $cache, true );
@@ -146,7 +151,7 @@ class WPT_TwitterFeed {
 				return false;
 			}
 		}
-		$cachename = $screenname . "-" . $this->getOptionsHash( $options );
+		$cachename = $screenname . '-' . $this->getOptionsHash( $options );
 
 		//Check if we have a cache for the user.
 		if ( ! isset( $cache[ $cachename ] ) ) {
@@ -175,8 +180,12 @@ class WPT_TwitterFeed {
 		$secret       = $this->defaults['secret'];
 		$token        = $this->defaults['token'];
 		$token_secret = $this->defaults['token_secret'];
-		$cachename    = $screenname . "-" . $this->getOptionsHash( $options );
-		$options      = array_merge( $options, array( 'screen_name' => $screenname, 'count' => 20, 'include_ext_alt_text' => 'true' ) );
+		$cachename    = $screenname . '-' . $this->getOptionsHash( $options );
+		$options      = array_merge( $options, array( 
+			'screen_name'          => $screenname, 
+			'count'                => 20, 
+			'include_ext_alt_text' => 'true',
+		) );
 
 		if ( empty( $key ) ) {
 			return array( 'error' => __( 'Missing Consumer Key - Check settings', 'wp-to-twitter' ) );
@@ -197,8 +206,9 @@ class WPT_TwitterFeed {
 		$connection = new wpt_TwitterOAuth( $key, $secret, $token, $token_secret );
 
 		if ( isset( $options['search'] ) ) {
-			$args = array( 'q'           => urlencode( $options['search'] ),
-			               'result_type' => urlencode( $options['result_type'] )
+			$args = array( 
+				'q'           => urlencode( $options['search'] ),
+				'result_type' => urlencode( $options['result_type'] ),
 			);
 			if ( $options['geocode'] != '' ) {
 				$args['geocode'] = urlencode( $options['geocode'] );
@@ -239,7 +249,7 @@ class WPT_TwitterFeed {
 				$this->st_last_error = $last_error;
 			}
 		}
-		// Run an action on the results output from the Twitter widget query
+		// Run an action on the results output from the Twitter widget query.
 		do_action( 'wpt_process_tweets', $result, $screenname, $options );
 
 		return $result;

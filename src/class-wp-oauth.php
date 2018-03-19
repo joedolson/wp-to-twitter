@@ -88,9 +88,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * the encoding is handled in OAuthRequest when the final
 		 * request is serialized
 		 *
-		 * @param OAuthRequest $request
+		 * @param OAuthRequest  $request
 		 * @param OAuthConsumer $consumer
-		 * @param OAuthToken $token
+		 * @param OAuthToken    $token
 		 *
 		 * @return string
 		 */
@@ -99,10 +99,10 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		/**
 		 * Verifies that a given signature is correct
 		 *
-		 * @param OAuthRequest $request
+		 * @param OAuthRequest  $request
 		 * @param OAuthConsumer $consumer
-		 * @param OAuthToken $token
-		 * @param string $signature
+		 * @param OAuthToken    $token
+		 * @param string        $signature
 		 *
 		 * @return bool
 		 */
@@ -122,7 +122,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	 */
 	class WPOAuthSignatureMethod_HMAC_SHA1 extends WPOAuthSignatureMethod {
 		function get_name() {
-			return "HMAC-SHA1";
+			return 'HMAC-SHA1';
 		}
 
 		public function build_signature( $request, $consumer, $token ) {
@@ -148,7 +148,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * oauth_signature is set to the concatenated encoded values of the Consumer Secret and
+		 * The oauth_signature is set to the concatenated encoded values of the Consumer Secret and
 		 * Token Secret, separated by a '&' character (ASCII code 38), even if either secret is
 		 * empty. The result MUST be encoded again.
 		 *   - Chapter 9.4.1 ("Generating Signatures")
@@ -227,7 +227,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			// Check the computed signature against the one passed in the query.
 			$ok = openssl_verify( $base_string, $decoded_sig, $publickeyid );
 
-			// Release the key resource
+			// Release the key resource.
 			openssl_free_key( $publickeyid );
 
 			return $ok == 1;
@@ -240,8 +240,8 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		private $http_url;
 		// for debug purposes.
 		public $base_string;
-		public static $version = '1.0';
-		public static $POST_INPUT = 'php://input';
+		public static $version    = '1.0';
+		public static $post_input = 'php://input';
 
 		function __construct( $http_method, $http_url, $parameters = null ) {
 			@$parameters or $parameters = array();
@@ -274,7 +274,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				// parameters and add those overriding any duplicates from GET.
 				if ( $http_method == 'POST' && @strstr( $request_headers['Content-Type'], 'application/x-www-form-urlencoded' ) ) {
 					$post_data  = WPOAuthUtil::parse_parameters(
-						file_get_contents( self::$POST_INPUT )
+						file_get_contents( self::$post_input )
 					);
 					$parameters = array_merge( $parameters, $post_data );
 				}

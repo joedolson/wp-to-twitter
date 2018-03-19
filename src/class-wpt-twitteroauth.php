@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Abraham Williams (abraham@abrah.am) http://abrah.am
  *
  * The first PHP Library to support WPOAuth for Twitter's REST API.

@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * function to test credentials
+ * Function to test validity of credentials
  *
- * @param mixed int/boolean $auth Current author
+ * @param mixed int/boolean $auth Current author.
  * @param string            $context Use context.
  *
  * @return Is authenticated.
@@ -26,7 +26,7 @@ function wtt_oauth_test( $auth = false, $context = '' ) {
 		return ( wtt_oauth_credentials_to_hash() == get_option( 'wtt_oauth_hash' ) );
 	} else {
 		$return = ( wtt_oauth_credentials_to_hash( $auth ) == wpt_get_user_verification( $auth ) );
-		if ( ! $return && $context != 'verify' ) {
+		if ( ! $return && 'verify' != $context ) {
 			return ( wtt_oauth_credentials_to_hash() == get_option( 'wtt_oauth_hash' ) );
 		} else {
 			return $return;

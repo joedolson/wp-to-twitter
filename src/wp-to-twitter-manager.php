@@ -13,6 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Update WP to Twitter settings.
+ */
 function wpt_updated_settings() {
 	wpt_check_version();
 
@@ -92,7 +95,7 @@ function wpt_updated_settings() {
 		update_option( 'jd_twit_append', $_POST['jd_twit_append'] );
 		update_option( 'jd_post_excerpt', $_POST['jd_post_excerpt'] );
 		update_option( 'jd_max_tags', $_POST['jd_max_tags'] );
-		$use_cats = ( isset( $_POST['wpt_use_cats']  ) ) ? $_POST['wpt_use_cats'] : 0;
+		$use_cats = ( isset( $_POST['wpt_use_cats'] ) ) ? $_POST['wpt_use_cats'] : 0;
 		update_option( 'wpt_use_cats', $use_cats );
 		update_option( 'wpt_tag_source', ( ( isset( $_POST['wpt_tag_source'] ) && 'slug' == $_POST['wpt_tag_source'] ) ? 'slug' : '' ) );
 		update_option( 'jd_max_characters', $_POST['jd_max_characters'] );
@@ -117,7 +120,6 @@ function wpt_updated_settings() {
 
 		update_option( 'twitter-analytics-campaign', $_POST['twitter-analytics-campaign'] );
 		update_option( 'jd_individual_twitter_users', ( isset( $_POST['jd_individual_twitter_users'] ) ? $_POST['jd_individual_twitter_users'] : 0 ) );
-
 
 		if ( isset( $_POST['wpt_caps'] ) ) {
 			$perms = $_POST['wpt_caps'];
@@ -190,16 +192,19 @@ function wpt_updated_settings() {
 	}
 }
 
+/**
+ * Show WP to Twitter settings form.
+ */
 function wpt_update_settings() {
 	?>
 	<div class="wrap" id="wp-to-twitter">
 	<?php
-		if ( defined( 'WPT_STAGING_MODE' ) && true == WPT_STAGING_MODE ) {
-			echo "<div class='updated notice'><p>" . __( 'WP to Twitter is in staging mode. Tweets will be reported as if successfully sent to Twitter but will not be sent.', 'wp-to-twitter' ) . '</p></div>';
-		}
-		wpt_updated_settings();
-		wpt_show_last_tweet();
-		wpt_handle_errors();
+	if ( defined( 'WPT_STAGING_MODE' ) && true == WPT_STAGING_MODE ) {
+		echo "<div class='updated notice'><p>" . __( 'WP to Twitter is in staging mode. Tweets will be reported as if successfully sent to Twitter but will not be sent.', 'wp-to-twitter' ) . '</p></div>';
+	}
+	wpt_updated_settings();
+	wpt_show_last_tweet();
+	wpt_handle_errors();
 	?>
 	<h1><?php _e( 'WP to Twitter Options', 'wp-to-twitter' ); ?></h1>
 
@@ -238,12 +243,17 @@ function wpt_update_settings() {
 								<?php _e( 'WP Tweets PRO takes the great Tweeting abilities from WP to Twitter and puts them in high gear.', 'wp-to-twitter' ); ?>
 							</p>
 							<ul>
-								<li><?php _e( 'Publish to unique Twitter accounts for each site author.','wp-to-twitter' ); ?></li>
+								<li><?php _e( 'Publish to unique Twitter accounts for each site author.', 'wp-to-twitter' ); ?></li>
 								<li><?php _e( 'Schedule up to 3 re-posts of Tweets at an interval of your choice.', 'wp-to-twitter' ); ?></li>
 								<li><?php _e( 'With a delay between publishing and Tweeting, verify your tweets before you share online.', 'wp-to-twitter' ); ?></li>
 								<li><?php _e( 'Automatically your great old posts every few hours, days, or weeks!', 'wp-to-twitter' ); ?></li>
 								<li><?php _e( 'Upload your featured images to Twitter with each Tweet', 'wp-to-twitter' ); ?></li>
-								<li><?php printf( __( 'Take a look at the <a href="%s">complete feature list</a>', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro/' ); ?></li>
+								<li>
+								<?php 
+								// Translators: Link to sales page.
+								printf( __( 'Take a look at the <a href="%s">complete feature list</a>', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro/' ); 
+								?>
+								</li>
 							</ul>
 							<p>
 								<strong><?php _e( 'Use WP Tweets PRO to keep traffic coming for every post.', 'wp-to-twitter' ); ?></strong>
@@ -258,10 +268,16 @@ function wpt_update_settings() {
 								<?php _e( 'WP Tweets PRO is packed with features to help you increase engagement with your Twitter followers. Upload images, use Twitter Cards, and automated re-posting of your Tweets are just a few of the features available in the premium add-on to WP to Twitter.', 'wp-to-twitter' ); ?>
 							</p>
 							<p>
-								<?php printf( __( 'Is there something that WP Tweets PRO <em>doesn\'t already do for you</em>? No problem! Take a look at the extensive <a href="%s">library of plug-in extensions</a> - you can try out or modify any of these code samples to extend and customize WP Tweets PRO.', 'wp-to-twitter' ), 'https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter' ); ?>
+								<?php 
+								// Translators: link to GitHub repo of add-ons.
+								printf( __( 'Is there something that WP Tweets PRO <em>doesn\'t already do for you</em>? No problem! Take a look at the extensive <a href="%s">library of plug-in extensions</a> - you can try out or modify any of these code samples to extend and customize WP Tweets PRO.', 'wp-to-twitter' ), 'https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter' ); 
+								?>
 							</p>
 							<p>
-								<?php printf( __( '<a href="%s">Learn more about WP Tweets PRO</a>!', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro?campaign=get-wpt' ); ?>
+								<?php 
+								// Translators: Link to sales page.
+								printf( __( '<a href="%s">Learn more about WP Tweets PRO</a>!', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro?campaign=get-wpt' ); 
+								?>
 							</p>
 
 							<p class='wpt-button'>
@@ -323,7 +339,7 @@ function wpt_update_settings() {
 								?>
 								<div class='wptab wpt_types wpt_<?php echo $slug; ?>' aria-labelledby='tab_wpt_<?php echo $slug; ?>' role="tabpanel" id='wpt_<?php echo $slug; ?>'>
 								<?php
-								// share information about any usage of pre 2.8 category filters
+								// share information about any usage of pre 2.8 category filters.
 								if ( '0' != get_option( 'limit_categories' ) && 'post' == $slug ) {
 									$falseness  = get_option( 'jd_twit_cats' );
 									$categories = get_option( 'tweet_categories' );
@@ -341,6 +357,7 @@ function wpt_update_settings() {
 									}
 									echo '</ul>';
 									if ( ! function_exists( 'wpt_pro_exists' ) ) {
+										//  Translators: Link to sales page.
 										printf( __( '<a href="%s">Upgrade to WP Tweets PRO</a> to filter posts in all custom post types on any taxonomy.', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro' );
 									} else {
 										_e( 'Updating the WP Tweets PRO taxonomy filters will overwrite your old category filters.', 'wp-to-twitter' );
@@ -580,7 +597,7 @@ function wpt_update_settings() {
 						<fieldset id="indauthors">
 							<legend><?php _e( 'Author Settings', 'wp-to-twitter' ); ?></legend>
 							<p>
-								<input type="checkbox" name="jd_individual_twitter_users" id="jd_individual_twitter_users" value="1" <?php echo jd_checkCheckbox( 'jd_individual_twitter_users' ) ?> />
+								<input type="checkbox" name="jd_individual_twitter_users" id="jd_individual_twitter_users" value="1" <?php echo jd_checkCheckbox( 'jd_individual_twitter_users' ); ?> />
 								<label for="jd_individual_twitter_users"><?php _e( 'Authors have individual Twitter accounts', 'wp-to-twitter' ); ?></label>
 							</p>
 
@@ -705,7 +722,10 @@ function wpt_update_settings() {
 		?>
 			<div class='wpt-support-me'>
 				<p>
-				<?php printf( __( 'Please, consider a <a href="%s">purchase</a> to support WP to Twitter!', 'wp-to-twitter' ), "http://www.wptweetspro.com/wp-tweets-pro" ); ?>
+				<?php 
+				// Translators: Link to sales page.
+				printf( __( 'Please, consider a <a href="%s">purchase</a> to support WP to Twitter!', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro' ); 
+				?>
 				</p>
 			</div>
 		<?php
@@ -725,6 +745,9 @@ function wpt_update_settings() {
 	<?php
 }
 
+/**
+ * Show WP to Twitter sidebar content.
+ */
 function wpt_sidebar() {
 	$context = ( ! function_exists( 'wpt_pro_exists' ) ) ? 'free' : 'premium';
 	?>
@@ -767,7 +790,7 @@ function wpt_sidebar() {
 					<?php
 					if ( 'premium' == $context ) {
 						$support_url = admin_url( 'admin.php?page=wp-tweets-pro' );
-						$support     ='<a href="' . esc_url( add_query_arg( 'tab', 'support', $support_url ) ) . '#get-support">' . __( "Get Support", 'wp-to-twitter' ) . '</a> &bull;';
+						$support     = '<a href="' . esc_url( add_query_arg( 'tab', 'support', $support_url ) ) . '#get-support">' . __( 'Get Support', 'wp-to-twitter' ) . '</a> &bull;';
 					} else {
 						$support_url = false;
 						$support     = '';
@@ -834,6 +857,13 @@ function wpt_sidebar() {
 <?php
 }
 
+/**
+ * Compare your server time to Twitter's time.
+ *
+ * @param boolean $test Doing a test.
+ *
+ * @return string showing comparison between times.
+ */
 function wpt_do_server_check( $test = false ) {
 	$wpt_server_string = get_option( 'wpt_server_string' );
 	if ( ! $wpt_server_string || isset( $_GET['refresh_wpt_server_string'] ) || true == $test ) {
@@ -894,6 +924,11 @@ function wpt_do_server_check( $test = false ) {
 }
 
 add_filter( 'wpt_tweet_length', 'wpt_tweet_length' );
+/**
+ * Add control to set maximum length for a Tweet.
+ *
+ * @return string HTML control.
+ */
 function wpt_tweet_length() {
 	$tweet_length = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : 140 );
 	$control      = "<p class='tweet_length_control'>
@@ -906,6 +941,9 @@ function wpt_tweet_length() {
 }
 
 add_filter( 'wpt_settings', 'wpt_set_tweet_length' );
+/**
+ * Set the maximum length for a Tweet.
+ */
 function wpt_set_tweet_length() {
 	if ( isset( $_POST['wpt_tweet_length'] ) ) {
 		update_option( 'wpt_tweet_length', intval( $_POST['wpt_tweet_length'] ) );
