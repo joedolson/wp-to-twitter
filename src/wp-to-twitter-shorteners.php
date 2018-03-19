@@ -9,7 +9,6 @@
  * @link     https://www.joedolson.com/wp-to-twitter/
  */
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -66,7 +65,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				}
 				$medium = urlencode( trim( apply_filters( 'wpt_utm_medium', 'twitter' ) ) );
 				$source = urlencode( trim( apply_filters( 'wpt_utm_source', 'twitter' ) ) );
-				$url = add_query_arg( array(
+				$url    = add_query_arg( array(
 					'utm_campaign' => $campaign,
 					'utm_medium'   => $medium,
 					'utm_source'   => $source,
@@ -120,12 +119,12 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					break;
 				case 5:
 					// local YOURLS installation.
-					global $yourls_reserved_URL;
+					global $yourls_reserved_URL; // JCD TODO: Is this required?
 					define( 'YOURLS_INSTALLING', true ); // Pretend we're installing YOURLS to bypass test for install or upgrade.
 					define( 'YOURLS_FLOOD_DELAY_SECONDS', 0 ); // Disable flood check.
 					$opath = get_option( 'yourlspath' );
 					$ypath = str_replace( 'user', 'includes', $opath );
-					if ( file_exists( dirname( $ypath ) . '/load-yourls.php' ) ) { // YOURLS 1.4+
+					if ( file_exists( dirname( $ypath ) . '/load-yourls.php' ) ) { // YOURLS 1.4+.
 						require_once( dirname( $ypath ) . '/load-yourls.php' );
 						global $ydb;
 						if ( function_exists( 'yourls_add_new_link' ) ) {
@@ -207,11 +206,11 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				case 8:
 					// Goo.gl.
 					$googl_api_key = ( '' == get_option( 'googl_api_key' ) ) ? 'AIzaSyBSnqQOg3vX1gwR7y2l-40yEG9SZiaYPUQ' : get_option( 'googl_api_key' );
-					$target  = "https://www.googleapis.com/urlshortener/v1/url?key=$googl_api_key";
-					$body    = "{'longUrl':'$url'}";
-					$json    = wpt_fetch_url( $target, 'POST', $body, 'Content-Type: application/json' );
-					$decoded = json_decode( $json );
-					$shrink  = $decoded->id;
+					$target        = "https://www.googleapis.com/urlshortener/v1/url?key=$googl_api_key";
+					$body          = "{'longUrl':'$url'}";
+					$json          = wpt_fetch_url( $target, 'POST', $body, 'Content-Type: application/json' );
+					$decoded       = json_decode( $json );
+					$shrink        = $decoded->id;
 					if ( ! wpt_is_valid_url( $shrink ) ) {
 						$shrink = false;
 					}
@@ -219,12 +218,13 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				case 9:
 					// Twitter Friendly Links. This plugin not updated in 8 years.
 					$shrink = $url;
+					break;
 				case 10:
-					//jotURL, added: 2013-04-10.
+					// jotURL, added: 2013-04-10.
 					$joturlapi             = trim( get_option( 'joturlapi' ) );
 					$joturllogin           = trim( get_option( 'joturllogin' ) );
 					$joturl_longurl_params = trim( get_option( 'joturl_longurl_params' ) );
-					if ( $joturl_longurl_params != '' ) {
+					if ( '' != $joturl_longurl_params ) {
 						if ( false === strpos( $url, '%3F' ) && false == strpos( $url, '?' ) ) {
 							$ct = '?';
 						} else {
@@ -284,7 +284,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 */
 	function wpt_store_url( $post_ID, $url ) {
 		$store_urls = apply_filters( 'wpt_store_urls', true, $post_ID, $url );
-		if ( function_exists( 'wpt_shorten_url' )  && $store_urls ) {
+		if ( function_exists( 'wpt_shorten_url' ) && $store_urls ) {
 			$shortener = get_option( 'jd_shortener' );
 			if ( get_post_meta( $post_ID, '_wpt_short_url', true ) != $url && wpt_is_valid_url( $url ) ) {
 				update_post_meta( $post_ID, '_wpt_short_url', $url );
@@ -327,7 +327,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 
 			return $url;
 		} else {
-			global $yourls_reserved_URL;
+			global $yourls_reserved_URL; // JCD TODO: is this required?
 			define( 'YOURLS_INSTALLING', true ); // Pretend we're installing YOURLS to bypass test for install or upgrade.
 			define( 'YOURLS_FLOOD_DELAY_SECONDS', 0 ); // Disable flood check.
 			if ( file_exists( dirname( get_option( 'yourlspath' ) ) . '/load-yourls.php' ) ) { // YOURLS 1.4+.
@@ -349,14 +349,14 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 * Controls for adding shortener relevant data.
 	 */
 	function wpt_shortener_controls() {
-		$shortener = get_option( 'jd_shortener' );
-		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
+		$shortener  = get_option( 'jd_shortener' );
+		$admin_url  = admin_url( 'admin.php?page=wp-tweets-pro' );
 		$form_start = '<div class="panel">
 							<form method="post" action="' . add_query_arg( 'tab', 'shortener', $admin_url ) . '">
 								<div><input type="hidden" name="wpt_shortener_update" value="true" /></div>
 								<div>';
-		$nonce = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false );
-		$form_end = '<div>' . $nonce . '</div>
+		$nonce      = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false );
+		$form_end   = '<div>' . $nonce . '</div>
 								<p>
 									<input type="submit" name="submit" value="' . __( 'Save URL Shortener Settings', 'wp-to-twitter' ) . '" class="button-primary" />
 								</p>
@@ -373,7 +373,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 
 				<div class="inside">
 					<?php
-					if ( 7 ==  $shortener ) {
+					if ( 7 == $shortener ) {
 					?>
 						<?php echo $form_start; ?>
 						<p>
@@ -439,14 +439,14 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 							<label for="yourlstoken"><?php _e( 'YOURLS signature token:', 'wp-to-twitter' ); ?></label>
 							<input type="text" name="yourlstoken" id="yourlstoken" size="30" value="<?php echo esc_attr( get_option( 'yourlstoken' ) ); ?>"/>
 						</p>
-						<?php 
-						if ( get_option( 'yourlsapi' ) && get_option( 'yourlslogin' ) ) { 
+						<?php
+						if ( get_option( 'yourlsapi' ) && get_option( 'yourlslogin' ) ) {
 						?>
 							<p>
 								<em><?php _e( 'Your YOURLS username and password are saved. If you add a signature token, that will be used for API calls and your username and password will be deleted from the database.', 'wp-to-twitter' ); ?></em>
 							</p>
-						<?php 
-						} 
+						<?php
+						}
 						?>
 						<p>
 							<input type="radio" name="jd_keyword_format" id="jd_keyword_id" value="1" <?php echo jd_checkSelect( 'jd_keyword_format', 1, 'checkbox' ); ?> />
@@ -459,20 +459,20 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						<div>
 							<input type="hidden" name="submit-type" value="yourlsapi" />
 						</div>
-						<?php 
-							echo $form_end; 
-						} elseif ( 8 == $shortener ) { 
-							echo $form_start; 
+						<?php
+						echo $form_end;
+					} elseif ( 8 == $shortener ) {
+						echo $form_start;
 						?>
 						<p>
 							<label for="googl_api_key"><?php _e( 'Goo.gl API Key:', 'wp-to-twitter' ); ?></label>
 							<input type="text" name="googl_api_key" id="googl_api_key" value="<?php echo esc_attr( get_option( 'googl_api_key' ) ); ?>"/>
 						</p>
 						<div><input type="hidden" name="submit-type" value="googlapi" /></div>
-						<?php 
-						echo $form_end; 
-					} elseif ( 10 == $shortener ) { 
-						echo $form_start; 
+						<?php
+						echo $form_end;
+					} elseif ( 10 == $shortener ) {
+						echo $form_start;
 						?>
 						<p>
 							<label for="joturllogin"><?php _e( "Your jotURL public <abbr title='application programming interface'>API</abbr> key:", 'wp-to-twitter' ); ?></label>
@@ -488,14 +488,14 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						</p>
 
 						<p>
-							<label for="joturl_shorturl_params"><?php _e( "Parameters to add to the short URL (after shortening):", 'wp-to-twitter' ); ?></label>
+							<label for="joturl_shorturl_params"><?php _e( 'Parameters to add to the short URL (after shortening):', 'wp-to-twitter' ); ?></label>
 							<input type="text" name="joturl_shorturl_params" id="joturl_shorturl_params" size="40" value="<?php echo esc_attr( get_option( 'joturl_shorturl_params' ) ); ?>"/>
 						</p>
 						<p>
 							<a href="https://www.joturl.com/reserved/api.html"><?php _e( 'View your jotURL public and private API key', 'wp-to-twitter' ); ?></a>
 						</p>
 						<div><input type="hidden" name="submit-type" value="joturlapi"/></div>
-						<?php 
+						<?php
 						echo $form_end;
 					} else {
 						$form = apply_filters( 'wpt_shortener_settings', '', $shortener );
@@ -504,7 +504,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						} else {
 							_e( 'Your shortener does not require any account settings.', 'wp-to-twitter' );
 						}
-					} 
+					}
 					?>
 				</div>
 			</div>
@@ -521,7 +521,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		$message = '';
 		if ( isset( $post['submit-type'] ) && 'yourlsapi' == $post['submit-type'] ) {
 			$message = '';
-			if ( $post['yourlstoken'] != '' && isset( $post['submit'] ) ) {
+			if ( '' != $post['yourlstoken'] && isset( $post['submit'] ) ) {
 				update_option( 'yourlstoken', trim( $post['yourlstoken'] ) );
 				delete_option( 'yourlsapi' );
 				delete_option( 'yourlslogin' );
@@ -558,7 +558,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			}
 		}
 
-		if ( isset( $post['submit-type'] ) && 'suprapi' ==  $post['submit-type'] ) {
+		if ( isset( $post['submit-type'] ) && 'suprapi' == $post['submit-type'] ) {
 			if ( '' != $post['suprapi'] && isset( $post['submit'] ) ) {
 				update_option( 'suprapi', trim( $post['suprapi'] ) );
 				update_option( 'suprlogin', trim( $post['suprlogin'] ) );
@@ -658,7 +658,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	function wpt_select_shortener( $post ) {
 		$message = '';
 		// don't return a message if unchanged.
-		if ( $post['jd_shortener'] == get_option( 'jd_shortener' ) ) {
+		if ( get_option( 'jd_shortener' ) == $post['jd_shortener'] ) {
 			return;
 		}
 		update_option( 'jd_shortener', sanitize_key( $post['jd_shortener'] ) );
@@ -669,6 +669,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 
 		// these are the URL shorteners which require settings.
 		if ( 2 == $short || 10 == $short || 6 == $short ) {
+			// Translators: Settings URL for shortener configuration.
 			$message .= sprintf( __( 'You must <a href="%s">configure your URL shortener settings</a>.', 'wp-to-twitter' ), $admin_url );
 		}
 
@@ -694,11 +695,11 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				<option value="2" <?php selected( $shortener, '2' ); ?>>Bit.ly</option>
 				<option value="8" <?php selected( $shortener, '8' ); ?>>Goo.gl</option>
 				<option value="7" <?php selected( $shortener, '7' ); ?>>Su.pr</option>
-				<?php 
-				if ( 5 == $shortener ) { // if the user has already selected local server, leave available. 
+				<?php
+				if ( 5 == $shortener ) { // if the user has already selected local server, leave available.
 				?>
 				<option	value="5" <?php selected( $shortener, '5' ); ?>><?php _e( 'YOURLS (this server)', 'wp-to-twitter' ); ?></option>
-				<?php 
+				<?php
 				}
 				?>
 				<option	value="6" <?php selected( $shortener, '6' ); ?>><?php _e( 'YOURLS (remote server)', 'wp-to-twitter' ); ?></option>

@@ -1050,15 +1050,14 @@ class WPT_Normalizer {
 	}
 }
 
-
+add_action( 'load-post.php', 'wpt_migrate_url_meta' );
 /**
  *  Migrates post meta to new format when post is called in editor.
  */
-add_action( 'load-post.php', 'wpt_migrate_url_meta' );
 function wpt_migrate_url_meta() {
 	$post_id = isset( $_GET['post'] ) ? intval( $_GET['post'] ) : false;
 	if ( ! $post_id ) {
-		// if this is a new post screen, no migration
+		// if this is a new post screen, no migration.
 		return;
 	}
 
@@ -1069,53 +1068,60 @@ function wpt_migrate_url_meta() {
 	}
 
 	$short = get_post_meta( $post_id, '_wpt_short_url', true );
-	if ( $short != '' ) {
+	if ( '' != $short ) {
 		return;
 	}
-	if ( $short == '' ) {
+	if ( '' == $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_goo', true );
 		delete_post_meta( $post_id, '_wp_jd_goo' );
 	}
-	if ( $short == '' ) {
+	if ( '' == $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_supr', true );
 		delete_post_meta( $post_id, '_wp_jd_supr' );
 	}
-	if ( $short == '' ) {
+	if ( '' == $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_wp', true );
 		delete_post_meta( $post_id, '_wp_jd_wp' );
 	}
-	if ( $short == '' ) {
+	if ( '' == $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_ind', true );
 		delete_post_meta( $post_id, '_wp_jd_ind' );
 	}
-	if ( $short == '' ) {
+	if ( '' == $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_yourls', true );
 		delete_post_meta( $post_id, '_wp_jd_yourls' );
 	}
-	if ( $short == '' ) {
+	if ( '' == $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_url', true );
 		delete_post_meta( $post_id, '_wp_jd_url' );
 	}
-	if ( $short == '' ) {
+	if ( '' == $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_joturl', true );
 		delete_post_meta( $post_id, '_wp_jd_joturl' );
 	}
-	if ( $short == '' ) {
+	if ( '' == $short ) {
 		// don't delete target link
 		$short = get_post_meta( $post_id, '_wp_jd_target', true );
 	}
-	if ( $short == '' ) {
+	if ( '' == $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_clig', true );
 		delete_post_meta( $post_id, '_wp_jd_clig' );
 	}
 
-	if ( $short == '' ) {
+	if ( '' == $short ) {
 		$short = get_permalink( $post_id );
 	}
 
 	update_post_meta( $post_id, '_wpt_short_url', $short );
 }
 
+/**
+ * Make a curl query.
+ *
+ * @param string $url URL to query.
+ *
+ * @return Curl response.
+ */
 function wp_get_curl( $url ) {
 
 	$curl = curl_init( $url );
@@ -1130,7 +1136,7 @@ function wp_get_curl( $url ) {
 	$response = curl_exec( $curl );
 	if ( 0 !== curl_errno( $curl ) || 200 !== curl_getinfo( $curl, CURLINFO_HTTP_CODE ) ) {
 		$response = false;
-	} // end if
+	} // end if.
 	curl_close( $curl );
 
 	return $response;
@@ -1156,7 +1162,7 @@ function wpt_delete_copied_meta( $new_id, $post ) {
 }
 
 /**
- * Functions to provide fallbacks for changed function names in case any plug-ins or themes are calling WP to Twitter functions in custom code.
+ * Provide aliases for changed function names if plug-ins or themes are calling WP to Twitter functions in custom code.
  */
 function jd_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $return = 'body' ) {
 	return wpt_fetch_url( $url, $method, $body, $headers, $return );
@@ -1186,9 +1192,6 @@ function jd_doTwitterAPIPost( $twit, $auth = false, $id = false, $media = false 
 	return wpt_post_to_twitter( $twit, $auth, $id, $media );
 }
 
-/**
- * Back compatibility function.
- */
 function jd_update_oauth_settings( $auth = false, $post = false ) {
 	return wpt_update_oauth_settings( $auth, $post );
 }

@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WPT_DEBUG', false ); // Debugging only works with WP Tweets PRO.
 define( 'WPT_DEBUG_BY_EMAIL', false ); // Email debugging no longer default as of 3.3.0.
 define( 'WPT_DEBUG_ADDRESS', get_option( 'admin_email' ) );
-define( 'WPT_FROM', "From: \"" . get_option( 'blogname' ) . "\" <" . get_option( 'admin_email' ) . ">" );
+define( 'WPT_FROM', 'From: \"' . get_option( 'blogname' ) . '\" <' . get_option( 'admin_email' ) . '>' );
 
 require_once( plugin_dir_path( __FILE__ ) . '/wpt-functions.php' );
 require_once( plugin_dir_path( __FILE__ ) . '/wp-to-twitter-oauth.php' );
@@ -67,7 +67,7 @@ function wpt_load_textdomain() {
 }
 
 /**
- *  check for OAuth configuration
+ * Check for OAuth configuration
  *
  * @param mixed int/boolean $auth Which account to check.
  *
@@ -113,7 +113,7 @@ function wptotwitter_activate() {
 				'post-published-text'   => 'New page: #title# #url#',
 				'post-edited-update'    => 0,
 				'post-edited-text'      => 'Page edited: #title# #url#',
-			)
+			),
 		);
 		update_option( 'wpt_post_types', $initial_settings );
 		update_option( 'jd_twit_blogroll', '1' );
@@ -167,7 +167,7 @@ function wptotwitter_activate() {
 	}
 
 	global $wpt_version;
-	$prev_version = get_option( 'wp_to_twitter_version' );
+	$prev_version  = get_option( 'wp_to_twitter_version' );
 	$administrator = get_role( 'administrator' );
 	$upgrade       = version_compare( $prev_version, '2.9.0', '<' );
 	if ( $upgrade ) {
@@ -188,7 +188,7 @@ function wpt_link( $post_ID ) {
 	$ex_link       = false;
 	$external_link = get_option( 'jd_twit_custom_url' );
 	$permalink     = get_permalink( $post_ID );
-	if ( $external_link != '' ) {
+	if ( '' != $external_link ) {
 		$ex_link = get_post_meta( $post_ID, $external_link, true );
 	}
 
@@ -207,23 +207,23 @@ function wpt_link( $post_ID ) {
  */
 function wpt_saves_error( $id, $auth, $twit, $error, $http_code, $ts ) {
 	$http_code = (int) $http_code;
-	if ( $http_code != 200 ) {
+	if ( 200 != $http_code ) {
 		add_post_meta( $id, '_wpt_failed', array(
-				'author'    => $auth,
-				'sentence'  => $twit,
-				'error'     => $error,
-				'code'      => $http_code,
-				'timestamp' => $ts
-			) );
+			'author'    => $auth,
+			'sentence'  => $twit,
+			'error'     => $error,
+			'code'      => $http_code,
+			'timestamp' => $ts,
+		) );
 	} else {
-		if ( get_option( 'wpt_rate_limiting' ) == 1 ) {
+		if ( 1 == get_option( 'wpt_rate_limiting' ) ) {
 			wpt_log_success( $auth, $ts, $id );
 		}
 	}
 }
 
 
-/*
+/**
  * Checks whether WP to Twitter has sent a tweet on this post to this author within the last 30 seconds and blocks duplicates.
  *
  * @param int $id Post ID.
@@ -271,8 +271,8 @@ function wpt_check_recent_tweet( $id, $auth ) {
  * @return boolean Success of query.
  */
 function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false ) {
-	$recent     = wpt_check_recent_tweet( $id, $auth );
-	$error = false;
+	$recent = wpt_check_recent_tweet( $id, $auth );
+	$error  = false;
 	if ( 1 == get_option( 'wpt_rate_limiting' ) ) {
 		// check whether this post needs to be rate limited.
 		$continue = wpt_test_rate_limit( $id, $auth );
@@ -297,7 +297,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 	$check = ( ! $auth ) ? get_option( 'jd_last_tweet' ) : get_user_meta( $auth, 'wpt_last_tweet', true ); // get user's last tweet.
 	// prevent duplicate Tweets.
 	if ( $check == $twit ) {
-		wpt_mail( 'Matched: tweet identical', "This Tweet: $twit; Check Tweet: $check; $auth, $id, $media" ); // DEBUG
+		wpt_mail( 'Matched: tweet identical', "This Tweet: $twit; Check Tweet: $check; $auth, $id, $media" ); // DEBUG.
 		$error = __( 'This tweet is identical to another Tweet recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'Twitter requires all Tweets to be unique.', 'wp-to-twitter' );
 		wpt_saves_error( $id, $auth, $twit, $error, '403-1', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
@@ -312,7 +312,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		return false;
 	} else {
 		$media_id = false;
-		// must be designated as media and have a valid attachment
+		// must be designated as media and have a valid attachment.
 		$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
 		if ( $attachment ) {
 			wpt_mail( 'Post has upload', "$auth, $attachment" );
@@ -330,15 +330,18 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			'include_entities' => 'true',
 		);
 
-		if ( wtt_oauth_test( $auth ) && ( $connection = wtt_oauth_connection( $auth ) ) ) {
-			if ( $media && $attachment && ! $media_id ) {
-				$media_id = $connection->media( $upload_api, array(
-					'auth'  => $auth,
-					'media' => $attachment,
-				) );
-				wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment" );
-				if ( $media_id ) {
-					$status['media_ids'] = $media_id;
+		if ( wtt_oauth_test( $auth ) ) {
+			$connection = wtt_oauth_connection( $auth );
+			if ( $connection ) {
+				if ( $media && $attachment && ! $media_id ) {
+					$media_id = $connection->media( $upload_api, array(
+						'auth'  => $auth,
+						'media' => $attachment,
+					) );
+					wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment" );
+					if ( $media_id ) {
+						$status['media_ids'] = $media_id;
+					}
 				}
 			}
 		}
@@ -346,7 +349,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$connection = array( 'connection' => 'undefined' );
 		} else {
 			$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id );
-			if ( ( defined( 'WPT_STAGING_MODE' ) && true == WPT_STAGING_MODE  ) || $staging_mode ) {
+			if ( ( defined( 'WPT_STAGING_MODE' ) && true == WPT_STAGING_MODE ) || $staging_mode ) {
 				// if in staging mode, we'll behave as if the Tweet succeeded, but not send it.
 				$connection = true;
 				$http_code  = 200;
