@@ -489,9 +489,9 @@ if ( ! function_exists( 'mb_strrpos' ) ) {
 	/**
 	 * Fallback implementation of mb_strrpos, hardcoded to UTF-8.
 	 *
-	 * @param string $haystack String
-	 * @param string $needle String
-	 * @param int    $offset integer: optional start position
+	 * @param string $haystack String.
+	 * @param string $needle String.
+	 * @param int    $offset integer: optional start position.
 	 *
 	 * @return int
 	 */
@@ -501,9 +501,7 @@ if ( ! function_exists( 'mb_strrpos' ) ) {
 		$ar = array();
 		preg_match_all( '/' . $needle . '/u', $haystack, $ar, PREG_OFFSET_CAPTURE, $offset );
 
-		if ( isset( $ar[0] ) && count( $ar[0] ) > 0 &&
-			isset( $ar[0][ count( $ar[0] ) - 1 ][1] )
-		) {
+		if ( isset( $ar[0] ) && count( $ar[0] ) > 0 && isset( $ar[0][ count( $ar[0] ) - 1 ][1] ) ) {
 			return $ar[0][ count( $ar[0] ) - 1 ][1];
 		} else {
 			return false;
@@ -511,60 +509,14 @@ if ( ! function_exists( 'mb_strrpos' ) ) {
 	}
 }
 
-// str_ireplace substitution for PHP4
-if ( ! function_exists( 'str_ireplace' ) ) {
-	function str_ireplace( $needle, $str, $haystack ) {
-		$needle = preg_quote( $needle, '/' );
-
-		return preg_replace( "/$needle/i", $str, $haystack );
-	}
-}
-// str_split substitution for PHP4
-if ( ! function_exists( 'str_split' ) ) {
-	function str_split( $string, $string_length = 1 ) {
-		if ( strlen( $string ) > $string_length || ! $string_length ) {
-			do {
-				$parts[] = substr( $string, 0, $string_length );
-				$string  = substr( $string, $string_length );
-			} while ( $string !== false );
-		} else {
-			$parts = array( $string );
-		}
-
-		return $parts;
-	}
-}
-// mb_substr_replace substition for PHP4
-if ( ! function_exists( 'mb_substr_replace' ) ) {
-	function mb_substr_replace( $string, $replacement, $start, $length = null, $encoding = null ) {
-		if ( extension_loaded( 'mbstring' ) === true ) {
-			$string_length = ( is_null( $encoding ) === true ) ? mb_strlen( $string ) : mb_strlen( $string, $encoding );
-			if ( $start < 0 ) {
-				$start = max( 0, $string_length + $start );
-			} elseif ( $start > $string_length ) {
-				$start = $string_length;
-			}
-			if ( $length < 0 ) {
-				$length = max( 0, $string_length - $start + $length );
-			} elseif ( ( is_null( $length ) === true ) || ( $length > $string_length ) ) {
-				$length = $string_length;
-			}
-			if ( ( $start + $length ) > $string_length ) {
-				$length = $string_length - $start;
-			}
-			if ( is_null( $encoding ) === true ) {
-				return mb_substr( $string, 0, $start ) . $replacement . mb_substr( $string, $start + $length, $string_length - $start - $length );
-			}
-
-			return mb_substr( $string, 0, $start, $encoding ) . $replacement . mb_substr( $string, $start + $length, $string_length - $start - $length, $encoding );
-		}
-
-		return ( is_null( $length ) === true ) ? substr_replace( $string, $replacement, $start ) : substr_replace( $string, $replacement, $start, $length );
-	}
-}
-
 /**
  * This function is obsolete; only exists for people using out of date versions of WP Tweets PRO.
+ *
+ * @param string $field Field to check.
+ * @param string $value Value to check.
+ * @param string $type Type of field.
+ *
+ * @param checked string.
  */
 function wtt_option_selected( $field, $value, $type = 'checkbox' ) {
 	switch ( $type ) {
@@ -608,7 +560,7 @@ function wpt_date_compare( $modified, $postdate ) {
 /**
  * Gets the first attachment for the supplied post.
  *
- * @param integer $post_ID The post ID
+ * @param integer $post_ID The post ID.
  *
  * @return mixed boolean|integer Attachment ID.
  */
@@ -626,7 +578,7 @@ function wpt_post_attachment( $post_ID ) {
 			'post_status'    => 'published',
 			'post_parent'    => $post_ID,
 			'post_mime_type' => 'image',
-			'order'          => 'ASC'
+			'order'          => 'ASC',
 		);
 		$attachments = get_posts( $args );
 		if ( $attachments ) {
@@ -639,32 +591,35 @@ function wpt_post_attachment( $post_ID ) {
 	return apply_filters( 'wpt_post_attachment', $return, $post_ID );
 }
 
+/**
+ * Show support form.
+ */
 function wpt_get_support_form() {
 	global $current_user, $wpt_version;
-	$current_user = wp_get_current_user();
-	$request = '';
+	$current_user   = wp_get_current_user();
+	$request        = '';
 	$response_email = '';
-	// send fields for WP to Twitter
-	$license = ( get_option( 'wpt_license_key' ) != '' ) ? get_option( 'wpt_license_key' ) : 'none';
-	if ( $license != 'none' ) {
-		$valid = ( ( get_option( 'wpt_license_valid' ) == 'true' ) || ( get_option( 'wpt_license_valid' ) == 'active' ) || ( get_option( 'wpt_license_valid' ) == 'valid' ) ) ? ' (active)' : ' (inactive)';
+	// send fields for WP to Twitter.
+	$license = ( '' != get_option( 'wpt_license_key' ) ) ? get_option( 'wpt_license_key' ) : 'none';
+	if ( 'none' != $license ) {
+		$valid = ( ( 'true' == get_option( 'wpt_license_valid' ) ) || ( 'active' == get_option( 'wpt_license_valid' ) ) || ( 'valid' == get_option( 'wpt_license_valid' ) ) ) ? ' (active)' : ' (inactive)';
 	} else {
 		$valid = '';
 	}
-	$license = "License Key: " . $license . $valid;
+	$license = 'License Key: ' . $license . $valid;
 
 	$version              = $wpt_version;
 	$wtt_twitter_username = get_option( 'wtt_twitter_username' );
-	// send fields for all plugins
+	// send fields for all plugins.
 	$wp_version = get_bloginfo( 'version' );
 	$home_url   = home_url();
 	$wp_url     = site_url();
 	$language   = get_bloginfo( 'language' );
 	$charset    = get_bloginfo( 'charset' );
-	// server
+	// server.
 	$php_version = phpversion();
 
-	// theme data
+	// theme data.
 	$theme         = wp_get_theme();
 	$theme_name    = $theme->get( 'Name' );
 	$theme_uri     = $theme->get( 'ThemeURI' );
@@ -672,20 +627,20 @@ function wpt_get_support_form() {
 	$theme_version = $theme->get( 'Version' );
 
 	$admin_email = get_option( 'admin_email' );
-	// plugin data
+	// plugin data.
 	$plugins        = get_plugins();
 	$plugins_string = '';
 	foreach ( array_keys( $plugins ) as $key ) {
 		if ( is_plugin_active( $key ) ) {
-			$plugin         =& $plugins[ $key ];
-			$plugin_name    = $plugin['Name'];
-			$plugin_uri     = $plugin['PluginURI'];
-			$plugin_version = $plugin['Version'];
+			$plugin          =& $plugins[ $key ];
+			$plugin_name     = $plugin['Name'];
+			$plugin_uri      = $plugin['PluginURI'];
+			$plugin_version  = $plugin['Version'];
 			$plugins_string .= "$plugin_name: $plugin_version; $plugin_uri\n";
 		}
 	}
 
-	$data              = "
+	$data = "
 ================ Installation Data ====================
 ==WP to Twitter==
 Version: $version
@@ -723,16 +678,16 @@ $plugins_string
 		$request      = ( ! empty( $_POST['support_request'] ) ) ? stripslashes( $_POST['support_request'] ) : false;
 		$has_donated  = ( isset( $_POST['has_donated'] ) ) ? 'Donor' : 'No donation';
 		$has_read_faq = ( isset( $_POST['has_read_faq'] ) ) ? 'Read FAQ' : false;
-		if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() == true ) {
-			$pro = " PRO";
+		if ( function_exists( 'wpt_pro_exists' ) && true == wpt_pro_exists() ) {
+			$pro = ' PRO';
 		} else {
 			$pro = '';
 		}
 		$subject = "WP to Twitter$pro support request. $has_donated";
 		$message = $request . "\n\n" . $data;
-		// Get the site domain and get rid of www. from pluggable.php
+		// Get the site domain and get rid of www. from pluggable.php.
 		$sitename = strtolower( $_SERVER['SERVER_NAME'] );
-		if ( substr( $sitename, 0, 4 ) == 'www.' ) {
+		if ( 'www.' == substr( $sitename, 0, 4 ) ) {
 			$sitename = substr( $sitename, 4 );
 		}
 		$response_email = ( isset( $_POST['response_email'] ) ) ? $_POST['response_email'] : false;
@@ -746,9 +701,9 @@ $plugins_string
 		} elseif ( ! $request ) {
 			echo "<div class='notice error'><p>" . __( 'Please describe your problem. I\'m not psychic.', 'wp-to-twitter' ) . '</p></div>';
 		} else {
-			$sent = wp_mail( "plugins@joedolson.com", $subject, $message, $from );
+			$sent = wp_mail( 'plugins@joedolson.com', $subject, $message, $from );
 			if ( $sent ) {
-				if ( $has_donated == 'Donor' ) {
+				if ( 'Donor' == $has_donated ) {
 					echo "<div class='notice updated'><p>" . sprintf( __( 'Thank you for supporting WP to Twitter! I\'ll get back to you as soon as I can. Please make sure you can receive email at <code>%s</code>.', 'wp-to-twitter' ), $response_email ) . '</p></div>';
 				} else {
 					echo "<div class='notice updated'><p>" . sprintf( __( "Thanks for using WP to Twitter. Please ensure that you can receive email at <code>%s</code>.", 'wp-to-twitter' ), $response_email ) . '</p></div>';
@@ -758,8 +713,8 @@ $plugins_string
 			}
 		}
 	}
-	if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() == true ) {
-		$checked = "checked='checked'";
+	if ( function_exists( 'wpt_pro_exists' ) && true == wpt_pro_exists() ) {
+		$checked = 'checked="checked"';
 	} else {
 		$checked = '';
 	}
@@ -770,13 +725,12 @@ $plugins_string
 	<form method='post' action='$admin_url'>
 		<div><input type='hidden' name='_wpnonce' value='" . wp_create_nonce( 'wp-to-twitter-nonce' ) . "' /></div>
 		<div>
-		<p>" .
-	     __( "If you're having trouble with WP to Twitter, please try to answer these questions in your message:", 'wp-to-twitter' )
-	     . "</p>
+		<p>" . __( "If you're having trouble with WP to Twitter, please try to answer these questions in your message:", 'wp-to-twitter' )
+ . '</p>
 		<ul>
-			<li>" . __( 'What were you doing when the problem occurred?', 'wp-to-twitter' ) . "</li>
-			<li>" . __( 'What did you expect to happen?', 'wp-to-twitter' ) . "</li>
-			<li>" . __( 'What happened instead?', 'wp-to-twitter' ) . "</li>
+			<li>' . __( 'What were you doing when the problem occurred?', 'wp-to-twitter' ) . '</li>
+			<li>' . __( 'What did you expect to happen?', 'wp-to-twitter' ) . '</li>
+			<li>' . __( 'What happened instead?', 'wp-to-twitter' ) . "</li>
 		</ul>
 		<p>
 		<label for='response_email'>" . __( 'Your Email', 'wp-to-twitter' ) . "</label><br />
@@ -804,6 +758,13 @@ $plugins_string
 	</form>";
 }
 
+/**
+ * Check whether a file is writable.
+ * 
+ * @param string $file Filename/path.
+ *
+ * @return boolean.
+ */
 function wpt_is_writable( $file ) {
 	if ( function_exists( 'wp_is_writable' ) ) {
 		$is_writable = wp_is_writable( $file );
@@ -820,8 +781,7 @@ function wpt_is_writable( $file ) {
  * It has been validated with Unicode 6.1 Normalization Conformance Test.
  * See http://www.unicode.org/reports/tr15/ for detailed info about Unicode normalizations.
  */
-class WPT_Normalizer
-{
+class WPT_Normalizer {
 	const
 
 	NONE = 1,
@@ -830,17 +790,21 @@ class WPT_Normalizer
 	FORM_C  = 4, NFC  = 4,
 	FORM_KC = 5, NFKC = 5;
 
-
 	protected static
 
 	$C, $D, $KD, $cC,
-	$ulen_mask = array("\xC0" => 2, "\xD0" => 2, "\xE0" => 3, "\xF0" => 4),
+	$ulen_mask = array( 
+		"\xC0" => 2, 
+		"\xD0" => 2, 
+		"\xE0" => 3, 
+		"\xF0" => 4
+	),
 	$ASCII = "\x20\x65\x69\x61\x73\x6E\x74\x72\x6F\x6C\x75\x64\x5D\x5B\x63\x6D\x70\x27\x0A\x67\x7C\x68\x76\x2E\x66\x62\x2C\x3A\x3D\x2D\x71\x31\x30\x43\x32\x2A\x79\x78\x29\x28\x4C\x39\x41\x53\x2F\x50\x22\x45\x6A\x4D\x49\x6B\x33\x3E\x35\x54\x3C\x44\x34\x7D\x42\x7B\x38\x46\x77\x52\x36\x37\x55\x47\x4E\x3B\x4A\x7A\x56\x23\x48\x4F\x57\x5F\x26\x21\x4B\x3F\x58\x51\x25\x59\x5C\x09\x5A\x2B\x7E\x5E\x24\x40\x60\x7F\x00\x01\x02\x03\x04\x05\x06\x07\x08\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F";
 
 
-	static function isNormalized($s, $form = self::NFC)
+	static function isNormalized( $s, $form = self::NFC )
 	{
-		if (strspn($s, self::$ASCII) === strlen($s)) return true;
+		if ( strspn( $s, self::$ASCII ) === strlen( $s ) ) return true;
 		if (self::NFC === $form && preg_match('//u', $s) && !preg_match('/[^\x00-\x{2FF}]/u', $s)) return true;
 		return false; // Pretend false as quick checks implementented in PHP won't be so quick
 	}
