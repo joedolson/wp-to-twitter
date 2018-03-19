@@ -13,7 +13,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// FUNCTION to see if checkboxes should be checked
+/**
+ * See if checkboxes should be checked
+ *
+ * @param string $field Option name to check.
+ * @param string $sub1 Array key if applicable.
+ * @param string $sub2 Array key if applicable.
+ *
+ * @return Checked or unchecked.
+ */
 function jd_checkCheckbox( $field, $sub1 = false, $sub2 = '' ) {
 	if ( $sub1 ) {
 		$setting = get_option( $field );
@@ -32,13 +40,29 @@ function jd_checkCheckbox( $field, $sub1 = false, $sub2 = '' ) {
 	return '';
 }
 
+/**
+ * See if options should be selected
+ *
+ * @param string $field Option name to check.
+ * @param string $value Value to verify against.
+ * @param string $type Select or checkbox.
+ *
+ * @return Selected or unselected/ checked or unchecked..
+ */
 function jd_checkSelect( $field, $value, $type = 'select' ) {
 	if ( get_option( $field ) == $value ) {
-		return ( $type == 'select' ) ? 'selected="selected"' : 'checked="checked"';
+		return ( 'select' == $type ) ? 'selected="selected"' : 'checked="checked"';
 	}
 	return '';
 }
 
+/**
+ * Insert a Tweet record into logs.
+ *
+ * @param string $data Option key.
+ * @param int    $id Post ID.
+ * @param string $message Log message.
+ */
 function wpt_set_log( $data, $id, $message ) {
 	if ( $id == 'test' ) {
 		update_option( $data, $message );
@@ -48,6 +72,14 @@ function wpt_set_log( $data, $id, $message ) {
 	update_option( $data . '_last', array( $id, $message ) );
 }
 
+/**
+ * Get information from Tweet logs.
+ *
+ * @param string $data Option key.
+ * @param int    $id Post ID.
+ *
+ * @return stored message.
+ */
 function wpt_log( $data, $id ) {
 	if ( $id == 'test' ) {
 		$log = get_option( $data );
@@ -60,77 +92,81 @@ function wpt_log( $data, $id ) {
 	return $log;
 }
 
+/**
+ * Test function to see whether options are functioning.
+ */
 function wpt_check_functions() {
 	$message = "<div class='update'><ul>";
-	// grab or set necessary variables
+	// grab or set necessary variables.
 	$testurl   = get_bloginfo( 'url' );
 	$testpost  = false;
 	$title     = urlencode( 'Your blog home' );
 	$shrink    = apply_filters( 'wptt_shorten_link', $testurl, $title, false, true );
-	if ( $shrink == false ) {
+	if ( false == $shrink ) {
 		$error = htmlentities( get_option( 'wpt_shortener_status' ) );
-		$message .= __( "<li class=\"error\"><strong>WP to Twitter was unable to contact your selected URL shortening service.</strong></li>", 'wp-to-twitter' );
+		$message .= __( '<li class="error"><strong>WP to Twitter was unable to contact your selected URL shortening service.</strong></li>', 'wp-to-twitter' );
 		if ( $error != '' ) {
 			$message .= "<li><code>$error</code></li>";
 		} else {
-			$message .= "<li><code>" . __( 'No error message was returned.', 'wp-to-twitter' ) . "</code></li>";
+			$message .= '<li><code>' . __( 'No error message was returned.', 'wp-to-twitter' ) . '</code></li>';
 		}
 	} else {
 		$message .= __( "<li><strong>WP to Twitter successfully contacted your URL shortening service.</strong>  This link should point to your site's homepage:", 'wp-to-twitter' );
 		$message .= " <a href='$shrink'>$shrink</a></li>";
 	}
-	//check twitter credentials
+	//check twitter credentials.
 	if ( wtt_oauth_test() ) {
 		$rand     = rand( 1000000, 9999999 );
 		$testpost = wpt_post_to_twitter( "This is a test of WP to Twitter. $shrink ($rand)" );
 		if ( $testpost ) {
-			$message .= __( "<li><strong>WP to Twitter successfully submitted a status update to Twitter.</strong></li>", 'wp-to-twitter' );
+			$message .= __( '<li><strong>WP to Twitter successfully submitted a status update to Twitter.</strong></li>', 'wp-to-twitter' );
 		} else {
 			$error = wpt_log( 'wpt_status_message', 'test' );
-			$message .= __( "<li class=\"error\"><strong>WP to Twitter failed to submit an update to Twitter.</strong></li>", 'wp-to-twitter' );
-			$message .= "<li class=\"error\">$error</li>";
+			$message .= __( '<li class="error"><strong>WP to Twitter failed to submit an update to Twitter.</strong></li>', 'wp-to-twitter' );
+			$message .= "<li class='error'>$error</li>";
 		}
 	} else {
-		$message .= "<strong>" . _e( 'You have not connected WordPress to Twitter.', 'wp-to-twitter' ) . '</strong> ';
+		$message .= '<strong>' . __( 'You have not connected WordPress to Twitter.', 'wp-to-twitter' ) . '</strong> ';
 	}
-	// If everything's OK, there's  no reason to do this again.
-	if ( $testpost == false && $shrink == false ) {
+	if ( false == $testpost && false == $shrink ) {
 		$message .= __( "<li class=\"error\"><strong>Your server does not appear to support the required methods for WP to Twitter to function.</strong> You can try it anyway - these tests aren't perfect.</li>", 'wp-to-twitter' );
-	} else {
 	}
 	if ( $testpost && $shrink ) {
-		$message .= __( "<li><strong>Your server should run WP to Twitter successfully.</strong></li>", 'wp-to-twitter' );
+		$message .= __( '<li><strong>Your server should run WP to Twitter successfully.</strong></li>', 'wp-to-twitter' );
 	}
-	$message .= "</ul>
-	</div>";
+	$message .= '</ul>
+	</div>';
 
 	return $message;
 }
 
+/**
+ * Generate Settings links.
+ */
 function wpt_settings_tabs() {
 	$output = '';
-	$default = ( get_option( 'wtt_twitter_username' ) == '' ) ? 'connection' : 'basic';
+	$default = ( '' == get_option( 'wtt_twitter_username' ) ) ? 'connection' : 'basic';
 	$current = ( isset( $_GET['tab'] ) ) ? $_GET['tab'] : $default;
 	$pro_text = ( function_exists( 'wpt_pro_exists' ) ) ? __( 'Pro Settings', 'wp-to-twitter' ) : __( 'Get WP Tweets PRO', 'wp-to-twitter' );
 	$pages = array(
-		'connection'=> __( 'Twitter Connection', 'wp-to-twitter' ),
-		'basic'=> __( 'Basic Settings', 'wp-to-twitter' ),
-		'shortener'=> __( 'URL Shortener', 'wp-to-twitter' ),
-		'advanced' => __( 'Advanced Settings', 'wp-to-twitter' ),
-		'support' => __( 'Get Help', 'wp-to-twitter' ),
-		'pro' => $pro_text
+		'connection' => __( 'Twitter Connection', 'wp-to-twitter' ),
+		'basic'      => __( 'Basic Settings', 'wp-to-twitter' ),
+		'shortener'  => __( 'URL Shortener', 'wp-to-twitter' ),
+		'advanced'   => __( 'Advanced Settings', 'wp-to-twitter' ),
+		'support'    => __( 'Get Help', 'wp-to-twitter' ),
+		'pro'        => $pro_text,
 	);
-	if ( get_option( 'jd_donations' ) == '1' && ! function_exists( 'wpt_pro_exists' ) ) {
+	if ( '1' == get_option( 'jd_donations' ) && ! function_exists( 'wpt_pro_exists' ) ) {
 		unset( $pages['pro'] );
 	}
 
-	$pages = apply_filters( 'wpt_settings_tabs_pages', $pages, $current );
+	$pages     = apply_filters( 'wpt_settings_tabs_pages', $pages, $current );
 	$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 
 	foreach ( $pages as $key => $value ) {
-		$selected = ( $key == $current ) ? " nav-tab-active" : '';
+		$selected = ( $key == $current ) ? ' nav-tab-active' : '';
 		$url = esc_url( add_query_arg( 'tab', $key, $admin_url ) );
-		if ( $key == 'pro' ) {
+		if ( 'pro' == $key ) {
 			$output .= "<a class='wpt-pro-tab nav-tab$selected' href='$url'>$value</a>";
 		} else {
 			$output .= "<a class='nav-tab$selected' href='$url'>$value</a>";
@@ -139,6 +175,9 @@ function wpt_settings_tabs() {
 	echo $output;
 }
 
+/**
+ * Show the last Tweet attempt as admin notice.
+ */
 function wpt_show_last_tweet() {
 	if ( apply_filters( 'wpt_show_last_tweet', true ) ) {
 		$log = wpt_log( 'wpt_status_message', 'last' );
@@ -156,16 +195,17 @@ function wpt_show_last_tweet() {
 	}
 }
 
-
+/**
+ * Handle Tweet & URL shortener errors.
+ */
 function wpt_handle_errors() {
-	if ( isset( $_POST['submit-type'] ) && $_POST['submit-type'] == 'clear-error' ) {
+	if ( isset( $_POST['submit-type'] ) && 'clear-error' == $_POST['submit-type'] ) {
 		delete_option( 'wp_url_failure' );
 	}
-	if ( get_option( 'wp_url_failure' ) == '1' ) {
+	if ( '1' == get_option( 'wp_url_failure' ) ) {
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
-		$nonce = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
-		$error = '<div class="error">' .
-			__( "<p>The query to the URL shortener API failed, and your URL was not shrunk. The full post URL was attached to your Tweet. Check with your URL shortening provider to see if there are any known issues.</p>", 'wp-to-twitter' ) .
+		$nonce     = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
+		$error     = '<div class="error">' . __( '<p>The query to the URL shortener API failed, and your URL was not shrunk. The full post URL was attached to your Tweet. Check with your URL shortening provider to see if there are any known issues.</p>', 'wp-to-twitter' ) .
 			'<form method="post" action="' . $admin_url . '">
 				<div>
 					<input type="hidden" name="submit-type" value="clear-error"/>
@@ -179,7 +219,15 @@ function wpt_handle_errors() {
 		echo $error;
 	}
 }
-// verify user capabilities
+
+/**
+ * Verify user capabilities
+ *
+ * @param string $role Role name.
+ * @param string $cap Capability name.
+ *
+ * @return Check if has capability.
+ */
 function wpt_check_caps( $role, $cap ) {
 	$role = get_role( $role );
 	if ( $role->has_cap( $cap ) ) {
@@ -188,13 +236,28 @@ function wpt_check_caps( $role, $cap ) {
 	return '';
 }
 
-// output checkbox for user capabilities
+/**
+ * output checkbox for user capabilities
+ *
+ * @param string $role Role name.
+ * @param string $cap Capability name.
+ * @param string $name Display name for capability.
+ *
+ * @return Checkbox HTML.
+ */
 function wpt_cap_checkbox( $role, $cap, $name ) {
 	return "<li><input type='checkbox' id='wpt_caps_{$role}_$cap' name='wpt_caps[$role][$cap]' value='on'" . wpt_check_caps( $role, $cap ) . " /> <label for='wpt_caps_{$role}_$cap'>$name</label></li>";
 }
 
-function wpt_mail( $subject, $body, $override=false ) {
-	if ( ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) || $override == true ) {
+/**
+ * Send a debug message. (Used email by default until 3.3.)
+ *
+ * @param string $subject Subject of error.
+ * @param string  $body Body of error.
+ * @param boolean $override Send message if debug disabled.
+ */
+function wpt_mail( $subject, $body, $override = false ) {
+	if ( ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) || true == $override ) {
 		if ( WPT_DEBUG_BY_EMAIL ) {
 			wp_mail( WPT_DEBUG_ADDRESS, $subject, $body, WPT_FROM );
 		} else {
@@ -203,6 +266,12 @@ function wpt_mail( $subject, $body, $override=false ) {
 	}
 }
 
+/**
+ * Insert record into debug log.
+ *
+ * @param string $subject Subject of error.
+ * @param string  $body Body of error.
+ */
 function wpt_debug_log( $subject, $body ) {
 	global $post_ID;
 	if ( $post_ID ) {
@@ -211,17 +280,20 @@ function wpt_debug_log( $subject, $body ) {
 	}
 }
 
+/**
+ * Display debug log.
+ */
 function wpt_show_debug() {
 	global $post_ID;
 	if ( WPT_DEBUG ) {
-		$records = '';
+		$records   = '';
 		$debug_log = get_post_meta( $post_ID, '_wpt_debug_log' );
 		if ( is_array( $debug_log ) ) {
 			foreach ( $debug_log as $entry ) {
-				$date    = date_i18n( 'Y-m-d H:i', $entry[0] );
-				$subject = $entry[1];
-				$body    = $entry[2];
-				$records .= "<li><button type='button' class='toggle-debug button-secondary' aria-expanded='false'><strong>$date</strong>:<br />$subject</button><pre class='wpt-debug-details'>" . esc_html( $body ) . "</pre></li>";
+				$date     = date_i18n( 'Y-m-d H:i', $entry[0] );
+				$subject  = $entry[1];
+				$body     = $entry[2];
+				$records .= "<li><button type='button' class='toggle-debug button-secondary' aria-expanded='false'><strong>$date</strong>:<br />$subject</button><pre class='wpt-debug-details'>" . esc_html( $body ) . '</pre></li>';
 			}
 		}
 		$script = "
@@ -243,38 +315,47 @@ function wpt_show_debug() {
 </script>";
 		$delete = "<ul>
 		<li><input type='checkbox' name='wpt-delete-debug' value='true' id='wpt-delete-debug'> <label for='wpt-delete-debug'>" . __( 'Delete debugging logs on this post', 'wp-to-twitter' ) . "</label></li>
-		<li><input type='checkbox' name='wpt-delete-all-debug' value='true' id='wpt-delete-all-debug'> <label for='wpt-delete-all-debug'>" . __( 'Delete debugging logs for all posts', 'wp-to-twitter' ) . "</label></li>
-		</ul>";
+		<li><input type='checkbox' name='wpt-delete-all-debug' value='true' id='wpt-delete-all-debug'> <label for='wpt-delete-all-debug'>" . __( 'Delete debugging logs for all posts', 'wp-to-twitter' ) . '</label></li>
+		</ul>';
 
-		echo ( $records != '' ) ? "$script<div class='wpt-debug-log'><h3>Debugging Log:</h3><ul>$records</ul></div>$delete" : '';
+		echo ( '' != $records ) ? "$script<div class='wpt-debug-log'><h3>Debugging Log:</h3><ul>$records</ul></div>$delete" : '';
 	}
 }
 
+/**
+ * Send a remote query expecting JSON.
+ *
+ * @param string $url Target URL.
+ * @param array  $array Arguments if not default.
+ * @param string $method Query method.
+ *
+ * @return JSON object.
+ */
 function wpt_remote_json( $url, $array = true, $method = 'GET' ) {
 	$input = wpt_fetch_url( $url, $method );
 	wpt_mail( 'Remote JSON input', print_r( $input, 1 ) . "\n\n" . $url );
 	$obj   = json_decode( $input, $array );
 	wpt_mail( 'Remote JSON return value', print_r( $obj, 1 ) . "\n\n" . "$url" );
-	if ( function_exists( 'json_last_error' ) ) { // > PHP 5.3
+	if ( function_exists( 'json_last_error' ) ) { // > PHP 5.3.
 		try {
 			if ( is_null( $obj ) ) {
 				switch ( json_last_error() ) {
-					case JSON_ERROR_DEPTH :
+					case JSON_ERROR_DEPTH:
 						$msg = ' - Maximum stack depth exceeded';
 						break;
-					case JSON_ERROR_STATE_MISMATCH :
+					case JSON_ERROR_STATE_MISMATCH:
 						$msg = ' - Underflow or the modes mismatch';
 						break;
-					case JSON_ERROR_CTRL_CHAR :
+					case JSON_ERROR_CTRL_CHAR:
 						$msg = ' - Unexpected control character found';
 						break;
-					case JSON_ERROR_SYNTAX :
+					case JSON_ERROR_SYNTAX:
 						$msg = ' - Syntax error, malformed JSON';
 						break;
-					case JSON_ERROR_UTF8 :
+					case JSON_ERROR_UTF8:
 						$msg = ' - Malformed UTF-8 characters, possibly incorrectly encoded';
 						break;
-					default :
+					default:
 						$msg = ' - Unknown error';
 						break;
 				}
@@ -288,6 +369,13 @@ function wpt_remote_json( $url, $array = true, $method = 'GET' ) {
 	return $obj;
 }
 
+/**
+ * Test whether a URL is valid.
+ * 
+ * @param string $url URL.
+ *
+ * @return URL if passes, false otherwise.
+ */
 function wpt_is_valid_url( $url ) {
 	if ( is_string( $url ) ) {
 		$url = urldecode( $url );
@@ -298,20 +386,30 @@ function wpt_is_valid_url( $url ) {
 	}
 }
 
-// Fetch a remote page. Input url, return content
+/**
+ * Fetch a remote page. Input url, return content
+ *
+ * @param string $url URL.
+ * @param string $method Method.
+ * @param string $body Body of query.
+ * @param string $headers Headers to add.
+ * @param string $return Array key from fetched object to return.
+ *
+ * @param value from query.
+ */
 function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $return = 'body' ) {
 	$request = new WP_Http;
 	$result  = $request->request( $url, array(
 		'method'     => $method,
-	   'body'       => $body,
-	   'headers'    => $headers,
-	   'sslverify'  => false,
-	   'user-agent' => 'WP to Twitter/http://www.joedolson.com/wp-to-twitter/',
+		'body'       => $body,
+		'headers'    => $headers,
+		'sslverify'  => false,
+		'user-agent' => 'WP to Twitter/http://www.joedolson.com/wp-to-twitter/',
 	) );
 	// Success?
 	if ( ! is_wp_error( $result ) && isset( $result['body'] ) ) {
 		if ( 200 == $result['response']['code'] ) {
-			if ( $return == 'body' ) {
+			if ( 'body' == $return ) {
 				return $result['body'];
 			} else {
 				return $result;
@@ -326,6 +424,14 @@ function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $retur
 }
 
 if ( ! function_exists( 'mb_substr_split_unicode' ) ) {
+	/**
+	 * Fall back function for mb_substr_split_unicode if doesn't exist.
+	 * 
+	 * @param string $str String.
+	 * @param int    $split_pos Position to split on.
+	 *
+	 * @return split output.
+	 */
 	function mb_substr_split_unicode( $str, $split_pos ) {
 		if ( 0 == $split_pos ) {
 			return 0;
@@ -356,11 +462,11 @@ if ( ! function_exists( 'mb_substr_split_unicode' ) ) {
 			}
 		} else {
 			$split_posx = $split_pos + 1;
-			$char_pos = 0; // relative to end of string; we don't care about the actual char position here
+			$char_pos = 0; // relative to end of string; we don't care about the actual char position here.
 			$byte_pos = $byte_len;
 			while ( $byte_pos > 0 && $char_pos-- >= $split_posx ) {
 				--$byte_pos;
-				// Move past any tail bytes
+				// Move past any tail bytes.
 				while ( $byte_pos > 0 && $str[ $byte_pos ] >= "\x80" && $str[ $byte_pos ] < "\xc0" ) {
 					--$byte_pos;
 				}
@@ -371,7 +477,7 @@ if ( ! function_exists( 'mb_substr_split_unicode' ) ) {
 	}
 }
 
-// filter_var substitution for PHP <5.2
+// filter_var substitution for PHP < 5.2
 if ( ! function_exists( 'filter_var' ) ) {
 	function filter_var( $url ) {
 		// this does not emulate filter_var; merely the usage of filter_var in WP to Twitter.
