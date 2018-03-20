@@ -71,8 +71,8 @@ function wtt_oauth_connection( $auth = false ) {
 		$ots = get_user_meta( $auth, 'oauth_token_secret', true );
 	}
 	if ( ! empty( $ack ) && ! empty( $acs ) && ! empty( $ot ) && ! empty( $ots ) ) {
-		require_once( plugin_dir_path( __FILE__ ) . 'class-wpt-twitteroauth.php' );
-		$connection            = new wpt_TwitterOAuth( $ack, $acs, $ot, $ots );
+		require_once( plugin_dir_path( __FILE__ ) . 'classes/class-wpt-twitteroauth.php' );
+		$connection            = new Wpt_TwitterOAuth( $ack, $acs, $ot, $ots );
 		$connection->useragent = get_option( 'blogname' ) . ' ' . home_url();
 
 		return $connection;

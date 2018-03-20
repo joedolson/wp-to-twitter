@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once( 'class-wp-oauth.php' );
 
-if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
+if ( ! class_exists( 'wpt_TwitterOAuth' ) ) {
 
 	/**
 	 * Twitter WPOAuth class
 	 */
-	class Wpt_TwitterOAuth {
+	class wpt_TwitterOAuth {
 		/* Contains the last HTTP status code returned */
 		public $http_code;
 		/* Contains the last API call. */
