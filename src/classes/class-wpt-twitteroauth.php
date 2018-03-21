@@ -2,8 +2,13 @@
 /**
  * Abraham Williams (abraham@abrah.am) http://abrah.am
  *
+ * @category Core
+ * @package  WP to Twitter
+ * @author   Joe Dolson
+ * @license  GPLv2 or later
+ * @link     https://www.joedolson.com/wp-to-twitter/
+ * 
  * The first PHP Library to support WPOAuth for Twitter's REST API.
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,27 +17,45 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once( 'class-wp-oauth.php' );
 
-if ( ! class_exists( 'wpt_TwitterOAuth' ) ) {
+if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 	/**
 	 * Twitter WPOAuth class
 	 */
-	class wpt_TwitterOAuth {
-		/* Contains the last HTTP status code returned */
+	class Wpt_TwitterOAuth {
+		/*
+		 * Contains the last HTTP status code returned
+		 *
+		 * @var status code
+		 */
 		public $http_code;
-		/* Contains the last API call. */
+		/**
+		 * Contains the last API call. 
+		 */
 		public $url;
-		/* Set up the API root URL. */
-		public $host = "https://api.twitter.com/1.1/";
-		/* Set timeout default. */
+		/**
+		 * Set up the API root URL. 
+		 */
+		public $host = 'https://api.twitter.com/1.1/';
+		/**
+		 * Set timeout default. 
+		 */
 		public $format = 'json';
-		/* Decode returned json data. */
+		/** 
+		 * Decode returned json data. 
+		 */
 		public $decode_json = false;
-		/* Contains the last API call */
+		/**
+		 * Contains the last API call 
+		 */
 		private $last_api_call;
-		/* containe the header */
+		/**
+		 * contains the header 
+		 */
 		public $http_header;
-		/* contains the body */
+		/**
+		 * contains the body 
+		 */
 		public $body;
 
 		/**
@@ -42,14 +65,23 @@ if ( ! class_exists( 'wpt_TwitterOAuth' ) ) {
 			return "https://api.twitter.com/oauth/access_token";
 		}
 
+		/**
+		 * Set authentication URL.
+		 */
 		function authenticateURL() {
 			return "https://api.twitter.com/oauth/authenticate";
 		}
 
+		/**
+		 * Set authorization URL.
+		 */
 		function authorizeURL() {
 			return "https://api.twitter.com/oauth/authorize";
 		}
 
+		/**
+		 * Set request Token URL.
+		 */
 		function requestTokenURL() {
 			return "https://api.twitter.com/oauth/request_token";
 		}
@@ -61,12 +93,20 @@ if ( ! class_exists( 'wpt_TwitterOAuth' ) ) {
 			return $this->http_code;
 		}
 
+		/**
+		 * Return last API call.
+		 */
 		function lastAPICall() {
 			return $this->last_api_call;
 		}
 
 		/**
 		 * construct TwitterWPOAuth object
+		 *
+		 * @param string $consumer_key Consumer key.
+		 * @param string $consumer_secret Consumer secret.
+		 * @param string $WPOAuth_token Token.
+		 * @param string $WPOAuth_token_secret. Token secret.
 		 */
 		function __construct( $consumer_key, $consumer_secret, $WPOAuth_token = null, $WPOAuth_token_secret = null ) {
 			$this->sha1_method = new WPOAuthSignatureMethod_HMAC_SHA1();
