@@ -25,15 +25,31 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	 * Create Consumer key
 	 */
 	class WPOAuthConsumer {
+		/*
+		 * Contains the user's Consumer key.
+		 *
+		 * @var consumer key
+		 */
 		public $key;
+		/*
+		 * Contains the user's consumer secret.
+		 *
+		 * @var secret
+		 */
 		public $secret;
 
+		/**
+		 * Constructor.
+		 */
 		function __construct( $key, $secret, $callback_url = null ) {
 			$this->key          = $key;
 			$this->secret       = $secret;
 			$this->callback_url = $callback_url;
 		}
 
+		/**
+		 * Generate consumer string.
+		 */
 		function __toString() {
 			return "OAuthConsumer[key=$this->key,secret=$this->secret]";
 		}
@@ -43,8 +59,17 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	 * Create consumer token.
 	 */
 	class WPOAuthToken {
-		// access tokens and request tokens.
+		/*
+		 * Access token
+		 *
+		 * @var token
+		 */
 		public $key;
+		/*
+		 * Access secret.
+		 *
+		 * @var secret
+		 */
 		public $secret;
 
 		/**
@@ -59,13 +84,18 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * generates the basic string serialization of a token that a server
+		 * Generates the basic string serialization of a token that a server
 		 * would respond to request_token and access_token calls with
+		 *
+		 * @return string Oauth serialization.
 		 */
 		function to_string() {
 			return 'oauth_token=' . WPOAuthUtil::urlencode_rfc3986( $this->key ) . '&oauth_token_secret=' . WPOAuthUtil::urlencode_rfc3986( $this->secret );
 		}
 
+		/**
+		 * Return string.
+		 */
 		function __toString() {
 			return $this->to_string();
 		}
@@ -99,10 +129,10 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		/**
 		 * Verifies that a given signature is correct
 		 *
-		 * @param OAuthRequest  $request
-		 * @param OAuthConsumer $consumer
-		 * @param OAuthToken    $token
-		 * @param string        $signature
+		 * @param OAuthRequest  $request Request.
+		 * @param OAuthConsumer $consumer Consumer key.
+		 * @param OAuthToken    $token Auth token.
+		 * @param string        $signature Signature.
 		 *
 		 * @return bool
 		 */
@@ -121,10 +151,22 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	 * - Chapter 9.2 ("HMAC-SHA1")
 	 */
 	class WPOAuthSignatureMethod_HMAC_SHA1 extends WPOAuthSignatureMethod {
+		/**
+		 * Signature method.
+		 */
 		function get_name() {
 			return 'HMAC-SHA1';
 		}
 
+		/**
+		 * Build a signature.
+		 *
+		 * @param object $request Request object.
+		 * @param object $consumer Consumer object.
+		 * @param string $token Token.
+		 *
+		 * @return base 64 signature.
+		 */
 		public function build_signature( $request, $consumer, $token ) {
 			$base_string          = $request->get_signature_base_string();
 			$request->base_string = $base_string;
@@ -143,6 +185,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	 *   - Chapter 9.4 ("PLAINTEXT")
 	 */
 	class WPOAuthSignatureMethod_PLAINTEXT extends WPOAuthSignatureMethod {
+		/**
+		 * Plaintext method.
+		 */
 		public function get_name() {
 			return 'PLAINTEXT';
 		}
@@ -152,6 +197,12 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * Token Secret, separated by a '&' character (ASCII code 38), even if either secret is
 		 * empty. The result MUST be encoded again.
 		 *   - Chapter 9.4.1 ("Generating Signatures")
+		 *
+		 * @param object $request Request object.
+		 * @param object $consumer Consumer object.
+		 * @param string $token Token.
+		 *
+		 * @return signature.
 		 *
 		 * Please note that the second encoding MUST NOT happen in the SignatureMethod, as
 		 * OAuthRequest handles this!
@@ -176,24 +227,44 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	 *   - Chapter 9.3 ("RSA-SHA1")
 	 */
 	abstract class WPOAuthSignatureMethod_RSA_SHA1 extends WPOAuthSignatureMethod {
+		/**
+		 * Return method.
+		 */
 		public function get_name() {
 			return 'RSA-SHA1';
 		}
 
-		// Up to the SP to implement this lookup of keys. Possible ideas are:
-		// (1) do a lookup in a table of trusted certs keyed off of consumer.
-		// (2) fetch via http using a url provided by the requester.
-		// (3) some sort of specific discovery code based on request.
-		//
-		// Either way should return a string representation of the certificate.
+		/**
+ 		 * Up to the SP to implement this lookup of keys. Possible ideas are:
+		 * ((1) do a lookup in a table of trusted certs keyed off of consumer.
+		 * (2) fetch via http using a url provided by the requester.
+		 * (3) some sort of specific discovery code based on request.
+		 * 
+		 * @param Object $request Request.
+		 * 
+		 * Either way should return a string representation of the certificate.
+		 */
 		protected abstract function fetch_public_cert( &$request );
 
-		// Up to the SP to implement this lookup of keys. Possible ideas are:
-		// (1) do a lookup in a table of trusted certs keyed off of consumer.
-		//
-		// Either way should return a string representation of the certificate.
+		/**
+ 		 * Up to the SP to implement this lookup of keys. Possible ideas are:
+		 * (1) do a lookup in a table of trusted certs keyed off of consumer.
+		 *
+		 * @param Object request Request.
+		 *
+		 * @return Either way should return a string representation of the certificate.
+		 */
 		protected abstract function fetch_private_cert( &$request );
 
+		/**
+		 * Build a signature object.
+		 *
+		 * @param object $request Request object.
+		 * @param object $consumer Consumer object.
+		 * @param string $token Token.
+		 *
+		 * @return Encoded signature.
+		 */
 		public function build_signature( $request, $consumer, $token ) {
 			$base_string          = $request->get_signature_base_string();
 			$request->base_string = $base_string;
@@ -204,15 +275,25 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			// Pull the private key ID from the certificate.
 			$privatekeyid = openssl_get_privatekey( $cert );
 
-			// Sign using the key
+			// Sign using the key.
 			$ok = openssl_sign( $base_string, $signature, $privatekeyid );
 
-			// Release the key resource
+			// Release the key resource.
 			openssl_free_key( $privatekeyid );
 
 			return base64_encode( $signature );
 		}
 
+		/**
+		 * Verify a signature object.
+		 *
+		 * @param object $request Request object.
+		 * @param object $consumer Consumer object.
+		 * @param string $token Token.
+		 * @param string $signature Signature.
+		 *
+		 * @return boolean acceptance.
+		 */
 		public function check_signature( $request, $consumer, $token, $signature ) {
 			$decoded_sig = base64_decode( $signature );
 
