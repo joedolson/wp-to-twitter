@@ -117,9 +117,9 @@ class tmhUtilities {
 	 */
 	public static function php_self( $dropqs = true ) {
 		$protocol = 'http';
-		if ( isset( $_SERVER['HTTPS'] ) && strtolower( $_SERVER['HTTPS'] ) == 'on' ) {
+		if ( isset( $_SERVER['HTTPS'] ) && 'on' == strtolower( $_SERVER['HTTPS'] ) ) {
 			$protocol = 'https';
-		} elseif ( isset( $_SERVER['SERVER_PORT'] ) && ( $_SERVER['SERVER_PORT'] == '443' ) ) {
+		} elseif ( isset( $_SERVER['SERVER_PORT'] ) && ( '443' == $_SERVER['SERVER_PORT'] ) ) {
 			$protocol = 'https';
 		}
 
@@ -137,11 +137,9 @@ class tmhUtilities {
 		$path   = @$parts['path'];
 		$qs     = @$parts['query'];
 
-		$port or $port = ( $scheme == 'https' ) ? '443' : '80';
+		$port or $port = ( 'https' == $scheme ) ? '443' : '80';
 
-		if ( ( $scheme == 'https' && $port != '443' )
-		     || ( $scheme == 'http' && $port != '80' )
-		) {
+		if ( ( 'https' == $scheme && '443' != $port ) || ( 'http' == $scheme && '80' != $port ) ) {
 			$host = "$host:$port";
 		}
 		$url = "$scheme://$host$path";
@@ -199,23 +197,23 @@ class tmhUtilities {
 	public static function auto_fix_time_request( $tmhOAuth, $method, $url, $params = array(), $useauth = true, $multipart = false ) {
 		$tmhOAuth->request( $method, $url, $params, $useauth, $multipart );
 
-		// if we're not doing auth the timestamp isn't important
+		// if we're not doing auth the timestamp isn't important.
 		if ( ! $useauth ) {
 			return;
 		}
 
 		// some error that isn't a 401
-		if ( $tmhOAuth->response['code'] != 401 ) {
+		if ( 401 != $tmhOAuth->response['code'] ) {
 			return;
 		}
 
-		// some error that is a 401 but isn't because the OAuth token and signature are incorrect
-		// TODO: this check is horrid but helps avoid requesting twice when the username and password are wrong
+		// some error that is a 401 but isn't because the OAuth token and signature are incorrect.
+		// TODO: this check is horrid but helps avoid requesting twice when the username and password are wrong.
 		if ( stripos( $tmhOAuth->response['response'], 'password' ) !== false ) {
 			return;
 		}
 
-		// force the timestamp to be the same as the Twitter servers, and re-request
+		// force the timestamp to be the same as the Twitter servers, and re-request.
 		$tmhOAuth->auto_fixed_time           = true;
 		$tmhOAuth->config['force_timestamp'] = true;
 		$tmhOAuth->config['timestamp']       = strtotime( $tmhOAuth->response['headers']['date'] );
@@ -226,13 +224,13 @@ class tmhUtilities {
 	/**
 	 * Asks the user for input and returns the line they enter
 	 *
-	 * @param string $prompt the text to display to the user
+	 * @param string $prompt the text to display to the user.
 	 *
 	 * @return the text entered by the user
 	 */
 	public static function read_input( $prompt ) {
 		echo $prompt;
-		$handle = fopen( "php://stdin", "r" );
+		$handle = fopen( 'php://stdin', 'r' );
 		$data   = fgets( $handle );
 
 		return trim( $data );
@@ -260,14 +258,14 @@ class tmhUtilities {
 			$password = '';
 			while ( true ) :
 				$char = fgetc( STDIN );
-				if ( $char === "\n" ) :
+				if ( "\n" === $char ) :
 					break;
-				elseif ( ord( $char ) === 127 ) :
+				elseif ( 127 === ord( $char ) ) :
 					if ( strlen( $password ) > 0 ) {
 						fwrite( STDOUT, "\x08 \x08" );
 						$password = substr( $password, 0, - 1 );
 					} else {
-						fwrite( STDOUT, "*" );
+						fwrite( STDOUT, '*' );
 					}
 					$password .= $char;
 				endif;
@@ -284,8 +282,8 @@ class tmhUtilities {
 	/**
 	 * Check if one string ends with another
 	 *
-	 * @param string $haystack the string to check inside of
-	 * @param string $needle the string to check $haystack ends with
+	 * @param string $haystack the string to check inside of.
+	 * @param string $needle the string to check $haystack ends with.
 	 *
 	 * @return true if $haystack ends with $needle, false otherwise
 	 */

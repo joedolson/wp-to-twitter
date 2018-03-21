@@ -1116,8 +1116,8 @@ function wpt_add_twitter_inner_box( $post ) {
 		// don't display when draft is updated or if no message.
 			if ( ! ( ( 1 == $_REQUEST['message'] ) && ( 'publish' == $status && 1 != $options[ $type ]['post-edited-update'] ) ) && 'no' != $tweet_this ) {
 				$log   = wpt_log( 'wpt_status_message', $post_id );
-				$class = ( $log != __( 'Tweet sent successfully.', 'wp-to-twitter' ) ) ? 'error' : 'updated';
-				if ( $log != '' ) {
+				$class = ( __( 'Tweet sent successfully.', 'wp-to-twitter' ) != $log ) ? 'error' : 'updated';
+				if ( '' != $log ) {
 					echo "<div class='$class'><p>$log</p></div>";
 				}
 			}
@@ -1341,7 +1341,7 @@ function wpt_show_tweets( $post_id ) {
 	$hidden_fields = '';
 	if ( is_array( $previous_tweets ) ) {
 		foreach ( $previous_tweets as $previous_tweet ) {
-			if ( $previous_tweet != '' ) {
+			if ( '' != $previous_tweet ) {
 				$has_history    = true;
 				$hidden_fields .= "<input type='hidden' name='_jd_wp_twitter[]' value='" . esc_attr( $previous_tweet ) . "' />";
 				echo "<li>$previous_tweet <a href='http://twitter.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>Retweet this</a></li>";
@@ -1415,8 +1415,8 @@ function wpt_ajax_tweet() {
 		die;
 	}
 	$action       = ( 'tweet' == $_REQUEST['tweet_action'] ) ? 'tweet' : 'schedule';
-	$authors      = ( isset( $_REQUEST['tweet_auth'] ) && $_REQUEST['tweet_auth'] != null ) ? $_REQUEST['tweet_auth'] : false;
-	$upload       = ( isset( $_REQUEST['tweet_upload'] ) && $_REQUEST['tweet_upload'] != null ) ? $_REQUEST['tweet_upload'] : 1;
+	$authors      = ( isset( $_REQUEST['tweet_auth'] ) && null != $_REQUEST['tweet_auth'] ) ? $_REQUEST['tweet_auth'] : false;
+	$upload       = ( isset( $_REQUEST['tweet_upload'] ) && null != $_REQUEST['tweet_upload'] ) ? $_REQUEST['tweet_upload'] : 1;
 	$current_user = wp_get_current_user();
 	if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
 		if ( wtt_oauth_test( $current_user->ID, 'verify' ) ) {
@@ -1677,7 +1677,7 @@ add_action( 'init', 'wpt_old_admin_redirect' );
  * Send links to old admin to new admin page
  */
 function wpt_old_admin_redirect() {
-	if ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] == 'wp-to-twitter/wp-to-twitter.php' ) {
+	if ( is_admin() && isset( $_GET['page'] ) && 'wp-to-twitter/wp-to-twitter.php' == $_GET['page'] ) {
 		wp_safe_redirect( admin_url( 'admin.php?page=wp-tweets-pro' ) );
 		exit;
 	}
@@ -1910,7 +1910,7 @@ function wpt_debugging_enabled() {
  */
 function wpt_promotion_notice() {
 	if ( current_user_can( 'activate_plugins' ) && get_option( 'wpt_promotion_scheduled' ) == 2 && get_option( 'jd_donations' ) != 1 ) {
-		$upgrade = "http://www.wptweetspro.com/wp-tweets-pro/";
+		$upgrade = 'http://www.wptweetspro.com/wp-tweets-pro/';
 		$dismiss = admin_url( 'admin.php?page=wp-tweets-pro&dismiss=promotion' );
 		echo "<div class='notice'><p>" . sprintf( __( "I hope you've enjoyed <strong>WP to Twitter</strong>! Take a look at <a href='%s'>upgrading to WP Tweets PRO</a> for advanced Tweeting with WordPress! <a href='%s'>Dismiss</a>", 'wp-to-twitter' ), $upgrade, $dismiss ) . '</p></div>';
 	}

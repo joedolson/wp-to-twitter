@@ -26,15 +26,15 @@ function jd_checkCheckbox( $field, $sub1 = false, $sub2 = '' ) {
 	if ( $sub1 ) {
 		$setting = get_option( $field );
 		if ( isset( $setting[ $sub1 ] ) ) {
-			$value = ( $sub2 != '' ) ? $setting[ $sub1 ][ $sub2 ] : $setting[ $sub1 ];
+			$value = ( '' != $sub2 ) ? $setting[ $sub1 ][ $sub2 ] : $setting[ $sub1 ];
 		} else {
 			$value = 0;
 		}
-		if ( $value == 1 ) {
+		if ( 1 == $value ) {
 			return 'checked="checked"';
 		}
 	}
-	if ( get_option( $field ) == '1' ) {
+	if ( '1' == get_option( $field ) ) {
 		return 'checked="checked"';
 	}
 	return '';
@@ -64,7 +64,7 @@ function jd_checkSelect( $field, $value, $type = 'select' ) {
  * @param string $message Log message.
  */
 function wpt_set_log( $data, $id, $message ) {
-	if ( $id == 'test' ) {
+	if ( 'test' == $id ) {
 		update_option( $data, $message );
 	} else {
 		update_post_meta( $id, '_' . $data, $message );
@@ -81,9 +81,9 @@ function wpt_set_log( $data, $id, $message ) {
  * @return stored message.
  */
 function wpt_log( $data, $id ) {
-	if ( $id == 'test' ) {
+	if ( 'test' == $id ) {
 		$log = get_option( $data );
-	} elseif ( $id == 'last' ) {
+	} elseif ( 'last' == $id ) {
 		$log = get_option( $data . '_last' );
 	} else {
 		$log = get_post_meta( $id, '_' . $data, true );
@@ -105,7 +105,7 @@ function wpt_check_functions() {
 	if ( false == $shrink ) {
 		$error = htmlentities( get_option( 'wpt_shortener_status' ) );
 		$message .= __( '<li class="error"><strong>WP to Twitter was unable to contact your selected URL shortening service.</strong></li>', 'wp-to-twitter' );
-		if ( $error != '' ) {
+		if ( '' != $error ) {
 			$message .= "<li><code>$error</code></li>";
 		} else {
 			$message .= '<li><code>' . __( 'No error message was returned.', 'wp-to-twitter' ) . '</code></li>';
@@ -114,7 +114,7 @@ function wpt_check_functions() {
 		$message .= __( "<li><strong>WP to Twitter successfully contacted your URL shortening service.</strong>  This link should point to your site's homepage:", 'wp-to-twitter' );
 		$message .= " <a href='$shrink'>$shrink</a></li>";
 	}
-	//check twitter credentials.
+	// check twitter credentials.
 	if ( wtt_oauth_test() ) {
 		$rand     = rand( 1000000, 9999999 );
 		$testpost = wpt_post_to_twitter( "This is a test of WP to Twitter. $shrink ($rand)" );

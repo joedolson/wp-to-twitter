@@ -197,7 +197,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 */
 		function post( $url, $parameters = array() ) {
 			$response = $this->WPOAuthRequest( $url, $parameters, 'POST' );
-			if ( $this->format === 'json' && $this->decode_json ) {
+			if ( 'json' === $this->format && $this->decode_json ) {
 				return json_decode( $response );
 			}
 
@@ -209,7 +209,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 */
 		function media( $url, $parameters = array() ) {
 			$response = $this->WPOAuthRequest( $url, $parameters, 'MEDIA' );
-			if ( $this->format === 'json' && $this->decode_json ) {
+			if ( 'json' === $this->format && $this->decode_json ) {
 				return json_decode( $response );
 			}
 
@@ -221,7 +221,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 */
 		function get( $url, $parameters = array() ) {
 			$response = $this->WPOAuthRequest( $url, $parameters, 'GET' );
-			if ( $this->format === 'json' && $this->decode_json ) {
+			if ( 'json' === $this->format && $this->decode_json ) {
 				return json_decode( $response );
 			}
 
@@ -233,7 +233,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 */
 		function meta( $url, $parameters = array() ) {
 			$response = $this->WPOAuthRequest( $url, $parameters, 'META' );
-			if ( $this->format === 'json' && $this->decode_json ) {
+			if ( 'json' === $this->format && $this->decode_json ) {
 				return json_decode( $response );
 			}
 
@@ -366,13 +366,13 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 */
 		function WPOAuthRequest( $url, $args = array(), $method = null ) {
 
-			//Handle media requests using tmhOAuth library.
-			if ( $method == 'MEDIA' ) {
+			// Handle media requests using tmhOAuth library.
+			if ( 'MEDIA' == $method ) {
 				return $this->handleMediaRequest( $url, $args );
 			}
 
 			if ( empty( $method ) ) {
-				$method = empty( $args ) ? "GET" : "POST";
+				$method = empty( $args ) ? 'GET' : 'POST';
 			}
 			$req = WPOAuthRequest::from_consumer_and_token( $this->consumer, $this->token, $method, $url, $args );
 			$req->sign_request( $this->sha1_method, $this->consumer, $this->token );

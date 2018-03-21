@@ -210,7 +210,7 @@ class WPT_TwitterFeed {
 				'q'           => urlencode( $options['search'] ),
 				'result_type' => urlencode( $options['result_type'] ),
 			);
-			if ( $options['geocode'] != '' ) {
+			if ( '' != $options['geocode'] ) {
 				$args['geocode'] = urlencode( $options['geocode'] );
 			}
 			$url    = add_query_arg( $args, 'https://api.twitter.com/1.1/search/tweets.json' );

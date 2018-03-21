@@ -311,7 +311,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			// Release the key resource.
 			openssl_free_key( $publickeyid );
 
-			return $ok == 1;
+			return 1 == $ok;
 		}
 	}
 
@@ -353,7 +353,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 				// It's a POST request of the proper content-type, so parse POST.
 				// parameters and add those overriding any duplicates from GET.
-				if ( $http_method == 'POST' && @strstr( $request_headers['Content-Type'], 'application/x-www-form-urlencoded' ) ) {
+				if ( 'POST' == $http_method && @strstr( $request_headers['Content-Type'], 'application/x-www-form-urlencoded' ) ) {
 					$post_data  = WPOAuthUtil::parse_parameters(
 						file_get_contents( self::$post_input )
 					);
