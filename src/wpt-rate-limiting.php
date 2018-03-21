@@ -189,8 +189,9 @@ function wpt_view_rate_limits() {
 				$term_label = $term_object->name;
 				$rate_limiting = ( $count >= $limit ) ? 'rate-limited' : 'active';
 				$dashicon = ( $count >= $limit ) ? "<span class='dashicons dashicons-no' aria-hidden='true'></span>" : "<span class='dashicons dashicons-yes' aria-hidden='true'></span>";
-				$output .= "<li class='$rate_limiting'>$dashicon<strong>$term_label</strong>: "
-					. sprintf( _n( '%s Tweet sent, %s allowed.', '%s Tweets sent, %s allowed.', $count, 'wp-to-twitter' ), "<strong>$count</strong>", "<strong>$limit</strong>" )
+				$output .= "<li class='$rate_limiting'>$dashicon<strong>$term_label</strong>: ";
+				// Translators: Number of tweets sent, number allowed. 
+				$output .= sprintf( _n( '%s Tweet sent, %s allowed.', '%s Tweets sent, %s allowed.', $count, 'wp-to-twitter' ), "<strong>$count</strong>", "<strong>$limit</strong>" )
 					. '</li>';
 			}
 			$output .= '</ul>';

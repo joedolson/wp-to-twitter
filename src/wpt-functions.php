@@ -704,11 +704,14 @@ $plugins_string
 			$sent = wp_mail( 'plugins@joedolson.com', $subject, $message, $from );
 			if ( $sent ) {
 				if ( 'Donor' == $has_donated ) {
+					// Translators: Email address.
 					echo "<div class='notice updated'><p>" . sprintf( __( 'Thank you for supporting WP to Twitter! I\'ll get back to you as soon as I can. Please make sure you can receive email at <code>%s</code>.', 'wp-to-twitter' ), $response_email ) . '</p></div>';
 				} else {
+					// Translators: Email address.
 					echo "<div class='notice updated'><p>" . sprintf( __( 'Thanks for using WP to Twitter. Please ensure that you can receive email at <code>%s</code>.', 'wp-to-twitter' ), $response_email ) . '</p></div>';
 				}
 			} else {
+				// Translators: URL to plugin support form.
 				echo "<div class='notice error'><p>" . __( "Sorry! I couldn't send that message. Here's the text of your request:", 'wp-to-twitter' ) . '</p><p>' . sprintf( __( '<a href="%s">Contact me here</a>, instead.', 'wp-to-twitter' ), 'https://www.joedolson.com/contact/get-support/' ) . "</p><pre>$request</pre></div>";
 			}
 		}
@@ -737,8 +740,10 @@ $plugins_string
 		<input type='email' name='response_email' id='response_email' value='$response_email' class='widefat' required='required' aria-required='true' />
 		</p>
 		<p>
-		<input type='checkbox' name='has_read_faq' id='has_read_faq' value='on' required='required' aria-required='true' /> <label for='has_read_faq'>" . sprintf( __( 'I have read <a href="%1$s">the FAQ for this plug-in</a> <span>(required)</span>', 'wp-to-twitter' ), 'http://www.joedolson.com/wp-to-twitter/support-2/' ) . "
-		</p>
+		<input type='checkbox' name='has_read_faq' id='has_read_faq' value='on' required='required' aria-required='true' /> <label for='has_read_faq'>";
+	// Translators: Link to plugin FAQ.
+	echo sprintf( __( 'I have read <a href="%1$s">the FAQ for this plug-in</a> <span>(required)</span>', 'wp-to-twitter' ), 'http://www.joedolson.com/wp-to-twitter/support-2/' );
+	echo "</p>
 		<p>
 		<input type='checkbox' name='has_donated' id='has_donated' value='on' $checked /> <label for='has_donated'>" . __( 'I made a donation or purchase to help support this plug-in', 'wp-to-twitter' ) . "</label>
 		</p>

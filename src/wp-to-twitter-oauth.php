@@ -167,6 +167,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 								'http_code' => $connection->http_code,
 								'status'    => $status,
 							);
+							// Translators: HTTP code & status message from Twitter.
 							$error_code        = sprintf( __( 'Twitter response: http_code %s', 'wp-to-twitter' ), "$error_information[http_code] - $error_information[status]" );
 							update_option( 'wpt_curl_error', $error_code );
 						}
@@ -240,6 +241,7 @@ function wtt_connect_oauth( $auth = false ) {
 		// show notification to authenticate with OAuth. No longer global; settings only.
 		if ( ! wpt_check_oauth() ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
+			// Translators: Settings page to authenticate via OAuth.
 			$message   = sprintf( __( "Twitter requires authentication by OAuth. You will need to <a href='%s'>update your settings</a> to complete installation of WP to Twitter.", 'wp-to-twitter' ), $admin_url );
 			echo "<div class='error'><p>$message</p></div>";
 		}

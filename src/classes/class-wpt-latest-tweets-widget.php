@@ -66,7 +66,7 @@ class WPT_Latest_Tweets_Widget extends WP_Widget {
 	 * Echo the widget content.
 	 *
 	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
-	 * @param array $instance The settings for the particular instance of the widget
+	 * @param array $instance The settings for the particular instance of the widget.
 	 */
 
 	function widget( $args, $instance ) {
@@ -96,13 +96,13 @@ class WPT_Latest_Tweets_Widget extends WP_Widget {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $new_instance New settings for this instance as input by the user via form()
-	 * @param array $old_instance Old settings for this instance
+	 * @param array $new_instance New settings for this instance as input by the user via form().
+	 * @param array $old_instance Old settings for this instance.
 	 *
 	 * @return array Settings to save or bool false to cancel saving
 	 */
 	function update( $new_instance, $old_instance ) {
-		/** Force the cache to refresh */
+		// Force the cache to refresh
 		update_option( 'wpt_delete_cache', 'true' );
 		$new_instance['title'] = strip_tags( $new_instance['title'] );
 
@@ -112,13 +112,13 @@ class WPT_Latest_Tweets_Widget extends WP_Widget {
 	/**
 	 * Echo the settings update form.
 	 *
-	 * @param array $instance Current settings
+	 * @param array $instance Current settings.
 	 *
 	 * @return string
 	 */
 	function form( $instance ) {
 
-		/** Merge with defaults */
+		// Merge with defaults.
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 		?>
 		<p>

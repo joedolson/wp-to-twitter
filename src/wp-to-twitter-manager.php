@@ -321,21 +321,11 @@ function wpt_update_settings() {
 						$tabs .= "<li><a href='#wpt_links' id='tab_wpt_links' aria-controls='wpt_links'>" . __( 'Links', 'wp-to-twitter' ) . '</a></li></ul>';
 						echo $tabs;
 						foreach ( $post_types as $type ) {
-							$name     = $type->labels->name;
-							$singular = $type->labels->singular_name;
-							$slug     = $type->name;
+							$name   = $type->labels->name;
+							$slug   = $type->name;
 							if ( 'attachment' == $slug || 'nav_menu_item' == $slug || 'revision' == $slug ) {
 								continue;
 							} else {
-								$vowels = array( 'a', 'e', 'i', 'o', 'u' );
-								foreach ( $vowels as $vowel ) {
-									if ( 0 === strpos( $name, $vowel ) ) {
-										$word = 'an';
-										break;
-									} else {
-										$word = 'a';
-									}
-								}
 								?>
 								<div class='wptab wpt_types wpt_<?php echo $slug; ?>' aria-labelledby='tab_wpt_<?php echo $slug; ?>' role="tabpanel" id='wpt_<?php echo $slug; ?>'>
 								<?php
@@ -368,28 +358,30 @@ function wpt_update_settings() {
 									<legend><?php _e( 'Tweet Templates', 'wp-to-twitter' ); ?></legend>
 									<p>
 										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][post-published-update]" id="<?php echo $slug; ?>-post-published-update" value="1" <?php echo jd_checkCheckbox( 'wpt_post_types', $slug, 'post-published-update' ) ?> />
-										<label for="<?php echo $slug; ?>-post-published-update"><strong><?php printf( __( 'Update when %1$s %2$s is published', 'wp-to-twitter' ), $word, $singular ); ?></strong></label>
-										<label for="<?php echo $slug; ?>-post-published-text"><br/><?php printf( __( 'Template for new %1$s updates', 'wp-to-twitter' ), $name ); ?>
-										</label><br/>
-										<textarea class="wpt-template" name="wpt_post_types[<?php echo $slug; ?>][post-published-text]" id="<?php echo $slug; ?>-post-published-text" cols="60" rows="3">
-										<?php
-										if ( isset( $wpt_settings[ $slug ] ) ) {
-											echo esc_attr( stripslashes( $wpt_settings[ $slug ]['post-published-text'] ) );
-										}
+										<label for="<?php echo $slug; ?>-post-published-update"><strong>
+										<?php 
+										// Translators: post type.
+										printf( __( 'Update when %s are published', 'wp-to-twitter' ), $name ); 
 										?>
-										</textarea>
+										</strong></label>
+										<label for="<?php echo $slug; ?>-post-published-text"><br/>
+										<?php 
+										// Translators: post type.
+										printf( __( 'Template for new %s', 'wp-to-twitter' ), $name ); 
+										?>
+										</label><br/>
+										<textarea class="wpt-template" name="wpt_post_types[<?php echo $slug; ?>][post-published-text]" id="<?php echo $slug; ?>-post-published-text" cols="60" rows="3"><?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-published-text'] ) ) : ''; ?></textarea>
 									</p>
 
 									<p>
 										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][post-edited-update]" id="<?php echo $slug; ?>-post-edited-update" value="1" <?php echo jd_checkCheckbox( 'wpt_post_types', $slug, 'post-edited-update' ) ?> />
-										<label for="<?php echo $slug; ?>-post-edited-update"><strong><?php printf( __( 'Update when %1$s %2$s is edited', 'wp-to-twitter' ), $word, $singular ); ?></strong></label><br/><label for="<?php echo $slug; ?>-post-edited-text"><?php printf( __( 'Template for %1$s editing updates', 'wp-to-twitter' ), $name ); ?></label><br/>
-										<textarea class="wpt-template" name="wpt_post_types[<?php echo $slug; ?>][post-edited-text]" id="<?php echo $slug; ?>-post-edited-text" cols="60" rows="3">
-										<?php
-										if ( isset( $wpt_settings[ $slug ] ) ) {
-											echo esc_attr( stripslashes( $wpt_settings[ $slug ]['post-edited-text'] ) );
-										}
+										<label for="<?php echo $slug; ?>-post-edited-update"><strong>
+										<?php 
+										// Translators: post type name.
+										printf( __( 'Update when %s are edited', 'wp-to-twitter' ), $name ); 
 										?>
-										</textarea>
+										</strong></label><br/><label for="<?php echo $slug; ?>-post-edited-text"><?php printf( __( 'Template for %1$s edits', 'wp-to-twitter' ), $name ); ?></label><br/>
+										<textarea class="wpt-template" name="wpt_post_types[<?php echo $slug; ?>][post-edited-text]" id="<?php echo $slug; ?>-post-edited-text" cols="60" rows="3"><?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-edited-text'] ) ) : ''; ?></textarea>
 									</p>
 								</fieldset>
 								<?php

@@ -156,8 +156,8 @@ function wpt_get_twitter_feed( $atts, $content ) {
 function wpt_twitter_feed( $instance ) {
 	$header = '';
 	if ( ! isset( $instance['search'] ) ) {
-		$twitter_ID = ( isset( $instance['twitter_id'] ) && '' != $instance['twitter_id'] ) ? $instance['twitter_id'] : get_option( 'wtt_twitter_username' );
-		$user = wpt_get_user( $twitter_ID );
+		$twitter_id = ( isset( $instance['twitter_id'] ) && '' != $instance['twitter_id'] ) ? $instance['twitter_id'] : get_option( 'wtt_twitter_username' );
+		$user = wpt_get_user( $twitter_id );
 		if ( empty( $user ) ) {
 			return __( 'Error: You are not connected to Twitter.', 'wp-to-twitter' );
 		}
@@ -169,18 +169,18 @@ function wpt_twitter_feed( $instance ) {
 		$verified         = sanitize_title( $user->verified );
 		$img_alignment    = ( is_rtl() ) ? 'wpt-right' : 'wpt-left';
 		$follow_alignment = ( is_rtl() ) ? 'wpt-left' : 'wpt-right';
-		$follow_url       = esc_url( 'https://twitter.com/' . $twitter_ID );
-		$follow_button    = apply_filters( 'wpt_follow_button', "<a href='$follow_url' class='twitter-follow-button $follow_alignment' data-width='30px' data-show-screen-name='false' data-size='large' data-show-count='false' data-lang='en'>Follow @" .  esc_html( $twitter_ID ) . '</a>' );
+		$follow_url       = esc_url( 'https://twitter.com/' . $twitter_id );
+		$follow_button    = apply_filters( 'wpt_follow_button', "<a href='$follow_url' class='twitter-follow-button $follow_alignment' data-width='30px' data-show-screen-name='false' data-size='large' data-show-count='false' data-lang='en'>Follow @" .  esc_html( $twitter_id ) . '</a>' );
 		$header          .= '<div class="wpt-header">';
 		$header          .= "<div class='wpt-follow-button'>$follow_button</div>
 		<p>
 			<img src='$avatar' alt='' class='wpt-twitter-avatar $img_alignment $verified' />
 			<span class='wpt-twitter-name'>$name</span><br />
-			<span class='wpt-twitter-id'><a href='$follow_url'>@" .  esc_html( $twitter_ID ) . '</a></span>
+			<span class='wpt-twitter-id'><a href='$follow_url'>@" .  esc_html( $twitter_id ) . '</a></span>
 		</p>';
 		$header          .= '</div>';
 	} else {
-		$twitter_ID = false;
+		$twitter_id = false;
 	}
 
 	$hide_header = ( isset( $instance['hide_header'] ) && 1 == $instance['hide_header'] ) ? true : false;
@@ -204,7 +204,7 @@ function wpt_twitter_feed( $instance ) {
 	$opts['mentions']    = $instance['link_mentions'];
 	$opts['hashtags']    = $instance['link_hashtags'];
 	$opts['show_images'] = isset( $instance['show_images'] ) ? $instance['show_images'] : false;
-	$rawtweets           = WPT_getTweets( $instance['twitter_num'], $twitter_ID, $options );
+	$rawtweets           = WPT_getTweets( $instance['twitter_num'], $twitter_id, $options );
 
 	if ( isset( $rawtweets['error'] ) ) {
 		$return .= '<li>' . $rawtweets['error'] . '</li>';
@@ -217,10 +217,12 @@ function wpt_twitter_feed( $instance ) {
 				$tweet = json_decode( json_encode( $tweet ), true );
 			}
 			if ( $instance['source'] ) {
-				$source    = $tweet['source'];
-				$timetweet = sprintf( __( '<a href="%3$s">about %1$s ago</a> via %2$s', 'wp-to-twitter' ), human_time_diff( strtotime( $tweet['created_at'] ) ), $source, 'http://twitter.com/' . $twitter_ID . "/status/$tweet[id_str]" );
+				$source = $tweet['source'];
+				// Translators: 1 - time string, 2 - name of Tweet app, 3 - Link to Tweet.
+				$timetweet = sprintf( __( '<a href="%3$s">about %1$s ago</a> via %2$s', 'wp-to-twitter' ), human_time_diff( strtotime( $tweet['created_at'] ) ), $source, 'http://twitter.com/' . $twitter_id . "/status/$tweet[id_str]" );
 			} else {
-				$timetweet = sprintf( __( '<a href="%2$s">about %1$s ago</a>', 'wp-to-twitter' ), human_time_diff( strtotime( $tweet['created_at'] ) ), "http://twitter.com/$twitter_ID/status/$tweet[id_str]" );
+				// Translators: 1 - time string; 2 - link to Tweet.
+				$timetweet = sprintf( __( '<a href="%2$s">about %1$s ago</a>', 'wp-to-twitter' ), human_time_diff( strtotime( $tweet['created_at'] ) ), "http://twitter.com/$twitter_id/status/$tweet[id_str]" );
 			}
 			$tweet_classes = wpt_generate_classes( $tweet );
 

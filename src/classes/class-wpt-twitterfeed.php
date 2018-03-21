@@ -242,6 +242,7 @@ class WPT_TwitterFeed {
 			$this->save_cache( $file, json_encode( $cache ) );
 		} else {
 			if ( is_array( $result ) && isset( $result['errors'][0] ) && isset( $result['errors'][0]['message'] ) ) {
+				// Translators: Error message.
 				$last_error          = '[' . date( 'r' ) . '] ' . sprintf( __( 'Twitter error: %s', 'wp-to-twitter' ), $result['errors'][0]['message'] );
 				$this->st_last_error = $last_error;
 			} else {

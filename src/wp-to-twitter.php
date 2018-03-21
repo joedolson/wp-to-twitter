@@ -1127,6 +1127,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		$template = ( 'publish' == $status ) ? $options[ $type ]['post-edited-text'] : $options[ $type ]['post-published-text'];
 
 		if ( 'publish' == $status && 1 != $options[ $type ]['post-edited-update'] ) {
+			// Translators: post type.
 			$tweet_status = sprintf( __( '%s will not be Tweeted on update.', 'wp-to-twitter' ), ucfirst( $type ) );
 		}
 
@@ -1234,6 +1235,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			do_action( 'wpt_custom_tab', $post_id, 'visible' );
 		} else {
 			if ( ! function_exists( 'wpt_pro_exists' ) ) {
+				// Translators: premium sales link.
 				echo '<p>' . sprintf( __( 'Upgrade to WP Tweets PRO to configure options! <a href="%s">Upgrade now!</a>', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro/' ) . '</p>';
 			}
 		}
@@ -1464,6 +1466,7 @@ function wpt_ajax_tweet() {
 					) );
 					break;
 			}
+			// Translators: Full text of Tweet, time scheduled for.
 			$return = ( 'tweet' == $action ) ? wpt_log( 'wpt_status_message', $post_ID ) : sprintf( __( "Tweet scheduled: '%s' for %s", 'wp-tweets-pro' ), $sentence, $print_schedule );
 			echo $return;
 			if ( count( $authors ) > 1 ) {
