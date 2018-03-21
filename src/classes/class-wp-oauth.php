@@ -239,9 +239,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * ((1) do a lookup in a table of trusted certs keyed off of consumer.
 		 * (2) fetch via http using a url provided by the requester.
 		 * (3) some sort of specific discovery code based on request.
-		 * 
+		 *
 		 * @param Object $request Request.
-		 * 
+		 *
 		 * Either way should return a string representation of the certificate.
 		 */
 		protected abstract function fetch_public_cert( &$request );
@@ -652,7 +652,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * version 1
 		 */
 		private function get_version( &$request ) {
-			$version = $request->get_parameter( "oauth_version" );
+			$version = $request->get_parameter( 'oauth_version' );
 			if ( ! $version ) {
 				// Service Providers MUST assume the protocol version to be 1.0 if this parameter is not present.
 				// Chapter 7.0 ("Accessing Protected Resources").

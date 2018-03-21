@@ -729,7 +729,7 @@ class tmhOAuth {
 		if ( isset( $this->config['prevent_request'] ) && ( true == $this->config['prevent_request'] ) ) {
 			return 0;
 		}
-		
+
 		// do it!
 		$response = curl_exec( $c );
 		$code     = curl_getinfo( $c, CURLINFO_HTTP_CODE );

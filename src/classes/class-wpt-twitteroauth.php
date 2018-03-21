@@ -7,7 +7,7 @@
  * @author   Joe Dolson
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/
- * 
+ *
  * The first PHP Library to support WPOAuth for Twitter's REST API.
  */
 
@@ -30,31 +30,31 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 */
 		public $http_code;
 		/**
-		 * Contains the last API call. 
+		 * Contains the last API call.
 		 */
 		public $url;
 		/**
-		 * Set up the API root URL. 
+		 * Set up the API root URL.
 		 */
 		public $host = 'https://api.twitter.com/1.1/';
 		/**
-		 * Set timeout default. 
+		 * Set timeout default.
 		 */
 		public $format = 'json';
-		/** 
-		 * Decode returned json data. 
+		/**
+		 * Decode returned json data.
 		 */
 		public $decode_json = false;
 		/**
-		 * Contains the last API call 
+		 * Contains the last API call
 		 */
 		private $last_api_call;
 		/**
-		 * contains the header 
+		 * contains the header
 		 */
 		public $http_header;
 		/**
-		 * contains the body 
+		 * contains the body
 		 */
 		public $body;
 
@@ -62,28 +62,28 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * Set API URLS
 		 */
 		function accessTokenURL() {
-			return "https://api.twitter.com/oauth/access_token";
+			return 'https://api.twitter.com/oauth/access_token';
 		}
 
 		/**
 		 * Set authentication URL.
 		 */
 		function authenticateURL() {
-			return "https://api.twitter.com/oauth/authenticate";
+			return 'https://api.twitter.com/oauth/authenticate';
 		}
 
 		/**
 		 * Set authorization URL.
 		 */
 		function authorizeURL() {
-			return "https://api.twitter.com/oauth/authorize";
+			return 'https://api.twitter.com/oauth/authorize';
 		}
 
 		/**
 		 * Set request Token URL.
 		 */
 		function requestTokenURL() {
-			return "https://api.twitter.com/oauth/request_token";
+			return 'https://api.twitter.com/oauth/request_token';
 		}
 
 		/**
@@ -227,7 +227,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 			return $response;
 		}
-		
+
 		/**
 		 * Wrapper for metadata requests
 		 */
@@ -238,8 +238,8 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			}
 
 			return $response;
-		}		
-		
+		}
+
 		/**
 		 * Handles a status update that includes an image.
 		 *
@@ -279,7 +279,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			);
 			$tmhOAuth   = new tmhOAuth( $connect );
 			$attachment = $args['media'];
-			
+
 			$image_sizes = get_intermediate_image_sizes();
 			if ( in_array( 'large', $image_sizes ) ) {
 				$size = 'large';
@@ -300,12 +300,12 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			if ( ! $binary ) {
 				return;
 			}
-			
+
 			$mime_type = get_post_mime_type( $attachment );
 			if ( ! $mime_type ) {
 				$mime_type = 'image/jpeg';
 			}
-			
+
 			/* End New */
 			$code  = $tmhOAuth->request(
 				'POST',
@@ -314,14 +314,14 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				true, // use auth
 				true  // multipart
 			);
-			
+
 			$response = $tmhOAuth->response['response'];
 			$full     = $tmhOAuth->response;
-			wpt_mail( "Media Posted", "
-				Media ID #$args[media] ($transport)" . "\n\n" .  
-				"Twitter Response" . "\n" . print_r( $full, 1 ) . "\n\n" . 
-				"Attachment Details" . "\n" . print_r( $upload, 1 ) .  "\n\n" . 
-				"Img Request Response" . "\n" . print_r( $remote, 1 )
+			wpt_mail( 'Media Posted', "
+				Media ID #$args[media] ($transport)" . "\n\n" .
+				'Twitter Response' . "\n" . print_r( $full, 1 ) . "\n\n" .
+				'Attachment Details' . "\n" . print_r( $upload, 1 ) .  "\n\n" .
+				'Img Request Response' . "\n" . print_r( $remote, 1 )
 			);
 
 			if ( is_wp_error( $response ) ) {
@@ -334,30 +334,30 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			$this->http_header   = $response;
 			$response            = json_decode( $response );
 			$media_id            = $response->media_id_string;
-		
+
 			/**
 			 * Eventually, use this to add alt text. Not supported at this time.
 			 *
 			$metadata_api = 'https://upload.twitter.com/1.1/media/metadata/create.json';
 			$alt_text  = get_post_meta( $args['media'], '_wp_attachment_image_alt', true );
 			if ( $alt_text != '' ) {
-				$image_alt = json_encode( array( 
-							'media_id' => $media_id, 
-							'alt_text' => array( 
-								'text' => $alt_text 
-							) 
+				$image_alt = json_encode( array(
+							'media_id' => $media_id,
+							'alt_text' => array(
+								'text' => $alt_text
+							)
 						) );
-				$post_image = $tmhOAuth->request( 
+				$post_image = $tmhOAuth->request(
 					'POST',
-					$metadata_api, 
+					$metadata_api,
 					array( 'body' => $image_alt ),
 					true
 				);
-				
+
 				wpt_debug( 'Test of post image alt', print_r( $post_image, 1 ) );
 			}
 			*/
-						
+
 			return $media_id;
 		}
 
@@ -376,7 +376,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			}
 			$req = WPOAuthRequest::from_consumer_and_token( $this->consumer, $this->token, $method, $url, $args );
 			$req->sign_request( $this->sha1_method, $this->consumer, $this->token );
-			
+
 
 			$response = false;
 			$url      = null;
@@ -390,7 +390,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 					$url      = $req->get_normalized_http_url();
 					$args     = wp_parse_args( $req->to_postdata() );
 					$response = wp_remote_post( $url, array( 'body' => $args, 'timeout' => 30 ) );
-					break;				
+					break;
 			}
 
 			if ( is_wp_error( $response ) ) {

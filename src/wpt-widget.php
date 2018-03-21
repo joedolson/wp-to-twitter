@@ -36,18 +36,18 @@ function wpt_tweet_linkify( $text, $opts, $tweet ) {
 		$media = isset( $tweet['entities']['media'] ) ? $tweet['entities']['media'] : false;
 		if ( $media ) {
 			$media_urls = array();
-			if ( ! empty( $media ) ) { 
-				foreach ( $media as $key => $image ) { 
-					$media_urls[] = $image['url']; 
+			if ( ! empty( $media ) ) {
+				foreach ( $media as $key => $image ) {
+					$media_urls[] = $image['url'];
 					// alt attributes are not available on Twitter. include_ext_alt_text
 					$alt   = isset( $tweet['extended_entities']['media'][ $key ]['ext_alt_text'] ) ? $tweet['extended_entities']['media'][ $key ]['ext_alt_text'] : '';
 					$text .= "<img src='$image[media_url_https]' alt='$alt' class='wpt-twitter-image' />";
-					
+
 				}
 			}
-			if ( ! empty( $media_urls ) ) { 
-				foreach ( $media_urls as $media_url ) { 
-					$text = str_replace( $media_url, '', $text ); 
+			if ( ! empty( $media_urls ) ) {
+				foreach ( $media_urls as $media_url ) {
+					$text = str_replace( $media_url, '', $text );
 				}
 			}
 		}
@@ -213,13 +213,13 @@ function wpt_twitter_feed( $instance ) {
 		$tweets = array();
 		foreach ( $rawtweets as $tweet ) {
 
-			if ( is_object( $tweet ) ) { 
+			if ( is_object( $tweet ) ) {
 				$tweet = json_decode( json_encode( $tweet ), true );
 			}
-			if ( $instance['source'] ) { 
-				$source    = $tweet['source']; 
-				$timetweet = sprintf( __( '<a href="%3$s">about %1$s ago</a> via %2$s', 'wp-to-twitter' ), human_time_diff( strtotime( $tweet['created_at'] ) ), $source, "http://twitter.com/" . $twitter_ID . "/status/$tweet[id_str]" );
-			} else { 
+			if ( $instance['source'] ) {
+				$source    = $tweet['source'];
+				$timetweet = sprintf( __( '<a href="%3$s">about %1$s ago</a> via %2$s', 'wp-to-twitter' ), human_time_diff( strtotime( $tweet['created_at'] ) ), $source, 'http://twitter.com/' . $twitter_ID . "/status/$tweet[id_str]" );
+			} else {
 				$timetweet = sprintf( __( '<a href="%2$s">about %1$s ago</a>', 'wp-to-twitter' ), human_time_diff( strtotime( $tweet['created_at'] ) ), "http://twitter.com/$twitter_ID/status/$tweet[id_str]" );
 			}
 			$tweet_classes = wpt_generate_classes( $tweet );

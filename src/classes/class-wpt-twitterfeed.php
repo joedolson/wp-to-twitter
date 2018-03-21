@@ -181,9 +181,9 @@ class WPT_TwitterFeed {
 		$token        = $this->defaults['token'];
 		$token_secret = $this->defaults['token_secret'];
 		$cachename    = $screenname . '-' . $this->getOptionsHash( $options );
-		$options      = array_merge( $options, array( 
-			'screen_name'          => $screenname, 
-			'count'                => 20, 
+		$options      = array_merge( $options, array(
+			'screen_name'          => $screenname,
+			'count'                => 20,
 			'include_ext_alt_text' => 'true',
 		) );
 
@@ -206,7 +206,7 @@ class WPT_TwitterFeed {
 		$connection = new wpt_TwitterOAuth( $key, $secret, $token, $token_secret );
 
 		if ( isset( $options['search'] ) ) {
-			$args = array( 
+			$args = array(
 				'q'           => urlencode( $options['search'] ),
 				'result_type' => urlencode( $options['result_type'] ),
 			);

@@ -371,7 +371,7 @@ function wpt_remote_json( $url, $array = true, $method = 'GET' ) {
 
 /**
  * Test whether a URL is valid.
- * 
+ *
  * @param string $url URL.
  *
  * @return URL if passes, false otherwise.
@@ -426,7 +426,7 @@ function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $retur
 if ( ! function_exists( 'mb_substr_split_unicode' ) ) {
 	/**
 	 * Fall back function for mb_substr_split_unicode if doesn't exist.
-	 * 
+	 *
 	 * @param string $str String.
 	 * @param int    $split_pos Position to split on.
 	 *
@@ -706,7 +706,7 @@ $plugins_string
 				if ( 'Donor' == $has_donated ) {
 					echo "<div class='notice updated'><p>" . sprintf( __( 'Thank you for supporting WP to Twitter! I\'ll get back to you as soon as I can. Please make sure you can receive email at <code>%s</code>.', 'wp-to-twitter' ), $response_email ) . '</p></div>';
 				} else {
-					echo "<div class='notice updated'><p>" . sprintf( __( "Thanks for using WP to Twitter. Please ensure that you can receive email at <code>%s</code>.", 'wp-to-twitter' ), $response_email ) . '</p></div>';
+					echo "<div class='notice updated'><p>" . sprintf( __( 'Thanks for using WP to Twitter. Please ensure that you can receive email at <code>%s</code>.', 'wp-to-twitter' ), $response_email ) . '</p></div>';
 				}
 			} else {
 				echo "<div class='notice error'><p>" . __( "Sorry! I couldn't send that message. Here's the text of your request:", 'wp-to-twitter' ) . '</p><p>' . sprintf( __( '<a href="%s">Contact me here</a>, instead.', 'wp-to-twitter' ), 'https://www.joedolson.com/contact/get-support/' ) . "</p><pre>$request</pre></div>";
@@ -760,7 +760,7 @@ $plugins_string
 
 /**
  * Check whether a file is writable.
- * 
+ *
  * @param string $file Filename/path.
  *
  * @return boolean.
@@ -793,10 +793,10 @@ class WPT_Normalizer {
 	protected static
 
 	$C, $D, $KD, $cC,
-	$ulen_mask = array( 
-		"\xC0" => 2, 
-		"\xD0" => 2, 
-		"\xE0" => 3, 
+	$ulen_mask = array(
+		"\xC0" => 2,
+		"\xD0" => 2,
+		"\xE0" => 3,
 		"\xF0" => 4
 	),
 	$ASCII = "\x20\x65\x69\x61\x73\x6E\x74\x72\x6F\x6C\x75\x64\x5D\x5B\x63\x6D\x70\x27\x0A\x67\x7C\x68\x76\x2E\x66\x62\x2C\x3A\x3D\x2D\x71\x31\x30\x43\x32\x2A\x79\x78\x29\x28\x4C\x39\x41\x53\x2F\x50\x22\x45\x6A\x4D\x49\x6B\x33\x3E\x35\x54\x3C\x44\x34\x7D\x42\x7B\x38\x46\x77\x52\x36\x37\x55\x47\x4E\x3B\x4A\x7A\x56\x23\x48\x4F\x57\x5F\x26\x21\x4B\x3F\x58\x51\x25\x59\x5C\x09\x5A\x2B\x7E\x5E\x24\x40\x60\x7F\x00\x01\x02\x03\x04\x05\x06\x07\x08\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F";

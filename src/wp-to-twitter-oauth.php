@@ -136,7 +136,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 						$data = $connection->get( 'https://api.twitter.com/1.1/account/verify_credentials.json' );
 						if ( $connection->http_code != '200' ) {
 							$data  = json_decode( $data );
-							$code  = "<a href='https://dev.twitter.com/docs/error-codes-responses'>" . $data->errors[0]->code . "</a>";
+							$code  = "<a href='https://dev.twitter.com/docs/error-codes-responses'>" . $data->errors[0]->code . '</a>';
 							$error = $data->errors[0]->message;
 							update_option( 'wpt_error', "$code: $error" );
 						} else {

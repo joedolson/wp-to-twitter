@@ -926,7 +926,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 			}
 		} else {
 			if ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) {
-				wpt_mail( '3c: Not a Tweeted post type', "Post_Info: " . print_r( $post_info, 1 ) . " / $type" );
+				wpt_mail( '3c: Not a Tweeted post type', 'Post_Info: ' . print_r( $post_info, 1 ) . " / $type" );
 			}
 
 			return $post_ID;
@@ -959,7 +959,7 @@ function wpt_twit_link( $link_ID ) {
 		}
 		$shrink = apply_filters( 'wptt_shorten_link', $thispostlink, $thislinkname, false, 'link' );
 		if ( false === stripos( $sentence, '#url#' ) ) {
-			$sentence = $sentence . " " . $shrink;
+			$sentence = $sentence . ' ' . $shrink;
 		} else {
 			$sentence = str_ireplace( '#url#', $shrink, $sentence );
 		}
@@ -1112,7 +1112,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( isset( $_GET['action'] ) && 'edit' == $_GET['action'] && '1' == get_option( 'jd_tweet_default_edit' ) && 'publish' == $status ) {
 			$tweet_this = 'no';
 		}
-		if ( isset( $_REQUEST['message'] ) && 10 != $_REQUEST['message'] ) { 
+		if ( isset( $_REQUEST['message'] ) && 10 != $_REQUEST['message'] ) {
 		// don't display when draft is updated or if no message.
 			if ( ! ( ( 1 == $_REQUEST['message'] ) && ( 'publish' == $status && 1 != $options[ $type ]['post-edited-update'] ) ) && 'no' != $tweet_this ) {
 				$log   = wpt_log( 'wpt_status_message', $post_id );
@@ -1134,8 +1134,8 @@ function wpt_add_twitter_inner_box( $post ) {
 			?>
 			<div class='tweet-buttons'>
 				<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-twitter' aria-hidden='true'></span><?php _e( 'Tweet Now', 'wp-to-twitter' ); ?></button>
-				<?php 
-				if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) { 
+				<?php
+				if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
 				?>
 				<button type='button' class='tweet schedule button-secondary' data-action='schedule' disabled><?php _e( 'Schedule', 'wp-to-twitter' ); ?></button>
 				<button type='button' class='time button-secondary'>
@@ -1257,14 +1257,14 @@ function wpt_add_twitter_inner_box( $post ) {
 		?>
 			<div class='wptab' id='notes' aria-labelledby='tab_notes' role='tabpanel'>
 				<p>
-				<?php 
+				<?php
 				_e( 'Template Tags: <code>#url#</code>, <code>#title#</code>, <code>#post#</code>, <code>#category#</code>, <code>#date#</code>, <code>#modified#</code>, <code>#author#</code>, <code>#account#</code>, <code>#tags#</code>, <code>#blog#</code>, <code>#longurl#</code>.', 'wp-to-twitter' );
 				do_action( 'wpt_notes_tab', $post_id );
 				?>
 				</p>
 			</div>
 		<?php
-		} 
+		}
 		?>
 		</div>
 		<?php
@@ -1275,7 +1275,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		?>
 		<p class='toggle-btn-group'>
 			<input type="radio" name="_jd_tweet_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Tweet", 'wp-to-twitter' ); ?></label>
-			<input type="radio" name="_jd_tweet_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( "Tweet", 'wp-to-twitter' ); ?></label>
+			<input type="radio" name="_jd_tweet_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( 'Tweet', 'wp-to-twitter' ); ?></label>
 		</p>
 		<?php
 		} else {
@@ -1286,17 +1286,17 @@ function wpt_add_twitter_inner_box( $post ) {
 		wpt_show_tweets( $post_id );
 		?>
 		<p class="wpt-support">
-			<?php 
+			<?php
 			if ( ! function_exists( 'wpt_pro_exists' ) ) {
 			// These aren't actually usages that require esc_url. But using it will give people the illusion that it does something.
 			?>
 				<strong><a href="http://www.wptweetspro.com/wp-tweets-pro"><?php _e( 'Go Premium', 'wp-to-twitter', 'wp-to-twitter' ) ?></a></strong> &raquo;
-			<?php 
-			} else { 
+			<?php
+			} else {
 			?>
 				<a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php _e( 'Get Support', 'wp-to-twitter', 'wp-to-twitter' ); ?></a> &raquo;
-			<?php 
-			} 
+			<?php
+			}
 			?>
 		</p>
 		<?php
@@ -1307,8 +1307,8 @@ function wpt_add_twitter_inner_box( $post ) {
 		</div>
 	<?php
 	} else { // permissions: this user isn't allowed to Tweet.
-		_e( 'Your role does not have the ability to Post Tweets from this site.', 'wp-to-twitter' ); ?> 
-		<input type='hidden' name='_jd_tweet_this' value='no'/> 
+		_e( 'Your role does not have the ability to Post Tweets from this site.', 'wp-to-twitter' ); ?>
+		<input type='hidden' name='_jd_tweet_this' value='no'/>
 	<?php
 	}
 }
@@ -1584,10 +1584,10 @@ function wpt_twitter_profile() {
 	if ( current_user_can( 'wpt_twitter_oauth' ) || current_user_can( 'manage_options' ) ) {
 		?>
 		<h3><?php _e( 'WP Tweets User Settings', 'wp-to-twitter' ); ?></h3>
-		<?php 
+		<?php
 		if ( function_exists( 'wpt_connect_oauth_message' ) ) {
 			wpt_connect_oauth_message( $user_edit );
-		} 
+		}
 		?>
 		<table class="form-table">
 			<tr>
@@ -1909,7 +1909,7 @@ function wpt_debugging_enabled() {
  * Display promotion notice to admin users who have not donated or purchased WP Tweets PRO.
  */
 function wpt_promotion_notice() {
-	if ( current_user_can( 'activate_plugins' ) && get_option( 'wpt_promotion_scheduled' ) == 2 && get_option( 'jd_donations' ) != 1 ) {
+	if ( current_user_can( 'activate_plugins' ) && 2 == get_option( 'wpt_promotion_scheduled' ) && 1 != get_option( 'jd_donations' ) ) {
 		$upgrade = 'http://www.wptweetspro.com/wp-tweets-pro/';
 		$dismiss = admin_url( 'admin.php?page=wp-tweets-pro&dismiss=promotion' );
 		echo "<div class='notice'><p>" . sprintf( __( "I hope you've enjoyed <strong>WP to Twitter</strong>! Take a look at <a href='%s'>upgrading to WP Tweets PRO</a> for advanced Tweeting with WordPress! <a href='%s'>Dismiss</a>", 'wp-to-twitter' ), $upgrade, $dismiss ) . '</p></div>';

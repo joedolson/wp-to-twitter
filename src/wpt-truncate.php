@@ -128,7 +128,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 
 		$url_strlen     = mb_strlen( urldecode( wpt_normalize( $values['url'] ) ), $encoding );
 		$longurl_strlen = mb_strlen( urldecode( wpt_normalize( $values['longurl'] ) ), $encoding );
-		
+
 		// Tweet is too long, so we'll have to truncate that sucker.
 		$length_array = wpt_length_array( $values, $encoding );
 
@@ -365,8 +365,8 @@ function wpt_length_array( $values, $encoding ) {
  */
 function wpt_custom_shortcodes( $sentence, $post_ID ) {
 	$pattern = '/([([\[\]?)([A-Za-z0-9-_])*(\]\]]?)+/';
-	$params  = array( 
-		0 => '[[', 
+	$params  = array(
+		0 => '[[',
 		1 => ']]',
 	);
 	preg_match_all( $pattern, $sentence, $matches );
@@ -392,8 +392,8 @@ function wpt_custom_shortcodes( $sentence, $post_ID ) {
  */
 function wpt_user_meta_shortcodes( $sentence, $auth_ID ) {
 	$pattern = '/([({\{\}?)([A-Za-z0-9-_])*(\}\}}?)+/';
-	$params  = array( 
-		0 => '{{', 
+	$params  = array(
+		0 => '{{',
 		1 => '}}',
 	);
 	preg_match_all( $pattern, $sentence, $matches );
