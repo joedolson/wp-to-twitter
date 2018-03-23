@@ -25,13 +25,13 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	 * Create Consumer key
 	 */
 	class WPOAuthConsumer {
-		/*
+		/**
 		 * Contains the user's Consumer key.
 		 *
 		 * @var consumer key
 		 */
 		public $key;
-		/*
+		/**
 		 * Contains the user's consumer secret.
 		 *
 		 * @var secret
@@ -112,6 +112,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	abstract class WPOAuthSignatureMethod {
 		/**
 		 * Needs to return the name of the Signature Method (ie HMAC-SHA1)
+		 *
 		 * @return string
 		 */
 		abstract public function get_name();
@@ -122,9 +123,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * the encoding is handled in OAuthRequest when the final
 		 * request is serialized
 		 *
-		 * @param OAuthRequest  $request
-		 * @param OAuthConsumer $consumer
-		 * @param OAuthToken    $token
+		 * @param OAuthRequest  $request OAuth Request object.
+		 * @param OAuthConsumer $consumer OAuth Consumer key.
+		 * @param OAuthToken    $token OAuth Consumer token.
 		 *
 		 * @return string
 		 */
@@ -228,7 +229,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	 * EMSA-PKCS1-v1_5. It is assumed that the Consumer has provided its RSA public key in a
 	 * verified way to the Service Provider, in a manner which is beyond the scope of this
 	 * specification.
-	 *   - Chapter 9.3 ("RSA-SHA1")
+	 * - Chapter 9.3 ("RSA-SHA1")
 	 */
 	abstract class WPOAuthSignatureMethod_RSA_SHA1 extends WPOAuthSignatureMethod {
 		/**
@@ -239,7 +240,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
- 		 * Up to the SP to implement this lookup of keys. Possible ideas are:
+		 * Up to the SP to implement this lookup of keys. Possible ideas are:
 		 * ((1) do a lookup in a table of trusted certs keyed off of consumer.
 		 * (2) fetch via http using a url provided by the requester.
 		 * (3) some sort of specific discovery code based on request.
@@ -251,7 +252,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		protected abstract function fetch_public_cert( &$request );
 
 		/**
- 		 * Up to the SP to implement this lookup of keys. Possible ideas are:
+		 * Up to the SP to implement this lookup of keys. Possible ideas are:
 		 * (1) do a lookup in a table of trusted certs keyed off of consumer.
 		 *
 		 * @param Object $request Request.
@@ -319,6 +320,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 	}
 
+	/**
+	 * Construct and send the OAuth Request to the target URL.
+	 */
 	class WPOAuthRequest {
 		/**
 		 * Query parameters
@@ -353,7 +357,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 *
 		 * @var version
 		 */
-		public static $version    = '1.0';
+		public static $version = '1.0';
 
 		/**
 		 * POST input - source of input.
@@ -369,8 +373,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @param string $http_url URL.
 		 * @param array  $parameters Query parameters; will be combined with POST data.
 		 */
-		function __construct( $http_method, $http_url, $parameters = null ) {
-			@$parameters or $parameters = array();
+		function __construct( $http_method, $http_url, $parameters = array() ) {
 			$parameters        = array_merge( WPOAuthUtil::parse_parameters( parse_url( $http_url, PHP_URL_QUERY ) ), $parameters );
 			$this->parameters  = $parameters;
 			$this->http_method = $http_method;
@@ -419,14 +422,12 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 					);
 					$parameters        = array_merge( $parameters, $header_parameters );
 				}
-
 			}
-
 			return new WPOAuthRequest( $http_method, $http_url, $parameters );
 		}
 
 		/**
-		 * pretty much a helper function to set up the request
+		 * Helper function to set up the request
 		 *
 		 * @param object $consumer Consumer token.
 		 * @param object $token API token.
@@ -436,8 +437,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 *
 		 * @return object WPOAuthRequest object.
 		 */
-		public static function from_consumer_and_token( $consumer, $token, $http_method, $http_url, $parameters = null ) {
-			@$parameters or $parameters = array();
+		public static function from_consumer_and_token( $consumer, $token, $http_method, $http_url, $parameters = array() ) {
 			$defaults = array(
 				'oauth_version'      => WPOAuthRequest::$version,
 				'oauth_nonce'        => WPOAuthRequest::generate_nonce(),
@@ -454,7 +454,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * COnstruct parameters for query.
+		 * Construct parameters for query.
 		 *
 		 * @param string  $name Parameter name string.
 		 * @param string  $value Parameter value.
@@ -621,7 +621,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 			return $out;
 		}
-		
+
 		/**
 		 * Convert object to URL string.
 		 *
@@ -688,26 +688,60 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 	}
 
+	/**
+	 * Query to OAuth server.
+	 */
 	class WPOAuthServer {
+		/**
+		 * Limit on timestamp inconsistencies.
+		 *
+		 * @var $timestamp_threshold
+		 */
 		protected $timestamp_threshold = 300; // in seconds, five minutes.
+		/**
+		 * Version
+		 *
+		 * @var $version
+		 */
 		protected $version = '1.0';           // hi blaine.
+		/**
+		 * Array of methods usable.
+		 *
+		 * @var $signature_methods
+		 */
 		protected $signature_methods = array();
 
+		/**
+		 * Storage variable.
+		 *
+		 * @var $data_store
+		 */
 		protected $data_store;
 
+		/**
+		 * Build data store.
+		 *
+		 * @param object $data_store Data store.
+		 */
 		function __construct( $data_store ) {
 			$this->data_store = $data_store;
 		}
 
+		/**
+		 * Add a signature method.
+		 *
+		 * @param object $signature_method Signature method.
+		 */
 		public function add_signature_method( $signature_method ) {
 			$this->signature_methods[ $signature_method->get_name() ] = $signature_method;
 		}
 
-		// high level functions.
-
 		/**
-		 * process a request_token request
-		 * returns the request token on success
+		 * Process a request_token request
+		 *
+		 * @param object $request Request object.
+		 *
+		 * @return new token.
 		 */
 		public function fetch_request_token( &$request ) {
 			$this->get_version( $request );
@@ -727,8 +761,11 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * process an access_token request
-		 * returns the access token on success
+		 * Process an access_token request
+		 *
+		 * @param object $request Request object.
+		 *
+		 * @return new token.
 		 */
 		public function fetch_access_token( &$request ) {
 			$this->get_version( $request );
@@ -748,7 +785,11 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * verify an api call, checks all the parameters
+		 * Verify an api call, checks all the parameters
+		 *
+		 * @param object $request Request object.
+		 *
+		 * @return consumer & token.
 		 */
 		public function verify_request( &$request ) {
 			$this->get_version( $request );
@@ -759,9 +800,12 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			return array( $consumer, $token );
 		}
 
-		// Internals from here
 		/**
-		 * version 1
+		 * Version 1
+		 *
+		 * @param object $request Request.
+		 *
+		 * @return Oauth version.
 		 */
 		private function get_version( &$request ) {
 			$version = $request->get_parameter( 'oauth_version' );
@@ -778,14 +822,18 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * figure out the signature with some defaults
+		 * Figure out the signature with some defaults
+		 *
+		 * @param object $request Request.
+		 *
+		 * @return signature methods.
 		 */
 		private function get_signature_method( &$request ) {
 			$signature_method =
 				@$request->get_parameter( 'oauth_signature_method' );
 
 			if ( ! $signature_method ) {
-				// According to chapter 7 ("Accessing Protected Ressources") the signature-method.
+				// According to chapter 7 ("Accessing Protected Resources") the signature-method.
 				// parameter is required, and we can't just fallback to PLAINTEXT.
 				throw new WPOAuthException( 'No signature method parameter. This parameter is required' );
 			}
@@ -805,6 +853,10 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 		/**
 		 * try to find the consumer for the provided request's consumer key
+		 *
+		 * @param object $request Request.
+		 *
+		 * @return consumer.
 		 */
 		private function get_consumer( &$request ) {
 			$consumer_key = @$request->get_parameter( 'oauth_consumer_key' );
@@ -821,7 +873,13 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * try to find the token for the provided request's token key
+		 * Try to find the token for the provided request's token key
+		 *
+		 * @param object $request Request.
+		 * @param object $consumer Consumer.
+		 * @param string $token_type Type of token being handled.
+		 *
+		 * @return Oauth version.
 		 */
 		private function get_token( &$request, $consumer, $token_type = 'access' ) {
 			$token_field = @$request->get_parameter( 'oauth_token' );
@@ -834,8 +892,12 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * all-in-one function to check the signature on a request
+		 * All-in-one function to check the signature on a request
 		 * should guess the signature method appropriately
+		 *
+		 * @param object $request Request.
+		 * @param object $consumer Consumer.
+		 * @param object $token Token.
 		 */
 		private function check_signature( &$request, $consumer, $token ) {
 			// this should probably be in a different method.
@@ -861,7 +923,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * check that the timestamp is new enough
+		 * Check that the timestamp is new enough
+		 *
+		 * @param string $timestamp Time stamp.
 		 */
 		private function check_timestamp( $timestamp ) {
 			if ( ! $timestamp ) {
@@ -880,7 +944,12 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * check that the nonce is not repeated
+		 * Check that the nonce is not repeated
+		 *
+		 * @param string $consumer Consumer.
+		 * @param string $token Token.
+		 * @param string $nonce Nonce.
+		 * @param string $timestamp Timestamp.
 		 */
 		private function check_nonce( $consumer, $token, $nonce, $timestamp ) {
 			if ( ! $nonce ) {
@@ -901,6 +970,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 	}
 
+	/**
+	 * Handle data storage.
+	 */
 	class WPOAuthDataStore {
 		function lookup_consumer( $consumer_key ) {
 			// implement me.
@@ -927,7 +999,17 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 	}
 
+	/**
+	 * Utility procedures.
+	 */
 	class WPOAuthUtil {
+		/**
+		 * Encode as rfc3986.
+		 *
+		 * @param string $input Any string input.
+		 *
+		 * @return encoded input.
+		 */
 		public static function urlencode_rfc3986( $input ) {
 			if ( is_array( $input ) ) {
 				return array_map( array( 'WPOAuthUtil', 'urlencode_rfc3986' ), $input );
@@ -943,16 +1025,29 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 
-		// This decode function isn't taking into consideration the above
-		// modifications to the encoding process. However, this method doesn't
-		// seem to be used anywhere so leaving it as is.
+		/**
+		 * This decode function isn't taking into consideration the above
+		 * modifications to the encoding process. However, this method doesn't
+		 * seem to be used anywhere so leaving it as is.
+		 *
+		 * @param string $string An encoded string.
+		 *
+		 * @param return $string A decoded string.
+		 */
 		public static function urldecode_rfc3986( $string ) {
 			return urldecode( $string );
 		}
 
-		// Utility function for turning the Authorization: header into.
-		// parameters, has to do some unescaping.
-		// Can filter out any non-oauth parameters if needed (default behaviour).
+		/**
+		 * Utility function for turning the Authorization: header into.
+		 * parameters, has to do some unescaping.
+		 * Can filter out any non-oauth parameters if needed (default behaviour).
+		 *
+		 * @param string  $header Header string.
+		 * @param boolean $only_allow_oauth_parameters Strip off non-oauth params.
+		 *
+		 * @return Return parameters array.
+		 */
 		public static function split_header( $header, $only_allow_oauth_parameters = true ) {
 			$pattern = '/(([-_a-z]*)=("([^"]*)"|([^,]*)),?)/';
 			$offset  = 0;
@@ -974,7 +1069,11 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			return $params;
 		}
 
-		// helper to try to sort out headers for people who aren't running apache
+		/**
+		 * Helper to try to sort out headers for people who aren't running apache
+		 *
+		 * @return headers
+		 */
 		public static function get_headers() {
 			if ( function_exists( 'apache_request_headers' ) ) {
 				// we need this to get the actual Authorization: header.
@@ -1022,9 +1121,15 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			return $out;
 		}
 
-		// This function takes a input like a=b&a=c&d=e and returns the parsed
-		// parameters like this
-		// array('a' => array('b','c'), 'd' => 'e')
+		/**
+		 * This function takes a input like a=b&a=c&d=e and returns the parsed
+		 * parameters like this
+		 * array('a' => array('b','c'), 'd' => 'e')
+		 *
+		 * @param string $input URL query string.
+		 *
+		 * @return array of parameters.
+		 */
 		public static function parse_parameters( $input ) {
 			if ( ! isset( $input ) || ! $input ) {
 				return array();
@@ -1057,6 +1162,13 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			return $parsed_parameters;
 		}
 
+		/**
+		 * Built an HTTP query string from parameters.
+		 *
+		 * @param array $params Query parameters.
+		 *
+		 * @return string query string.
+		 */
 		public static function build_http_query( $params ) {
 			if ( ! $params ) {
 				return '';
@@ -1089,5 +1201,4 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			return implode( '&', $pairs );
 		}
 	}
-
 } // class_exists check.
