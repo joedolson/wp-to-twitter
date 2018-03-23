@@ -40,6 +40,10 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 		/**
 		 * Constructor.
+		 *
+		 * @param string $key Key.
+		 * @param string $secret Secret.
+		 * @param string $callback_url Response sent to.
 		 */
 		function __construct( $key, $secret, $callback_url = null ) {
 			$this->key          = $key;
@@ -59,13 +63,13 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	 * Create consumer token.
 	 */
 	class WPOAuthToken {
-		/*
+		/**
 		 * Access token
 		 *
 		 * @var token
 		 */
 		public $key;
-		/*
+		/**
 		 * Access secret.
 		 *
 		 * @var secret
@@ -250,7 +254,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
  		 * Up to the SP to implement this lookup of keys. Possible ideas are:
 		 * (1) do a lookup in a table of trusted certs keyed off of consumer.
 		 *
-		 * @param Object request Request.
+		 * @param Object $request Request.
 		 *
 		 * @return Either way should return a string representation of the certificate.
 		 */
@@ -316,14 +320,55 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	}
 
 	class WPOAuthRequest {
+		/**
+		 * Query parameters
+		 *
+		 * @var parameters
+		 */
 		private $parameters;
+
+		/**
+		 * HTTP query method.
+		 *
+		 * @var http_method
+		 */
 		private $http_method;
+
+		/**
+		 * Target URL
+		 *
+		 * @var http_url
+		 */
 		private $http_url;
-		// for debug purposes.
+
+		/**
+		 * Base string - base for signature string.
+		 *
+		 * @var base_string
+		 */
 		public $base_string;
+
+		/**
+		 * Version.
+		 *
+		 * @var version
+		 */
 		public static $version    = '1.0';
+
+		/**
+		 * POST input - source of input.
+		 *
+		 * @var post_input
+		 */
 		public static $post_input = 'php://input';
 
+		/**
+		 * Constructor function. Build properties.
+		 *
+		 * @param string $http_method Method.
+		 * @param string $http_url URL.
+		 * @param array  $parameters Query parameters; will be combined with POST data.
+		 */
 		function __construct( $http_method, $http_url, $parameters = null ) {
 			@$parameters or $parameters = array();
 			$parameters        = array_merge( WPOAuthUtil::parse_parameters( parse_url( $http_url, PHP_URL_QUERY ) ), $parameters );
@@ -333,7 +378,13 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * attempt to build up a request from what was passed to the server
+		 * Attempt to build up a request from what was passed to the server
+		 *
+		 * @param string $http_method Method.
+		 * @param string $http_url URL.
+		 * @param array  $parameters Query parameters.
+		 *
+		 * @return WPOAuthRequest object.
 		 */
 		public static function from_request( $http_method = null, $http_url = null, $parameters = null ) {
 			$scheme = ( ! isset( $_SERVER['HTTPS'] ) || 'on' != $_SERVER['HTTPS'] )
@@ -376,6 +427,14 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 		/**
 		 * pretty much a helper function to set up the request
+		 *
+		 * @param object $consumer Consumer token.
+		 * @param object $token API token.
+		 * @param string $http_method Method.
+		 * @param string $http_url URL.
+		 * @param array  $parameters Query parameters.
+		 *
+		 * @return object WPOAuthRequest object.
 		 */
 		public static function from_consumer_and_token( $consumer, $token, $http_method, $http_url, $parameters = null ) {
 			@$parameters or $parameters = array();
@@ -394,6 +453,13 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			return new WPOAuthRequest( $http_method, $http_url, $parameters );
 		}
 
+		/**
+		 * COnstruct parameters for query.
+		 *
+		 * @param string  $name Parameter name string.
+		 * @param string  $value Parameter value.
+		 * @param boolean $allow_duplicates Should we allow duplicate parameter names?
+		 */
 		public function set_parameter( $name, $value, $allow_duplicates = true ) {
 			if ( $allow_duplicates && isset( $this->parameters[ $name ] ) ) {
 				// We have already added parameter(s) with this name, so add to the list.
@@ -409,20 +475,38 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			}
 		}
 
+		/**
+		 * Get a parameter by name.
+		 *
+		 * @param string $name Parameter name.
+		 *
+		 * @return Parameter value.
+		 */
 		public function get_parameter( $name ) {
 			return isset( $this->parameters[ $name ] ) ? $this->parameters[ $name ] : null;
 		}
 
+		/**
+		 * Get all current parameters.
+		 *
+		 * @return Parameters.
+		 */
 		public function get_parameters() {
 			return $this->parameters;
 		}
 
+		/**
+		 * Remove a parameter.
+		 *
+		 * @param string $name Parameter name.
+		 */
 		public function unset_parameter( $name ) {
 			unset( $this->parameters[ $name ] );
 		}
 
 		/**
 		 * The request parameters, sorted and concatenated into a normalized string.
+		 *
 		 * @return string
 		 */
 		public function get_signable_parameters() {
@@ -458,7 +542,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * just uppercases the http method
+		 * Just uppercases the http method
 		 */
 		public function get_normalized_http_method() {
 			return strtoupper( $this->http_method );
@@ -487,7 +571,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * builds a url usable for a GET request
+		 * Builds a url usable for a GET request
 		 */
 		public function to_url() {
 			$post_data = $this->to_postdata();
@@ -500,14 +584,18 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * builds the data one would send in a POST request
+		 * Builds the data one would send in a POST request
 		 */
 		public function to_postdata() {
 			return WPOAuthUtil::build_http_query( $this->parameters );
 		}
 
 		/**
-		 * builds the Authorization: header
+		 * Builds the Authorization: header
+		 *
+		 * @param string $realm If realm not null.
+		 *
+		 * @return Header string.
 		 */
 		public function to_header( $realm = null ) {
 			$first = true;
@@ -533,12 +621,23 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 			return $out;
 		}
-
+		
+		/**
+		 * Convert object to URL string.
+		 *
+		 * @return string URL.
+		 */
 		public function __toString() {
 			return $this->to_url();
 		}
 
-
+		/**
+		 * Sign the OAuth request.
+		 *
+		 * @param string $signature_method Method to use to sign.
+		 * @param object $consumer Consumer object.
+		 * @param object $token Token object.
+		 */
 		public function sign_request( $signature_method, $consumer, $token ) {
 			$this->set_parameter(
 				'oauth_signature_method',
@@ -549,6 +648,15 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			$this->set_parameter( 'oauth_signature', $signature, false );
 		}
 
+		/**
+		 * Create the OAuth signature.
+		 *
+		 * @param string $signature_method Method to use to sign.
+		 * @param object $consumer Consumer object.
+		 * @param object $token Token object.
+		 *
+		 * @return signature.
+		 */
 		public function build_signature( $signature_method, $consumer, $token ) {
 			$signature = $signature_method->build_signature( $this, $consumer, $token );
 
@@ -557,6 +665,8 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 		/**
 		 * Util function: current timestamp
+		 *
+		 * @return current time.
 		 */
 		private static function generate_timestamp() {
 			// make sure that timestamp is in UTC.
@@ -566,7 +676,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * util function: current nonce
+		 * Util function: current nonce
+		 *
+		 * @return md5 string.
 		 */
 		private static function generate_nonce() {
 			$mt   = microtime();
@@ -956,7 +1068,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			$params = array_combine( $keys, $values );
 
 			// Parameters are sorted by name, using lexicographical byte value ordering.
-			// Ref: Spec: 9.1.1 (1)
+			// Ref: Spec: 9.1.1 (1).
 			uksort( $params, 'strcmp' );
 
 			$pairs = array();
@@ -978,4 +1090,4 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 	}
 
-} // class_exists check
+} // class_exists check.

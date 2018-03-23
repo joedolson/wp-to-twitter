@@ -15,12 +15,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once( 'class-wpt-twitteroauth.php' );
 
-/*
+/**
 * Based on Version 2.0.3, Twitter Feed for Developers by Storm Consultancy (Liam Gladdy)
 * The base class for the storm twitter feed for developers.
 */
 class WPT_TwitterFeed {
 
+	/**
+	 * Default feed settings.
+	 *
+	 * @var $defaults.
+	 */
 	private $defaults = array(
 		'directory'    => '',
 		'key'          => '',
@@ -31,17 +36,40 @@ class WPT_TwitterFeed {
 		'cache_expire' => 1800,
 	);
 
+	/**
+	 * Last error, if any.
+	 *
+	 * @var $st_last_error
+	 */
 	public $st_last_error = false;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param array $args Arguments; merged with defaults.
+	 */
 	function __construct( $args = array() ) {
 		$this->defaults = array_merge( $this->defaults, $args );
 	}
 
+	/**
+	 * Convert arguments into a string.
+	 *
+	 * @return print_r of arguments.
+	 */
 	function __toString() {
 		return print_r( $this->defaults, true );
 	}
 
-	// I'd prefer to put username before count, but for backwards compatibility it's not really viable.
+	/**
+	 * Get Tweets for a given screen name.
+	 *
+	 * @param int    $count Number of Tweets to fetch.
+	 * @param string $screenname Twitter account feed to fetch.
+	 * @param array  $options Options to apply for display of feed.
+	 *
+	 * @return Tweets or error message.
+	 */
 	function getTweets( $count = 20, $screenname = false, $options = false ) {
 		if ( $count > 20 ) {
 			/**
@@ -73,25 +101,33 @@ class WPT_TwitterFeed {
 			$screenname = get_option( 'wtt_twitter_username' );
 		}
 
-		$result = $this->checkValidCache( $screenname, $options );
+		$result = $this->check_valid_cache( $screenname, $options );
 		if ( false !== $result ) {
-			return $this->cropTweets( $result, $count );
+			return $this->crop_tweets( $result, $count );
 		}
 
-		//If we're here, we need to load.
-		$result = $this->oauthGetTweets( $screenname, $options );
+		// If we're here, we need to load.
+		$result = $this->oauth_get_tweets( $screenname, $options );
 
 		if ( is_object( $result ) && isset( $result->error ) ) {
 			$last_error = $result->error;
 
 			return array( 'error' => 'Twitter said: ' . $last_error );
 		} else {
-			return $this->cropTweets( $result, $count );
+			return $this->crop_tweets( $result, $count );
 		}
 
 	}
 
-	private function cropTweets( $result, $count ) {
+	/**
+	 * Crop list of Tweets to display correct number of items.
+	 *
+	 * @param array $result Full query result.
+	 * @param int   $count Tweets to show.
+	 *
+	 * @return array
+	 */
+	private function crop_tweets( $result, $count ) {
 		if ( is_array( $result ) ) {
 			return array_slice( $result, 0, $count );
 		} else {
@@ -99,16 +135,32 @@ class WPT_TwitterFeed {
 		}
 	}
 
-	private function getCacheLocation() {
+	/**
+	 * Locate cache.
+	 */
+	private function get_cache_location() {
 		return $this->defaults['directory'] . '.tweetcache';
 	}
 
-	private function getOptionsHash( $options ) {
+	/**
+	 * Hash options so cache is unique.
+	 *
+	 * @param array $options Display options.
+	 *
+	 * @return md5 hash.
+	 */
+	private function get_options_hash( $options ) {
 		$hash = md5( serialize( $options ) );
 
 		return $hash;
 	}
 
+	/**
+	 * Save cache to file.
+	 * 
+	 * @param string $file Cache file location.
+	 * @param string $cache Data to save.
+	 */
 	private function save_cache( $file, $cache ) {
 		$is_writable = wpt_is_writable( $file );
 		if ( $is_writable ) {
@@ -118,6 +170,11 @@ class WPT_TwitterFeed {
 		}
 	}
 
+	/**
+	 * Delete cache.
+	 *
+	 * @param string $file File name.
+	 */
 	private function delete_cache( $file ) {
 		$is_writable = wpt_is_writable( $file );
 		if ( $is_writable ) {
@@ -127,9 +184,17 @@ class WPT_TwitterFeed {
 		}
 	}
 
-	private function checkValidCache( $screenname, $options ) {
+	/**
+	 * Fetch and verify cache.
+	 *
+	 * @param string $screenname Name to get cache for.
+	 * @param array  $options Options for cache being fetched.
+	 *
+	 * @return boolean or cache contents.
+	 */
+	private function check_valid_cache( $screenname, $options ) {
 		$delete_cache = get_option( 'wpt_delete_cache' );
-		$file         = $this->getCacheLocation();
+		$file         = $this->get_cache_location();
 
 		if ( 'true' == $delete_cache ) {
 			update_option( 'wpt_delete_cache', 'false' );
@@ -151,7 +216,7 @@ class WPT_TwitterFeed {
 				return false;
 			}
 		}
-		$cachename = $screenname . '-' . $this->getOptionsHash( $options );
+		$cachename = $screenname . '-' . $this->get_options_hash( $options );
 
 		//Check if we have a cache for the user.
 		if ( ! isset( $cache[ $cachename ] ) ) {
@@ -166,7 +231,7 @@ class WPT_TwitterFeed {
 		}
 
 		if ( $cache[ $cachename ]['time'] < ( time() - $this->defaults['cache_expire'] ) ) {
-			$result = $this->oauthGetTweets( $screenname, $options );
+			$result = $this->oauth_get_tweets( $screenname, $options );
 			if ( ! isset( $result->error ) ) {
 				return $result;
 			}
@@ -175,12 +240,20 @@ class WPT_TwitterFeed {
 		return $cache[ $cachename ]['tweets'];
 	}
 
-	private function oauthGetTweets( $screenname, $options ) {
+	/**
+	 * Fetch Tweets from Twitter.
+	 *
+	 * @param string $screenname Username.
+	 * @param array  $options Array of display options.
+	 *
+	 * @return Tweets.
+	 */
+	private function oauth_get_tweets( $screenname, $options ) {
 		$key          = $this->defaults['key'];
 		$secret       = $this->defaults['secret'];
 		$token        = $this->defaults['token'];
 		$token_secret = $this->defaults['token_secret'];
-		$cachename    = $screenname . '-' . $this->getOptionsHash( $options );
+		$cachename    = $screenname . '-' . $this->get_options_hash( $options );
 		$options      = array_merge( $options, array(
 			'screen_name'          => $screenname,
 			'count'                => 20,
@@ -231,14 +304,14 @@ class WPT_TwitterFeed {
 				echo '<ul>' . $return . '</ul>'; return;
 			}
 		}
-		if ( is_file( $this->getCacheLocation() ) ) {
-			$cache = json_decode( file_get_contents( $this->getCacheLocation() ), true );
+		if ( is_file( $this->get_cache_location() ) ) {
+			$cache = json_decode( file_get_contents( $this->get_cache_location() ), true );
 		}
 
 		if ( ! isset( $result->error ) ) {
 			$cache[ $cachename ]['time']   = time();
 			$cache[ $cachename ]['tweets'] = $result;
-			$file                          = $this->getCacheLocation();
+			$file                          = $this->get_cache_location();
 			$this->save_cache( $file, json_encode( $cache ) );
 		} else {
 			if ( is_array( $result ) && isset( $result['errors'][0] ) && isset( $result['errors'][0]['message'] ) ) {

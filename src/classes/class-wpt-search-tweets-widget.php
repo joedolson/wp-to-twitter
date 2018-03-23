@@ -71,7 +71,7 @@ class WPT_Search_Tweets_Widget extends WP_Widget {
 		$before_title  = $args['before_title'];
 		$after_title   = $args['after_title'];
 
-		wp_enqueue_script( 'twitter-platform', "https://platform.twitter.com/widgets.js" );
+		wp_enqueue_script( 'twitter-platform', 'https://platform.twitter.com/widgets.js' );
 		// Merge with defaults.
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 		echo $before_widget;
@@ -97,7 +97,7 @@ class WPT_Search_Tweets_Widget extends WP_Widget {
 	 * @return array Settings to save or bool false to cancel saving
 	 */
 	function update( $new_instance, $old_instance ) {
-		// Force the cache to refresh
+		// Force the cache to refresh.
 		update_option( 'wpt_delete_cache', 'true' );
 		$new_instance['title'] = strip_tags( $new_instance['title'] );
 

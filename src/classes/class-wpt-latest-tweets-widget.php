@@ -68,14 +68,13 @@ class WPT_Latest_Tweets_Widget extends WP_Widget {
 	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
 	 * @param array $instance The settings for the particular instance of the widget.
 	 */
-
 	function widget( $args, $instance ) {
 		$before_widget = $args['before_widget'];
 		$after_widget  = $args['after_widget'];
 		$before_title  = $args['before_title'];
 		$after_title   = $args['after_title'];
 
-		wp_enqueue_script( 'twitter-platform', "https://platform.twitter.com/widgets.js" );
+		wp_enqueue_script( 'twitter-platform', 'https://platform.twitter.com/widgets.js' );
 		/** Merge with defaults */
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
@@ -102,7 +101,7 @@ class WPT_Latest_Tweets_Widget extends WP_Widget {
 	 * @return array Settings to save or bool false to cancel saving
 	 */
 	function update( $new_instance, $old_instance ) {
-		// Force the cache to refresh
+		// Force the cache to refresh.
 		update_option( 'wpt_delete_cache', 'true' );
 		$new_instance['title'] = strip_tags( $new_instance['title'] );
 
@@ -113,8 +112,6 @@ class WPT_Latest_Tweets_Widget extends WP_Widget {
 	 * Echo the settings update form.
 	 *
 	 * @param array $instance Current settings.
-	 *
-	 * @return string
 	 */
 	function form( $instance ) {
 
