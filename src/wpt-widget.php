@@ -66,8 +66,8 @@ function wpt_tweet_linkify( $text, $opts, $tweet ) {
 	return $text;
 }
 
-/* implement getTweets */
-function WPT_getTweets( $count = 20, $username = false, $options = false ) {
+/* implement get_tweets */
+function WPT_get_tweets( $count = 20, $username = false, $options = false ) {
 
 	$config['key']          = get_option( 'app_consumer_key' );
 	$config['secret']       = get_option( 'app_consumer_secret' );
@@ -81,7 +81,7 @@ function WPT_getTweets( $count = 20, $username = false, $options = false ) {
 	$config['directory'] = plugin_dir_path( __FILE__ );
 
 	$obj = new WPT_TwitterFeed( $config );
-	$res = $obj->getTweets( $count, $username, $options );
+	$res = $obj->get_tweets( $count, $username, $options );
 	update_option( 'wpt_tdf_last_error', $obj->st_last_error );
 
 	return $res;
@@ -204,7 +204,7 @@ function wpt_twitter_feed( $instance ) {
 	$opts['mentions']    = $instance['link_mentions'];
 	$opts['hashtags']    = $instance['link_hashtags'];
 	$opts['show_images'] = isset( $instance['show_images'] ) ? $instance['show_images'] : false;
-	$rawtweets           = WPT_getTweets( $instance['twitter_num'], $twitter_id, $options );
+	$rawtweets           = WPT_get_tweets( $instance['twitter_num'], $twitter_id, $options );
 
 	if ( isset( $rawtweets['error'] ) ) {
 		$return .= '<li>' . $rawtweets['error'] . '</li>';

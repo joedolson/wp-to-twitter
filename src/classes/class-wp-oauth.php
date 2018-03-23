@@ -390,11 +390,13 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @return WPOAuthRequest object.
 		 */
 		public static function from_request( $http_method = null, $http_url = null, $parameters = null ) {
-			$scheme = ( ! isset( $_SERVER['HTTPS'] ) || 'on' != $_SERVER['HTTPS'] )
-				? 'http'
-				: 'https';
-			@$http_url or $http_url       = $scheme . '://' . $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
-			@$http_method or $http_method = $_SERVER['REQUEST_METHOD'];
+			$scheme = ( ! isset( $_SERVER['HTTPS'] ) || 'on' != $_SERVER['HTTPS'] ) ? 'http' : 'https';
+			if ( null === $http_url ) {
+				$http_url = $scheme . '://' . $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
+			}
+			if ( null === $http_method ) {
+				$http_method = $_SERVER['REQUEST_METHOD'];
+			}
 
 			// We weren't handed any parameters, so let's find the ones relevant to this request.
 			// If you run XML-RPC or similar you should use this to provide your own parsed parameter-list.
@@ -407,7 +409,8 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 				// It's a POST request of the proper content-type, so parse POST.
 				// parameters and add those overriding any duplicates from GET.
-				if ( 'POST' == $http_method && @strstr( $request_headers['Content-Type'], 'application/x-www-form-urlencoded' ) ) {
+				$content_type = isset( $request_headers['Content-Type'] ) ? $request_headers['Content-Type'] : '';
+				if ( 'POST' == $http_method && strstr( $content_type, 'application/x-www-form-urlencoded' ) ) {
 					$post_data  = WPOAuthUtil::parse_parameters(
 						file_get_contents( self::$post_input )
 					);
@@ -416,7 +419,8 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 				// We have a Authorization-header with OAuth data. Parse the header.
 				// and add those overriding any duplicates from GET or POST.
-				if ( 'OAuth ' == @substr( $request_headers['Authorization'], 0, 6 ) ) {
+				$authorization = isset( $request_headers['Authorization'] ) ? $request_headers['Authorization'] : '';
+				if ( 'OAuth ' == substr( $authorization, 0, 6 ) ) {
 					$header_parameters = WPOAuthUtil::split_header(
 						$request_headers['Authorization']
 					);
@@ -458,7 +462,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 *
 		 * @param string  $name Parameter name string.
 		 * @param string  $value Parameter value.
-		 * @param boolean $allow_duplicates Should we allow duplicate parameter names?
+		 * @param boolean $allow_duplicates Should we allow duplicate parameter names.
 		 */
 		public function set_parameter( $name, $value, $allow_duplicates = true ) {
 			if ( $allow_duplicates && isset( $this->parameters[ $name ] ) ) {
@@ -533,7 +537,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			$parts = array(
 				$this->get_normalized_http_method(),
 				$this->get_normalized_http_url(),
-				$this->get_signable_parameters()
+				$this->get_signable_parameters(),
 			);
 
 			$parts = WPOAuthUtil::urlencode_rfc3986( $parts );
@@ -549,16 +553,16 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * parses the url and rebuilds it to be
+		 * Parses the url and rebuilds it to be
 		 * scheme://host/path
 		 */
 		public function get_normalized_http_url() {
 			$parts = parse_url( $this->http_url );
 
 			$port   = isset( $parts['port'] ) ? $parts['port'] : false;
-			$scheme = @$parts['scheme'];
-			$host   = @$parts['host'];
-			$path   = @$parts['path'];
+			$scheme = isset( $parts['scheme'] ) ? $parts['scheme'] : '';
+			$host   = isset( $parts['host'] ) ? $parts['scheme'] : '';
+			$path   = isset( $parts['path'] ) ? $parts['scheme'] : '';
 
 			$port or $port = ( 'https' == $scheme ) ? '443' : '80';
 
