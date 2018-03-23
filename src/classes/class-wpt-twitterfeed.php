@@ -16,9 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once( 'class-wpt-twitteroauth.php' );
 
 /**
-* Based on Version 2.0.3, Twitter Feed for Developers by Storm Consultancy (Liam Gladdy)
-* The base class for the storm twitter feed for developers.
-*/
+ * Based on Version 2.0.3, Twitter Feed for Developers by Storm Consultancy (Liam Gladdy)
+ * The base class for the storm twitter feed for developers.
+ */
 class WPT_TwitterFeed {
 
 	/**
@@ -70,7 +70,7 @@ class WPT_TwitterFeed {
 	 *
 	 * @return Tweets or error message.
 	 */
-	function getTweets( $count = 20, $screenname = false, $options = false ) {
+	function get_tweets( $count = 20, $screenname = false, $options = false ) {
 		if ( $count > 20 ) {
 			/**
 			 * Filters the max feed count. Default is 20, but you can change it.
@@ -157,7 +157,7 @@ class WPT_TwitterFeed {
 
 	/**
 	 * Save cache to file.
-	 * 
+	 *
 	 * @param string $file Cache file location.
 	 * @param string $cache Data to save.
 	 */
@@ -218,7 +218,7 @@ class WPT_TwitterFeed {
 		}
 		$cachename = $screenname . '-' . $this->get_options_hash( $options );
 
-		//Check if we have a cache for the user.
+		// Check if we have a cache for the user.
 		if ( ! isset( $cache[ $cachename ] ) ) {
 			return false;
 		}
@@ -293,7 +293,7 @@ class WPT_TwitterFeed {
 		}
 		$result = json_decode( $result );
 		if ( isset( $options['search'] ) ) {
-			if ( !method_exists( $result, 'errors' ) ) {
+			if ( ! method_exists( $result, 'errors' ) ) {
 				$result = $result->statuses;
 			} else {
 				$errors = $result->errors;
@@ -301,7 +301,8 @@ class WPT_TwitterFeed {
 				foreach ( $errors as $error ) {
 					$return .= "<li>$error->message</li>";
 				}
-				echo '<ul>' . $return . '</ul>'; return;
+				echo '<ul>' . $return . '</ul>'; 
+				return;
 			}
 		}
 		if ( is_file( $this->get_cache_location() ) ) {
