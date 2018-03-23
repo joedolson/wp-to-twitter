@@ -23,7 +23,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 	 * Twitter WPOAuth class
 	 */
 	class Wpt_TwitterOAuth {
-		/*
+		/**
 		 * Contains the last HTTP status code returned
 		 *
 		 * @var status code
@@ -31,72 +31,98 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		public $http_code;
 		/**
 		 * Contains the last API call.
+		 *
+		 * @var $url
 		 */
 		public $url;
 		/**
 		 * Set up the API root URL.
+		 *
+		 * @var $host
 		 */
 		public $host = 'https://api.twitter.com/1.1/';
 		/**
 		 * Set timeout default.
+		 *
+		 * @var $format
 		 */
 		public $format = 'json';
 		/**
 		 * Decode returned json data.
+		 *
+		 * @var $decode_json
 		 */
 		public $decode_json = false;
 		/**
 		 * Contains the last API call
+		 *
+		 * @var $last_api_call
 		 */
 		private $last_api_call;
 		/**
 		 * contains the header
+		 *
+		 * @var $http_header
 		 */
 		public $http_header;
 		/**
 		 * contains the body
+		 *
+		 * @var $body
 		 */
 		public $body;
 
 		/**
 		 * Set API URLS
+		 *
+		 * @return access token endpoint.
 		 */
-		function accessTokenURL() {
+		function access_token_url() {
 			return 'https://api.twitter.com/oauth/access_token';
 		}
 
 		/**
 		 * Set authentication URL.
+		 *
+		 * @return authentication endpoint.
 		 */
-		function authenticateURL() {
+		function authenticate_url() {
 			return 'https://api.twitter.com/oauth/authenticate';
 		}
 
 		/**
 		 * Set authorization URL.
+		 *
+		 * @return authorization endpoint.
 		 */
-		function authorizeURL() {
+		function authorize_url() {
 			return 'https://api.twitter.com/oauth/authorize';
 		}
 
 		/**
 		 * Set request Token URL.
+		 *
+		 * @return request token ednpoint.
 		 */
-		function requestTokenURL() {
+		function request_token_url() {
 			return 'https://api.twitter.com/oauth/request_token';
 		}
 
 		/**
 		 * Debug helpers
+		 *
+		 * @return last query's http code response.
 		 */
-		function lastStatusCode() {
+		function last_status_code() {
 			return $this->http_code;
 		}
 
 		/**
 		 * Return last API call.
+		 *
+		 * @return last query API call.
 		 */
-		function lastAPICall() {
+		function last_api_call() {
 			return $this->last_api_call;
 		}
 
@@ -105,14 +131,14 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 *
 		 * @param string $consumer_key Consumer key.
 		 * @param string $consumer_secret Consumer secret.
-		 * @param string $WPOAuth_token Token.
-		 * @param string $WPOAuth_token_secret. Token secret.
+		 * @param string $wp_oauth_token Token.
+		 * @param string $wp_oauth_token_secret. Token secret.
 		 */
-		function __construct( $consumer_key, $consumer_secret, $WPOAuth_token = null, $WPOAuth_token_secret = null ) {
+		function __construct( $consumer_key, $consumer_secret, $wp_oauth_token = null, $wp_oauth_token_secret = null ) {
 			$this->sha1_method = new WPOAuthSignatureMethod_HMAC_SHA1();
 			$this->consumer    = new WPOAuthConsumer( $consumer_key, $consumer_secret );
-			if ( ! empty( $WPOAuth_token ) && ! empty( $WPOAuth_token_secret ) ) {
-				$this->token = new WPOAuthConsumer( $WPOAuth_token, $WPOAuth_token_secret );
+			if ( ! empty( $wp_oauth_token ) && ! empty( $wp_oauth_token_secret ) ) {
+				$this->token = new WPOAuthConsumer( $wp_oauth_token, $wp_oauth_token_secret );
 			} else {
 				$this->token = null;
 			}
@@ -125,7 +151,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * @returns a key/value array containing WPOAuth_token and WPOAuth_token_secret
 		 */
 		function getRequestToken() {
-			$r           = $this->WPOAuthRequest( $this->requestTokenURL() );
+			$r           = $this->WPOAuthRequest( $this->request_token_url() );
 			$token       = $this->WPOAuthParseResponse( $r );
 			$this->token = new WPOAuthConsumer( $token['WPOAuth_token'], $token['WPOAuth_token_secret'] );
 
@@ -155,12 +181,12 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 *
 		 * @returns a string
 		 */
-		function getAuthorizeURL( $token ) {
+		function getauthorize_url( $token ) {
 			if ( is_array( $token ) ) {
 				$token = $token['WPOAuth_token'];
 			}
 
-			return $this->authorizeURL() . '?WPOAuth_token=' . $token;
+			return $this->authorize_url() . '?WPOAuth_token=' . $token;
 		}
 
 
@@ -169,12 +195,12 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 *
 		 * @returns a string
 		 */
-		function getAuthenticateURL( $token ) {
+		function getauthenticate_url( $token ) {
 			if ( is_array( $token ) ) {
 				$token = $token['WPOAuth_token'];
 			}
 
-			return $this->authenticateURL() . '?WPOAuth_token=' . $token;
+			return $this->authenticate_url() . '?WPOAuth_token=' . $token;
 		}
 
 		/**
@@ -185,7 +211,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 *                "WPOAuth_token_secret" => the access secret)
 		 */
 		function getAccessToken( $token = null ) {
-			$r           = $this->WPOAuthRequest( $this->accessTokenURL() );
+			$r           = $this->WPOAuthRequest( $this->access_token_url() );
 			$token       = $this->WPOAuthParseResponse( $r );
 			$this->token = new WPOAuthConsumer( $token['WPOAuth_token'], $token['WPOAuth_token_secret'] );
 
@@ -306,13 +332,12 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				$mime_type = 'image/jpeg';
 			}
 
-			/* End New */
 			$code  = $tmhOAuth->request(
 				'POST',
 				$url,
 				array( 'media' => "$binary" ),
-				true, // use auth
-				true  // multipart
+				true, // use auth.
+				true  // multipart.
 			);
 
 			$response = $tmhOAuth->response['response'];
