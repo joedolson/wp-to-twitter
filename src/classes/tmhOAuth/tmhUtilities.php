@@ -1,6 +1,6 @@
 <?php
 /**
- * tmhUtilities
+ * Utilities / tmhUtilities
  *
  * Helpful utility and Twitter formatting functions
  *
@@ -17,8 +17,8 @@ class tmhUtilities {
 	 * Deprecated.
 	 * You should instead use entify_with_options.
 	 *
-	 * @param array $tweet the json converted to normalised array
-	 * @param array $replacements if specified, the entities and their replacements will be stored to this variable
+	 * @param array $tweet the json converted to normalised array.
+	 * @param array $replacements if specified, the entities and their replacements will be stored to this variable.
 	 *
 	 * @return the tweet text with entities replaced with hyperlinks
 	 */
@@ -30,9 +30,9 @@ class tmhUtilities {
 	 * Entifies the tweet using the given entities element, using the provided
 	 * options.
 	 *
-	 * @param array $tweet the json converted to normalised array
-	 * @param array $options settings to be used when rendering the entities
-	 * @param array $replacements if specified, the entities and their replacements will be stored to this variable
+	 * @param array $tweet the json converted to normalised array.
+	 * @param array $options settings to be used when rendering the entities.
+	 * @param array $replacements if specified, the entities and their replacements will be stored to this variable.
 	 *
 	 * @return the tweet text with entities replaced with hyperlinks
 	 */
@@ -61,7 +61,7 @@ class tmhUtilities {
 
 		$target = ( ! empty( $opts['target'] ) ) ? ' target="' . $opts['target'] . '"' : '';
 
-		// prepare the entities
+		// prepare the entities.
 		foreach ( $tweet['entities'] as $type => $things ) {
 			foreach ( $things as $entity => $value ) {
 				$tweet_link = "<a href=\"https://twitter.com/{$tweet['user']['screen_name']}/statuses/{$tweet['id']}\"{$target}>{$tweet['created_at']}</a>";
@@ -110,7 +110,7 @@ class tmhUtilities {
 	/**
 	 * Returns the current URL. This is instead of PHP_SELF which is unsafe
 	 *
-	 * @param bool $dropqs whether to drop the querystring or not. Default true
+	 * @param bool $dropqs whether to drop the querystring or not. Default true.
 	 *
 	 * @return string the current URL
 	 */
@@ -136,7 +136,9 @@ class tmhUtilities {
 		$path   = @$parts['path'];
 		$qs     = @$parts['query'];
 
-		$port or $port = ( 'https' == $scheme ) ? '443' : '80';
+		if ( ! $port ) {
+			$port == ( 'https' == $scheme ) ? '443' : '80';
+		}
 
 		if ( ( 'https' == $scheme && '443' != $port ) || ( 'http' == $scheme && '80' != $port ) ) {
 			$host = "$host:$port";
@@ -156,7 +158,7 @@ class tmhUtilities {
 	/**
 	 * Debug function for printing the content of an object
 	 *
-	 * @param mixes $obj
+	 * @param mixes $obj Object print.
 	 */
 	public static function pr( $obj ) {
 
@@ -187,11 +189,12 @@ class tmhUtilities {
 	 * This method doesn't return anything. Instead the response should be
 	 * inspected directly.
 	 *
-	 * @param string $method the HTTP method being used. e.g. POST, GET, HEAD etc
-	 * @param string $url the request URL without query string parameters
-	 * @param array $params the request parameters as an array of key=value pairs
+	 * @param object $tmhOAuth Class object.
+	 * @param string $method the HTTP method being used. e.g. POST, GET, HEAD etc.
+	 * @param string $url the request URL without query string parameters.
+	 * @param array  $params the request parameters as an array of key=value pairs.
 	 * @param string $useauth whether to use authentication when making the request. Default true.
-	 * @param string $multipart whether this request contains multipart data. Default false
+	 * @param string $multipart whether this request contains multipart data. Default false.
 	 */
 	public static function auto_fix_time_request( $tmhOAuth, $method, $url, $params = array(), $useauth = true, $multipart = false ) {
 		$tmhOAuth->request( $method, $url, $params, $useauth, $multipart );
@@ -201,14 +204,14 @@ class tmhUtilities {
 			return;
 		}
 
-		// some error that isn't a 401
+		// some error that isn't a 401.
 		if ( 401 != $tmhOAuth->response['code'] ) {
 			return;
 		}
 
 		// some error that is a 401 but isn't because the OAuth token and signature are incorrect.
 		// TODO: this check is horrid but helps avoid requesting twice when the username and password are wrong.
-		if ( stripos( $tmhOAuth->response['response'], 'password' ) !== false ) {
+		if ( false !== stripos( $tmhOAuth->response['response'], 'password' ) ) {
 			return;
 		}
 
@@ -240,7 +243,7 @@ class tmhUtilities {
 	 *
 	 * This function works on *nix systems only and requires shell_exec and stty.
 	 *
-	 * @param  boolean $stars Wether or not to output stars for given characters
+	 * @param  boolean $stars Wether or not to output stars for given characters.
 	 *
 	 * @return string
 	 * @url http://www.dasprids.de/blog/2008/08/22/getting-a-password-hidden-from-stdin-with-php-cli

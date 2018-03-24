@@ -1,7 +1,6 @@
 <?php
-
 /**
- * tmhOAuth
+ * OAuth / tmhOAuth
  *
  * An OAuth 1.0A library written in PHP.
  * The library supports file uploading using multipart/form as well as general
@@ -12,6 +11,7 @@
  *
  * 20 February 2013
  */
+
 class tmhOAuth {
 	const VERSION = '0.7.5';
 
@@ -50,7 +50,6 @@ class tmhOAuth {
 				'force_timestamp'            => false,
 				'timestamp'                  => false,
 				// used for checking signatures. leave as false for auto.
-
 				// oauth signing variables that are not dynamic.
 				'oauth_version'              => '1.0',
 				'oauth_signature_method'     => 'HMAC-SHA1',
@@ -66,7 +65,6 @@ class tmhOAuth {
 				'curl_capath'                => dirname( __FILE__ ),
 				'curl_followlocation'        => false,
 				// whether to follow redirects or not.
-
 				// support for proxy servers.
 				'curl_proxy'                 => false,
 				// really you don't want to use this if you are using streaming.
@@ -74,7 +72,6 @@ class tmhOAuth {
 				// format username:password for proxy, if required.
 				'curl_encoding'              => '',
 				// leave blank for all supported formats, else use gzip, deflate, identity.
-
 				// streaming API.
 				'is_streaming'               => false,
 				'streaming_eol'              => "\r\n",
@@ -153,7 +150,7 @@ class tmhOAuth {
 	private function safe_encode( $data ) {
 		if ( is_array( $data ) ) {
 			return array_map( array( $this, 'safe_encode' ), $data );
-		} else if ( is_scalar( $data ) ) {
+		} elseif ( is_scalar( $data ) ) {
 			return str_ireplace(
 				array( '+', '%7E' ),
 				array( ' ', '~' ),
@@ -175,7 +172,7 @@ class tmhOAuth {
 	private function safe_decode( $data ) {
 		if ( is_array( $data ) ) {
 			return array_map( array( $this, 'safe_decode' ), $data );
-		} else if ( is_scalar( $data ) ) {
+		} elseif ( is_scalar( $data ) ) {
 			return rawurldecode( $data );
 		} else {
 			return '';
@@ -259,7 +256,9 @@ class tmhOAuth {
 		$host   = $parts['host'];
 		$path   = isset( $parts['path'] ) ? $parts['path'] : false;
 
-		$port or $port = ( 'https' == $scheme ) ? '443' : '80';
+		if ( ! $port ) {
+			$port == ( 'https' == $scheme ) ? '443' : '80';
+		}
 
 		if ( ( 'https' == $scheme && '443' != $port ) || ( 'http' == $scheme && '80' != $port ) ) {
 			$host = "$host:$port";

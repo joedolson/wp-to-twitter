@@ -127,7 +127,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		}
 
 		/**
-		 * construct TwitterWPOAuth object
+		 * Construct TwitterWPOAuth object
 		 *
 		 * @param string $consumer_key Consumer key.
 		 * @param string $consumer_secret Consumer secret.
@@ -296,8 +296,8 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		/**
 		 * Handles a status update that includes an image.
 		 *
-		 * @param type $url
-		 * @param type $args
+		 * @param string $url Target URL.
+		 * @param array  $args Array of arguments to send.
 		 *
 		 * @return boolean
 		 */
@@ -320,7 +320,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				$ot  = get_user_meta( $auth, 'oauth_token', true );
 				$ots = get_user_meta( $auth, 'oauth_token_secret', true );
 			}
-			// when performing as a scheduled action, need to include file.php
+			// when performing as a scheduled action, need to include file.php.
 			if ( ! function_exists( 'get_home_path' ) ) {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			}
@@ -328,7 +328,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				'consumer_key'    => $ack,
 				'consumer_secret' => $acs,
 				'user_token'      => $ot,
-				'user_secret'     => $ots
+				'user_secret'     => $ots,
 			);
 			$tmhOAuth   = new tmhOAuth( $connect );
 			$attachment = $args['media'];
@@ -359,7 +359,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				$mime_type = 'image/jpeg';
 			}
 
-			$code  = $tmhOAuth->request(
+			$code = $tmhOAuth->request(
 				'POST',
 				$url,
 				array( 'media' => "$binary" ),
@@ -372,7 +372,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			wpt_mail( 'Media Posted', "
 				Media ID #$args[media] ($transport)" . "\n\n" .
 				'Twitter Response' . "\n" . print_r( $full, 1 ) . "\n\n" .
-				'Attachment Details' . "\n" . print_r( $upload, 1 ) .  "\n\n" .
+				'Attachment Details' . "\n" . print_r( $upload, 1 ) . "\n\n" .
 				'Img Request Response' . "\n" . print_r( $remote, 1 )
 			);
 
@@ -415,6 +415,12 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 		/**
 		 * Format and sign an WPOAuth / API request
+		 *
+		 * @param string $url Target URL.
+		 * @param array  $args Arguments for signing.
+		 * @param string $method Method type.
+		 *
+		 * @return Request.
 		 */
 		function WPOAuthRequest( $url, $args = array(), $method = null ) {
 
@@ -429,7 +435,6 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			$req = WPOAuthRequest::from_consumer_and_token( $this->consumer, $this->token, $method, $url, $args );
 			$req->sign_request( $this->sha1_method, $this->consumer, $this->token );
 
-
 			$response = false;
 			$url      = null;
 
@@ -441,7 +446,10 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				case 'POST':
 					$url      = $req->get_normalized_http_url();
 					$args     = wp_parse_args( $req->to_postdata() );
-					$response = wp_remote_post( $url, array( 'body' => $args, 'timeout' => 30 ) );
+					$response = wp_remote_post( $url, array(
+						'body' => $args,
+						'timeout' => 30,
+					) );
 					break;
 			}
 

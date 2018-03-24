@@ -600,7 +600,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * Builds the Authorization: header
 		 *
 		 * @param string $realm If realm not null.
-		 * @throws WPOAuthException
+		 * @throws WPOAuthException Exception message.
 		 *
 		 * @return Header string.
 		 */
@@ -811,6 +811,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * Version 1
 		 *
 		 * @param object $request Request.
+		 * @throws WPOAuthException Exception message.
 		 *
 		 * @return Oauth version.
 		 */
@@ -832,6 +833,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * Figure out the signature with some defaults
 		 *
 		 * @param object $request Request.
+		 * @throws WPOAuthException Exception message.
 		 *
 		 * @return signature methods.
 		 */
@@ -860,7 +862,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * Try to find the consumer for the provided request's consumer key
 		 *
 		 * @param object $request Request.
-		 * @throws WPOAuthException
+		 * @throws WPOAuthException Exception message.
 		 *
 		 * @return consumer.
 		 */
@@ -884,7 +886,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @param object $request Request.
 		 * @param object $consumer Consumer.
 		 * @param string $token_type Type of token being handled.
-		 * @throws WPOAuthException
+		 * @throws WPOAuthException Exception message.
 		 *
 		 * @return Oauth version.
 		 */
@@ -905,7 +907,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @param object $request Request.
 		 * @param object $consumer Consumer.
 		 * @param object $token Token.
-		 * @throws WPOAuthException
+		 * @throws WPOAuthException Exception message.
 		 */
 		private function check_signature( &$request, $consumer, $token ) {
 			// this should probably be in a different method.
@@ -934,7 +936,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * Check that the timestamp is new enough
 		 *
 		 * @param string $timestamp Time stamp.
-		 * @throws WPOAuthException
+		 * @throws WPOAuthException Exception message.
 		 */
 		private function check_timestamp( $timestamp ) {
 			if ( ! $timestamp ) {
@@ -959,7 +961,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @param string $token Token.
 		 * @param string $nonce Nonce.
 		 * @param string $timestamp Timestamp.
-		 * @throws WPOAuthException
+		 * @throws WPOAuthException Exception message.
 		 */
 		private function check_nonce( $consumer, $token, $nonce, $timestamp ) {
 			if ( ! $nonce ) {
