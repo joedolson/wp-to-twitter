@@ -564,7 +564,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			$host   = isset( $parts['host'] ) ? $parts['scheme'] : '';
 			$path   = isset( $parts['path'] ) ? $parts['scheme'] : '';
 
-			$port or $port = ( 'https' == $scheme ) ? '443' : '80';
+			if ( ! $port ) {
+				$port == ( 'https' == $scheme ) ? '443' : '80';
+			}
 
 			if ( ( 'https' == $scheme && '443' != $port ) || ( 'http' == $scheme && '80' != $port )
 			) {
@@ -598,6 +600,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * Builds the Authorization: header
 		 *
 		 * @param string $realm If realm not null.
+		 * @throws WPOAuthException
 		 *
 		 * @return Header string.
 		 */
@@ -842,9 +845,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				throw new WPOAuthException( 'No signature method parameter. This parameter is required' );
 			}
 
-			if ( ! in_array( $signature_method,
-				array_keys( $this->signature_methods ) )
-			) {
+			if ( ! in_array( $signature_method, array_keys( $this->signature_methods ) ) ) {
 				throw new WPOAuthException(
 					"Signature method '$signature_method' not supported " .
 					'try one of the following: ' .
@@ -856,9 +857,10 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		}
 
 		/**
-		 * try to find the consumer for the provided request's consumer key
+		 * Try to find the consumer for the provided request's consumer key
 		 *
 		 * @param object $request Request.
+		 * @throws WPOAuthException
 		 *
 		 * @return consumer.
 		 */
@@ -882,6 +884,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @param object $request Request.
 		 * @param object $consumer Consumer.
 		 * @param string $token_type Type of token being handled.
+		 * @throws WPOAuthException
 		 *
 		 * @return Oauth version.
 		 */
@@ -902,6 +905,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @param object $request Request.
 		 * @param object $consumer Consumer.
 		 * @param object $token Token.
+		 * @throws WPOAuthException
 		 */
 		private function check_signature( &$request, $consumer, $token ) {
 			// this should probably be in a different method.
@@ -930,6 +934,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * Check that the timestamp is new enough
 		 *
 		 * @param string $timestamp Time stamp.
+		 * @throws WPOAuthException
 		 */
 		private function check_timestamp( $timestamp ) {
 			if ( ! $timestamp ) {
@@ -938,7 +943,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				);
 			}
 
-			// verify that timestamp is recentish
+			// verify that timestamp is recentish.
 			$now = time();
 			if ( abs( $now - $timestamp ) > $this->timestamp_threshold ) {
 				throw new WPOAuthException(
@@ -954,13 +959,14 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @param string $token Token.
 		 * @param string $nonce Nonce.
 		 * @param string $timestamp Timestamp.
+		 * @throws WPOAuthException
 		 */
 		private function check_nonce( $consumer, $token, $nonce, $timestamp ) {
 			if ( ! $nonce ) {
 				throw new WPOAuthException( 'Missing nonce parameter. The parameter is required' );
 			}
 
-			// verify that the nonce is uniqueish
+			// verify that the nonce is uniqueish.
 			$found = $this->data_store->lookup_nonce(
 				$consumer,
 				$token,
@@ -978,22 +984,51 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	 * Handle data storage.
 	 */
 	class WPOAuthDataStore {
+		/**
+		 * Look up the current consumer.
+		 *
+		 * @param string $consumer_key Key.
+		 */
 		function lookup_consumer( $consumer_key ) {
 			// implement me.
 		}
-
+		/**
+		 * Look up the current token.
+		 *
+		 * @param object $consumer Consumer object.
+		 * @param string $token_type Token type.
+		 * @param string $token Token.
+		 */
 		function lookup_token( $consumer, $token_type, $token ) {
 			// implement me.
 		}
-
+		/**
+		 * Look up the current nonce.
+		 *
+		 * @param object $consumer Consumer object.
+		 * @param object $token Token.
+		 * @param string $nonce None.
+		 * @param string $timestamp Timestamp.
+		 */
 		function lookup_nonce( $consumer, $token, $nonce, $timestamp ) {
 			// implement me.
 		}
-
+		/**
+		 * Get a new request token.
+		 *
+		 * @param object $consumer Consumer.
+		 * @param string $callback URL.
+		 */
 		function new_request_token( $consumer, $callback = null ) {
 			// return a new token attached to this consumer.
 		}
-
+		/**
+		 * Get a new access token.
+		 *
+		 * @param object $token Token.
+		 * @param object $consumer Consumer.
+		 * @param string $verifier Verifier parameter.
+		 */
 		function new_access_token( $token, $consumer, $verifier = null ) {
 			// return a new access token attached to this consumer.
 			// for the user associated with this token if the request token.
@@ -1036,7 +1071,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 *
 		 * @param string $string An encoded string.
 		 *
-		 * @param return $string A decoded string.
+		 * @return $string A decoded string.
 		 */
 		public static function urldecode_rfc3986( $string ) {
 			return urldecode( $string );
@@ -1088,7 +1123,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				// we always want the keys to be Cased-Like-This and arh().
 				// returns the headers in the same case as they are in the request.
 				$out = array();
-				foreach ( $headers AS $key => $value ) {
+				foreach ( $headers as $key => $value ) {
 					$key         = str_replace(
 						' ',
 						'-',
@@ -1150,7 +1185,6 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				if ( isset( $parsed_parameters[ $parameter ] ) ) {
 					// We have already recieved parameter(s) with this name, so add to the list.
 					// of parameters with this name.
-
 					if ( is_scalar( $parsed_parameters[ $parameter ] ) ) {
 						// This is the first duplicate, so transform scalar (string) into an array.
 						// so we can add the duplicates.

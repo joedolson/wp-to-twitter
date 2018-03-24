@@ -60,13 +60,13 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 */
 		private $last_api_call;
 		/**
-		 * contains the header
+		 * Contains the header
 		 *
 		 * @var $http_header
 		 */
 		public $http_header;
 		/**
-		 * contains the body
+		 * Contains the body
 		 *
 		 * @var $body
 		 */
@@ -132,7 +132,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * @param string $consumer_key Consumer key.
 		 * @param string $consumer_secret Consumer secret.
 		 * @param string $wp_oauth_token Token.
-		 * @param string $wp_oauth_token_secret. Token secret.
+		 * @param string $wp_oauth_token_secret Token secret.
 		 */
 		function __construct( $consumer_key, $consumer_secret, $wp_oauth_token = null, $wp_oauth_token_secret = null ) {
 			$this->sha1_method = new WPOAuthSignatureMethod_HMAC_SHA1();
@@ -150,7 +150,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 *
 		 * @returns a key/value array containing WPOAuth_token and WPOAuth_token_secret
 		 */
-		function getRequestToken() {
+		function get_request_token() {
 			$r           = $this->WPOAuthRequest( $this->request_token_url() );
 			$token       = $this->WPOAuthParseResponse( $r );
 			$this->token = new WPOAuthConsumer( $token['WPOAuth_token'], $token['WPOAuth_token_secret'] );
@@ -161,11 +161,13 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		/**
 		 * Parse a URL-encoded WPOAuth response
 		 *
+		 * @param string $response_string String from response.
+		 *
 		 * @return a key/value array
 		 */
-		function WPOAuthParseResponse( $responseString ) {
+		function WPOAuthParseResponse( $response_string ) {
 			$r = array();
-			foreach ( explode( '&', $responseString ) as $param ) {
+			foreach ( explode( '&', $response_string ) as $param ) {
 				$pair = explode( '=', $param, 2 );
 				if ( count( $pair ) != 2 ) {
 					continue;
@@ -178,6 +180,8 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 		/**
 		 * Get the authorize URL
+		 *
+		 * @param array $token Token array.
 		 *
 		 * @returns a string
 		 */
@@ -193,6 +197,8 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		/**
 		 * Get the authenticate URL
 		 *
+		 * @param array $token Token array.
+		 *
 		 * @returns a string
 		 */
 		function getauthenticate_url( $token ) {
@@ -206,11 +212,12 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		/**
 		 * Exchange the request token and secret for an access token and
 		 * secret, to sign API calls.
+		 * @param array $token Token array.
 		 *
 		 * @returns array("WPOAuth_token" => the access token,
 		 *                "WPOAuth_token_secret" => the access secret)
 		 */
-		function getAccessToken( $token = null ) {
+		function get_access_token( $token = null ) {
 			$r           = $this->WPOAuthRequest( $this->access_token_url() );
 			$token       = $this->WPOAuthParseResponse( $r );
 			$this->token = new WPOAuthConsumer( $token['WPOAuth_token'], $token['WPOAuth_token_secret'] );
@@ -220,6 +227,11 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 		/**
 		 * Wrapper for POST requests
+		 *
+		 * @param string $url URL.
+		 * @param array  $parameters Request params.
+		 *
+		 * @return decoded response.
 		 */
 		function post( $url, $parameters = array() ) {
 			$response = $this->WPOAuthRequest( $url, $parameters, 'POST' );
@@ -232,6 +244,11 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 		/**
 		 * Wrapper for MEDIA requests
+		 *
+		 * @param string $url URL.
+		 * @param array  $parameters Request params.
+		 *
+		 * @return decoded response.
 		 */
 		function media( $url, $parameters = array() ) {
 			$response = $this->WPOAuthRequest( $url, $parameters, 'MEDIA' );
@@ -244,6 +261,11 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 		/**
 		 * Wrapper for GET requests
+		 *
+		 * @param string $url URL.
+		 * @param array  $parameters Request params.
+		 *
+		 * @return decoded response.
 		 */
 		function get( $url, $parameters = array() ) {
 			$response = $this->WPOAuthRequest( $url, $parameters, 'GET' );
@@ -256,6 +278,11 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 		/**
 		 * Wrapper for metadata requests
+		 *
+		 * @param string $url URL.
+		 * @param array  $parameters Request params.
+		 *
+		 * @return decoded response.
 		 */
 		function meta( $url, $parameters = array() ) {
 			$response = $this->WPOAuthRequest( $url, $parameters, 'META' );
@@ -274,7 +301,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 *
 		 * @return boolean
 		 */
-		function handleMediaRequest( $url, $args = array() ) {
+		function handle_media_request( $url, $args = array() ) {
 			// Load tmhOAuth for Media uploads only when needed: https://github.com/themattharris/tmhOAuth.
 			// It's not possible to upload media using WP_HTTP, so this needs to use cURL.
 			if ( ! class_exists( 'tmhOAuth' ) ) {
@@ -393,7 +420,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 			// Handle media requests using tmhOAuth library.
 			if ( 'MEDIA' == $method ) {
-				return $this->handleMediaRequest( $url, $args );
+				return $this->handle_media_request( $url, $args );
 			}
 
 			if ( empty( $method ) ) {

@@ -301,7 +301,7 @@ class WPT_TwitterFeed {
 				foreach ( $errors as $error ) {
 					$return .= "<li>$error->message</li>";
 				}
-				echo '<ul>' . $return . '</ul>'; 
+				echo '<ul>' . $return . '</ul>';
 				return;
 			}
 		}
