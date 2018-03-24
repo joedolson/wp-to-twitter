@@ -4,6 +4,8 @@
  *
  * Helpful utility and Twitter formatting functions
  *
+ * @category OAuth
+ * @package tmhOAuth
  * @author themattharris
  * @version 0.5.0
  *
@@ -137,7 +139,7 @@ class tmhUtilities {
 		$qs     = @$parts['query'];
 
 		if ( ! $port ) {
-			$port == ( 'https' == $scheme ) ? '443' : '80';
+			$port = ( 'https' == $scheme ) ? '443' : '80';
 		}
 
 		if ( ( 'https' == $scheme && '443' != $port ) || ( 'http' == $scheme && '80' != $port ) ) {
@@ -151,6 +153,11 @@ class tmhUtilities {
 		}
 	}
 
+	/**
+	 * Check whether this is a cli environment.
+	 *
+	 * @return boolean
+	 */
 	public static function is_cli() {
 		return ( PHP_SAPI == 'cli' && empty( $_SERVER['REMOTE_ADDR'] ) );
 	}
@@ -243,7 +250,8 @@ class tmhUtilities {
 	 *
 	 * This function works on *nix systems only and requires shell_exec and stty.
 	 *
-	 * @param  boolean $stars Wether or not to output stars for given characters.
+	 * @param string  $prompt Text to display to the user.
+	 * @param boolean $stars Whether or not to output stars for given characters.
 	 *
 	 * @return string
 	 * @url http://www.dasprids.de/blog/2008/08/22/getting-a-password-hidden-from-stdin-with-php-cli
@@ -252,7 +260,7 @@ class tmhUtilities {
 		echo $prompt;
 		$style = shell_exec( 'stty -g' );
 
-		if ( $stars === false ) {
+		if ( false === $stars ) {
 			shell_exec( 'stty -echo' );
 			$password = rtrim( fgets( STDIN ), "\n" );
 		} else {
@@ -274,7 +282,7 @@ class tmhUtilities {
 			endwhile;
 		}
 
-		// Reset
+		// Reset.
 		shell_exec( 'stty ' . $style );
 		echo PHP_EOL;
 

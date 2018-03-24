@@ -6,6 +6,8 @@
  * The library supports file uploading using multipart/form as well as general
  * REST requests. OAuth authentication is sent using the an Authorization Header.
  *
+ * @category OAuth
+ * @package tmhOAuth
  * @author themattharris
  * @version 0.7.5
  *
@@ -257,7 +259,7 @@ class tmhOAuth {
 		$path   = isset( $parts['path'] ) ? $parts['path'] : false;
 
 		if ( ! $port ) {
-			$port == ( 'https' == $scheme ) ? '443' : '80';
+			$port = ( 'https' == $scheme ) ? '443' : '80';
 		}
 
 		if ( ( 'https' == $scheme && '443' != $port ) || ( 'http' == $scheme && '80' != $port ) ) {
@@ -280,7 +282,7 @@ class tmhOAuth {
 	 * @return void prepared values are stored in the class variable 'signing_params'
 	 */
 	private function prepare_params( $params ) {
-		// do not encode multipart parameters, leave them alone
+		// do not encode multipart parameters, leave them alone.
 		if ( $this->config['multipart'] ) {
 			$this->request_params = $params;
 			$params               = array();
@@ -365,7 +367,7 @@ class tmhOAuth {
 		$base              = array(
 			$this->method,
 			$url,
-			$this->signing_params
+			$this->signing_params,
 		);
 		$this->base_string = implode( '&', $this->safe_encode( $base ) );
 	}
@@ -417,7 +419,9 @@ class tmhOAuth {
 				base64_encode(
 					hash_hmac(
 						'sha1', $this->base_string, $this->signing_key, true
-					) ) );
+					)
+				)
+			);
 
 			$this->prepare_auth_header();
 		}
@@ -466,7 +470,7 @@ class tmhOAuth {
 	 * @param array  $params the request parameters as an array of key=value pairs.
 	 * @param string $callback the callback function to stream the buffer to.
 	 *
-	 * @return void
+	 * @return mixed false or void
 	 */
 	public function streaming_request( $method, $url, $params = array(), $callback = '' ) {
 		if ( ! empty( $callback ) ) {
@@ -533,7 +537,7 @@ class tmhOAuth {
 		return implode( '/', array(
 			$proto,
 			$this->config['host'],
-			$request . $format
+			$request . $format,
 		) );
 	}
 
@@ -545,7 +549,7 @@ class tmhOAuth {
 	 *
 	 * @return string $text transformed by the given $mode
 	 */
-	public function transformText( $text, $mode = 'encode' ) {
+	public function transform_text( $text, $mode = 'encode' ) {
 		return $this->{"safe_$mode"}( $text );
 	}
 
@@ -558,7 +562,7 @@ class tmhOAuth {
 	 *
 	 * @return string the length of the header
 	 */
-	private function curlHeader( $ch, $header ) {
+	private function curl_header( $ch, $header ) {
 		$this->response['raw'] .= $header;
 
 		list( $key, $value ) = array_pad( explode( ':', $header, 2 ), 2, null );
@@ -590,7 +594,7 @@ class tmhOAuth {
 	 *
 	 * @return int the length of the data string processed in this function
 	 */
-	private function curlWrite( $ch, $data ) {
+	private function curl_write( $ch, $data ) {
 		$l = strlen( $data );
 		if ( false === strpos( $data, $this->config['streaming_eol'] ) ) {
 			$this->buffer .= $data;
@@ -627,7 +631,7 @@ class tmhOAuth {
 	 * Makes a curl request. Takes no parameters as all should have been prepared
 	 * by the request method
 	 *
-	 * the response data is stored in the class variable 'response'
+	 * The response data is stored in the class variable 'response'
 	 *
 	 * @return int the http response code for the request. 0 is returned if a connection could not be made
 	 */
@@ -657,7 +661,7 @@ class tmhOAuth {
 				break;
 		}
 
-		// configure curl
+		// configure curl.
 		$c = curl_init();
 		curl_setopt_array( $c, array(
 			CURLOPT_USERAGENT      => $this->config['user_agent'],
@@ -671,7 +675,7 @@ class tmhOAuth {
 			CURLOPT_ENCODING       => $this->config['curl_encoding'],
 			CURLOPT_URL            => $this->url,
 			// process the headers.
-			CURLOPT_HEADERFUNCTION => array( $this, 'curlHeader' ),
+			CURLOPT_HEADERFUNCTION => array( $this, 'curl_header' ),
 			CURLOPT_HEADER         => false,
 			CURLINFO_HEADER_OUT    => true,
 		) );
@@ -692,7 +696,7 @@ class tmhOAuth {
 			// process the body.
 			$this->response['content-length'] = 0;
 			curl_setopt( $c, CURLOPT_TIMEOUT, 0 );
-			curl_setopt( $c, CURLOPT_WRITEFUNCTION, array( $this, 'curlWrite' ) );
+			curl_setopt( $c, CURLOPT_WRITEFUNCTION, array( $this, 'curl_write' ) );
 		}
 
 		switch ( $this->method ) {
@@ -728,7 +732,7 @@ class tmhOAuth {
 			return 0;
 		}
 
-		// do it!
+		// Run the curl command.
 		$response = curl_exec( $c );
 		$code     = curl_getinfo( $c, CURLINFO_HTTP_CODE );
 		$info     = curl_getinfo( $c );
