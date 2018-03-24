@@ -1425,7 +1425,7 @@ function wpt_ajax_tweet() {
 	$current_user = wp_get_current_user();
 	if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
 		if ( wtt_oauth_test( $current_user->ID, 'verify' ) ) {
-			$auth    = $current_user->ID
+			$auth    = $current_user->ID;
 			$user_ID = $current_user->ID;
 		} else {
 			$auth    = false;
