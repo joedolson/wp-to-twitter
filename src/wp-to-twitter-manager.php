@@ -313,7 +313,6 @@ function wpt_update_settings() {
 							$name = $type->labels->name;
 							$slug = $type->name;
 							if ( 'attachment' == $slug || 'nav_menu_item' == $slug || 'revision' == $slug ) {
-								//
 							} else {
 								$tabs .= "<li><a href='#wpt_$slug' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name</a></li>";
 							}
@@ -321,8 +320,8 @@ function wpt_update_settings() {
 						$tabs .= "<li><a href='#wpt_links' id='tab_wpt_links' aria-controls='wpt_links'>" . __( 'Links', 'wp-to-twitter' ) . '</a></li></ul>';
 						echo $tabs;
 						foreach ( $post_types as $type ) {
-							$name   = $type->labels->name;
-							$slug   = $type->name;
+							$name = $type->labels->name;
+							$slug = $type->name;
 							if ( 'attachment' == $slug || 'nav_menu_item' == $slug || 'revision' == $slug ) {
 								continue;
 							} else {
@@ -347,7 +346,7 @@ function wpt_update_settings() {
 									}
 									echo '</ul>';
 									if ( ! function_exists( 'wpt_pro_exists' ) ) {
-										//  Translators: Link to sales page.
+										// Translators: Link to sales page.
 										printf( __( '<a href="%s">Upgrade to WP Tweets PRO</a> to filter posts in all custom post types on any taxonomy.', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro' );
 									} else {
 										_e( 'Updating the WP Tweets PRO taxonomy filters will overwrite your old category filters.', 'wp-to-twitter' );
@@ -357,30 +356,35 @@ function wpt_update_settings() {
 								<fieldset>
 									<legend><?php _e( 'Tweet Templates', 'wp-to-twitter' ); ?></legend>
 									<p>
-										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][post-published-update]" id="<?php echo $slug; ?>-post-published-update" value="1" <?php echo jd_checkCheckbox( 'wpt_post_types', $slug, 'post-published-update' ) ?> />
+										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][post-published-update]" id="<?php echo $slug; ?>-post-published-update" value="1" <?php echo jd_checkCheckbox( 'wpt_post_types', $slug, 'post-published-update' ); ?> />
 										<label for="<?php echo $slug; ?>-post-published-update"><strong>
-										<?php 
+										<?php
 										// Translators: post type.
-										printf( __( 'Update when %s are published', 'wp-to-twitter' ), $name ); 
+										printf( __( 'Update when %s are published', 'wp-to-twitter' ), $name );
 										?>
 										</strong></label>
 										<label for="<?php echo $slug; ?>-post-published-text"><br/>
-										<?php 
+										<?php
 										// Translators: post type.
-										printf( __( 'Template for new %s', 'wp-to-twitter' ), $name ); 
+										printf( __( 'Template for new %s', 'wp-to-twitter' ), $name );
 										?>
 										</label><br/>
 										<textarea class="wpt-template" name="wpt_post_types[<?php echo $slug; ?>][post-published-text]" id="<?php echo $slug; ?>-post-published-text" cols="60" rows="3"><?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-published-text'] ) ) : ''; ?></textarea>
 									</p>
 
 									<p>
-										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][post-edited-update]" id="<?php echo $slug; ?>-post-edited-update" value="1" <?php echo jd_checkCheckbox( 'wpt_post_types', $slug, 'post-edited-update' ) ?> />
+										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][post-edited-update]" id="<?php echo $slug; ?>-post-edited-update" value="1" <?php echo jd_checkCheckbox( 'wpt_post_types', $slug, 'post-edited-update' ); ?> />
 										<label for="<?php echo $slug; ?>-post-edited-update"><strong>
-										<?php 
+										<?php
 										// Translators: post type name.
-										printf( __( 'Update when %s are edited', 'wp-to-twitter' ), $name ); 
+										printf( __( 'Update when %s are edited', 'wp-to-twitter' ), $name );
 										?>
-										</strong></label><br/><label for="<?php echo $slug; ?>-post-edited-text"><?php printf( __( 'Template for %1$s edits', 'wp-to-twitter' ), $name ); ?></label><br/>
+										</strong></label><br/><label for="<?php echo $slug; ?>-post-edited-text">
+										<?php
+										// Translators: post type name.
+										printf( __( 'Template for %1$s edits', 'wp-to-twitter' ), $name );
+										?>
+										</label><br/>
 										<textarea class="wpt-template" name="wpt_post_types[<?php echo $slug; ?>][post-edited-text]" id="<?php echo $slug; ?>-post-edited-text" cols="60" rows="3"><?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-edited-text'] ) ) : ''; ?></textarea>
 									</p>
 								</fieldset>
@@ -398,7 +402,7 @@ function wpt_update_settings() {
 							<fieldset>
 								<legend><span><?php _e( 'Links', 'wp-to-twitter' ); ?></span></legend>
 								<p>
-									<input type="checkbox" name="jd_twit_blogroll" id="jd_twit_blogroll" value="1" <?php echo jd_checkCheckbox( 'jd_twit_blogroll' ) ?> />
+									<input type="checkbox" name="jd_twit_blogroll" id="jd_twit_blogroll" value="1" <?php echo jd_checkCheckbox( 'jd_twit_blogroll' ); ?> />
 									<label for="jd_twit_blogroll"><strong><?php _e( 'Update Twitter when you post a Blogroll link', 'wp-to-twitter' ); ?></strong></label><br/>
 									<label for="newlink-published-text"><?php _e( 'Text for new link updates:', 'wp-to-twitter' ); ?></label>
 									<input aria-describedby="newlink-published-text-label" type="text" class="wpt-template" name="newlink-published-text" id="newlink-published-text" size="60" maxlength="120" value="<?php echo esc_attr( stripslashes( get_option( 'newlink-published-text' ) ) ); ?>"/><br/><span id="newlink-published-text-label"><?php _e( 'Available shortcodes: <code>#url#</code>, <code>#title#</code>, and <code>#description#</code>.', 'wp-to-twitter' ); ?></span>
@@ -519,7 +523,7 @@ function wpt_update_settings() {
 								<input type="text" aria-describedby="date_format_label" name="jd_date_format" id="jd_date_format" size="12" maxlength="12" value="
 								<?php
 								if ( '' == get_option( 'jd_date_format' ) ) {
-									 echo( esc_attr( stripslashes( get_option( 'date_format' ) ) ) );
+									echo( esc_attr( stripslashes( get_option( 'date_format' ) ) ) );
 								} else {
 									echo( esc_attr( get_option( 'jd_date_format' ) ) );
 								}
@@ -564,7 +568,7 @@ function wpt_update_settings() {
 								<label for="jd_tweet_default_edit"><?php _e( 'Do not post Tweets by default (editing only)', 'wp-to-twitter' ); ?></label><br/>
 								<input type="checkbox" name="wpt_inline_edits" id="wpt_inline_edits" value="1" <?php echo jd_checkCheckbox( 'wpt_inline_edits' ); ?> />
 								<label for="wpt_inline_edits"><?php _e( 'Allow status updates from Quick Edit', 'wp-to-twitter' ); ?></label><br/>
-								<input type="checkbox" name="wpt_rate_limiting" id="wpt_rate_limiting" value="1" <?php echo jd_checkCheckbox( 'wpt_rate_limiting' ) ?> />
+								<input type="checkbox" name="wpt_rate_limiting" id="wpt_rate_limiting" value="1" <?php echo jd_checkCheckbox( 'wpt_rate_limiting' ); ?> />
 								<label for="wpt_rate_limiting"><?php _e( 'Enable Rate Limiting', 'wp-to-twitter' ); ?></label><br/>
 								<?php
 								if ( get_option( 'wpt_rate_limiting' ) == 1 ) {
@@ -625,8 +629,8 @@ function wpt_update_settings() {
 								<legend><?php _e( 'Permissions', 'wp-to-twitter' ); ?></legend>
 								<?php
 								global $wp_roles;
-								$roles = $wp_roles->get_names();
-								$caps  = array(
+								$roles          = $wp_roles->get_names();
+								$caps           = array(
 									'wpt_can_tweet'      => __( 'Can send Tweets', 'wp-to-twitter' ),
 									'wpt_twitter_custom' => __( 'See Custom Tweet Field when creating a Post', 'wp-to-twitter' ),
 									'wpt_twitter_switch' => __( 'Toggle the Tweet/Don\'t Tweet option', 'wp-to-twitter' ),
@@ -892,8 +896,6 @@ function wpt_sidebar() {
  * Compare your server time to Twitter's time.
  *
  * @param boolean $test Doing a test.
- *
- * @return string showing comparison between times.
  */
 function wpt_do_server_check( $test = false ) {
 	$wpt_server_string = get_option( 'wpt_server_string' );
