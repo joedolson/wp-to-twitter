@@ -844,8 +844,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @return signature methods.
 		 */
 		private function get_signature_method( &$request ) {
-			$signature_method =
-				@$request->get_parameter( 'oauth_signature_method' );
+			$signature_method = $request->get_parameter( 'oauth_signature_method' );
 
 			if ( ! $signature_method ) {
 				// According to chapter 7 ("Accessing Protected Resources") the signature-method.
@@ -873,7 +872,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @return consumer.
 		 */
 		private function get_consumer( &$request ) {
-			$consumer_key = @$request->get_parameter( 'oauth_consumer_key' );
+			$consumer_key = $request->get_parameter( 'oauth_consumer_key' );
 			if ( ! $consumer_key ) {
 				throw new WPOAuthException( 'Invalid consumer key' );
 			}
@@ -897,7 +896,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @return Oauth version.
 		 */
 		private function get_token( &$request, $consumer, $token_type = 'access' ) {
-			$token_field = @$request->get_parameter( 'oauth_token' );
+			$token_field = $request->get_parameter( 'oauth_token' );
 			$token       = $this->data_store->lookup_token( $consumer, $token_type, $token_field );
 			if ( ! $token ) {
 				throw new WPOAuthException( "Invalid $token_type token: $token_field" );
@@ -917,8 +916,8 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 */
 		private function check_signature( &$request, $consumer, $token ) {
 			// this should probably be in a different method.
-			$timestamp = @$request->get_parameter( 'oauth_timestamp' );
-			$nonce     = @$request->get_parameter( 'oauth_nonce' );
+			$timestamp = $request->get_parameter( 'oauth_timestamp' );
+			$nonce     = $request->get_parameter( 'oauth_nonce' );
 
 			$this->check_timestamp( $timestamp );
 			$this->check_nonce( $consumer, $token, $nonce, $timestamp );
