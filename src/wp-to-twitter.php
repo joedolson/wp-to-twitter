@@ -1158,14 +1158,14 @@ function wpt_add_twitter_inner_box( $post ) {
 			</div>
 		<?php
 		}
-			if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
-			?>
-			<p class='jtw'>
-				<label for="jtw"><?php _e( 'Custom Twitter Post', 'wp-to-twitter' ); ?></label><br/>
-				<textarea class="wpt_tweet_box" name="_jd_twitter" id="jtw" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
-				<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
-			</p>
-			<?php
+		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
+		?>
+		<p class='jtw'>
+			<label for="jtw"><?php _e( 'Custom Twitter Post', 'wp-to-twitter' ); ?></label><br/>
+			<textarea class="wpt_tweet_box" name="_jd_twitter" id="jtw" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
+			<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
+		</p>
+		<?php
 			$expanded = $template;
 			if ( '' != get_option( 'jd_twit_prepend' ) ) {
 				$expanded = "<span title='" . __( 'Your prepended Tweet text; not part of your template.', 'wp-to-twitter' ) . "'>" . stripslashes( get_option( 'jd_twit_prepend' ) ) . '</span> ' . $expanded;
@@ -1173,13 +1173,13 @@ function wpt_add_twitter_inner_box( $post ) {
 			if ( '' != get_option( 'jd_twit_append' ) ) {
 				$expanded = $expanded . " <span title='" . __( 'Your appended Tweet text; not part of your template.', 'wp-to-twitter' ) . "'>" . stripslashes( get_option( 'jd_twit_append' ) ) . '</span>';
 			}
-			?>
-			<p class='template'>
-				<?php _e( 'Template:', 'wp-to-twitter' ); ?><br />
-				<code><?php echo stripcslashes( $expanded ); ?></code>
-				<?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
-			</p>
-			<?php
+		?>
+		<p class='template'>
+			<?php _e( 'Template:', 'wp-to-twitter' ); ?><br />
+			<code><?php echo stripcslashes( $expanded ); ?></code>
+			<?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
+		</p>
+		<?php
 			echo apply_filters( 'wpt_custom_retweet_fields', '', $post_id );
 			if ( get_option( 'jd_keyword_format' ) == 2 ) {
 				$custom_keyword = get_post_meta( $post_id, '_yourls_keyword', true );
@@ -1255,7 +1255,7 @@ function wpt_add_twitter_inner_box( $post ) {
 				if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() == true ) {
 					wpt_schedule_values( $post_id, 'hidden' );
 					do_action( 'wpt_custom_tab', $post_id, 'hidden' );
-				} 
+				}
 				?>
 			</div>
 		<?php
@@ -1301,7 +1301,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		<?php
 		} else {
 		?>
-			<a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php _e( 'Get Support', 'wp-to-twitter', 'wp-to-twitter' ); ?></a> &raquo;
+			<a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php _e( 'Get Support', 'wp-to-twitter' ); ?></a> &raquo;
 		<?php
 		}
 		?>
@@ -1313,9 +1313,9 @@ function wpt_add_twitter_inner_box( $post ) {
 		?>
 		</div>
 	<?php
-	} else { 
+	} else {
 		// permissions: this user isn't allowed to Tweet.
-		_e( 'Your role does not have the ability to Post Tweets from this site.', 'wp-to-twitter' ); 
+		_e( 'Your role does not have the ability to Post Tweets from this site.', 'wp-to-twitter' );
 	?>
 		<input type='hidden' name='_jd_tweet_this' value='no'/>
 	<?php
