@@ -30,8 +30,12 @@ class WPT_Normalizer {
 
 	protected static
 
-	$c, $d, $kd, $cc;
-
+	/**
+	 * Character containers.
+	 *
+	 * @var $c, $d, $kd, $cc.
+	 */
+	$c, $d, $kd, $cc,
 	/**
 	 * U length mask.
 	 *
@@ -42,7 +46,7 @@ class WPT_Normalizer {
 		"\xD0" => 2,
 		"\xE0" => 3,
 		"\xF0" => 4,
-	);
+	),
 
 	/**
 	 * Index of ASCII characters.
