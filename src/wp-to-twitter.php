@@ -901,9 +901,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 												'rt'               => $i,
 												'post_id'          => $post_ID,
 												'timestamp'        => time() + $time + $offset + $delay,
-												'time'             => $time,
-												'offset'           => $offset,
-												'delay'            => $delay,
+												'time'             => array( $time, $offset, $delay ),
 												'current_time'     => time(),
 												'timezone'         => get_option( 'gmt_offset' ),
 												'timestamp_string' => date( 'Y-m-d H:i:s', time() + $time + $offset + $delay ),
@@ -1166,13 +1164,13 @@ function wpt_add_twitter_inner_box( $post ) {
 			<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
 		</p>
 		<?php
-			$expanded = $template;
-			if ( '' != get_option( 'jd_twit_prepend' ) ) {
-				$expanded = "<span title='" . __( 'Your prepended Tweet text; not part of your template.', 'wp-to-twitter' ) . "'>" . stripslashes( get_option( 'jd_twit_prepend' ) ) . '</span> ' . $expanded;
-			}
-			if ( '' != get_option( 'jd_twit_append' ) ) {
-				$expanded = $expanded . " <span title='" . __( 'Your appended Tweet text; not part of your template.', 'wp-to-twitter' ) . "'>" . stripslashes( get_option( 'jd_twit_append' ) ) . '</span>';
-			}
+		$expanded = $template;
+		if ( '' != get_option( 'jd_twit_prepend' ) ) {
+			$expanded = "<span title='" . __( 'Your prepended Tweet text; not part of your template.', 'wp-to-twitter' ) . "'>" . stripslashes( get_option( 'jd_twit_prepend' ) ) . '</span> ' . $expanded;
+		}
+		if ( '' != get_option( 'jd_twit_append' ) ) {
+			$expanded = $expanded . " <span title='" . __( 'Your appended Tweet text; not part of your template.', 'wp-to-twitter' ) . "'>" . stripslashes( get_option( 'jd_twit_append' ) ) . '</span>';
+		}
 		?>
 		<p class='template'>
 			<?php _e( 'Template:', 'wp-to-twitter' ); ?><br />

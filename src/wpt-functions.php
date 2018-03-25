@@ -105,7 +105,7 @@ function wpt_check_functions() {
 	$title    = urlencode( 'Your blog home' );
 	$shrink   = apply_filters( 'wptt_shorten_link', $testurl, $title, false, true );
 	if ( false == $shrink ) {
-		$error = htmlentities( get_option( 'wpt_shortener_status' ) );
+		$error    = htmlentities( get_option( 'wpt_shortener_status' ) );
 		$message .= __( '<li class="error"><strong>WP to Twitter was unable to contact your selected URL shortening service.</strong></li>', 'wp-to-twitter' );
 		if ( '' != $error ) {
 			$message .= "<li><code>$error</code></li>";
@@ -123,7 +123,7 @@ function wpt_check_functions() {
 		if ( $testpost ) {
 			$message .= __( '<li><strong>WP to Twitter successfully submitted a status update to Twitter.</strong></li>', 'wp-to-twitter' );
 		} else {
-			$error = wpt_log( 'wpt_status_message', 'test' );
+			$error    = wpt_log( 'wpt_status_message', 'test' );
 			$message .= __( '<li class="error"><strong>WP to Twitter failed to submit an update to Twitter.</strong></li>', 'wp-to-twitter' );
 			$message .= "<li class='error'>$error</li>";
 		}
@@ -409,7 +409,7 @@ function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $retur
 		'sslverify'  => false,
 		'user-agent' => 'WP to Twitter/http://www.joedolson.com/wp-to-twitter/',
 	) );
-	// Success?
+
 	if ( ! is_wp_error( $result ) && isset( $result['body'] ) ) {
 		if ( 200 == $result['response']['code'] ) {
 			if ( 'body' == $return ) {
@@ -458,15 +458,15 @@ if ( ! function_exists( 'mb_substr_split_unicode' ) ) {
 
 			while ( $char_pos++ < $split_pos ) {
 				++$byte_pos;
-				// Move past any tail bytes
+				// Move past any tail bytes.
 				while ( $byte_pos < $byte_len && $str[ $byte_pos ] >= "\x80" && $str[ $byte_pos ] < "\xc0" ) {
 					++$byte_pos;
 				}
 			}
 		} else {
 			$split_posx = $split_pos + 1;
-			$char_pos = 0; // relative to end of string; we don't care about the actual char position here.
-			$byte_pos = $byte_len;
+			$char_pos   = 0; // relative to end of string; we don't care about the actual char position here.
+			$byte_pos   = $byte_len;
 			while ( $byte_pos > 0 && $char_pos-- >= $split_posx ) {
 				--$byte_pos;
 				// Move past any tail bytes.
@@ -477,14 +477,6 @@ if ( ! function_exists( 'mb_substr_split_unicode' ) ) {
 		}
 
 		return $byte_pos;
-	}
-}
-
-// filter_var substitution for PHP < 5.2
-if ( ! function_exists( 'filter_var' ) ) {
-	function filter_var( $url ) {
-		// this does not emulate filter_var; merely the usage of filter_var in WP to Twitter.
-		return ( false !== stripos( $url, 'https:' ) || false !== stripos( $url, 'http:' ) ) ? true : false;
 	}
 }
 
@@ -530,7 +522,8 @@ function wtt_option_selected( $field, $value, $type = 'checkbox' ) {
 		case 'option':
 			$result = ' selected="selected"';
 			break;
-		default: $result = ' selected="selected"';
+		default:
+			$result = ' selected="selected"';
 	}
 	if ( $field == $value ) {
 		$output = $result;
@@ -544,8 +537,8 @@ function wtt_option_selected( $field, $value, $type = 'checkbox' ) {
 /**
  * Compares two dates to identify which is earlier. Used to differentiate between post edits and original publication.
  *
- * @param string $modified
- * @param string $late
+ * @param string $modified Date this post was modified.
+ * @param string $postdate Date this post was published.
  *
  * @return integer 1|0
  */
@@ -595,7 +588,7 @@ function wpt_post_attachment( $post_ID ) {
 }
 
 /**
- * Show support form.
+ * Show support form. Note: text in the message body should not be translatable.
  */
 function wpt_get_support_form() {
 	global $current_user, $wpt_version;

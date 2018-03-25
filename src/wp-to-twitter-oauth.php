@@ -37,7 +37,7 @@ function wtt_oauth_test( $auth = false, $context = '' ) {
 /**
  * Get user verification hash.
  *
- * @param mixed int $auth Current author
+ * @param mixed int $auth Current author.
  *
  * @return author hash.
  */
@@ -101,7 +101,7 @@ function wtt_oauth_credentials_to_hash( $auth = false ) {
 /**
  * Update OAuth settings.
  *
- * @param mixed int/boolean $auth Author.
+ * @param mixed int/boolean   $auth Author.
  * @param mixed array/boolean $post POST data.
  */
 function wpt_update_oauth_settings( $auth = false, $post = false ) {
@@ -134,7 +134,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 					$message = 'failed';
 					if ( wtt_oauth_connection( $auth ) == $connection ) {
 						$data = $connection->get( 'https://api.twitter.com/1.1/account/verify_credentials.json' );
-						if ( $connection->http_code != '200' ) {
+						if ( '200' != $connection->http_code ) {
 							$data  = json_decode( $data );
 							$code  = "<a href='https://dev.twitter.com/docs/error-codes-responses'>" . $data->errors[0]->code . '</a>';
 							$error = $data->errors[0]->message;
@@ -144,7 +144,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 						}
 						if ( '200' == $connection->http_code ) {
 							$error_information = '';
-							$decode = json_decode( $data );
+							$decode            = json_decode( $data );
 							if ( ! $auth ) {
 								update_option( 'wtt_twitter_username', stripslashes( $decode->screen_name ) );
 							} else {
@@ -168,7 +168,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 								'status'    => $status,
 							);
 							// Translators: HTTP code & status message from Twitter.
-							$error_code        = sprintf( __( 'Twitter response: http_code %s', 'wp-to-twitter' ), "$error_information[http_code] - $error_information[status]" );
+							$error_code = sprintf( __( 'Twitter response: http_code %s', 'wp-to-twitter' ), "$error_information[http_code] - $error_information[status]" );
 							update_option( 'wpt_curl_error', $error_code );
 						}
 						if ( '1' == get_option( 'wp_debug_oauth' ) ) {
@@ -184,7 +184,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 				} else {
 					$message = 'nodata';
 				}
-				if ( $message == 'failed' && ( time() < strtotime( $connection->http_header['date'] ) - 300 || time() > strtotime( $connection->http_header['date'] ) + 300 ) ) {
+				if ( 'failed' == $message && ( time() < strtotime( $connection->http_header['date'] ) - 300 || time() > strtotime( $connection->http_header['date'] ) + 300 ) ) {
 					$message = 'nosync';
 				}
 
@@ -242,7 +242,7 @@ function wtt_connect_oauth( $auth = false ) {
 		if ( ! wpt_check_oauth() ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 			// Translators: Settings page to authenticate via OAuth.
-			$message   = sprintf( __( "Twitter requires authentication by OAuth. You will need to <a href='%s'>update your settings</a> to complete installation of WP to Twitter.", 'wp-to-twitter' ), $admin_url );
+			$message = sprintf( __( "Twitter requires authentication by OAuth. You will need to <a href='%s'>update your settings</a> to complete installation of WP to Twitter.", 'wp-to-twitter' ), $admin_url );
 			echo "<div class='error'><p>$message</p></div>";
 		}
 
@@ -352,21 +352,21 @@ function wtt_connect_oauth( $auth = false ) {
  * Update stored set of authenticated users.
  */
 function wpt_update_authenticated_users() {
-	$args            = array(
+	$args = array(
 		'meta_query' => array(
 			array(
-				'key' => 'wtt_twitter_username',
+				'key'     => 'wtt_twitter_username',
 				'compare' => 'EXISTS',
-				),
 			),
-		);
+		), 
+	);
 	// get all authorized users.
 	$users            = get_users( $args );
 	$authorized_users = array();
 	if ( is_array( $users ) ) {
 		foreach ( $users as $this_user ) {
 			if ( wtt_oauth_test( $this_user->ID, 'verify' ) ) {
-				$twitter = get_user_meta( $this_user->ID, 'wtt_twitter_username', true );
+				$twitter            = get_user_meta( $this_user->ID, 'wtt_twitter_username', true );
 				$authorized_users[] = array(
 					'ID'      => $this_user->ID,
 					'name'    => $this_user->display_name,
