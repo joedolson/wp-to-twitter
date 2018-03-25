@@ -30,11 +30,6 @@ class WPT_Normalizer {
 
 	protected static
 
-	/**
-	 * Variable containers.
-	 *
-	 * @var $c, $d, $kd, $cc
-	 */
 	$c, $d, $kd, $cc;
 
 	/**
