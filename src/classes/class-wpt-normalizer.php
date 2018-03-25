@@ -33,7 +33,10 @@ class WPT_Normalizer {
 	/**
 	 * Character containers.
 	 *
-	 * @var $c, $d, $kd, $cc.
+	 * @var $c
+	 * @var $d
+	 * @var $kd
+	 * @var $cc
 	 */
 	$c, $d, $kd, $cc,
 	/**
@@ -105,10 +108,11 @@ class WPT_Normalizer {
 				$c = false;
 				$k = true;
 				break;
-			default: return false;
+			default: 
+				return false;
 		}
 
-		if ( !strlen( $s ) ) {
+		if ( ! strlen( $s ) ) {
 			return '';
 		}
 
@@ -117,8 +121,8 @@ class WPT_Normalizer {
 		}
 
 		if ( empty( self::$d ) ) {
-			self::$d  = self::get_data('canonicalDecomposition');
-			self::$cc = self::get_data('combiningClass');
+			self::$d  = self::get_data( 'canonicalDecomposition' );
+			self::$cc = self::get_data( 'combiningClass' );
 		}
 
 		if ( $c ) {
@@ -160,21 +164,21 @@ class WPT_Normalizer {
 					$last_uchr .= $tail;
 					$tail       = '';
 				}
-
-				if ( $j = strspn( $s, $ascii, $i+1 ) ) {
+				$j = strspn( $s, $ascii, $i + 1 );
+				if ( $j ) {
 					$last_uchr .= substr( $s, $i, $j );
 					$i         += $j;
 				}
 
 				$result   .= $last_uchr;
-				$last_uchr = $s[$i];
+				$last_uchr = $s[ $i ];
 				++$i;
 			} else {
 				$ulen = $ulen_mask[ $s[ $i ] & "\xF0" ];
 				$uchr = substr( $s, $i, $ulen );
 
 				if ( $last_uchr < "\xE1\x84\x80" || "\xE1\x84\x92" < $last_uchr
-					||   $uchr < "\xE1\x85\xA1" || "\xE1\x85\xB5" < $uchr
+					|| $uchr < "\xE1\x85\xA1" || "\xE1\x85\xB5" < $uchr
 					|| $last_ucls ) {
 					// Table lookup and combining chars composition.
 					$ucls = isset( $comb_class[ $uchr ] ) ? $comb_class[ $uchr ] : 0;
@@ -220,7 +224,8 @@ class WPT_Normalizer {
 	/**
 	 * Decompose a string.
 	 *
-	 * @param string $s String to check.
+	 * @param string  $s String to check.
+	 * @param boolean $c use compat map
 	 *
 	 * @return string
 	 */
