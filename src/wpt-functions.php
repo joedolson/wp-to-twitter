@@ -511,7 +511,7 @@ if ( ! function_exists( 'mb_strrpos' ) ) {
  * @param string $value Value to check.
  * @param string $type Type of field.
  *
- * @param checked string.
+ * @return checked string.
  */
 function wtt_option_selected( $field, $value, $type = 'checkbox' ) {
 	switch ( $type ) {
@@ -546,7 +546,7 @@ function wpt_date_compare( $modified, $postdate ) {
 	$modifier  = apply_filters( 'wpt_edit_sensitivity', 0 ); // alter time in seconds to modified date.
 	$mod_date  = strtotime( $modified );
 	$post_date = strtotime( $postdate ) + $modifier;
-	if ( $mod_date <= $post_date ) { // if post_modified is before or equal to post_date
+	if ( $mod_date <= $post_date ) { // if post_modified is before or equal to post_date.
 		return 1;
 	} else {
 		return 0;
@@ -561,7 +561,7 @@ function wpt_date_compare( $modified, $postdate ) {
  * @return mixed boolean|integer Attachment ID.
  */
 function wpt_post_attachment( $post_ID ) {
-	$return = false;
+	$return             = false;
 	$use_featured_image = apply_filters( 'wpt_use_featured_image', true, $post_ID );
 	if ( has_post_thumbnail( $post_ID ) && $use_featured_image ) {
 		$attachment = get_post_thumbnail_id( $post_ID );
@@ -578,7 +578,7 @@ function wpt_post_attachment( $post_ID ) {
 		);
 		$attachments = get_posts( $args );
 		if ( $attachments ) {
-			$return = $attachments[0]->ID; //Return the first attachment.
+			$return = $attachments[0]->ID; // Return the first attachment.
 		} else {
 			$return = false;
 		}
@@ -687,8 +687,8 @@ $plugins_string
 			$sitename = substr( $sitename, 4 );
 		}
 		$response_email = ( isset( $_POST['response_email'] ) ) ? $_POST['response_email'] : false;
-		$from_email = 'wordpress@' . $sitename;
-		$from       = "From: \"$current_user->display_name\" <$response_email>\r\nReply-to: \"$current_user->display_name\" <$response_email>\r\n";
+		$from_email     = 'wordpress@' . $sitename;
+		$from           = "From: \"$current_user->display_name\" <$response_email>\r\nReply-to: \"$current_user->display_name\" <$response_email>\r\n";
 
 		if ( ! $has_read_faq ) {
 			echo "<div class='notice error'><p>" . __( 'Please read the FAQ and other Help documents before making a support request.', 'wp-to-twitter' ) . '</p></div>';
@@ -724,8 +724,7 @@ $plugins_string
 	<form method='post' action='$admin_url'>
 		<div><input type='hidden' name='_wpnonce' value='" . wp_create_nonce( 'wp-to-twitter-nonce' ) . "' /></div>
 		<div>
-		<p>" . __( "If you're having trouble with WP to Twitter, please try to answer these questions in your message:", 'wp-to-twitter' )
- . '</p>
+		<p>" . __( "If you're having trouble with WP to Twitter, please try to answer these questions in your message:", 'wp-to-twitter' ) . '</p>
 		<ul>
 			<li>' . __( 'What were you doing when the problem occurred?', 'wp-to-twitter' ) . '</li>
 			<li>' . __( 'What did you expect to happen?', 'wp-to-twitter' ) . '</li>
@@ -753,10 +752,10 @@ $plugins_string
 		__( 'The following additional information will be sent with your support request:', 'wp-to-twitter' )
 		. "</p>
 		<div class='mc_support'>
-		" . wpautop( $data ) . "
+		" . wpautop( $data ) . '
 		</div>
 		</div>
-	</form>";
+	</form>';
 }
 
 /**
@@ -826,7 +825,7 @@ function wpt_migrate_url_meta() {
 		delete_post_meta( $post_id, '_wp_jd_joturl' );
 	}
 	if ( '' == $short ) {
-		// don't delete target link
+		// don't delete target link.
 		$short = get_post_meta( $post_id, '_wp_jd_target', true );
 	}
 	if ( '' == $short ) {
@@ -872,6 +871,9 @@ add_action( 'dp_duplicate_post', 'wpt_delete_copied_meta', 10, 2 );
 add_action( 'dp_duplicate_page', 'wpt_delete_copied_meta', 10, 2 );
 /**
  * Prevent 'Duplicate Posts' plug-in from copying WP to Twitter meta data
+ *
+ * @param int $new_id New post ID.
+ * @param object $post Old Post.
  */
 function wpt_delete_copied_meta( $new_id, $post ) {
 	$disable = apply_filters( 'wpt_allow_copy_meta', false );
@@ -889,35 +891,94 @@ function wpt_delete_copied_meta( $new_id, $post ) {
 
 /**
  * Provide aliases for changed function names if plug-ins or themes are calling WP to Twitter functions in custom code.
+ *
+ * @param string $url Query url.
+ * @param string $method Method.
+ * @param string $body Body.
+ * @param string $headers Headers.
+ * @param string $return Return data.
+ *
+ * @return data.
  */
 function jd_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $return = 'body' ) {
 	return wpt_fetch_url( $url, $method, $body, $headers, $return );
 }
 
+/**
+ * Alias for remote_json.
+ * 
+ * @param string $url Query url.
+ * @param array  $array Arguments.
+ *
+ * @return remote JSON.
+ */
 function jd_remote_json( $url, $array = true ) {
 	return wpt_remote_json( $url, $array );
 }
 
-function jd_twit_link( $link_ID ) {
-	return wpt_twit_link( $link_ID );
+/**
+ * Send a Tweet for a new link.
+ *
+ * @param int $link_ID Link ID.
+ *
+ * @return twit link.
+ */
+function jd_twit_link( $link_id ) {
+	return wpt_twit_link( $link_id );
 }
 
+/**
+ * Get post data.
+ *
+ * @param int $post_ID Post ID.
+ *
+ * @return Array post data.
+ */
 function jd_post_info( $post_ID ) {
 	return wpt_post_info( $post_ID );
 }
 
+/**
+ * Sent post tweet.
+ *
+ * @param int    $post_ID Post ID.
+ * @param string $type Type of post. 
+ *
+ * @return tweet
+ */
 function jd_twit( $post_ID, $type = 'instant' ) {
 	return wpt_tweet( $post_ID, $type );
 }
 
+/**
+ * Set up admin styles.
+ */
 function jd_addTwitterAdminStyles() {
 	return wpt_admin_style();
 }
 
+/**
+ * Send to Twitter API.
+ * 
+ * @param string            $twit Tweet.
+ * @param mixed boolean/int $auth Author ID.
+ * @param int               $id Post ID.
+ * @param boolean           $media Include media.
+ *
+ * @return boolean.
+ */
 function jd_doTwitterAPIPost( $twit, $auth = false, $id = false, $media = false ) {
 	return wpt_post_to_twitter( $twit, $auth, $id, $media );
 }
 
+/**
+ * Update oauth settings.
+ *
+ * @param mixed boolean/int   $auth Author ID.
+ * @param mixed boolean/array $post POST data.
+ *
+ * @return update.
+ */
 function jd_update_oauth_settings( $auth = false, $post = false ) {
 	return wpt_update_oauth_settings( $auth, $post );
 }

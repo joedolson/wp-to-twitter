@@ -358,7 +358,7 @@ function wpt_update_authenticated_users() {
 				'key'     => 'wtt_twitter_username',
 				'compare' => 'EXISTS',
 			),
-		), 
+		),
 	);
 	// get all authorized users.
 	$users            = get_users( $args );

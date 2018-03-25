@@ -196,15 +196,15 @@ class tmhUtilities {
 	 * This method doesn't return anything. Instead the response should be
 	 * inspected directly.
 	 *
-	 * @param object $tmhOAuth Class object.
+	 * @param object $tmh_oauth Class object.
 	 * @param string $method the HTTP method being used. e.g. POST, GET, HEAD etc.
 	 * @param string $url the request URL without query string parameters.
 	 * @param array  $params the request parameters as an array of key=value pairs.
 	 * @param string $useauth whether to use authentication when making the request. Default true.
 	 * @param string $multipart whether this request contains multipart data. Default false.
 	 */
-	public static function auto_fix_time_request( $tmhOAuth, $method, $url, $params = array(), $useauth = true, $multipart = false ) {
-		$tmhOAuth->request( $method, $url, $params, $useauth, $multipart );
+	public static function auto_fix_time_request( $tmh_oauth, $method, $url, $params = array(), $useauth = true, $multipart = false ) {
+		$tmh_oauth->request( $method, $url, $params, $useauth, $multipart );
 
 		// if we're not doing auth the timestamp isn't important.
 		if ( ! $useauth ) {
@@ -212,22 +212,22 @@ class tmhUtilities {
 		}
 
 		// some error that isn't a 401.
-		if ( 401 != $tmhOAuth->response['code'] ) {
+		if ( 401 != $tmh_oauth->response['code'] ) {
 			return;
 		}
 
 		// some error that is a 401 but isn't because the OAuth token and signature are incorrect.
 		// TODO: this check is horrid but helps avoid requesting twice when the username and password are wrong.
-		if ( false !== stripos( $tmhOAuth->response['response'], 'password' ) ) {
+		if ( false !== stripos( $tmh_oauth->response['response'], 'password' ) ) {
 			return;
 		}
 
 		// force the timestamp to be the same as the Twitter servers, and re-request.
-		$tmhOAuth->auto_fixed_time           = true;
-		$tmhOAuth->config['force_timestamp'] = true;
-		$tmhOAuth->config['timestamp']       = strtotime( $tmhOAuth->response['headers']['date'] );
+		$tmh_oauth->auto_fixed_time           = true;
+		$tmh_oauth->config['force_timestamp'] = true;
+		$tmh_oauth->config['timestamp']       = strtotime( $tmh_oauth->response['headers']['date'] );
 
-		return $tmhOAuth->request( $method, $url, $params, $useauth, $multipart );
+		return $tmh_oauth->request( $method, $url, $params, $useauth, $multipart );
 	}
 
 	/**

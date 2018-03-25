@@ -14,6 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'WPOAuthException' ) ) {
 
+	/**
+	 * Generic OAuth class
+	 */
 	class WP_OAuth {
 		// Honestly, this is only here so I don't have to rename the file.
 	}
