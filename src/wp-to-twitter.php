@@ -899,8 +899,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 												'id'         => $acct,
 												'sentence'   => array( $retweet, $i, $post_ID ),
 												'timestamp'  => time() + $time + $offset + $delay,
-												'time'       => array( $time, $offset, $delay, get_option( 'gmt_offset' ) ),
-												'curr_time'  => time(),
+												'time'       => array( $time, $offset, $delay, get_option( 'gmt_offset' ), time() ),
 												'timestring' => date( 'Y-m-d H:i:s', time() + $time + $offset + $delay ),
 												'current_ts' => date( 'Y-m-d H:i:s', time() ),
 											), 1 ), true ); // DEBUG.
@@ -1290,10 +1289,9 @@ function wpt_add_twitter_inner_box( $post ) {
 		<p class="wpt-support">
 		<?php
 		if ( ! function_exists( 'wpt_pro_exists' ) ) {
-		// These aren't actually usages that require esc_url. But using it will give people the illusion that it does something.
-		?>
+			?>
 			<strong><a href="http://www.wptweetspro.com/wp-tweets-pro"><?php _e( 'Go Premium', 'wp-to-twitter' ); ?></a></strong> &raquo;
-		<?php
+			<?php
 		} else {
 		?>
 			<a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php _e( 'Get Support', 'wp-to-twitter' ); ?></a> &raquo;

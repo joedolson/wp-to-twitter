@@ -329,7 +329,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				'user_token'      => $ot,
 				'user_secret'     => $ots,
 			);
-			$tmhOAuth   = new tmhOAuth( $connect );
+			$tmh_oauth  = new tmhOAuth( $connect );
 			$attachment = $args['media'];
 
 			$image_sizes = get_intermediate_image_sizes();
@@ -358,7 +358,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				$mime_type = 'image/jpeg';
 			}
 
-			$code = $tmhOAuth->request(
+			$code = $tmh_oauth->request(
 				'POST',
 				$url,
 				array( 'media' => "$binary" ),
@@ -366,8 +366,8 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				true  // multipart.
 			);
 
-			$response = $tmhOAuth->response['response'];
-			$full     = $tmhOAuth->response;
+			$response = $tmh_oauth->response['response'];
+			$full     = $tmh_oauth->response;
 			wpt_mail( 'Media Posted', "
 				Media ID #$args[media] ($transport)" . "\n\n" .
 				'Twitter Response' . "\n" . print_r( $full, 1 ) . "\n\n" .
@@ -398,7 +398,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 								'text' => $alt_text
 							)
 						) );
-				$post_image = $tmhOAuth->request(
+				$post_image = $tmh_oauth->request(
 					'POST',
 					$metadata_api,
 					array( 'body' => $image_alt ),
