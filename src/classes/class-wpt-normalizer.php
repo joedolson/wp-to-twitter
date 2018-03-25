@@ -34,11 +34,26 @@ class WPT_Normalizer {
 	 * Character containers.
 	 *
 	 * @var $c
+	 */
+	$c,
+	/**
+	 * Character containers.
+	 *
 	 * @var $d
+	 */
+	$d,
+	/**
+	 * Character containers.
+	 *
 	 * @var $kd
+	 */
+	 $kd,
+	/**
+	 * Character containers.
+	 *
 	 * @var $cc
 	 */
-	$c, $d, $kd, $cc,
+	 $cc,
 	/**
 	 * U length mask.
 	 *
@@ -108,7 +123,7 @@ class WPT_Normalizer {
 				$c = false;
 				$k = true;
 				break;
-			default: 
+			default:
 				return false;
 		}
 
@@ -225,7 +240,7 @@ class WPT_Normalizer {
 	 * Decompose a string.
 	 *
 	 * @param string  $s String to check.
-	 * @param boolean $c use compat map
+	 * @param boolean $c use compat map.
 	 *
 	 * @return string
 	 */
