@@ -13,18 +13,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Check the current allowed max lengths.
+ *
+ * @return array of URL lengths and params.
+ */
 function wpt_max_length() {
-	$config     = get_transient( 'wpt_twitter_config' );
+	$config = get_transient( 'wpt_twitter_config' );
 	if ( ! $config ) {
 		$connection = wtt_oauth_connection();
 		if ( $connection ) {
-			$config     = $connection->get( 'https://api.twitter.com/1.1/help/configuration.json' );
+			$config = $connection->get( 'https://api.twitter.com/1.1/help/configuration.json' );
 			set_transient( 'wpt_twitter_config', $config, 60*60*24 );
 		} else {
-			$config     = json_encode( array(
-				'http_length' => 23,
-				'https_length' => 23,
-				'reserved_chars' => 24
+			$config = json_encode( array(
+				'http_length'   => 23,
+				'https_length'   => 23,
+				'reserved_chars' => 24,
 			) );
 		}
 	}
@@ -56,8 +61,16 @@ function wpt_max_length() {
 }
 
 add_filter( 'wpt_tweet_sentence', 'wpt_filter_urls', 10, 2 );
+/**
+ * Filter the URLs in a tweet and shorten them.
+ *
+ * @param string $tweet Tweet.
+ * @param int    $post_ID Post ID.
+ *
+ * @return string New tweet text.
+ */
 function wpt_filter_urls( $tweet, $post_ID ) {
-	preg_match_all('#\bhttps?://[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#', $tweet, $match);
+	preg_match_all( '#\bhttps?://[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#', $tweet, $match );
 	$title = get_the_title( $post_ID );
 
 	if ( isset( $match[0] ) && ! empty( $match[0] ) ) {
@@ -75,18 +88,28 @@ function wpt_filter_urls( $tweet, $post_ID ) {
 	return $tweet;
 }
 
-
+/**
+ * Parse the text of a Tweet to ensure included tags don't exceed length requirements.
+ *
+ * @param string $tweet Tweet text.
+ * @param array  $post Post data.
+ * @param int    $post_ID Post ID.
+ * @param boolean $retweet Is this a retweet.
+ * @param boolean $ref Reference.
+ *
+ * @return string New text.
+ */
 function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = false ) {
-	// media file no longer needs accounting in shortening. 9/22/2016
-	$maxlength    = wpt_max_length();
-	$length       = $maxlength['base_length'];
-	$tweet        = apply_filters( 'wpt_tweet_sentence', $tweet, $post_ID );
-	$tweet        = trim( wpt_custom_shortcodes( $tweet, $post_ID ) );
-	$tweet        = trim( wpt_user_meta_shortcodes( $tweet, $post['authId'] ) );
-	$encoding     = ( get_option( 'blog_charset' ) != 'UTF-8' && get_option( 'blog_charset' ) != '' ) ? get_option( 'blog_charset' ) : 'UTF-8';
-	$diff         = 0;
+	// media file no longer needs accounting in shortening. 9/22/2016.
+	$maxlength = wpt_max_length();
+	$length    = $maxlength['base_length'];
+	$tweet     = apply_filters( 'wpt_tweet_sentence', $tweet, $post_ID );
+	$tweet     = trim( wpt_custom_shortcodes( $tweet, $post_ID ) );
+	$tweet     = trim( wpt_user_meta_shortcodes( $tweet, $post['authId'] ) );
+	$encoding  = ( 'UTF-8' != get_option( 'blog_charset' ) && '' != get_option( 'blog_charset' ) ) ? get_option( 'blog_charset' ) : 'UTF-8';
+	$diff      = 0;
 
-	// Add custom append/prepend fields to Tweet text
+	// Add custom append/prepend fields to Tweet text.
 	if ( '' != get_option( 'jd_twit_prepend' ) && '' != $tweet ) {
 		$tweet = stripslashes( get_option( 'jd_twit_prepend' ) ) . ' ' . $tweet;
 	}
@@ -102,24 +125,20 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 
 	// create full unconditional post tweet - prior to truncation.
 	// order matters; arrays have to be ordered the same way.
-	$tags      = array_map( 'wpt_make_tag', wpt_tags() );
-	$values    = wpt_create_values( $post, $post_ID, $ref );
+	$tags   = array_map( 'wpt_make_tag', wpt_tags() );
+	$values = wpt_create_values( $post, $post_ID, $ref );
 
 	$post_tweet = str_ireplace( $tags, $values, $tweet );
-	// check total length
+	// check total length.
 	$str_length = mb_strlen( urldecode( wpt_normalize( $post_tweet ) ), $encoding );
 
-	/**
-	 * Check whether completed replacement is still within allowed length.
-	 *
-	 * If so, post as is.
-	 */
+	// Check whether completed replacement is still within allowed length.
 	if ( $str_length < $length + 1 ) {
 		if ( mb_strlen( wpt_normalize( $post_tweet ) ) > $length + 1 ) {
 			$post_tweet = mb_substr( $post_tweet, 0, $length, $encoding );
 		}
 
-		return apply_filters( 'wpt_custom_truncate', $post_tweet, $tweet, $post_ID, $retweet, 2 ); // return early if all is well without replacements.
+		return apply_filters( 'wpt_custom_truncate', $post_tweet, $tweet, $post_ID, $retweet, 2 ); // return early if all is well.
 	} else {
 		$has_excerpt_tag = wpt_has( $tweet, '#post#' );
 		$has_title_tag   = wpt_has( $tweet, '#title#' );
@@ -143,7 +162,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 					$k     = 'post';
 					$value = $length_array[ 'post' ];
 				} elseif ( 'blogname' == $k ) {
-					$k = 'blog';
+					$k     = 'blog';
 					$value = $length_array[ 'blog' ];
 				} else {
 					$value = $length_array[ $k ];
@@ -175,7 +194,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 							$new_value = '';
 							// These tag fields should have stray characters removed on word boundaries.
 						} elseif ( 'tags' == $key ) {
-							// remove any stray hash characters due to string truncation
+							// remove any stray hash characters due to string truncation.
 							if ( mb_strlen( $old_value ) - $trim <= 2 ) {
 								$new_value = '';
 							} else {
@@ -207,7 +226,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 		}
 
 		// this is needed in case a tweet needs to be truncated outright and the truncation values aren't in the above.
-		// 1) removes URL 2) checks length of remainder 3) Replaces URL
+		// 1) removes URL 2) checks length of remainder 3) Replaces URL.
 		if ( mb_strlen( wpt_normalize( $post_tweet ) ) > $length + 1 ) {
 			$tweet = false;
 			if ( $has_short_url ) {
@@ -224,13 +243,13 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 			if ( ! $tweet ) {
 				$temp = str_ireplace( $url, $tag, $post_tweet );
 				if ( mb_strlen( wpt_normalize( $temp ) ) > ( ( $length + 1 ) - ( $tco - strlen( $tag ) ) ) && $temp != $post_tweet ) {
-					if ( stripos( $temp, '#url#' ) === false && stripos( $temp, '#longurl#' ) === false ) {
-						$post_tweet   = trim( mb_substr( $temp, 0, $length, $encoding ) );
+					if ( false === stripos( $temp, '#url#' ) && false === stripos( $temp, '#longurl#' ) ) {
+						$post_tweet = trim( mb_substr( $temp, 0, $length, $encoding ) );
 					} else {
-						$post_tweet   = trim( mb_substr( $temp, 0, ( $length - $tco - 1 ), $encoding ) );
+						$post_tweet = trim( mb_substr( $temp, 0, ( $length - $tco - 1 ), $encoding ) );
 					}
 					// it's possible to trim off the #url# part in this process. If that happens, put it back.
-					$sub_sentence = ( !wpt_has( $post_tweet, $tag ) && ( $has_short_url || $has_long_url ) ) ? $post_tweet . ' ' . $tag : $post_tweet;
+					$sub_sentence = ( ! wpt_has( $post_tweet, $tag ) && ( $has_short_url || $has_long_url ) ) ? $post_tweet . ' ' . $tag : $post_tweet;
 					$post_tweet   = str_ireplace( $tag, $url, $sub_sentence );
 				}
 			}
@@ -240,6 +259,14 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 	return apply_filters( 'wpt_custom_truncate', $post_tweet, $tweet, $post_ID, $retweet, 3 );
 }
 
+/**
+ * Check whether a tag is within the string.
+ *
+ * @param string $string String. Probably a Tweet.
+ * @param string $tag Template tag text.
+ *
+ * @return boolean.
+ */
 function wpt_has( $string, $tag ) {
 	if ( strpos( $string, $tag ) === false ) {
 		return false;
@@ -248,6 +275,13 @@ function wpt_has( $string, $tag ) {
 	return true;
 }
 
+/**
+ * Check whether any tags are present.
+ *
+ * @param string $string String. Probably a Tweet.
+ *
+ * @return boolean.
+ */
 function wpt_has_tags( $string ) {
 	$tags = wpt_tags();
 	foreach ( $tags as $tag ) {
@@ -259,6 +293,13 @@ function wpt_has_tags( $string ) {
 	return false;
 }
 
+/**
+ * Get a tag to remove.
+ *
+ * @param string $key Template tag.
+ *
+ * @return boolean.
+ */
 function wpt_remove_tag( $key ) {
 	switch ( $key ) {
 		case 'account':
@@ -274,16 +315,37 @@ function wpt_remove_tag( $key ) {
 	return $return;
 }
 
+/**
+ * Get all valid template tags.
+ *
+ * @return array tags.
+ */
 function wpt_tags() {
 	return apply_filters( 'wpt_tags', array( 'url', 'title', 'blog', 'post', 'category', 'date', 'author', 'displayname', 'tags', 'modified', 'reference', 'account', '@', 'cat_desc', 'longurl' ) );
 }
 
+/**
+ * Adjust a tag string into its ## usage.
+ *
+ * @param string $value Any text.
+ *
+ * @return string wrapped.
+ */
 function wpt_make_tag( $value ) {
 	return '#' . $value . '#';
 }
 
+/**
+ * Create values. Get the value of tags.
+ *
+ * @param array $post Post array.
+ * @param int   $post_ID Post ID.
+ * @param boolean $ref Use referential author.
+ *
+ * @return array of values. 
+ */
 function wpt_create_values( $post, $post_ID, $ref ) {
-	$shrink       = ( $post['shortUrl'] != '' ) ? $post['shortUrl'] : apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
+	$shrink = ( '' != $post['shortUrl'] ) ? $post['shortUrl'] : apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
 	// generate template variable values
 	$auth         = $post['authId'];
 	$title        = trim( apply_filters( 'wpt_status', $post['postTitle'], $post_ID, 'title' ) );
@@ -300,9 +362,11 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	if ( 1 == get_option( 'jd_individual_twitter_users' ) ) {
 		if ( '' == $user_account ) {
 			if ( 'mainAtTwitter' == get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
-				$account = $user_account = stripcslashes( get_user_meta( $auth, 'wp-to-twitter-user-username', true ) );
+				$user_account = stripcslashes( get_user_meta( $auth, 'wp-to-twitter-user-username', true ) );
+				$account      = $user_account;
 			} elseif ( 'mainAtTwitterPlus' == get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
-				$account = $user_account = stripcslashes( get_user_meta( $auth, 'wp-to-twitter-user-username', true ) . ' @' . get_option( 'wtt_twitter_username' ) );
+				$user_account = stripcslashes( get_user_meta( $auth, 'wp-to-twitter-user-username', true ) . ' @' . get_option( 'wtt_twitter_username' ) );
+				$account      = $user_account;
 			}
 		} else {
 			$account = "$user_account";
@@ -313,9 +377,9 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$account      = ( '' != $account ) ? "@$account" : ''; // value of #account#.
 	$uaccount     = ( '' != $user_account ) ? "@$user_account" : "$account"; // value of #@#.
 	// clean up data if extra @ included in user data.
-	$account      = str_ireplace( '@@', '@', $account );
-	$uaccount     = str_ireplace( '@@', '@', $uaccount );
-	$author       = str_ireplace( '@@', '@', $author );
+	$account  = str_ireplace( '@@', '@', $account );
+	$uaccount = str_ireplace( '@@', '@', $uaccount );
+	$author   = str_ireplace( '@@', '@', $author );
 
 	if ( 'on' == get_user_meta( $auth, 'wpt-remove', true ) ) {
 		$account = '';
@@ -346,6 +410,14 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	);
 }
 
+/**
+ * Generate array of length values of every value.
+ *
+ * @param array  $values All values.
+ * @param string $encoding Current encoding.
+ *
+ * @return array.
+ */
 function wpt_length_array( $values, $encoding ) {
 	foreach ( $values as $key => $value ) {
 		$array[ $key ] = mb_strlen( wpt_normalize( $value ), $encoding );
@@ -353,7 +425,6 @@ function wpt_length_array( $values, $encoding ) {
 
 	return $array;
 }
-
 
 /**
  * Parse custom shortcodes
