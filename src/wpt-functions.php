@@ -906,7 +906,7 @@ function jd_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $return
 
 /**
  * Alias for remote_json.
- * 
+ *
  * @param string $url Query url.
  * @param array  $array Arguments.
  *
@@ -919,7 +919,7 @@ function jd_remote_json( $url, $array = true ) {
 /**
  * Send a Tweet for a new link.
  *
- * @param int $link_ID Link ID.
+ * @param int $link_id Link ID.
  *
  * @return twit link.
  */
@@ -942,7 +942,7 @@ function jd_post_info( $post_ID ) {
  * Sent post tweet.
  *
  * @param int    $post_ID Post ID.
- * @param string $type Type of post. 
+ * @param string $type Type of post.
  *
  * @return tweet
  */
@@ -959,7 +959,7 @@ function jd_addTwitterAdminStyles() {
 
 /**
  * Send to Twitter API.
- * 
+ *
  * @param string            $twit Tweet.
  * @param mixed boolean/int $auth Author ID.
  * @param int               $id Post ID.

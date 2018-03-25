@@ -896,16 +896,13 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 												$author_id = 'Main';
 											}
 											wpt_mail( "7b: Retweet Scheduled for author $author_id", print_r( array(
-												'id'           => $acct,
-												'sentence'     => $retweet,
-												'rt'           => $i,
-												'post_id'      => $post_ID,
-												'timestamp'    => time() + $time + $offset + $delay,
-												'time'         => array( $time, $offset, $delay ),
-												'current_time' => time(),
-												'timezone'     => get_option( 'gmt_offset' ),
-												'time_string'  => date( 'Y-m-d H:i:s', time() + $time + $offset + $delay ),
-												'current_ts'   => date( 'Y-m-d H:i:s', time() ),
+												'id'         => $acct,
+												'sentence'   => array( $retweet, $i, $post_ID ),
+												'timestamp'  => time() + $time + $offset + $delay,
+												'time'       => array( $time, $offset, $delay, get_option( 'gmt_offset' ) ),
+												'curr_time'  => time(),
+												'timestring' => date( 'Y-m-d H:i:s', time() + $time + $offset + $delay ),
+												'current_ts' => date( 'Y-m-d H:i:s', time() ),
 											), 1 ), true ); // DEBUG.
 										}
 										$tweet_limit = apply_filters( 'wpt_tweet_repeat_limit', 4, $post_ID );
