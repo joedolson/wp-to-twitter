@@ -567,8 +567,8 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 			$port   = isset( $parts['port'] ) ? $parts['port'] : false;
 			$scheme = isset( $parts['scheme'] ) ? $parts['scheme'] : '';
-			$host   = isset( $parts['host'] ) ? $parts['scheme'] : '';
-			$path   = isset( $parts['path'] ) ? $parts['scheme'] : '';
+			$host   = isset( $parts['host'] ) ? $parts['host'] : '';
+			$path   = isset( $parts['path'] ) ? $parts['path'] : '';
 
 			if ( ! $port ) {
 				$port = ( 'https' == $scheme ) ? '443' : '80';

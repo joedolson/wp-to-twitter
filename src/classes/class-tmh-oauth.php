@@ -1,15 +1,27 @@
 <?php
 /**
+ * TmhOAuth
+ *
+ * @category OAuth
+ * @package  WP to Twitter
+ * @author   Joe Dolson
+ * @license  GPLv2 or later
+ * @link     https://www.joedolson.com/wp-to-twitter/
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+/**
  * OAuth / tmhOAuth
  *
  * An OAuth 1.0A library written in PHP.
  * The library supports file uploading using multipart/form as well as general
  * REST requests. OAuth authentication is sent using the an Authorization Header.
  *
- * @category OAuth
- * @package tmhOAuth
  * @author themattharris
  * @version 0.7.5
+ * @link https://github.com/themattharris/tmhOAuth
  *
  * 20 February 2013
  */

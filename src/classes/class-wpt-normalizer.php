@@ -47,13 +47,13 @@ class WPT_Normalizer {
 	 *
 	 * @var $kd
 	 */
-	 $kd,
+	$kd,
 	/**
 	 * Character containers.
 	 *
 	 * @var $cc
 	 */
-	 $cc,
+	$cc,
 	/**
 	 * U length mask.
 	 *

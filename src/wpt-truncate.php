@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function wpt_max_length() {
 	$config = get_transient( 'wpt_twitter_config' );
 	if ( ! $config ) {
-		$connection = wtt_oauth_connection();
+		$connection = wpt_oauth_connection();
 		if ( $connection ) {
 			$config = $connection->get( 'https://api.twitter.com/1.1/help/configuration.json' );
 			set_transient( 'wpt_twitter_config', $config, 60*60*24 );
