@@ -101,7 +101,7 @@ class tmhUtilities {
 		}
 		$replacements = array(
 			'replacements' => $replacements,
-			'keys'         => $keys
+			'keys'         => $keys,
 		);
 
 		mb_internal_encoding( $encoding );

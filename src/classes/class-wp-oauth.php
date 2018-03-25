@@ -565,7 +565,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			$path   = isset( $parts['path'] ) ? $parts['scheme'] : '';
 
 			if ( ! $port ) {
-				$port == ( 'https' == $scheme ) ? '443' : '80';
+				$port = ( 'https' == $scheme ) ? '443' : '80';
 			}
 
 			if ( ( 'https' == $scheme && '443' != $port ) || ( 'http' == $scheme && '80' != $port )
@@ -784,7 +784,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 			$this->check_signature( $request, $consumer, $token );
 
-			// Rev A change
+			// Rev A change.
 			$verifier  = $request->get_parameter( 'oauth_verifier' );
 			$new_token = $this->data_store->new_access_token( $token, $consumer, $verifier );
 

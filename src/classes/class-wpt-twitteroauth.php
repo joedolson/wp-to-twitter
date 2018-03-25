@@ -152,7 +152,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 */
 		function get_request_token() {
 			$r           = $this->WPOAuthRequest( $this->request_token_url() );
-			$token       = $this->WPOAuthParseResponse( $r );
+			$token       = $this->wp_oauth_parse_response( $r );
 			$this->token = new WPOAuthConsumer( $token['WPOAuth_token'], $token['WPOAuth_token_secret'] );
 
 			return $token;
@@ -165,7 +165,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 *
 		 * @return a key/value array
 		 */
-		function WPOAuthParseResponse( $response_string ) {
+		function wp_oauth_parse_response( $response_string ) {
 			$r = array();
 			foreach ( explode( '&', $response_string ) as $param ) {
 				$pair = explode( '=', $param, 2 );
@@ -210,16 +210,15 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		}
 
 		/**
-		 * Exchange the request token and secret for an access token and
-		 * secret, to sign API calls.
+		 * Exchange the request token and secret for an access token and secret, to sign API calls.
+		 *
 		 * @param array $token Token array.
 		 *
-		 * @returns array("WPOAuth_token" => the access token,
-		 *                "WPOAuth_token_secret" => the access secret)
+		 * @returns array("WPOAuth_token" => the access token, "WPOAuth_token_secret" => the access secret)
 		 */
 		function get_access_token( $token = null ) {
 			$r           = $this->WPOAuthRequest( $this->access_token_url() );
-			$token       = $this->WPOAuthParseResponse( $r );
+			$token       = $this->wp_oauth_parse_response( $r );
 			$this->token = new WPOAuthConsumer( $token['WPOAuth_token'], $token['WPOAuth_token_secret'] );
 
 			return $token;
@@ -447,7 +446,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 					$url      = $req->get_normalized_http_url();
 					$args     = wp_parse_args( $req->to_postdata() );
 					$response = wp_remote_post( $url, array(
-						'body' => $args,
+						'body'    => $args,
 						'timeout' => 30,
 					) );
 					break;

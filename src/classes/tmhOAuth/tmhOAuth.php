@@ -13,16 +13,20 @@
  *
  * 20 February 2013
  */
-
 class tmhOAuth {
 	const VERSION = '0.7.5';
 
+	/**
+	 * The response from Twitter.
+	 *
+	 * @var $response
+	 */
 	var $response = array();
 
 	/**
 	 * Creates a new tmhOAuth object
 	 *
-	 * @param string $config , the configuration to use for this request.
+	 * @param array $config , the configuration to use for this request.
 	 *
 	 * @return void
 	 */
