@@ -308,8 +308,11 @@ function wpt_remove_tag( $key ) {
 		case 'date':
 		case 'modified':
 		case 'reference':
-		case '@': $return = true; break;
-		default: $return = false;
+		case '@':
+			$return = true;
+			break;
+		default:
+			$return = false;
 	}
 
 	return $return;
@@ -338,15 +341,15 @@ function wpt_make_tag( $value ) {
 /**
  * Create values. Get the value of tags.
  *
- * @param array $post Post array.
- * @param int   $post_ID Post ID.
+ * @param array   $post Post array.
+ * @param int     $post_ID Post ID.
  * @param boolean $ref Use referential author.
  *
- * @return array of values. 
+ * @return array of values.
  */
 function wpt_create_values( $post, $post_ID, $ref ) {
 	$shrink = ( '' != $post['shortUrl'] ) ? $post['shortUrl'] : apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
-	// generate template variable values
+	// generate template variable values.
 	$auth         = $post['authId'];
 	$title        = trim( apply_filters( 'wpt_status', $post['postTitle'], $post_ID, 'title' ) );
 	$blogname     = trim( $post['blogTitle'] );
@@ -457,11 +460,11 @@ function wpt_custom_shortcodes( $sentence, $post_ID ) {
  * Parse user meta shortcodes
  *
  * @param string  $sentence Tweet template.
- * @param integer $auth_ID Post Author ID.
+ * @param integer $auth_id Post Author ID.
  *
  * @return string $sentence with any custom shortcodes replaced with their appropriate content.
  */
-function wpt_user_meta_shortcodes( $sentence, $auth_ID ) {
+function wpt_user_meta_shortcodes( $sentence, $auth_id ) {
 	$pattern = '/([({\{\}?)([A-Za-z0-9-_])*(\}\}}?)+/';
 	$params  = array(
 		0 => '{{',
@@ -472,7 +475,7 @@ function wpt_user_meta_shortcodes( $sentence, $auth_ID ) {
 		foreach ( $matches[0] as $value ) {
 			$shortcode = "$value";
 			$field     = str_replace( $params, '', $shortcode );
-			$custom    = apply_filters( 'wpt_user_meta_shortcode', strip_tags( get_user_meta( $auth_ID, $field, true ) ), $auth_ID, $field );
+			$custom    = apply_filters( 'wpt_user_meta_shortcode', strip_tags( get_user_meta( $auth_id, $field, true ) ), $auth_id, $field );
 			$sentence  = str_replace( $shortcode, $custom, $sentence );
 		}
 	}

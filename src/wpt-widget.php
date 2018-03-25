@@ -27,7 +27,9 @@ require_once( dirname( __FILE__ ) . '/classes/class-wpt-search-tweets-widget.php
  *
  * @link http://www.snipe.net/2009/09/php-twitter-clickable-links/
  *
- * @param string $text A string representing the content of a tweet
+ * @param string $text A string representing the content of a tweet.
+ * @param array  $opts Array of options.
+ * @param array  $tweet Array of Tweet information.
  *
  * @return string Linkified tweet content
  */
@@ -39,7 +41,7 @@ function wpt_tweet_linkify( $text, $opts, $tweet ) {
 			if ( ! empty( $media ) ) {
 				foreach ( $media as $key => $image ) {
 					$media_urls[] = $image['url'];
-					// alt attributes are not available on Twitter. include_ext_alt_text
+					// alt attributes are not available on Twitter. include_ext_alt_text.
 					$alt   = isset( $tweet['extended_entities']['media'][ $key ]['ext_alt_text'] ) ? $tweet['extended_entities']['media'][ $key ]['ext_alt_text'] : '';
 					$text .= "<img src='$image[media_url_https]' alt='$alt' class='wpt-twitter-image' />";
 
@@ -66,8 +68,16 @@ function wpt_tweet_linkify( $text, $opts, $tweet ) {
 	return $text;
 }
 
-/* implement get_tweets */
-function WPT_get_tweets( $count = 20, $username = false, $options = false ) {
+/**
+ * Implement get_tweets
+ *
+ * @param int    $count How many Tweets.
+ * @param string $username Username passed.
+ * @param array  $options Widget options.
+ *
+ * @return Tweets.
+ */
+function wpt_get_tweets( $count = 20, $username = false, $options = false ) {
 
 	$config['key']          = get_option( 'app_consumer_key' );
 	$config['secret']       = get_option( 'app_consumer_secret' );
@@ -88,6 +98,13 @@ function WPT_get_tweets( $count = 20, $username = false, $options = false ) {
 
 }
 
+/**
+ * Generate relevant classes for a Tweet.
+ *
+ * @param array $tweet Tweet info.
+ *
+ * @return array classes.
+ */
 function wpt_generate_classes( $tweet ) {
 	// take Tweet array and parse selected options into classes.
 	$classes[] = ( $tweet['favorited'] ) ? 'favorited' : '';
@@ -99,19 +116,25 @@ function wpt_generate_classes( $tweet ) {
 	return $class;
 }
 
-
-function wpt_get_user( $twitter_ID = false ) {
-	if ( ! $twitter_ID ) {
+/**
+ * Get information about user.
+ *
+ * @param string $twitter_id Twitter screen name.
+ *
+ * @return array
+ */
+function wpt_get_user( $twitter_id = false ) {
+	if ( ! $twitter_id ) {
 		return;
 	}
-	$options      = array( 'screen_name' => $twitter_ID );
+	$options      = array( 'screen_name' => $twitter_id );
 	$key          = get_option( 'app_consumer_key' );
 	$secret       = get_option( 'app_consumer_secret' );
 	$token        = get_option( 'oauth_token' );
 	$token_secret = get_option( 'oauth_token_secret' );
 	if ( $key && $secret && $token && $token_secret ) {
-		$connection   = new Wpt_TwitterOAuth( $key, $secret, $token, $token_secret );
-		$result       = $connection->get( "https://api.twitter.com/1.1/users/show.json?screen_name=$twitter_ID&include_ext_alt_text=true", $options );
+		$connection = new Wpt_TwitterOAuth( $key, $secret, $token, $token_secret );
+		$result     = $connection->get( "https://api.twitter.com/1.1/users/show.json?screen_name=$twitter_id&include_ext_alt_text=true", $options );
 
 		return json_decode( $result );
 	} else {
@@ -120,6 +143,14 @@ function wpt_get_user( $twitter_ID = false ) {
 }
 
 add_shortcode( 'get_tweets', 'wpt_get_twitter_feed' );
+/**
+ * Get a Twitter Feed.
+ *
+ * @param array $atts Display attributes.
+ * @param string $content Fallback content.
+ *
+ * @return Twitter feed.
+ */
 function wpt_get_twitter_feed( $atts, $content ) {
 	$atts = ( shortcode_atts( array(
 		'id'          => false,
@@ -153,11 +184,18 @@ function wpt_get_twitter_feed( $atts, $content ) {
 	return wpt_twitter_feed( $instance );
 }
 
+/**
+ * Get the twitter feed data.
+ *
+ * @param array $instance Config for this instance.
+ *
+ * @return string.
+ */
 function wpt_twitter_feed( $instance ) {
 	$header = '';
 	if ( ! isset( $instance['search'] ) ) {
 		$twitter_id = ( isset( $instance['twitter_id'] ) && '' != $instance['twitter_id'] ) ? $instance['twitter_id'] : get_option( 'wtt_twitter_username' );
-		$user = wpt_get_user( $twitter_id );
+		$user       = wpt_get_user( $twitter_id );
 		if ( empty( $user ) ) {
 			return __( 'Error: You are not connected to Twitter.', 'wp-to-twitter' );
 		}
@@ -204,7 +242,7 @@ function wpt_twitter_feed( $instance ) {
 	$opts['mentions']    = $instance['link_mentions'];
 	$opts['hashtags']    = $instance['link_hashtags'];
 	$opts['show_images'] = isset( $instance['show_images'] ) ? $instance['show_images'] : false;
-	$rawtweets           = WPT_get_tweets( $instance['twitter_num'], $twitter_id, $options );
+	$rawtweets           = wpt_get_tweets( $instance['twitter_num'], $twitter_id, $options );
 
 	if ( isset( $rawtweets['error'] ) ) {
 		$return .= '<li>' . $rawtweets['error'] . '</li>';
