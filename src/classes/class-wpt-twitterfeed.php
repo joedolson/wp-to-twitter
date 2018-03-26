@@ -203,7 +203,7 @@ class WPT_TwitterFeed {
 
 		if ( is_file( $file ) ) {
 			$cache = file_get_contents( $file );
-			$cache = @json_decode( $cache, true );
+			$cache = json_decode( $cache, true );
 			if ( ! isset( $cache ) ) {
 				unlink( $file );
 
@@ -211,7 +211,7 @@ class WPT_TwitterFeed {
 			}
 		} else {
 			$cache = get_transient( 'wpt_cache' );
-			$cache = @json_decode( $cache, true );
+			$cache = json_decode( $cache, true );
 			if ( ! isset( $cache ) ) {
 				return false;
 			}
