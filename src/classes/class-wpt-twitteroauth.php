@@ -151,7 +151,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * @returns a key/value array containing WPOAuth_token and WPOAuth_token_secret
 		 */
 		function get_request_token() {
-			$r           = $this->WPOAuthRequest( $this->request_token_url() );
+			$r           = $this->WP_Oauth_Request( $this->request_token_url() );
 			$token       = $this->wp_oauth_parse_response( $r );
 			$this->token = new WPOAuthConsumer( $token['WPOAuth_token'], $token['WPOAuth_token_secret'] );
 
@@ -217,7 +217,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * @returns array("WPOAuth_token" => the access token, "WPOAuth_token_secret" => the access secret)
 		 */
 		function get_access_token( $token = null ) {
-			$r           = $this->WPOAuthRequest( $this->access_token_url() );
+			$r           = $this->WP_Oauth_Request( $this->access_token_url() );
 			$token       = $this->wp_oauth_parse_response( $r );
 			$this->token = new WPOAuthConsumer( $token['WPOAuth_token'], $token['WPOAuth_token_secret'] );
 
@@ -233,7 +233,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * @return decoded response.
 		 */
 		function post( $url, $parameters = array() ) {
-			$response = $this->WPOAuthRequest( $url, $parameters, 'POST' );
+			$response = $this->WP_Oauth_Request( $url, $parameters, 'POST' );
 			if ( 'json' === $this->format && $this->decode_json ) {
 				return json_decode( $response );
 			}
@@ -250,7 +250,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * @return decoded response.
 		 */
 		function media( $url, $parameters = array() ) {
-			$response = $this->WPOAuthRequest( $url, $parameters, 'MEDIA' );
+			$response = $this->WP_Oauth_Request( $url, $parameters, 'MEDIA' );
 			if ( 'json' === $this->format && $this->decode_json ) {
 				return json_decode( $response );
 			}
@@ -267,7 +267,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * @return decoded response.
 		 */
 		function get( $url, $parameters = array() ) {
-			$response = $this->WPOAuthRequest( $url, $parameters, 'GET' );
+			$response = $this->WP_Oauth_Request( $url, $parameters, 'GET' );
 			if ( 'json' === $this->format && $this->decode_json ) {
 				return json_decode( $response );
 			}
@@ -284,7 +284,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * @return decoded response.
 		 */
 		function meta( $url, $parameters = array() ) {
-			$response = $this->WPOAuthRequest( $url, $parameters, 'META' );
+			$response = $this->WP_Oauth_Request( $url, $parameters, 'META' );
 			if ( 'json' === $this->format && $this->decode_json ) {
 				return json_decode( $response );
 			}
@@ -420,7 +420,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 *
 		 * @return Request.
 		 */
-		function WPOAuthRequest( $url, $args = array(), $method = null ) {
+		function WP_Oauth_Request( $url, $args = array(), $method = null ) {
 
 			// Handle media requests using tmhOAuth library.
 			if ( 'MEDIA' == $method ) {
@@ -430,7 +430,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			if ( empty( $method ) ) {
 				$method = empty( $args ) ? 'GET' : 'POST';
 			}
-			$req = WPOAuthRequest::from_consumer_and_token( $this->consumer, $this->token, $method, $url, $args );
+			$req = WP_Oauth_Request::from_consumer_and_token( $this->consumer, $this->token, $method, $url, $args );
 			$req->sign_request( $this->sha1_method, $this->consumer, $this->token );
 
 			$response = false;

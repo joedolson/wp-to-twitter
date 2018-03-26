@@ -24,10 +24,10 @@ function wpt_max_length() {
 		$connection = wpt_oauth_connection();
 		if ( $connection ) {
 			$config = $connection->get( 'https://api.twitter.com/1.1/help/configuration.json' );
-			set_transient( 'wpt_twitter_config', $config, 60*60*24 );
+			set_transient( 'wpt_twitter_config', $config, 60 * 60 * 24 );
 		} else {
 			$config = json_encode( array(
-				'http_length'   => 23,
+				'http_length'    => 23,
 				'https_length'   => 23,
 				'reserved_chars' => 24,
 			) );
@@ -40,14 +40,14 @@ function wpt_max_length() {
 		$short_url_length = $decoded->short_url_length;
 		$short_url_https  = $decoded->short_url_length_https;
 		$reserved_char    = $decoded->characters_reserved_per_media;
-		$values = array(
+		$values           = array(
 			'http_length'    => $short_url_length,
 			'https_length'   => $short_url_https,
 			'reserved_chars' => $reserved_char,
 		);
 
 	} else {
-		// if config query is invalid, use default values; these may become invalid
+		// if config query is invalid, use default values; these may become invalid.
 		$values = array(
 			'http_length'    => 23,
 			'https_length'   => 23,
@@ -91,9 +91,9 @@ function wpt_filter_urls( $tweet, $post_ID ) {
 /**
  * Parse the text of a Tweet to ensure included tags don't exceed length requirements.
  *
- * @param string $tweet Tweet text.
- * @param array  $post Post data.
- * @param int    $post_ID Post ID.
+ * @param string  $tweet Tweet text.
+ * @param array   $post Post data.
+ * @param int     $post_ID Post ID.
  * @param boolean $retweet Is this a retweet.
  * @param boolean $ref Reference.
  *
@@ -160,10 +160,10 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 			foreach ( $order as $k => $v ) {
 				if ( 'excerpt' == $k ) {
 					$k     = 'post';
-					$value = $length_array[ 'post' ];
+					$value = $length_array['post'];
 				} elseif ( 'blogname' == $k ) {
 					$k     = 'blog';
-					$value = $length_array[ 'blog' ];
+					$value = $length_array['blog'];
 				} else {
 					$value = $length_array[ $k ];
 				}
@@ -179,13 +179,13 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 			$diff = ( ( $longurl_strlen - $tco ) > 0 ) ? $longurl_strlen - $tco : 0;
 		}
 		if ( $str_length > ( $length + 1 + $diff ) ) {
-			foreach ( $preferred AS $key => $value ) {
+			foreach ( $preferred as $key => $value ) {
 				// don't truncate content of post excerpt or title if those tags not in use.
 				if ( ! ( 'excerpt' == $key && ! $has_excerpt_tag ) && ! ( 'title' == $key && ! $has_title_tag ) ) {
 					$str_length = mb_strlen( urldecode( wpt_normalize( trim( $post_tweet ) ) ), $encoding );
 					if ( $str_length > ( $length + 1 + $diff ) ) {
 						$trim      = $str_length - ( $length + 1 + $diff );
-						$old_value = $values[$key];
+						$old_value = $values[ $key ];
 						// prevent URL from being modified.
 						$post_tweet = str_ireplace( array( $values['url'], $values['longurl'] ), array( '#url#', '#longurl#' ), $post_tweet );
 

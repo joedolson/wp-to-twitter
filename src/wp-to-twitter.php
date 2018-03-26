@@ -340,7 +340,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		);
 
 		if ( wtt_oauth_test( $auth ) ) {
-			$connection = wtt_oauth_connection( $auth );
+			$connection = wpt_oauth_connection( $auth );
 			if ( $connection ) {
 				if ( $media && $attachment && ! $media_id ) {
 					$media_id = $connection->media( $upload_api, array(
@@ -896,10 +896,10 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 												$author_id = 'Main';
 											}
 											wpt_mail( "7b: Retweet Scheduled for author $author_id", print_r( array(
-												'id'         => $acct,
-												'sentence'   => array( $retweet, $i, $post_ID ),
-												'timestamp'  => time() + $time + $offset + $delay,
-												'time'       => array( $time, $offset, $delay, get_option( 'gmt_offset' ), time() ),
+												'id'       => $acct,
+												'sentence' => array( $retweet, $i, $post_ID ),
+												'timestamp' => time() + $time + $offset + $delay,
+												'time'     => array( $time, $offset, $delay, get_option( 'gmt_offset' ), time() ),
 												'timestring' => date( 'Y-m-d H:i:s', time() + $time + $offset + $delay ),
 												'current_ts' => date( 'Y-m-d H:i:s', time() ),
 											), 1 ), true ); // DEBUG.

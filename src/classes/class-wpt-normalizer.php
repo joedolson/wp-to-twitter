@@ -200,7 +200,7 @@ class WPT_Normalizer {
 
 					if ( isset( $comp_map[ $last_uchr . $uchr ] ) && ( ! $last_ucls || $last_ucls < $ucls ) ) {
 						$last_uchr = $comp_map[ $last_uchr . $uchr ];
-					} elseif ( $last_ucls = $ucls ) {
+					} elseif ( $last_ucls == $ucls ) {
 						$tail .= $uchr;
 					} else {
 						if ( $tail ) {

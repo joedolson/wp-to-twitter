@@ -26,14 +26,14 @@ function wpt_clear_rate_limits() {
  *
  * @param int    $auth Author.
  * @param string $ts Timestamp.
- * @param int    $post_ID Post ID
+ * @param int    $post_ID Post ID.
  */
 function wpt_log_success( $auth, $ts, $post_ID ) {
-	if ( ! $post_ID ) { 
-		return; 
+	if ( ! $post_ID ) {
+		return;
 	}
 
-	// get record of recent Tweets
+	// get record of recent Tweets.
 	$rate_limit = get_option( 'wpt_rate_limits' );
 	if ( ! is_array( $rate_limit ) ) {
 		$rate_limit = array();
@@ -109,8 +109,7 @@ function wpt_default_rate_limit( $term = false ) {
 /**
  * Get the current rate limit for a given term ID.
  *
- * @param $term Term ID.
- *
+ * @param string $term Term ID.
  * @uses filter wpt_default_rate_limit
  *
  * @return integer Number of Tweets allowed per hour in this category.
@@ -154,7 +153,7 @@ function wpt_save_term_rate_limit( $term_id, $tax_id ) {
 	$option_set = isset( $_POST['wpt_rate_limit'] ) ? $_POST['wpt_rate_limit'] : wpt_default_rate_limit( $term_id );
 	if ( isset( $_POST['taxonomy'] ) ) {
 		if ( isset( $_POST['wpt_rate_limit'] ) ) {
-			$limits[ $term_id] = $option_set;
+			$limits[ $term_id ] = $option_set;
 			update_option( 'wpt_rate_limit', $limits );
 		}
 	}
@@ -184,7 +183,7 @@ function wpt_edit_term_rate_limit( $term, $taxonomy ) {
 
 /**
  * Add a rate limit for a given term.
- * 
+ *
  * @param object $term Term Object.
  */
 function wpt_add_term_rate_limit( $term ) {
@@ -199,7 +198,7 @@ function wpt_add_term_rate_limit( $term ) {
 /**
  * View rate limit status.
  *
- * @param string Rate limit info.
+ * @return string Rate limit info.
  */
 function wpt_view_rate_limits() {
 	$limits = get_option( 'wpt_rate_limits' );
@@ -219,8 +218,8 @@ function wpt_view_rate_limits() {
 				$rate_limiting = ( $count >= $limit ) ? 'rate-limited' : 'active';
 				$dashicon      = ( $count >= $limit ) ? "<span class='dashicons dashicons-no' aria-hidden='true'></span>" : "<span class='dashicons dashicons-yes' aria-hidden='true'></span>";
 				$output       .= "<li class='$rate_limiting'>$dashicon<strong>$term_label</strong>: ";
-				// Translators: Number of tweets sent, number allowed. 
-				$output .= sprintf( _n( '%s Tweet sent, %s allowed.', '%s Tweets sent, %s allowed.', $count, 'wp-to-twitter' ), "<strong>$count</strong>", "<strong>$limit</strong>" ) . '</li>';
+				// Translators: Number of tweets sent, number allowed.
+				$output .= sprintf( _n( '%1$s Tweet sent, %2$s allowed.', '%1$s Tweets sent, %2$s allowed.', $count, 'wp-to-twitter' ), "<strong>$count</strong>", "<strong>$limit</strong>" ) . '</li>';
 			}
 			$output .= '</ul>';
 		}

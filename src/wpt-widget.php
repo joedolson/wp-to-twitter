@@ -146,13 +146,13 @@ add_shortcode( 'get_tweets', 'wpt_get_twitter_feed' );
 /**
  * Get a Twitter Feed.
  *
- * @param array $atts Display attributes.
+ * @param array  $atts Display attributes.
  * @param string $content Fallback content.
  *
  * @return Twitter feed.
  */
 function wpt_get_twitter_feed( $atts, $content ) {
-	$atts = ( shortcode_atts( array(
+	$atts     = ( shortcode_atts( array(
 		'id'          => false,
 		'num'         => 10,
 		'duration'    => 1800,
@@ -208,13 +208,13 @@ function wpt_twitter_feed( $instance ) {
 		$img_alignment    = ( is_rtl() ) ? 'wpt-right' : 'wpt-left';
 		$follow_alignment = ( is_rtl() ) ? 'wpt-left' : 'wpt-right';
 		$follow_url       = esc_url( 'https://twitter.com/' . $twitter_id );
-		$follow_button    = apply_filters( 'wpt_follow_button', "<a href='$follow_url' class='twitter-follow-button $follow_alignment' data-width='30px' data-show-screen-name='false' data-size='large' data-show-count='false' data-lang='en'>Follow @" .  esc_html( $twitter_id ) . '</a>' );
+		$follow_button    = apply_filters( 'wpt_follow_button', "<a href='$follow_url' class='twitter-follow-button $follow_alignment' data-width='30px' data-show-screen-name='false' data-size='large' data-show-count='false' data-lang='en'>Follow @" . esc_html( $twitter_id ) . '</a>' );
 		$header          .= '<div class="wpt-header">';
 		$header          .= "<div class='wpt-follow-button'>$follow_button</div>
 		<p>
 			<img src='$avatar' alt='' class='wpt-twitter-avatar $img_alignment $verified' />
 			<span class='wpt-twitter-name'>$name</span><br />
-			<span class='wpt-twitter-id'><a href='$follow_url'>@" .  esc_html( $twitter_id ) . '</a></span>
+			<span class='wpt-twitter-id'><a href='$follow_url'>@" . esc_html( $twitter_id ) . '</a></span>
 		</p>';
 		$header          .= '</div>';
 	} else {

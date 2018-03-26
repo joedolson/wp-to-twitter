@@ -329,7 +329,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 	/**
 	 * Construct and send the OAuth Request to the target URL.
 	 */
-	class WPOAuthRequest {
+	class WP_Oauth_Request {
 		/**
 		 * Query parameters
 		 *
@@ -393,7 +393,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @param string $http_url URL.
 		 * @param array  $parameters Query parameters.
 		 *
-		 * @return WPOAuthRequest object.
+		 * @return WP_Oauth_Request object.
 		 */
 		public static function from_request( $http_method = null, $http_url = null, $parameters = null ) {
 			$scheme = ( ! isset( $_SERVER['HTTPS'] ) || 'on' != $_SERVER['HTTPS'] ) ? 'http' : 'https';
@@ -433,7 +433,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 					$parameters        = array_merge( $parameters, $header_parameters );
 				}
 			}
-			return new WPOAuthRequest( $http_method, $http_url, $parameters );
+			return new WP_Oauth_Request( $http_method, $http_url, $parameters );
 		}
 
 		/**
@@ -445,13 +445,13 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @param string $http_url URL.
 		 * @param array  $parameters Query parameters.
 		 *
-		 * @return object WPOAuthRequest object.
+		 * @return object WP_Oauth_Request object.
 		 */
 		public static function from_consumer_and_token( $consumer, $token, $http_method, $http_url, $parameters = array() ) {
 			$defaults = array(
-				'oauth_version'      => WPOAuthRequest::$version,
-				'oauth_nonce'        => WPOAuthRequest::generate_nonce(),
-				'oauth_timestamp'    => WPOAuthRequest::generate_timestamp(),
+				'oauth_version'      => WP_Oauth_Request::$version,
+				'oauth_nonce'        => WP_Oauth_Request::generate_nonce(),
+				'oauth_timestamp'    => WP_Oauth_Request::generate_timestamp(),
 				'oauth_consumer_key' => $consumer->key,
 			);
 			if ( $token ) {
@@ -460,7 +460,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 			$parameters = array_merge( $defaults, $parameters );
 
-			return new WPOAuthRequest( $http_method, $http_url, $parameters );
+			return new WP_Oauth_Request( $http_method, $http_url, $parameters );
 		}
 
 		/**

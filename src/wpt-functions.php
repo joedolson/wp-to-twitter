@@ -872,7 +872,7 @@ add_action( 'dp_duplicate_page', 'wpt_delete_copied_meta', 10, 2 );
 /**
  * Prevent 'Duplicate Posts' plug-in from copying WP to Twitter meta data
  *
- * @param int $new_id New post ID.
+ * @param int    $new_id New post ID.
  * @param object $post Old Post.
  */
 function wpt_delete_copied_meta( $new_id, $post ) {

@@ -58,7 +58,7 @@ function wpt_get_user_verification( $auth ) {
  *
  * @return mixed $connection or false
  */
-function wtt_oauth_connection( $auth = false ) {
+function wpt_oauth_connection( $auth = false ) {
 	if ( ! $auth ) {
 		$ack = get_option( 'app_consumer_key' );
 		$acs = get_option( 'app_consumer_secret' );
@@ -132,7 +132,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 						update_user_meta( $auth, 'oauth_token_secret', $ots );
 					}
 					$message = 'failed';
-					if ( wtt_oauth_connection( $auth ) == $connection ) {
+					if ( wpt_oauth_connection( $auth ) == $connection ) {
 						$data = $connection->get( 'https://api.twitter.com/1.1/account/verify_credentials.json' );
 						if ( '200' != $connection->http_code ) {
 							$data  = json_decode( $data );
