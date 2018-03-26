@@ -41,9 +41,8 @@ function wpt_tweet_linkify( $text, $opts, $tweet ) {
 			if ( ! empty( $media ) ) {
 				foreach ( $media as $key => $image ) {
 					$media_urls[] = $image['url'];
-					// alt attributes are not available on Twitter. include_ext_alt_text.
-					$alt   = isset( $tweet['extended_entities']['media'][ $key ]['ext_alt_text'] ) ? $tweet['extended_entities']['media'][ $key ]['ext_alt_text'] : '';
-					$text .= "<img src='$image[media_url_https]' alt='$alt' class='wpt-twitter-image' />";
+					$alt          = isset( $tweet['extended_entities']['media'][ $key ]['ext_alt_text'] ) ? $tweet['extended_entities']['media'][ $key ]['ext_alt_text'] : '';
+					$text        .= "<img src='$image[media_url_https]' alt='$alt' class='wpt-twitter-image' />";
 
 				}
 			}
