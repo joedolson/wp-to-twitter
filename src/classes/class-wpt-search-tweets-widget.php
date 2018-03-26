@@ -40,6 +40,7 @@ class WPT_Search_Tweets_Widget extends WP_Widget {
 			'geocode'       => '', // 37.777,-127.98,2km.
 			'link_links'    => '',
 			'link_mentions' => '',
+			'show_images'   => '',
 			'link_hashtags' => '',
 			'intents'       => '',
 			'source'        => '',
@@ -147,6 +148,11 @@ class WPT_Search_Tweets_Widget extends WP_Widget {
 		<p>
 			<input id="<?php echo $this->get_field_id( 'link_mentions' ); ?>" type="checkbox" name="<?php echo $this->get_field_name( 'link_mentions' ); ?>" value="1" <?php checked( $instance['link_mentions'] ); ?>/>
 			<label for="<?php echo $this->get_field_id( 'link_mentions' ); ?>"><?php _e( 'Parse @mentions', 'wp-to-twitter' ); ?></label>
+		</p>
+
+		<p>
+			<input id="<?php echo $this->get_field_id( 'show_images' ); ?>" type="checkbox" name="<?php echo $this->get_field_name( 'show_images' ); ?>" value="1" <?php checked( $instance['show_images'], 1 ); ?>/>
+			<label for="<?php echo $this->get_field_id( 'show_images' ); ?>"><?php _e( 'Show Images', 'wp-to-twitter' ); ?></label>
 		</p>
 
 		<p>

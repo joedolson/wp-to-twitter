@@ -70,7 +70,8 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Removed: support for YOURLS version 1.3
 * Removed: support for Twitter Friendly Links (plug-in not updated in 8 years)
 * Removed: fallback functions required for PHP 4 support.
-* TEST: Support for alt attributes in Feeds; test image display?
+* Add 'show images' as option in feeds.
+* Support for alt attributes displayed in Feeds
 
 = 3.3.2 =
 
