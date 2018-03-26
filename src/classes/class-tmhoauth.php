@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * 20 February 2013
  */
-class tmhOAuth {
+class TmhOAuth {
 	const VERSION = '0.7.5';
 
 	/**
@@ -36,7 +36,7 @@ class tmhOAuth {
 	var $response = array();
 
 	/**
-	 * Creates a new tmhOAuth object
+	 * Creates a new TmhOAuth object
 	 *
 	 * @param array $config , the configuration to use for this request.
 	 *

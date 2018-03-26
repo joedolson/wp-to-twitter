@@ -328,7 +328,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				'user_token'      => $ot,
 				'user_secret'     => $ots,
 			);
-			$tmh_oauth  = new tmhOAuth( $connect );
+			$tmh_oauth  = new TmhOAuth( $connect );
 			$attachment = $args['media'];
 
 			$image_sizes = get_intermediate_image_sizes();
