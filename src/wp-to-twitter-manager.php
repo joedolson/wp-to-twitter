@@ -356,7 +356,7 @@ function wpt_update_settings() {
 								<fieldset>
 									<legend><?php _e( 'Tweet Templates', 'wp-to-twitter' ); ?></legend>
 									<p>
-										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][post-published-update]" id="<?php echo $slug; ?>-post-published-update" value="1" <?php echo jd_checkCheckbox( 'wpt_post_types', $slug, 'post-published-update' ); ?> />
+										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][post-published-update]" id="<?php echo $slug; ?>-post-published-update" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'post-published-update' ); ?> />
 										<label for="<?php echo $slug; ?>-post-published-update"><strong>
 										<?php
 										// Translators: post type.
@@ -373,7 +373,7 @@ function wpt_update_settings() {
 									</p>
 
 									<p>
-										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][post-edited-update]" id="<?php echo $slug; ?>-post-edited-update" value="1" <?php echo jd_checkCheckbox( 'wpt_post_types', $slug, 'post-edited-update' ); ?> />
+										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][post-edited-update]" id="<?php echo $slug; ?>-post-edited-update" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'post-edited-update' ); ?> />
 										<label for="<?php echo $slug; ?>-post-edited-update"><strong>
 										<?php
 										// Translators: post type name.
@@ -402,7 +402,7 @@ function wpt_update_settings() {
 							<fieldset>
 								<legend><span><?php _e( 'Links', 'wp-to-twitter' ); ?></span></legend>
 								<p>
-									<input type="checkbox" name="jd_twit_blogroll" id="jd_twit_blogroll" value="1" <?php echo jd_checkCheckbox( 'jd_twit_blogroll' ); ?> />
+									<input type="checkbox" name="jd_twit_blogroll" id="jd_twit_blogroll" value="1" <?php echo wpt_checkbox( 'jd_twit_blogroll' ); ?> />
 									<label for="jd_twit_blogroll"><strong><?php _e( 'Update Twitter when you post a Blogroll link', 'wp-to-twitter' ); ?></strong></label><br/>
 									<label for="newlink-published-text"><?php _e( 'Text for new link updates:', 'wp-to-twitter' ); ?></label>
 									<input aria-describedby="newlink-published-text-label" type="text" class="wpt-template" name="newlink-published-text" id="newlink-published-text" size="60" maxlength="120" value="<?php echo esc_attr( stripslashes( get_option( 'newlink-published-text' ) ) ); ?>"/><br/><span id="newlink-published-text-label"><?php _e( 'Available shortcodes: <code>#url#</code>, <code>#title#</code>, and <code>#description#</code>.', 'wp-to-twitter' ); ?></span>
@@ -481,10 +481,10 @@ function wpt_update_settings() {
 						<fieldset>
 							<legend class='screen-reader-text'><?php _e( 'Hashtags', 'wp-to-twitter' ); ?></legend>
 							<p>
-								<input type="checkbox" name="jd_strip_nonan" id="jd_strip_nonan" value="1" <?php echo jd_checkCheckbox( 'jd_strip_nonan' ); ?> /> <label for="jd_strip_nonan"><?php _e( 'Strip nonalphanumeric characters from tags', 'wp-to-twitter' ); ?></label>
+								<input type="checkbox" name="jd_strip_nonan" id="jd_strip_nonan" value="1" <?php echo checked( get_option( 'jd_strip_nonan' ), 1 ); ?> /> <label for="jd_strip_nonan"><?php _e( 'Strip nonalphanumeric characters from tags', 'wp-to-twitter' ); ?></label>
 							</p>
 							<p>
-								<input type="checkbox" name="wpt_tag_source" id="wpt_tag_source" value="slug" <?php echo jd_checkSelect( 'wpt_tag_source', 'slug', 'checkbox' ); ?> />
+								<input type="checkbox" name="wpt_tag_source" id="wpt_tag_source" value="slug" <?php checked( get_option( 'wpt_tag_source' ), 'slug' ); ?> />
 								<label for="wpt_tag_source"><?php _e( 'Use tag slug as hashtag value', 'wp-to-twitter' ); ?></label><br/>
 							</p>
 							<p>
@@ -562,13 +562,13 @@ function wpt_update_settings() {
 						<fieldset>
 							<legend id="special_cases" class='screen-reader-text'><?php _e( 'Special Cases', 'wp-to-twitter' ); ?></legend>
 							<p>
-								<input type="checkbox" name="jd_tweet_default" id="jd_tweet_default" value="1" <?php echo jd_checkCheckbox( 'jd_tweet_default' ); ?> />
+								<input type="checkbox" name="jd_tweet_default" id="jd_tweet_default" value="1" <?php echo wpt_checkbox( 'jd_tweet_default' ); ?> />
 								<label for="jd_tweet_default"><?php _e( 'Do not post Tweets by default', 'wp-to-twitter' ); ?></label><br/>
-								<input type="checkbox" name="jd_tweet_default_edit" id="jd_tweet_default_edit" value="1" <?php echo jd_checkCheckbox( 'jd_tweet_default_edit' ); ?> />
+								<input type="checkbox" name="jd_tweet_default_edit" id="jd_tweet_default_edit" value="1" <?php echo wpt_checkbox( 'jd_tweet_default_edit' ); ?> />
 								<label for="jd_tweet_default_edit"><?php _e( 'Do not post Tweets by default (editing only)', 'wp-to-twitter' ); ?></label><br/>
-								<input type="checkbox" name="wpt_inline_edits" id="wpt_inline_edits" value="1" <?php echo jd_checkCheckbox( 'wpt_inline_edits' ); ?> />
+								<input type="checkbox" name="wpt_inline_edits" id="wpt_inline_edits" value="1" <?php echo wpt_checkbox( 'wpt_inline_edits' ); ?> />
 								<label for="wpt_inline_edits"><?php _e( 'Allow status updates from Quick Edit', 'wp-to-twitter' ); ?></label><br/>
-								<input type="checkbox" name="wpt_rate_limiting" id="wpt_rate_limiting" value="1" <?php echo jd_checkCheckbox( 'wpt_rate_limiting' ); ?> />
+								<input type="checkbox" name="wpt_rate_limiting" id="wpt_rate_limiting" value="1" <?php echo wpt_checkbox( 'wpt_rate_limiting' ); ?> />
 								<label for="wpt_rate_limiting"><?php _e( 'Enable Rate Limiting', 'wp-to-twitter' ); ?></label><br/>
 								<?php
 								if ( get_option( 'wpt_rate_limiting' ) == 1 ) {
@@ -591,24 +591,24 @@ function wpt_update_settings() {
 							<legend class='screen-reader-text'><?php _e( 'Google Analytics Settings', 'wp-to-twitter' ); ?></legend>
 
 							<p>
-								<input type="radio" name="twitter-analytics" id="use-twitter-analytics" value="1" <?php echo jd_checkCheckbox( 'use-twitter-analytics' ); ?> />
+								<input type="radio" name="twitter-analytics" id="use-twitter-analytics" value="1" <?php echo wpt_checkbox( 'use-twitter-analytics' ); ?> />
 								<label for="use-twitter-analytics"><?php _e( 'Use a Static Identifier', 'wp-to-twitter' ); ?></label><br/>
 								<label for="twitter-analytics-campaign"><?php _e( 'Static Campaign identifier', 'wp-to-twitter' ); ?></label>
 								<input type="text" name="twitter-analytics-campaign" id="twitter-analytics-campaign" size="40" maxlength="120" value="<?php echo esc_attr( get_option( 'twitter-analytics-campaign' ) ); ?>"/><br/>
 							</p>
 							<p>
-								<input type="radio" name="twitter-analytics" id="use-dynamic-analytics" value="2" <?php echo jd_checkCheckbox( 'use_dynamic_analytics' ); ?> />
+								<input type="radio" name="twitter-analytics" id="use-dynamic-analytics" value="2" <?php echo wpt_checkbox( 'use_dynamic_analytics' ); ?> />
 								<label for="use-dynamic-analytics"><?php _e( 'Use a dynamic identifier', 'wp-to-twitter' ); ?></label><br/>
 								<label for="jd-dynamic-analytics"><?php _e( 'What dynamic identifier would you like to use?', 'wp-to-twitter' ); ?></label>
 								<select name="jd-dynamic-analytics" id="jd-dynamic-analytics">
-									<option value="post_category"<?php echo jd_checkSelect( 'jd_dynamic_analytics', 'post_category' ); ?>><?php _e( 'Category', 'wp-to-twitter' ); ?></option>
-									<option value="post_ID"<?php echo jd_checkSelect( 'jd_dynamic_analytics', 'post_ID' ); ?>><?php _e( 'Post ID', 'wp-to-twitter' ); ?></option>
-									<option value="post_title"<?php echo jd_checkSelect( 'jd_dynamic_analytics', 'post_title' ); ?>><?php _e( 'Post Title', 'wp-to-twitter' ); ?></option>
-									<option value="post_author"<?php echo jd_checkSelect( 'jd_dynamic_analytics', 'post_author' ); ?>><?php _e( 'Author', 'wp-to-twitter' ); ?></option>
+									<option value="post_category"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_category' ); ?>><?php _e( 'Category', 'wp-to-twitter' ); ?></option>
+									<option value="post_ID"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_ID' ); ?>><?php _e( 'Post ID', 'wp-to-twitter' ); ?></option>
+									<option value="post_title"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_title' ); ?>><?php _e( 'Post Title', 'wp-to-twitter' ); ?></option>
+									<option value="post_author"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_author' ); ?>><?php _e( 'Author', 'wp-to-twitter' ); ?></option>
 								</select><br/>
 							</p>
 							<p>
-								<input type="radio" name="twitter-analytics" id="no-analytics" value="3" <?php echo jd_checkCheckbox( 'no-analytics' ); ?> /> <label for="no-analytics"><?php _e( 'No Analytics', 'wp-to-twitter' ); ?></label>
+								<input type="radio" name="twitter-analytics" id="no-analytics" value="3" <?php echo wpt_checkbox( 'no-analytics' ); ?> /> <label for="no-analytics"><?php _e( 'No Analytics', 'wp-to-twitter' ); ?></label>
 							</p>
 						</fieldset>
 					</div>
@@ -620,7 +620,7 @@ function wpt_update_settings() {
 					<div class="inside">
 
 						<p>
-							<input type="checkbox" name="jd_individual_twitter_users" id="jd_individual_twitter_users" value="1" <?php echo jd_checkCheckbox( 'jd_individual_twitter_users' ); ?> />
+							<input type="checkbox" name="jd_individual_twitter_users" id="jd_individual_twitter_users" value="1" <?php echo wpt_checkbox( 'jd_individual_twitter_users' ); ?> />
 							<label for="jd_individual_twitter_users"><?php _e( 'Authors have individual Twitter accounts', 'wp-to-twitter' ); ?></label>
 						</p>
 
@@ -725,14 +725,14 @@ function wpt_update_settings() {
 							<legend class='screen-reader-text'><?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?></legend>
 							<ul>
 								<li>
-									<input type="checkbox" name="wpt_permit_feed_styles" id="wpt_permit_feed_styles" value="1" <?php echo jd_checkCheckbox( 'wpt_permit_feed_styles' ); ?> />
+									<input type="checkbox" name="wpt_permit_feed_styles" id="wpt_permit_feed_styles" value="1" <?php echo wpt_checkbox( 'wpt_permit_feed_styles' ); ?> />
 									<label for="wpt_permit_feed_styles"><?php _e( 'Disable Twitter Feed Stylesheet', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
-									<input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" <?php echo jd_checkCheckbox( 'wp_debug_oauth' ); ?> /> <label for="wp_debug_oauth"><?php _e( 'Get Debugging Data for OAuth Connection', 'wp-to-twitter' ); ?></label>
+									<input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" <?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> <label for="wp_debug_oauth"><?php _e( 'Get Debugging Data for OAuth Connection', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
-									<input type="checkbox" name="jd_donations" id="jd_donations" value="1" <?php echo jd_checkCheckbox( 'jd_donations' ); ?> /> <label for="jd_donations"><strong><?php _e( 'I made a donation, so stop whinging at me, please.', 'wp-to-twitter' ); ?></strong></label>
+									<input type="checkbox" name="jd_donations" id="jd_donations" value="1" <?php echo wpt_checkbox( 'jd_donations' ); ?> /> <label for="jd_donations"><strong><?php _e( 'I made a donation, so stop whinging at me, please.', 'wp-to-twitter' ); ?></strong></label>
 								</li>
 							</ul>
 						</fieldset>

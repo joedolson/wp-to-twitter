@@ -447,11 +447,11 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						}
 						?>
 						<p>
-							<input type="radio" name="jd_keyword_format" id="jd_keyword_id" value="1" <?php echo jd_checkSelect( 'jd_keyword_format', 1, 'checkbox' ); ?> />
+							<input type="radio" name="jd_keyword_format" id="jd_keyword_id" value="1" <?php checked( get_option( 'jd_keyword_format' ), 1 ); ?> />
 							<label for="jd_keyword_id"><?php _e( 'Post ID for YOURLS url slug.', 'wp-to-twitter' ); ?></label><br/>
-							<input type="radio" name="jd_keyword_format" id="jd_keyword" value="2" <?php echo jd_checkSelect( 'jd_keyword_format', 2, 'checkbox' ); ?> />
+							<input type="radio" name="jd_keyword_format" id="jd_keyword" value="2" <?php checked( get_option( 'jd_keyword_format' ), 2 ); ?> />
 							<label for="jd_keyword"><?php _e( 'Custom keyword for YOURLS url slug.', 'wp-to-twitter' ); ?></label><br/>
-							<input type="radio" name="jd_keyword_format" id="jd_keyword_default" value="0" <?php echo jd_checkSelect( 'jd_keyword_format', 0, 'checkbox' ); ?> />
+							<input type="radio" name="jd_keyword_format" id="jd_keyword_default" value="0" <?php checked( get_option( 'jd_keyword_format' ), 0 ); ?> />
 							<label for="jd_keyword_default"><?php _e( 'Default: sequential URL numbering.', 'wp-to-twitter' ); ?></label>
 						</p>
 						<div>

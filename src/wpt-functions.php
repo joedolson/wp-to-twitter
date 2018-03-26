@@ -24,7 +24,7 @@ include( dirname( __FILE__ ) . '/classes/class-wpt-normalizer.php' );
  *
  * @return Checked or unchecked.
  */
-function jd_checkCheckbox( $field, $sub1 = false, $sub2 = '' ) {
+function wpt_checkbox( $field, $sub1 = false, $sub2 = '' ) {
 	if ( $sub1 ) {
 		$setting = get_option( $field );
 		if ( isset( $setting[ $sub1 ] ) ) {
@@ -43,6 +43,21 @@ function jd_checkCheckbox( $field, $sub1 = false, $sub2 = '' ) {
 }
 
 /**
+ * See if checkboxes should be checked - fallback to old function.
+ *
+ * @param string $field Option name to check.
+ * @param string $sub1 Array key if applicable.
+ * @param string $sub2 Array key if applicable.
+ *
+ * @deprecated 3/26/2018
+ *
+ * @return Checked or unchecked.
+ */
+function jd_checkCheckbox( $field, $sub1 = false, $sub2 = '' ) {
+	return wpt_checkbox( $field, $sub1, $sub2 );
+}
+
+/**
  * See if options should be selected
  *
  * @param string $field Option name to check.
@@ -51,11 +66,26 @@ function jd_checkCheckbox( $field, $sub1 = false, $sub2 = '' ) {
  *
  * @return Selected or unselected/ checked or unchecked..
  */
-function jd_checkSelect( $field, $value, $type = 'select' ) {
+function wpt_selected( $field, $value, $type = 'select' ) {
 	if ( get_option( $field ) == $value ) {
 		return ( 'select' == $type ) ? 'selected="selected"' : 'checked="checked"';
 	}
 	return '';
+}
+
+/**
+ * See if options should be selected - fallback function
+ *
+ * @param string $field Option name to check.
+ * @param string $value Value to verify against.
+ * @param string $type Select or checkbox.
+ *
+ * @deprecated 3/26/2018
+ *
+ * @return Selected or unselected/ checked or unchecked..
+ */
+function jd_checkSelect( $field, $value, $type = 'select' ) {
+	return wpt_selected( $field, $value, $type );
 }
 
 /**
