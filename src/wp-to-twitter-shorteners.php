@@ -119,7 +119,6 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					break;
 				case 5:
 					// local YOURLS installation.
-					global $yourls_reserved_URL; // JCD TODO: Is this required?
 					define( 'YOURLS_INSTALLING', true ); // Pretend we're installing YOURLS to bypass test for install or upgrade.
 					define( 'YOURLS_FLOOD_DELAY_SECONDS', 0 ); // Disable flood check.
 					$opath = get_option( 'yourlspath' );
@@ -327,7 +326,6 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 
 			return $url;
 		} else {
-			global $yourls_reserved_URL; // JCD TODO: is this required?
 			define( 'YOURLS_INSTALLING', true ); // Pretend we're installing YOURLS to bypass test for install or upgrade.
 			define( 'YOURLS_FLOOD_DELAY_SECONDS', 0 ); // Disable flood check.
 			if ( file_exists( dirname( get_option( 'yourlspath' ) ) . '/load-yourls.php' ) ) { // YOURLS 1.4+.
