@@ -304,7 +304,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			// Load tmhOAuth for Media uploads only when needed: https://github.com/themattharris/tmhOAuth.
 			// It's not possible to upload media using WP_HTTP, so this needs to use cURL.
 			if ( ! class_exists( 'tmhOAuth' ) ) {
-				require_once( plugin_dir_path( __FILE__ ) . 'class-tmh-oauth.php' );
+				require_once( plugin_dir_path( __FILE__ ) . 'class-tmhoauth.php' );
 			}
 			$auth = $args['auth'];
 			if ( ! $auth ) {
