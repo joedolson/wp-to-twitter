@@ -988,12 +988,14 @@ function jd_addTwitterAdminStyles() {
 }
 
 /**
- * Send to Twitter API.
+ * Send to Twitter API. Fallback; deprecated.
  *
  * @param string            $twit Tweet.
  * @param mixed boolean/int $auth Author ID.
  * @param int               $id Post ID.
  * @param boolean           $media Include media.
+ *
+ * @deprecated 1/19/2017
  *
  * @return boolean.
  */
