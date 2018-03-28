@@ -72,6 +72,8 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Removed: fallback functions required for PHP 4 support.
 * Add 'show images' as option in feeds.
 * Support for alt attributes displayed in Feeds
+* Improved URL generation to link to searched Tweets.
+* Improve parsing of URLs in Tweets.
 
 = 3.3.2 =
 

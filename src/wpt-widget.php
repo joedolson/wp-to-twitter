@@ -53,6 +53,11 @@ function wpt_tweet_linkify( $text, $opts, $tweet ) {
 			}
 		}
 	}
+	$restore = false;
+	if ( false !== strpos( $text, '…' ) ) {
+		$text    = str_replace( '…', ' ______ ', $text );
+		$restore = true;
+	}
 	$text = ( true == $opts['links'] ) ? preg_replace( '#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t< ]*)#', '\\1<a href="\\2" rel="nofollow">\\2</a>', $text ) : $text;
 	$text = ( true == $opts['links'] ) ? preg_replace( '#(^|[\n ])((www|ftp)\.[^ \"\t\n\r< ]*)#', '\\1<a href="http://\\2" rel="nofollow">\\2</a>', $text ) : $text;
 	$text = ( true == $opts['mentions'] ) ? preg_replace( '/@(\w+)/', '<a href="https://twitter.com/\\1" rel="nofollow">@\\1</a>', $text ) : $text;
@@ -62,6 +67,9 @@ function wpt_tweet_linkify( $text, $opts, $tweet ) {
 		foreach ( $urls as $url ) {
 			$text = str_replace( ">$url[url]<", ">$url[display_url]<", $text );
 		}
+	}
+	if ( true == $restore ) {
+		$text = str_replace( ' ______ ', '…', $text );
 	}
 
 	return $text;
