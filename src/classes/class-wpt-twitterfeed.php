@@ -294,7 +294,7 @@ class WPT_TwitterFeed {
 		$result = json_decode( $result );
 		if ( isset( $options['search'] ) ) {
 			if ( ! method_exists( $result, 'errors' ) ) {
-				$result = $result->statuses;
+				$result = ( is_object( $result ) ) ? $result->statuses : '';
 			} else {
 				$errors = $result->errors;
 				$return = '';
