@@ -350,6 +350,20 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment" );
 					if ( $media_id ) {
 						$status['media_ids'] = $media_id;
+						/**
+						 * Eventually, use this to add alt text. Not supported at this time.
+						$metadata_api = 'https://upload.twitter.com/1.1/media/metadata/create.json';
+						$alt_text     = get_post_meta( $args['media'], '_wp_attachment_image_alt', true );
+						if ( '' != $alt_text ) {
+							$image_alt = json_encode( array(
+								'media_id' => $media_id,
+								'alt_text' => array(
+									'text' => $alt_text,
+								),
+							) );
+							$post_alt = $connection->post( $metadata_api, array( 'auth' => $auth, 'json' => $image_alt ), true );
+						}
+						 */
 					}
 				}
 			}

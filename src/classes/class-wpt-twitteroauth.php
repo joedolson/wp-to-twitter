@@ -276,23 +276,6 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		}
 
 		/**
-		 * Wrapper for metadata requests
-		 *
-		 * @param string $url URL.
-		 * @param array  $parameters Request params.
-		 *
-		 * @return decoded response.
-		 */
-		function meta( $url, $parameters = array() ) {
-			$response = $this->wp_oauth_request( $url, $parameters, 'META' );
-			if ( 'json' === $this->format && $this->decode_json ) {
-				return json_decode( $response );
-			}
-
-			return $response;
-		}
-
-		/**
 		 * Handles a status update that includes an image.
 		 *
 		 * @param string $url Target URL.
@@ -357,14 +340,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				$mime_type = 'image/jpeg';
 			}
 
-			$code = $tmh_oauth->request(
-				'POST',
-				$url,
-				array( 'media' => "$binary" ),
-				true, // use auth.
-				true  // multipart.
-			);
-
+			$code     = $tmh_oauth->request( 'POST', $url, array( 'media' => "$binary" ), true, true );
 			$response = $tmh_oauth->response['response'];
 			$full     = $tmh_oauth->response;
 			wpt_mail( 'Media Posted', "
@@ -385,29 +361,6 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			$response            = json_decode( $response );
 			$media_id            = $response->media_id_string;
 
-			/**
-			 * Eventually, use this to add alt text. Not supported at this time.
-			 *
-			$metadata_api = 'https://upload.twitter.com/1.1/media/metadata/create.json';
-			$alt_text  = get_post_meta( $args['media'], '_wp_attachment_image_alt', true );
-			if ( $alt_text != '' ) {
-				$image_alt = json_encode( array(
-							'media_id' => $media_id,
-							'alt_text' => array(
-								'text' => $alt_text
-							)
-						) );
-				$post_image = $tmh_oauth->request(
-					'POST',
-					$metadata_api,
-					array( 'body' => $image_alt ),
-					true
-				);
-
-				wpt_debug( 'Test of post image alt', print_r( $post_image, 1 ) );
-			}
-			*/
-
 			return $media_id;
 		}
 
@@ -421,7 +374,6 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * @return Request.
 		 */
 		function wp_oauth_request( $url, $args = array(), $method = null ) {
-
 			// Handle media requests using tmhOAuth library.
 			if ( 'MEDIA' == $method ) {
 				return $this->handle_media_request( $url, $args );
@@ -442,6 +394,8 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 					$response = wp_remote_get( $url );
 					break;
 				case 'POST':
+					// TODO: if JSON, need to authenticate, pass bearer authentication as header in query.
+					// TODO: add content-type when JSON.
 					$url      = $req->get_normalized_http_url();
 					$args     = wp_parse_args( $req->to_postdata() );
 					$response = wp_remote_post( $url, array(
