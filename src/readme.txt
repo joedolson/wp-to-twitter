@@ -4,6 +4,7 @@ Donate link: http://www.joedolson.com/donate/
 Tags: twitter, microblogging, su.pr, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
 Requires at least: 4.4
 Tested up to: 4.9
+Requires PHP: 5.3
 License: GPLv2 or later
 Text Domain: wp-to-twitter
 Stable tag: 3.3.2
