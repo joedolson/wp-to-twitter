@@ -449,7 +449,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$error_supplement = ( '' != $error_code ) ? ' (Error Code: ' . $error_code . ': ' . $error_message . ')' : '';
 			$error           .= ( '' != $supplement ) ? " $supplement" : '';
 			$error           .= $error_supplement;
-			wpt_mail( "Twitter Response: $http_code", "$error" ); // DEBUG
+			wpt_mail( "Twitter Response: $http_code", "$error" ); // DEBUG.
 			// only save last Tweet if successful.
 			if ( 200 == $http_code ) {
 				if ( ! $auth ) {
