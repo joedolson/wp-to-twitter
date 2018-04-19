@@ -863,11 +863,9 @@ function wpt_migrate_url_meta() {
 		delete_post_meta( $post_id, '_wp_jd_clig' );
 	}
 
-	if ( '' == $short ) {
-		$short = get_permalink( $post_id );
+	if ( '' != $short ) {
+		update_post_meta( $post_id, '_wpt_short_url', $short );
 	}
-
-	update_post_meta( $post_id, '_wpt_short_url', $short );
 }
 
 /**
