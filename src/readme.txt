@@ -70,6 +70,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Removed: upgrade paths from version 2.4.x
 * Removed: support for YOURLS version 1.3
 * Removed: support for Twitter Friendly Links (plug-in not updated in 8 years)
+* Removed: Ability to enable the Goo.gl URL shortener (see: https://developers.google.com/url-shortener/)
 * Removed: fallback functions required for PHP 4 support.
 * Add 'show images' as option in feeds.
 * Support for alt attributes displayed in Feeds

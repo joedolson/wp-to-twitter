@@ -460,6 +460,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						<?php
 						echo $form_end;
 					} elseif ( 8 == $shortener ) {
+						echo '<p>' . __( 'The Goo.gl URL shortener will be shut down by Google on March 30th, 2019, and will be removed from WP to Twitter in the near future.', 'wp-to-twitter' ) . '</p>';
 						echo $form_start;
 						?>
 						<p>
@@ -684,6 +685,9 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 */
 	function wpt_pick_shortener() {
 		$shortener = get_option( 'jd_shortener' );
+		if ( 8 == $shortener ) {
+			echo '<p>' . __( 'The Goo.gl URL shortener will be shut down by Google on March 30th, 2019, and will be removed from WP to Twitter in the near future.', 'wp-to-twitter' ) . '</p>';
+		}
 		?>
 		<p>
 			<label for="jd_shortener"><?php _e( 'Choose a URL shortener', 'wp-to-twitter' ); ?></label>
@@ -691,7 +695,13 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				<option	value="3" <?php selected( $shortener, '3' ); ?>><?php _e( "Don't shorten URLs.", 'wp-to-twitter' ); ?></option>
 				<option value="4" <?php selected( $shortener, '4' ); ?>>WordPress</option>
 				<option value="2" <?php selected( $shortener, '2' ); ?>>Bit.ly</option>
+				<?php
+				if ( 8 == $shortener ) { // if already selected, leave available.
+				?>
 				<option value="8" <?php selected( $shortener, '8' ); ?>>Goo.gl</option>
+				<?php
+				}
+				?>
 				<option value="7" <?php selected( $shortener, '7' ); ?>>Su.pr</option>
 				<?php
 				if ( 5 == $shortener ) { // if the user has already selected local server, leave available.
