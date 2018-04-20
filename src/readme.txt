@@ -77,6 +77,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Improved URL generation to link to searched Tweets.
 * Improve parsing of URLs in Tweets.
 * Don't save URLs if no shortener used or shortener returns no value.
+* Code now conforms with WordPress PHP standards with the exception of four deprecated functions.
 
 = 3.3.2 =
 

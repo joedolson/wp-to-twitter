@@ -822,7 +822,7 @@ function wpt_migrate_url_meta() {
 		return;
 	}
 
-	$short = get_post_meta( $post_id, '_wpt_short_url', true );
+	$short = wpt_short_url( $post_id );
 	if ( '' != $short ) {
 		return;
 	}

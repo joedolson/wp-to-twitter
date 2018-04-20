@@ -33,8 +33,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		// filter link before sending to shortener or adding analytics.
 		$shortener = get_option( 'jd_shortener' );
 		// if the URL already exists, return it without processing.
-		if ( get_post_meta( $post_ID, '_wpt_short_url', true ) ) {
-			$shrink = get_post_meta( $post_ID, '_wpt_short_url', true );
+		if ( wpt_short_url( $post_ID ) ) {
+			$shrink = wpt_short_url( $post_ID );
 
 			return $shrink;
 		}
@@ -285,7 +285,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		$store_urls = apply_filters( 'wpt_store_urls', true, $post_ID, $url );
 		if ( function_exists( 'wpt_shorten_url' ) && $store_urls ) {
 			$shortener = get_option( 'jd_shortener' );
-			if ( get_post_meta( $post_ID, '_wpt_short_url', true ) != $url && wpt_is_valid_url( $url ) ) {
+			if ( wpt_short_url( $post_ID ) != $url && wpt_is_valid_url( $url ) ) {
 				update_post_meta( $post_ID, '_wpt_short_url', $url );
 			}
 			switch ( $shortener ) {
