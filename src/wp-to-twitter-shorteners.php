@@ -657,11 +657,12 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	function wpt_select_shortener( $post ) {
 		$message = '';
 		// don't return a message if unchanged.
+		$stored = ( isset( $_POST['wpt_use_stored_urls'] ) ) ? 'false' : 'true';
+		update_option( 'wpt_use_stored_urls', $stored );
 		if ( get_option( 'jd_shortener' ) == $post['jd_shortener'] ) {
 			return;
 		}
 		update_option( 'jd_shortener', sanitize_key( $post['jd_shortener'] ) );
-
 		$short     = get_option( 'jd_shortener' );
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 		$admin_url = add_query_arg( 'tab', 'shortener', $admin_url );
@@ -692,7 +693,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		<p>
 			<label for="jd_shortener"><?php _e( 'Choose a URL shortener', 'wp-to-twitter' ); ?></label>
 			<select name="jd_shortener" id="jd_shortener">
-				<option	value="3" <?php selected( $shortener, '3' ); ?>><?php _e( "Don't shorten URLs.", 'wp-to-twitter' ); ?></option>
+				<option value="3" <?php selected( $shortener, '3' ); ?>><?php _e( "Don't shorten URLs.", 'wp-to-twitter' ); ?></option>
 				<option value="4" <?php selected( $shortener, '4' ); ?>>WordPress</option>
 				<option value="2" <?php selected( $shortener, '2' ); ?>>Bit.ly</option>
 				<?php
@@ -706,17 +707,24 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				<?php
 				if ( 5 == $shortener ) { // if the user has already selected local server, leave available.
 				?>
-				<option	value="5" <?php selected( $shortener, '5' ); ?>><?php _e( 'YOURLS (this server)', 'wp-to-twitter' ); ?></option>
+				<option value="5" <?php selected( $shortener, '5' ); ?>><?php _e( 'YOURLS (this server)', 'wp-to-twitter' ); ?></option>
 				<?php
 				}
 				?>
-				<option	value="6" <?php selected( $shortener, '6' ); ?>><?php _e( 'YOURLS (remote server)', 'wp-to-twitter' ); ?></option>
+				<option value="6" <?php selected( $shortener, '6' ); ?>><?php _e( 'YOURLS (remote server)', 'wp-to-twitter' ); ?></option>
 				<option value="10" <?php selected( $shortener, '10' ); ?>>jotURL</option>
 				<?php
 				// Add a custom shortener.
 				echo apply_filters( 'wpt_choose_shortener', '', $shortener );
 				?>
 			</select>
+		<?php
+		if ( 3 != $shortener ) {
+		?>
+			<input type='checkbox' value='false' name='wpt_use_stored_urls' id='wpt_use_stored_urls' <?php checked( get_option( 'wpt_use_stored_urls' ), 'false' ); ?>> <label for='wpt_use_stored_urls'><?php _e( 'Always request a new short URL for Tweets', 'wp-to-twitter' ); ?></label>
+		<?php
+		}
+		?>
 		</p>
 	<?php
 	}
