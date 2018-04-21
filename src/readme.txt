@@ -65,6 +65,11 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.3.3.1 =
+
+* Bug fix: fallback normalizer method called incorrectly
+* 
+
 = 3.3.3 =
 
 * Removed: upgrade paths from version 2.4.x

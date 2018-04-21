@@ -511,7 +511,7 @@ function wpt_normalize( $string ) {
 		return normalizer_normalize( $string );
 	} else {
 		$normalizer = new WPT_Normalizer();
-		if ( $normalizer->isNormalized( $string ) ) {
+		if ( $normalizer->is_normalized( $string ) ) {
 			return $string;
 		}
 
