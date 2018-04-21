@@ -7,7 +7,7 @@ Tested up to: 4.9
 Requires PHP: 5.3
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.3.3
+Stable tag: 3.3.4
 
 Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -65,10 +65,9 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
-= 3.3.3.1 =
+= 3.3.4 =
 
 * Bug fix: fallback normalizer method called incorrectly
-* 
 
 = 3.3.3 =
 
