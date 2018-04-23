@@ -131,8 +131,9 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 						update_user_meta( $auth, 'oauth_token', $ot );
 						update_user_meta( $auth, 'oauth_token_secret', $ots );
 					}
-					$message = 'failed';
-					if ( wpt_oauth_connection( $auth ) == $connection ) {
+					$message    = 'failed';
+					$connection = wpt_oauth_connection( $auth );
+					if ( $connection ) {
 						$data = $connection->get( 'https://api.twitter.com/1.1/account/verify_credentials.json' );
 						if ( '200' != $connection->http_code ) {
 							$data  = json_decode( $data );
