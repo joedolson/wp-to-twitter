@@ -620,7 +620,7 @@ function wpt_post_info( $post_ID ) {
 	if ( '' == $thisposttitle && isset( $_POST['title'] ) ) {
 		$thisposttitle = $_POST['title'];
 	}
-	$thisposttitle = strip_tags( apply_filters( 'the_title', stripcslashes( $thisposttitle ) ) );
+	$thisposttitle = strip_tags( apply_filters( 'the_title', stripcslashes( $thisposttitle ), $post_ID ) );
 	// These are common sequences that may not be fixed by html_entity_decode due to double encoding.
 	$search               = array( '&apos;', '&#039;', '&quot;', '&#034;', '&amp;', '&#038;' );
 	$replace              = array( "'", "'", '"', '"', '&', '&' );
