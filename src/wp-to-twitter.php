@@ -656,7 +656,7 @@ function wpt_short_url( $post_id ) {
 		$post_id = $post_ID;
 	}
 	$use_urls = ( get_option( 'wpt_use_stored_urls' ) == 'false' ) ? false : true;
-	$short    = ( $use_url ) ? get_post_meta( $post_id, '_wpt_short_url', true ) : false;
+	$short    = ( $use_urls ) ? get_post_meta( $post_id, '_wpt_short_url', true ) : false;
 
 	return $short;
 }
