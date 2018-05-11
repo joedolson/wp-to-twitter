@@ -33,7 +33,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		// filter link before sending to shortener or adding analytics.
 		$shortener = get_option( 'jd_shortener' );
 		// if the URL already exists, return it without processing.
-		if ( wpt_short_url( $post_ID ) ) {
+		if ( wpt_short_url( $post_ID ) && $store_urls ) {
 			$shrink = wpt_short_url( $post_ID );
 
 			return $shrink;
