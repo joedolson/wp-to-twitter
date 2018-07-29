@@ -47,6 +47,7 @@ define( 'WPT_DEBUG_ADDRESS', get_option( 'admin_email' ) );
 define( 'WPT_FROM', 'From: \"' . get_option( 'blogname' ) . '\" <' . get_option( 'admin_email' ) . '>' );
 
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-functions.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-users.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php' );
@@ -1068,17 +1069,14 @@ function wpt_add_twitter_outer_box() {
 	wpt_check_version();
 	// add Twitter panel to post types where it's enabled.
 	$wpt_post_types = get_option( 'wpt_post_types' );
-	if ( function_exists( 'add_meta_box' ) ) {
-		if ( is_array( $wpt_post_types ) ) {
-			foreach ( $wpt_post_types as $key => $value ) {
-				if ( 1 == $value['post-published-update'] || 1 == $value['post-edited-update'] ) {
-					add_meta_box( 'wp2t', 'WP to Twitter', 'wpt_add_twitter_inner_box', $key, 'side' );
-				}
+	if ( is_array( $wpt_post_types ) ) {
+		foreach ( $wpt_post_types as $key => $value ) {
+			if ( 1 == $value['post-published-update'] || 1 == $value['post-edited-update'] ) {
+				add_meta_box( 'wp2t', 'WP to Twitter', 'wpt_add_twitter_inner_box', $key, 'side' );
 			}
 		}
 	}
 }
-
 
 add_action( 'admin_menu', 'wpt_add_twitter_debug_box' );
 /**
@@ -1089,12 +1087,10 @@ function wpt_add_twitter_debug_box() {
 		wpt_check_version();
 		// add Twitter panel to post types where it's enabled.
 		$wpt_post_types = get_option( 'wpt_post_types' );
-		if ( function_exists( 'add_meta_box' ) ) {
-			if ( is_array( $wpt_post_types ) ) {
-				foreach ( $wpt_post_types as $key => $value ) {
-					if ( 1 == $value['post-published-update'] || 1 == $value['post-edited-update'] ) {
-						add_meta_box( 'wp2t-debug', 'WP to Twitter Debugging', 'wpt_show_debug', $key, 'advanced' );
-					}
+		if ( is_array( $wpt_post_types ) ) {
+			foreach ( $wpt_post_types as $key => $value ) {
+				if ( 1 == $value['post-published-update'] || 1 == $value['post-edited-update'] ) {
+					add_meta_box( 'wp2t-debug', 'WP to Twitter Debugging', 'wpt_show_debug', $key, 'advanced' );
 				}
 			}
 		}
@@ -1582,108 +1578,6 @@ function wpt_save_post( $id ) {
 	}
 }
 
-/**
- * Show user profile data on Edit User pages.
- */
-function wpt_twitter_profile() {
-	global $user_ID;
-	$current_user = wp_get_current_user();
-	$user_edit    = ( isset( $_GET['user_id'] ) ) ? (int) $_GET['user_id'] : $user_ID;
-
-	$is_enabled       = get_user_meta( $user_edit, 'wp-to-twitter-enable-user', true );
-	$twitter_username = get_user_meta( $user_edit, 'wp-to-twitter-user-username', true );
-	$wpt_remove       = get_user_meta( $user_edit, 'wpt-remove', true );
-	if ( current_user_can( 'wpt_twitter_oauth' ) || current_user_can( 'manage_options' ) ) {
-		?>
-		<h3><?php _e( 'WP Tweets User Settings', 'wp-to-twitter' ); ?></h3>
-		<?php
-		if ( function_exists( 'wpt_connect_oauth_message' ) ) {
-			wpt_connect_oauth_message( $user_edit );
-		}
-		?>
-		<table class="form-table">
-			<tr>
-				<th scope="row"><?php _e( 'Use My Twitter Username', 'wp-to-twitter' ); ?></th>
-				<td>
-					<input type="radio" name="wp-to-twitter-enable-user" id="wp-to-twitter-enable-user-3" value="mainAtTwitter"<?php checked( $is_enabled, 'mainAtTwitter' ); ?> /> <label for="wp-to-twitter-enable-user-3"><?php _e( 'Tweet my posts with an @ reference to my username.', 'wp-to-twitter' ); ?></label><br/>
-					<input type="radio" name="wp-to-twitter-enable-user" id="wp-to-twitter-enable-user-4" value="mainAtTwitterPlus"<?php checked( $is_enabled, 'mainAtTwitterPlus' ); ?> /> <label for="wp-to-twitter-enable-user-4"><?php _e( 'Tweet my posts with an @ reference to both my username and to the main site username.', 'wp-to-twitter' ); ?></label>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
-					<label for="wp-to-twitter-user-username"><?php _e( 'Your Twitter Username', 'wp-to-twitter' ); ?></label>
-				</th>
-				<td>
-					<input type="text" name="wp-to-twitter-user-username" id="wp-to-twitter-user-username" value="<?php echo esc_attr( $twitter_username ); ?>"/> <?php _e( 'Enter your own Twitter username.', 'wp-to-twitter' ); ?>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
-					<label for="wpt-remove"><?php _e( 'Hide account name in Tweets', 'wp-to-twitter' ); ?></label></th>
-				<td>
-					<input type="checkbox" name="wpt-remove" id="wpt-remove" value="on"<?php checked( 'on', $wpt_remove ); ?>/> <?php _e( 'Do not display my account in the #account# template tag.', 'wp-to-twitter' ); ?>
-				</td>
-			</tr>
-			<?php echo apply_filters( 'wpt_twitter_user_fields', $user_edit ); ?>
-		</table>
-		<?php
-		if ( function_exists( 'wpt_schedule_tweet' ) ) {
-			if ( function_exists( 'wtt_connect_oauth' ) ) {
-				wtt_connect_oauth( $user_edit );
-			}
-		}
-	} else {
-		// hidden fields. If function is enabled, but this user does not have privileges to edit.
-	?>
-		<input type="hidden" name="wp-to-twitter-enable-user" value="<?php echo esc_attr( $is_enabled ); ?>" />
-		<input type="hidden" name="wp-to-twitter-user-username" value="<?php echo esc_attr( $twitter_username ); ?>" />
-		<input type="hidden" name="wpt-remove" value="<?php echo esc_attr( $wpt_remove ); ?>" />
-	<?php
-	}
-}
-
-/**
- * This compensates for an old error where the user ID is echoed directly into the page.
- */
-add_filter( 'wpt_twitter_user_fields', 'wpt_basic_user_fields', 100, 1 );
-/**
- * Return empty string if value is an integer.
- *
- * @param int $user_edit User ID.
- *
- * @return empty string.
- */
-function wpt_basic_user_fields( $user_edit ) {
-	if ( is_int( $user_edit ) ) {
-		return '';
-	}
-
-	return $user_edit;
-}
-
-/**
- * Save user profile data
- */
-function wpt_twitter_save_profile() {
-	global $user_ID;
-	$current_user = wp_get_current_user();
-	if ( isset( $_POST['user_id'] ) ) {
-		$edit_id = (int) $_POST['user_id'];
-	} else {
-		$edit_id = $user_ID;
-	}
-	if ( current_user_can( 'wpt_twitter_oauth' ) || current_user_can( 'manage_options' ) ) {
-		$enable     = ( isset( $_POST['wp-to-twitter-enable-user'] ) ) ? $_POST['wp-to-twitter-enable-user'] : '';
-		$username   = ( isset( $_POST['wp-to-twitter-user-username'] ) ) ? $_POST['wp-to-twitter-user-username'] : '';
-		$wpt_remove = ( isset( $_POST['wpt-remove'] ) ) ? 'on' : '';
-		update_user_meta( $edit_id, 'wp-to-twitter-enable-user', $enable );
-		update_user_meta( $edit_id, 'wp-to-twitter-user-username', $username );
-		update_user_meta( $edit_id, 'wpt-remove', $wpt_remove );
-	}
-	// WPT PRO.
-	apply_filters( 'wpt_save_user', $edit_id, $_POST );
-}
-
 add_action( 'init', 'wpt_old_admin_redirect' );
 /**
  * Send links to old admin to new admin page
@@ -1738,13 +1632,6 @@ function wpt_plugin_action( $links, $file ) {
 
 // Add Plugin Actions to WordPress.
 add_filter( 'plugin_action_links', 'wpt_plugin_action', 10, 2 );
-
-if ( '1' == get_option( 'jd_individual_twitter_users' ) ) {
-	add_action( 'show_user_profile', 'wpt_twitter_profile' );
-	add_action( 'edit_user_profile', 'wpt_twitter_profile' );
-	add_action( 'profile_update', 'wpt_twitter_save_profile' );
-}
-
 add_action( 'in_plugin_update_message-wp-to-twitter/wp-to-twitter.php', 'wpt_plugin_update_message' );
 /**
  * Parse plugin update info to display in update list.
@@ -1953,25 +1840,4 @@ function wpt_permit_feed_styles( $value ) {
 	}
 
 	return $value;
-}
-
-add_action( 'admin_head', 'wpt_css' );
-/**
- * Output CSS governing styles for authorized users column.
- */
-function wpt_css() {
-?>
-	<style type="text/css">
-		th#wpt {
-			width: 60px;
-		}
-
-		.wpt_twitter .authorized {
-			padding: 1px 3px;
-			border-radius: 3px;
-			background: #070;
-			color: #fff;
-		}
-	</style>
-<?php
 }
