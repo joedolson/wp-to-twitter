@@ -491,11 +491,16 @@ function wpt_update_settings() {
 								<input type="checkbox" name="wpt_use_cats" id="wpt_use_cats" value="1" <?php checked( get_option( 'wpt_use_cats' ), '1' ); ?> />
 								<label for="wpt_use_cats"><?php _e( 'Use categories instead of tags', 'wp-to-twitter' ); ?></label><br/>
 							</p>
+							<?php 
+							if ( ! ( '[ ]' == get_option( 'jd_replace_character' ) || '' ==  get_option( 'jd_replace_character' ) ) {
+								?>
 							<p>
 								<label for="jd_replace_character"><?php _e( 'Spaces in tags replaced with:', 'wp-to-twitter' ); ?></label>
 								<input type="text" name="jd_replace_character" id="jd_replace_character" value="<?php echo esc_attr( get_option( 'jd_replace_character' ) ); ?>" size="3"/>
 							</p>
-
+								<?php
+							}
+							?>
 							<p>
 								<label for="jd_max_tags"><?php _e( 'Maximum number of tags to include:', 'wp-to-twitter' ); ?></label>
 								<input aria-describedby="jd_max_characters_label" type="text" name="jd_max_tags" id="jd_max_tags" value="<?php echo esc_attr( get_option( 'jd_max_tags' ) ); ?>" size="3"/>
