@@ -232,7 +232,7 @@ function wpt_update_settings() {
 			}
 		} else {
 			if ( ! function_exists( 'wpt_pro_exists' ) ) {
-			?>
+				?>
 				<div class="ui-sortable meta-box-sortables">
 					<div class="postbox">
 						<h3 class='wpt-upgrade'><span><strong><?php _e( 'Upgrade Now!', 'wp-to-twitter' ); ?></strong></span></h3>
@@ -286,12 +286,12 @@ function wpt_update_settings() {
 						</div>
 					</div>
 				</div>
-			<?php
+				<?php
 			}
 		}
 	}
 	if ( 'basic' == $current ) {
-	?>
+		?>
 	<div class="ui-sortable meta-box-sortables">
 		<div class="postbox">
 			<h3><span><?php _e( 'Status Update Templates', 'wp-to-twitter' ); ?></span></h3>
@@ -394,7 +394,7 @@ function wpt_update_settings() {
 								}
 								?>
 								</div>
-							<?php
+								<?php
 							}
 						}
 						?>
@@ -440,9 +440,9 @@ function wpt_update_settings() {
 						<li><?php _e( '<code>#tags#</code>: your tags modified into hashtags.', 'wp-to-twitter' ); ?></li>
 						<?php
 						if ( function_exists( 'wpt_pro_exists' ) && true == wpt_pro_exists() ) {
-						?>
+							?>
 						<li><?php _e( '<code>#reference#</code>: Used only in co-tweeting. @reference to main account when posted to author account, @reference to author account in post to main account.', 'wp-to-twitter' ); ?></li>
-						<?php
+							<?php
 						}
 						?>
 					</ul>
@@ -459,14 +459,14 @@ function wpt_update_settings() {
 				</div>
 			</div>
 		</div>
-	<?php
+		<?php
 	}
 	if ( 'shortener' == $current ) {
 		echo apply_filters( 'wpt_shortener_controls', '' );
 	}
 
 	if ( 'advanced' == $current ) {
-	?>
+		?>
 	<form method="post" action="">
 	<div class="ui-sortable meta-box-sortables">
 		<div class="postbox">
@@ -491,8 +491,8 @@ function wpt_update_settings() {
 								<input type="checkbox" name="wpt_use_cats" id="wpt_use_cats" value="1" <?php checked( get_option( 'wpt_use_cats' ), '1' ); ?> />
 								<label for="wpt_use_cats"><?php _e( 'Use categories instead of tags', 'wp-to-twitter' ); ?></label><br/>
 							</p>
-							<?php 
-							if ( ! ( '[ ]' == get_option( 'jd_replace_character' ) || '' ==  get_option( 'jd_replace_character' ) ) ) {
+							<?php
+							if ( ! ( '[ ]' == get_option( 'jd_replace_character' ) || '' == get_option( 'jd_replace_character' ) ) ) {
 								?>
 							<p>
 								<label for="jd_replace_character"><?php _e( 'Spaces in tags replaced with:', 'wp-to-twitter' ); ?></label>
@@ -577,10 +577,10 @@ function wpt_update_settings() {
 								<label for="wpt_rate_limiting"><?php _e( 'Enable Rate Limiting', 'wp-to-twitter' ); ?></label><br/>
 								<?php
 								if ( get_option( 'wpt_rate_limiting' ) == 1 ) {
-								?>
+									?>
 								<input type="number" name="wpt_default_rate_limit" min="1" id="wpt_default_rate_limit" value="<?php echo wpt_default_rate_limit(); ?>" />
 								<label for="wpt_default_rate_limit"><?php _e( 'Default Rate Limit per category per hour', 'wp-to-twitter' ); ?></label><br/>
-								<?php
+									<?php
 								}
 								?>
 							</p>
@@ -750,17 +750,17 @@ function wpt_update_settings() {
 			</div>
 		</div>
 	</div>
-	<?php
+		<?php
 	}
 	if ( 'support' == $current ) {
-	?>
+		?>
 	<div class="postbox" id="get-support">
 		<h3><span><?php _e( 'Get Plug-in Support', 'wp-to-twitter' ); ?></span></h3>
 
 		<div class="inside">
 		<?php
 		if ( ! function_exists( 'wpt_pro_exists' ) ) {
-		?>
+			?>
 			<div class='wpt-support-me'>
 				<p>
 				<?php
@@ -769,13 +769,13 @@ function wpt_update_settings() {
 				?>
 				</p>
 			</div>
-		<?php
+			<?php
 		}
 		wpt_get_support_form();
 		?>
 		</div>
 	</div>
-	<?php
+		<?php
 	}
 	?>
 	</div>
@@ -798,21 +798,21 @@ function wpt_sidebar() {
 			<div class="postbox">
 				<?php
 				if ( 'free' == $context ) {
-				?>
+					?>
 					<h3><span><strong><?php _e( 'Support WP to Twitter', 'wp-to-twitter' ); ?></strong></span></h3>
-				<?php
+					<?php
 				} else {
-				?>
+					?>
 					<h3><span><strong><?php _e( 'WP to Twitter Support', 'wp-to-twitter' ); ?></strong></span></h3>
-				<?php
+					<?php
 				}
 				?>
 				<div class="inside resources">
 					<?php
 					if ( 1 != get_option( 'jd_donations' ) && ! function_exists( 'wpt_pro_exists' ) ) {
-					?>
+						?>
 					<p class='cta'><?php _e( '<a href="http://www.wptweetspro.com/wp-tweets-pro">Get WP Tweets Pro</a>', 'wp-to-twitter' ); ?></p>
-					<?php
+						<?php
 					}
 					?>
 					<p>
@@ -880,7 +880,7 @@ function wpt_sidebar() {
 
 		<?php
 		if ( 1 == get_option( 'wpt_rate_limiting' ) ) {
-		?>
+			?>
 		<div class="ui-sortable meta-box-sortables">
 			<div class="postbox">
 				<h3><?php _e( 'Monitor Rate Limiting', 'wp-to-twitter' ); ?></h3>
@@ -890,11 +890,11 @@ function wpt_sidebar() {
 				</div>
 			</div>
 		</div>
-		<?php
+			<?php
 		}
 		?>
 	</div>
-<?php
+	<?php
 }
 
 /**

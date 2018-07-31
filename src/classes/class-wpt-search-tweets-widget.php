@@ -169,6 +169,6 @@ class WPT_Search_Tweets_Widget extends WP_Widget {
 			<input id="<?php echo $this->get_field_id( 'source' ); ?>" type="checkbox" name="<?php echo $this->get_field_name( 'source' ); ?>" value="1" <?php checked( $instance['source'] ); ?>/>
 			<label for="<?php echo $this->get_field_id( 'source' ); ?>"><?php _e( 'Include Tweet source', 'wp-to-twitter' ); ?></label>
 		</p>
-	<?php
+		<?php
 	}
 }

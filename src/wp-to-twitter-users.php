@@ -71,11 +71,11 @@ function wpt_twitter_profile() {
 		}
 	} else {
 		// hidden fields. If function is enabled, but this user does not have privileges to edit.
-	?>
+		?>
 		<input type="hidden" name="wp-to-twitter-enable-user" value="<?php echo esc_attr( $is_enabled ); ?>" />
 		<input type="hidden" name="wp-to-twitter-user-username" value="<?php echo esc_attr( $twitter_username ); ?>" />
 		<input type="hidden" name="wpt-remove" value="<?php echo esc_attr( $wpt_remove ); ?>" />
-	<?php
+		<?php
 	}
 }
 
@@ -126,7 +126,7 @@ add_action( 'admin_head', 'wpt_css' );
  * Output CSS governing styles for authorized users column.
  */
 function wpt_css() {
-?>
+	?>
 	<style type="text/css">
 		th#wpt {
 			width: 60px;
@@ -139,5 +139,5 @@ function wpt_css() {
 			color: #fff;
 		}
 	</style>
-<?php
+	<?php
 }

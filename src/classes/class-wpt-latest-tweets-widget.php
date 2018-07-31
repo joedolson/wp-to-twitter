@@ -181,6 +181,6 @@ class WPT_Latest_Tweets_Widget extends WP_Widget {
 			<input id="<?php echo $this->get_field_id( 'cache' ); ?>" type="checkbox" name="<?php echo $this->get_field_name( 'cache' ); ?>" value="1" />
 			<label for="<?php echo $this->get_field_id( 'cache' ); ?>"><?php _e( 'Clear cache', 'wp-to-twitter' ); ?></label>
 		</p>
-	<?php
+		<?php
 	}
 }

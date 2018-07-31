@@ -17,7 +17,7 @@
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
  * Domain Path: lang
- * Version:     3.3.6
+ * Version:     3.3.7
  */
 
 /*
@@ -57,7 +57,7 @@ require_once( plugin_dir_path( __FILE__ ) . 'wpt-widget.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php' );
 
 global $wpt_version;
-$wpt_version = '3.3.6';
+$wpt_version = '3.3.7';
 
 add_action( 'init', 'wpt_load_textdomain' );
 /**
@@ -1026,12 +1026,12 @@ function wpt_generate_hash_tags( $post_ID ) {
 			$replace = get_option( 'jd_replace_character' );
 			$replace = ( '[ ]' == $replace || '' == $replace ) ? '' : $replace;
 			if ( false !== strpos( $tag, ' ' ) ) {
-				// If multiple words, camelcase tag
+				// If multiple words, camelcase tag.
 				$tag = ucwords( $tag );
 			}
-			$tag     = str_ireplace( ' ', $replace, trim( $tag ) );
-			$tag     = preg_replace( '/[\/]/', $replace, $tag ); // remove forward slashes.
-			$tag     = ( '1' == $strip ) ? preg_replace( $search, $replace, $tag ) : $tag;
+			$tag = str_ireplace( ' ', $replace, trim( $tag ) );
+			$tag = preg_replace( '/[\/]/', $replace, $tag ); // remove forward slashes.
+			$tag = ( '1' == $strip ) ? preg_replace( $search, $replace, $tag ) : $tag;
 
 			switch ( $term_meta ) {
 				case 1:
@@ -1147,7 +1147,7 @@ function wpt_add_twitter_inner_box( $post ) {
 				<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-twitter' aria-hidden='true'></span><?php _e( 'Tweet Now', 'wp-to-twitter' ); ?></button>
 			<?php
 			if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
-			?>
+				?>
 			<button type='button' class='tweet schedule button-secondary' data-action='schedule' disabled><?php _e( 'Schedule', 'wp-to-twitter' ); ?></button>
 			<button type='button' class='time button-secondary'>
 				<span class="dashicons dashicons-clock" aria-hidden="true"></span><span class="screen-reader-text"><?php _e( 'Set Date/Time', 'wp-to-twitter' ); ?></span>
@@ -1158,12 +1158,12 @@ function wpt_add_twitter_inner_box( $post ) {
 				<label for='wpt_time'><?php _e( 'Time', 'wp-to-twitter' ); ?></label>
 				<input type='text' value='<?php echo date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); ?>' class='wpt_time time' name='wpt_datetime' id='wpt_time'/>
 			</div>
-			<?php
+				<?php
 			}
 			?>
 				<div class='wpt_log' aria-live='assertive'></div>
 			</div>
-		<?php
+			<?php
 		}
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			?>
@@ -1193,9 +1193,9 @@ function wpt_add_twitter_inner_box( $post ) {
 				echo "<label for='yourls_keyword'>" . __( 'YOURLS Custom Keyword', 'wp-to-twitter' ) . "</label> <input type='text' name='_yourls_keyword' id='yourls_keyword' value='$custom_keyword' />";
 			}
 		} else {
-		?>
+			?>
 			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $tweet ); ?>'/>
-		<?php
+			<?php
 		}
 		?>
 		<div class='wpt-options'>
@@ -1265,10 +1265,10 @@ function wpt_add_twitter_inner_box( $post ) {
 				}
 				?>
 			</div>
-		<?php
+			<?php
 		}
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
-		?>
+			?>
 			<div class='wptab' id='notes' aria-labelledby='tab_notes' role='tabpanel'>
 				<p>
 				<?php
@@ -1277,7 +1277,7 @@ function wpt_add_twitter_inner_box( $post ) {
 				?>
 				</p>
 			</div>
-		<?php
+			<?php
 		}
 		?>
 		</div>
@@ -1286,16 +1286,16 @@ function wpt_add_twitter_inner_box( $post ) {
 			// "no" means 'Don't Tweet' (is checked)
 			$nochecked  = ( 'no' == $tweet_this ) ? ' checked="checked"' : '';
 			$yeschecked = ( 'yes' == $tweet_this ) ? ' checked="checked"' : '';
-		?>
+			?>
 		<p class='toggle-btn-group'>
 			<input type="radio" name="_jd_tweet_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Tweet", 'wp-to-twitter' ); ?></label>
 			<input type="radio" name="_jd_tweet_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( 'Tweet', 'wp-to-twitter' ); ?></label>
 		</p>
-		<?php
+			<?php
 		} else {
-		?>
+			?>
 		<input type='hidden' name='_jd_tweet_this' value='<?php echo $tweet_this; ?>'/>
-		<?php
+			<?php
 		}
 		wpt_show_tweets( $post_id );
 		?>
@@ -1306,9 +1306,9 @@ function wpt_add_twitter_inner_box( $post ) {
 			<strong><a href="http://www.wptweetspro.com/wp-tweets-pro"><?php _e( 'Go Premium', 'wp-to-twitter' ); ?></a></strong> &raquo;
 			<?php
 		} else {
-		?>
+			?>
 			<a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php _e( 'Get Support', 'wp-to-twitter' ); ?></a> &raquo;
-		<?php
+			<?php
 		}
 		?>
 		</p>
@@ -1318,13 +1318,13 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		?>
 		</div>
-	<?php
+		<?php
 	} else {
 		// permissions: this user isn't allowed to Tweet.
 		_e( 'Your role does not have the ability to Post Tweets from this site.', 'wp-to-twitter' );
-	?>
+		?>
 		<input type='hidden' name='_jd_tweet_this' value='no'/>
-	<?php
+		<?php
 	}
 }
 
@@ -1341,7 +1341,7 @@ function wpt_show_tweets( $post_id ) {
 		$previous_tweets = array( 0 => $previous_tweets );
 	}
 	if ( ! empty( $previous_tweets ) || ! empty( $failed_tweets ) ) {
-	?>
+		?>
 	<hr>
 	<p class='panel-toggle'>
 		<a href='#wpt_tweet_history' class='history-toggle'><span class='dashicons dashicons-plus' aria-hidden="true"></span><?php _e( 'View Tweet History', 'wp-to-twitter' ); ?></a>
@@ -1349,45 +1349,45 @@ function wpt_show_tweets( $post_id ) {
 	<div class='history'>
 	<p class='error'><em><?php _e( 'Previous Tweets', 'wp-to-twitter' ); ?>:</em></p>
 	<ul>
-	<?php
-	$has_history   = false;
-	$hidden_fields = '';
-	if ( is_array( $previous_tweets ) ) {
-		foreach ( $previous_tweets as $previous_tweet ) {
-			if ( '' != $previous_tweet ) {
-				$has_history    = true;
-				$hidden_fields .= "<input type='hidden' name='_jd_wp_twitter[]' value='" . esc_attr( $previous_tweet ) . "' />";
-				echo "<li>$previous_tweet <a href='http://twitter.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>Retweet this</a></li>";
+		<?php
+		$has_history   = false;
+		$hidden_fields = '';
+		if ( is_array( $previous_tweets ) ) {
+			foreach ( $previous_tweets as $previous_tweet ) {
+				if ( '' != $previous_tweet ) {
+					$has_history    = true;
+					$hidden_fields .= "<input type='hidden' name='_jd_wp_twitter[]' value='" . esc_attr( $previous_tweet ) . "' />";
+					echo "<li>$previous_tweet <a href='http://twitter.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>Retweet this</a></li>";
+				}
 			}
 		}
-	}
-	?>
+		?>
 	</ul>
-	<?php
-	$list       = false;
-	$error_list = '';
-	if ( is_array( $failed_tweets ) ) {
-		foreach ( $failed_tweets as $failed_tweet ) {
-			if ( ! empty( $failed_tweet ) ) {
-				$ft          = $failed_tweet['sentence'];
-				$reason      = $failed_tweet['code'];
-				$error       = $failed_tweet['error'];
-				$list        = true;
-				$error_list .= "<li> <code>Error: $reason</code> $ft <a href='http://twitter.com/intent/tweet?text=" . urlencode( $ft ) . "'>Tweet this</a><br /><em>$error</em></li>";
+		<?php
+		$list       = false;
+		$error_list = '';
+		if ( is_array( $failed_tweets ) ) {
+			foreach ( $failed_tweets as $failed_tweet ) {
+				if ( ! empty( $failed_tweet ) ) {
+					$ft          = $failed_tweet['sentence'];
+					$reason      = $failed_tweet['code'];
+					$error       = $failed_tweet['error'];
+					$list        = true;
+					$error_list .= "<li> <code>Error: $reason</code> $ft <a href='http://twitter.com/intent/tweet?text=" . urlencode( $ft ) . "'>Tweet this</a><br /><em>$error</em></li>";
+				}
+			}
+			if ( true == $list ) {
+				echo "<p class='error'><em>" . __( 'Failed Tweets', 'wp-to-twitter' ) . ":</em></p>
+				<ul>$error_list</ul>";
 			}
 		}
-		if ( true == $list ) {
-			echo "<p class='error'><em>" . __( 'Failed Tweets', 'wp-to-twitter' ) . ":</em></p>
-			<ul>$error_list</ul>";
+		echo '<div>' . $hidden_fields . '</div>';
+		if ( $has_history || $list ) {
+			echo "<p><input type='checkbox' name='wpt_clear_history' id='wptch' value='clear' /> <label for='wptch'>" . __( 'Delete Tweet History', 'wp-to-twitter' ) . '</label></p>';
 		}
-	}
-	echo '<div>' . $hidden_fields . '</div>';
-	if ( $has_history || $list ) {
-		echo "<p><input type='checkbox' name='wpt_clear_history' id='wptch' value='clear' /> <label for='wptch'>" . __( 'Delete Tweet History', 'wp-to-twitter' ) . '</label></p>';
-	}
-	?>
+		?>
 	</div>
-	<?php
+		<?php
 	}
 }
 
