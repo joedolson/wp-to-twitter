@@ -129,7 +129,7 @@ function wptotwitter_activate() {
 		update_option( 'jd_twit_blogroll', '1' );
 		update_option( 'newlink-published-text', 'New link: #title# #url#' );
 		update_option( 'jd_shortener', '1' );
-		update_option( 'jd_strip_nonan', '0' );
+		update_option( 'jd_strip_nonan', '1' );
 		update_option( 'jd_max_tags', 3 );
 		update_option( 'jd_max_characters', 15 );
 		update_option( 'jd_replace_character', '' );
@@ -1027,6 +1027,10 @@ function wpt_generate_hash_tags( $post_ID ) {
 			$search  = '/[^\p{L}\p{N}\s]/u';
 			$replace = get_option( 'jd_replace_character' );
 			$replace = ( '[ ]' == $replace || '' == $replace ) ? '' : $replace;
+			if ( false !== strpos( $tag, ' ' ) ) {
+				// If multiple words, camelcase tag
+				$tag = ucwords( $tag );
+			}
 			$tag     = str_ireplace( ' ', $replace, trim( $tag ) );
 			$tag     = preg_replace( '/[\/]/', $replace, $tag ); // remove forward slashes.
 			$tag     = ( '1' == $strip ) ? preg_replace( $search, $replace, $tag ) : $tag;
