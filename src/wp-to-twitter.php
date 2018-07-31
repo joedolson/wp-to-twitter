@@ -129,10 +129,9 @@ function wptotwitter_activate() {
 		update_option( 'jd_twit_blogroll', '1' );
 		update_option( 'newlink-published-text', 'New link: #title# #url#' );
 		update_option( 'jd_shortener', '1' );
-		update_option( 'jd_strip_nonan', '1' );
+		update_option( 'jd_strip_nonan', '0' );
 		update_option( 'jd_max_tags', 3 );
 		update_option( 'jd_max_characters', 15 );
-		update_option( 'jd_replace_character', '' );
 		$administrator = get_role( 'administrator' );
 		if ( is_object( $administrator ) ) {
 			// wpt_twitter_oauth is the general permission for editing user accounts.
@@ -494,7 +493,6 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		}
 	}
 }
-
 
 /**
  * For servers without PEAR normalize installed, approximates normalization. With normalizer, executes normalization on string.

@@ -492,7 +492,7 @@ function wpt_update_settings() {
 								<label for="wpt_use_cats"><?php _e( 'Use categories instead of tags', 'wp-to-twitter' ); ?></label><br/>
 							</p>
 							<?php 
-							if ( ! ( '[ ]' == get_option( 'jd_replace_character' ) || '' ==  get_option( 'jd_replace_character' ) ) {
+							if ( ! ( '[ ]' == get_option( 'jd_replace_character' ) || '' ==  get_option( 'jd_replace_character' ) ) ) {
 								?>
 							<p>
 								<label for="jd_replace_character"><?php _e( 'Spaces in tags replaced with:', 'wp-to-twitter' ); ?></label>

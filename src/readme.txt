@@ -65,6 +65,11 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.3.7 =
+
+* Change: Remove replacement character setting unless in use for non-space character
+* Change: Capitalize each word in tags sent to Twitter (accessibility)
+
 = 3.3.6 =
 
 * Bug fix: Check for existing short URL should not run when parsing text of Tweets for URLs.
