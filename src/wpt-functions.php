@@ -570,9 +570,9 @@ function wtt_option_selected( $field, $value, $type = 'checkbox' ) {
  * @param string $modified Date this post was modified.
  * @param string $postdate Date this post was published.
  *
- * @return integer 1|0
+ * @return integer (boolean)
  */
-function wpt_date_compare( $modified, $postdate ) {
+function wpt_post_is_new( $modified, $postdate ) {
 	$modifier  = apply_filters( 'wpt_edit_sensitivity', 0 ); // alter time in seconds to modified date.
 	$mod_date  = strtotime( $modified );
 	$post_date = strtotime( $postdate ) + $modifier;
@@ -781,7 +781,7 @@ $plugins_string
 		<p>" .
 		__( 'The following additional information will be sent with your support request:', 'wp-to-twitter' )
 		. "</p>
-		<div class='mc_support'>
+		<div class='wpt_support'>
 		" . wpautop( $data ) . '
 		</div>
 		</div>

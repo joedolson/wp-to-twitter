@@ -781,7 +781,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 		} else {
 			// if the post modified date and the post date are the same, this is new.
 			// true if first date before or equal to last date.
-			$new = wpt_date_compare( $post_info['_postModified'], $post_info['_postDate'] );
+			$new = wpt_post_is_new( $post_info['_postModified'], $post_info['_postDate'] );
 		}
 		// post is not previously published but has been backdated.
 		// (post date is edited, but save option is 'publish').
