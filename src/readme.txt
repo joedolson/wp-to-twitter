@@ -65,6 +65,11 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.3.8 =
+
+* Change function name for checking edit vs. new for clarity.
+* 
+
 = 3.3.7 =
 
 * Change: Remove replacement character setting unless in use for non-space character
