@@ -304,6 +304,7 @@ function wpt_mail( $subject, $body, $post_ID = false, $override = false ) {
  *
  * @param string $subject Subject of error.
  * @param string $body Body of error.
+ * @param int    $post_ID ID of post being Tweeted.
  */
 function wpt_debug_log( $subject, $body, $post_ID ) {
 	if ( ! $post_ID ) {
