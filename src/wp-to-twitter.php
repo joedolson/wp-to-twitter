@@ -866,7 +866,8 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 							if ( wtt_oauth_test( $acct, 'verify' ) ) {
 								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
 								wp_schedule_single_event(
-									time() + $time + $offset, 'wpt_schedule_tweet_action',
+									time() + $time + $offset,
+									'wpt_schedule_tweet_action',
 									array(
 										'id'       => $acct,
 										'sentence' => $sentence,
@@ -878,17 +879,20 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 									$author_id = ( $acct ) ? "#$acct" : 'Main';
 									wpt_mail(
 										"7a: Tweet Scheduled for author $author_id",
-										print_r( array(
-											'id'               => $acct,
-											'sentence'         => $sentence,
-											'rt'               => 0,
-											'post_id'          => $post_ID,
-											'timestamp'        => time() + $time + $offset,
-											'current_time'     => time(),
-											'timezone'         => get_option( 'gmt_offset' ),
-											'timestamp_string' => date( 'Y-m-d H:i:s', time() + $time + $offset ),
-											'current_ts'       => date( 'Y-m-d H:i:s', time() ),
-										), 1 ),
+										print_r(
+											array(
+												'id'               => $acct,
+												'sentence'         => $sentence,
+												'rt'               => 0,
+												'post_id'          => $post_ID,
+												'timestamp'        => time() + $time + $offset,
+												'current_time'     => time(),
+												'timezone'         => get_option( 'gmt_offset' ),
+												'timestamp_string' => date( 'Y-m-d H:i:s', time() + $time + $offset ),
+												'current_ts'       => date( 'Y-m-d H:i:s', time() ),
+											),
+											1
+										),
 										$post_ID
 									);
 									// DEBUG.
@@ -912,12 +916,16 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 										// Don't delay the first Tweet of the group.
 										$offset = ( true == $first ) ? 0 : rand( 60, 240 ); // delay each co-tweet by 1-4 minutes.
 										$time   = apply_filters( 'wpt_schedule_retweet', ( $post_info['wpt_retweet_after'] ) * ( 60 * 60 ) * $i, $acct, $i, $post_info );
-										wp_schedule_single_event( time() + $time + $offset + $delay, 'wpt_schedule_tweet_action', array(
-											'id'       => $acct,
-											'sentence' => $retweet,
-											'rt'       => $i,
-											'post_id'  => $post_ID,
-										) );
+										wp_schedule_single_event(
+											time() + $time + $offset + $delay,
+											'wpt_schedule_tweet_action',
+											array(
+												'id'       => $acct,
+												'sentence' => $retweet,
+												'rt'       => $i,
+												'post_id'  => $post_ID,
+											)
+										);
 										if ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) {
 											if ( $acct ) {
 												$author_id = "#$acct";
@@ -926,14 +934,17 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 											}
 											wpt_mail(
 												"7b: Retweet Scheduled for author $author_id",
-												print_r( array(
-													'id'       => $acct,
-													'sentence' => array( $retweet, $i, $post_ID ),
-													'timestamp' => time() + $time + $offset + $delay,
-													'time'     => array( $time, $offset, $delay, get_option( 'gmt_offset' ), time() ),
-													'timestring' => date( 'Y-m-d H:i:s', time() + $time + $offset + $delay ),
-													'current_ts' => date( 'Y-m-d H:i:s', time() ),
-												), 1 ),
+												print_r(
+													array(
+														'id'         => $acct,
+														'sentence'   => array( $retweet, $i, $post_ID ),
+														'timestamp'  => time() + $time + $offset + $delay,
+														'time'       => array( $time, $offset, $delay, get_option( 'gmt_offset' ), time() ),
+														'timestring' => date( 'Y-m-d H:i:s', time() + $time + $offset + $delay ),
+														'current_ts' => date( 'Y-m-d H:i:s', time() ),
+													),
+													1
+												),
 												$post_ID
 											); // DEBUG.
 										}
@@ -1421,11 +1432,15 @@ function wpt_admin_scripts() {
 	}
 	if ( 'post' == $current_screen->base && isset( $_GET['post'] ) && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 		wp_enqueue_script( 'wpt.ajax', plugins_url( 'js/ajax.js', __FILE__ ), array( 'jquery' ), $wpt_version );
-		wp_localize_script( 'wpt.ajax', 'wpt_data', array(
-			'post_ID'  => (int) $_GET['post'],
-			'action'   => 'wpt_tweet',
-			'security' => wp_create_nonce( 'wpt-tweet-nonce' ),
-		) );
+		wp_localize_script(
+			'wpt.ajax',
+			'wpt_data',
+			array(
+				'post_ID'  => (int) $_GET['post'],
+				'action'   => 'wpt_tweet',
+				'security' => wp_create_nonce( 'wpt-tweet-nonce' ),
+			)
+		);
 	}
 	if ( 'settings_page_wp-to-twitter/wp-to-twitter' == $current_screen->id || 'toplevel_page_wp-tweets-pro' == $current_screen->id ) {
 		wp_enqueue_script( 'wpt.tabs', plugins_url( 'js/tabs.js', __FILE__ ), array( 'jquery' ), $wpt_version );
@@ -1487,12 +1502,16 @@ function wpt_ajax_tweet() {
 					wpt_post_to_twitter( $sentence, $auth, $post_ID, $media );
 					break;
 				case 'schedule':
-					wp_schedule_single_event( $schedule, 'wpt_schedule_tweet_action', array(
-						'id'       => $auth,
-						'sentence' => $sentence,
-						'rt'       => 0,
-						'post_id'  => $post_ID,
-					) );
+					wp_schedule_single_event(
+						$schedule,
+						'wpt_schedule_tweet_action',
+						array(
+							'id'       => $auth,
+							'sentence' => $sentence,
+							'rt'       => 0,
+							'post_id'  => $post_ID,
+						)
+					);
 					break;
 			}
 			// Translators: Full text of Tweet, time scheduled for.
@@ -1533,12 +1552,16 @@ function wpt_admin_script() {
 		}
 		wp_register_script( 'wpt-base-js', plugins_url( 'js/base.js', __FILE__ ), array( 'jquery' ) );
 		wp_enqueue_script( 'wpt-base-js' );
-		wp_localize_script( 'wpt-base-js', 'wptSettings', array(
-			'allowed' => $allowed,
-			'first'   => $first,
-			'is_ssl'  => ( wpt_is_ssl( home_url() ) ) ? 'true' : 'false',
-			'text'    => __( 'Characters left: ', 'wp-to-twitter' ),
-		) );
+		wp_localize_script(
+			'wpt-base-js',
+			'wptSettings',
+			array(
+				'allowed' => $allowed,
+				'first'   => $first,
+				'is_ssl'  => ( wpt_is_ssl( home_url() ) ) ? 'true' : 'false',
+				'text'    => __( 'Characters left: ', 'wp-to-twitter' ),
+			)
+		);
 		echo "
 <style type='text/css'>
 #wp2t h3 span, #wp2t h2 span { padding-left: 30px; background: url(" . plugins_url( 'wp-to-twitter/images/twitter-bird-light-bgs.png' ) . ') left 50% no-repeat; }
