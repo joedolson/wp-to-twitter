@@ -345,11 +345,9 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			$code     = $tmh_oauth->request( 'POST', $url, array( 'media' => "$binary" ), true, true );
 			$response = $tmh_oauth->response['response'];
 			$full     = $tmh_oauth->response;
-			wpt_mail( 'Media Posted', "
-				Media ID #$args[media] ($transport)" . "\n\n" .
-				'Twitter Response' . "\n" . print_r( $full, 1 ) . "\n\n" .
-				'Attachment Details' . "\n" . print_r( $upload, 1 ) . "\n\n" .
-				'Img Request Response' . "\n" . print_r( $remote, 1 ).
+			wpt_mail(
+				'Media Posted',
+				"Media ID #$args[media] ($transport)" . "\n\n" . 'Twitter Response' . "\n" . print_r( $full, 1 ) . "\n\n" . 'Attachment Details' . "\n" . print_r( $upload, 1 ) . "\n\n" .'Img Request Response' . "\n" . print_r( $remote, 1 ),
 				$parent
 			);
 
@@ -401,10 +399,13 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 					// TODO: add content-type when JSON.
 					$url      = $req->get_normalized_http_url();
 					$args     = wp_parse_args( $req->to_postdata() );
-					$response = wp_remote_post( $url, array(
-						'body'    => $args,
-						'timeout' => 30,
-					) );
+					$response = wp_remote_post(
+						$url,
+						array(
+							'body'    => $args,
+							'timeout' => 30,
+						)
+					);
 					break;
 			}
 

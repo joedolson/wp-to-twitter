@@ -65,11 +65,14 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				}
 				$medium = urlencode( trim( apply_filters( 'wpt_utm_medium', 'twitter' ) ) );
 				$source = urlencode( trim( apply_filters( 'wpt_utm_source', 'twitter' ) ) );
-				$url    = add_query_arg( array(
-					'utm_campaign' => $campaign,
-					'utm_medium'   => $medium,
-					'utm_source'   => $source,
-				), $url );
+				$url    = add_query_arg( 
+					array(
+						'utm_campaign' => $campaign,
+						'utm_medium'   => $medium,
+						'utm_source'   => $source,
+					),
+					$url
+				);
 			}
 			$url     = urldecode( trim( $url ) ); // prevent double-encoding.
 			$encoded = urlencode( $url );

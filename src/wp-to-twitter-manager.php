@@ -906,10 +906,13 @@ function wpt_do_server_check( $test = false ) {
 	$wpt_server_string = get_option( 'wpt_server_string' );
 	if ( ! $wpt_server_string || isset( $_GET['refresh_wpt_server_string'] ) || true == $test ) {
 		$server_time = date( DATE_COOKIE );
-		$response    = wp_remote_get( 'https://twitter.com/', array(
-			'timeout'     => 30,
-			'redirection' => 1,
-		) );
+		$response    = wp_remote_get(
+			'https://twitter.com/',
+			array(
+				'timeout'     => 30,
+				'redirection' => 1,
+			)
+		);
 
 		if ( is_wp_error( $response ) ) {
 			$warning = '';

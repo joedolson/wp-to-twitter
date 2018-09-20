@@ -254,11 +254,14 @@ class WPT_TwitterFeed {
 		$token        = $this->defaults['token'];
 		$token_secret = $this->defaults['token_secret'];
 		$cachename    = $screenname . '-' . $this->get_options_hash( $options );
-		$options      = array_merge( $options, array(
-			'screen_name'          => $screenname,
-			'count'                => 20,
-			'include_ext_alt_text' => 'true',
-		) );
+		$options      = array_merge(
+			$options,
+			array(
+				'screen_name'          => $screenname,
+				'count'                => 20,
+				'include_ext_alt_text' => 'true',
+			)
+		);
 
 		if ( empty( $key ) ) {
 			return array( 'error' => __( 'Missing Consumer Key - Check settings', 'wp-to-twitter' ) );

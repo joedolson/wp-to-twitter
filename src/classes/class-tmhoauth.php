@@ -433,9 +433,7 @@ class TmhOAuth {
 
 			$this->auth_params['oauth_signature'] = $this->safe_encode(
 				base64_encode(
-					hash_hmac(
-						'sha1', $this->base_string, $this->signing_key, true
-					)
+					hash_hmac( 'sha1', $this->base_string, $this->signing_key, true )
 				)
 			);
 
@@ -550,11 +548,14 @@ class TmhOAuth {
 			$request = substr_replace( $request, '', $pos );
 		}
 
-		return implode( '/', array(
-			$proto,
-			$this->config['host'],
-			$request . $format,
-		) );
+		return implode(
+			'/',
+			array(
+				$proto,
+				$this->config['host'],
+				$request . $format,
+			)
+		);
 	}
 
 	/**
@@ -679,22 +680,25 @@ class TmhOAuth {
 
 		// configure curl.
 		$c = curl_init();
-		curl_setopt_array( $c, array(
-			CURLOPT_USERAGENT      => $this->config['user_agent'],
-			CURLOPT_CONNECTTIMEOUT => $this->config['curl_connecttimeout'],
-			CURLOPT_TIMEOUT        => $this->config['curl_timeout'],
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_SSL_VERIFYPEER => $this->config['curl_ssl_verifypeer'],
-			CURLOPT_SSL_VERIFYHOST => $this->config['curl_ssl_verifyhost'],
-			CURLOPT_FOLLOWLOCATION => $this->config['curl_followlocation'],
-			CURLOPT_PROXY          => $this->config['curl_proxy'],
-			CURLOPT_ENCODING       => $this->config['curl_encoding'],
-			CURLOPT_URL            => $this->url,
-			// process the headers.
-			CURLOPT_HEADERFUNCTION => array( $this, 'curl_header' ),
-			CURLOPT_HEADER         => false,
-			CURLINFO_HEADER_OUT    => true,
-		) );
+		curl_setopt_array(
+			$c,
+			array(
+				CURLOPT_USERAGENT      => $this->config['user_agent'],
+				CURLOPT_CONNECTTIMEOUT => $this->config['curl_connecttimeout'],
+				CURLOPT_TIMEOUT        => $this->config['curl_timeout'],
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_SSL_VERIFYPEER => $this->config['curl_ssl_verifypeer'],
+				CURLOPT_SSL_VERIFYHOST => $this->config['curl_ssl_verifyhost'],
+				CURLOPT_FOLLOWLOCATION => $this->config['curl_followlocation'],
+				CURLOPT_PROXY          => $this->config['curl_proxy'],
+				CURLOPT_ENCODING       => $this->config['curl_encoding'],
+				CURLOPT_URL            => $this->url,
+				// process the headers.
+				CURLOPT_HEADERFUNCTION => array( $this, 'curl_header' ),
+				CURLOPT_HEADER         => false,
+				CURLINFO_HEADER_OUT    => true,
+			)
+		);
 
 		if ( false !== $this->config['curl_cainfo'] ) {
 			curl_setopt( $c, CURLOPT_CAINFO, $this->config['curl_cainfo'] );
