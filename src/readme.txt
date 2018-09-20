@@ -68,7 +68,9 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.3.8 =
 
 * Change function name for checking edit vs. new for clarity.
-* [TODO: Prevent setting up additional accounts that already exist? PRO]
+* Update debugging function to pass post ID of current Tweet.
+* Bug fix: PHP Notice in settings.
+* Bug fix: If rate limiting cron not set, automatically recreate.
 
 = 3.3.7 =
 

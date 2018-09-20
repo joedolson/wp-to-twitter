@@ -99,7 +99,7 @@ function wpt_updated_settings() {
 		update_option( 'wpt_use_cats', $use_cats );
 		update_option( 'wpt_tag_source', ( ( isset( $_POST['wpt_tag_source'] ) && 'slug' == $_POST['wpt_tag_source'] ) ? 'slug' : '' ) );
 		update_option( 'jd_max_characters', $_POST['jd_max_characters'] );
-		update_option( 'jd_replace_character', $_POST['jd_replace_character'] );
+		update_option( 'jd_replace_character', ( isset( $_POST['jd_replace_character'] ) ? $_POST['jd_replace_character'] : '' ) );
 		update_option( 'jd_date_format', $_POST['jd_date_format'] );
 		update_option( 'jd_dynamic_analytics', $_POST['jd-dynamic-analytics'] );
 
