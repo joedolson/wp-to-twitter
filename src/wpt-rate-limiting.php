@@ -202,6 +202,10 @@ function wpt_add_term_rate_limit( $term ) {
  */
 function wpt_view_rate_limits() {
 	$limits = get_option( 'wpt_rate_limits' );
+	if ( ! wp_next_scheduled( 'wptratelimits' ) ) {
+		wp_schedule_event( current_time( 'timestamp' ) + 3600, 'hourly', 'wptratelimits' );
+	}
+	$next_scheduled = human_time_diff( wp_next_scheduled( 'wptratelimits' ), time() );
 	if ( is_array( $limits ) ) {
 		$output = '<ul>';
 		foreach ( $limits as $auth => $term ) {
@@ -227,6 +231,7 @@ function wpt_view_rate_limits() {
 	} else {
 		$output = __( 'No Tweets have been sent this hour.', 'wp-to-twitter' );
 	}
+	$next = wpautop( sprintf( __( ' Next reset in %s.', 'wp-to-twitter' ), $next_scheduled ) );
 
-	return $output;
+	return $output . $next;
 }
