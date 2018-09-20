@@ -286,6 +286,7 @@ function wpt_cap_checkbox( $role, $cap, $name ) {
  *
  * @param string  $subject Subject of error.
  * @param string  $body Body of error.
+ * @param int     $post_ID ID of Post being Tweeted.
  * @param boolean $override Send message if debug disabled.
  */
 function wpt_mail( $subject, $body, $post_ID = false, $override = false ) {
@@ -368,7 +369,7 @@ function wpt_show_debug() {
  */
 function wpt_remote_json( $url, $array = true, $method = 'GET' ) {
 	$input = wpt_fetch_url( $url, $method );
-	$obj = json_decode( $input, $array );
+	$obj   = json_decode( $input, $array );
 	if ( function_exists( 'json_last_error' ) ) { // > PHP 5.3.
 		try {
 			if ( is_null( $obj ) ) {
@@ -432,13 +433,16 @@ function wpt_is_valid_url( $url ) {
  */
 function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $return = 'body' ) {
 	$request = new WP_Http;
-	$result  = $request->request( $url, array(
-		'method'     => $method,
-		'body'       => $body,
-		'headers'    => $headers,
-		'sslverify'  => false,
-		'user-agent' => 'WP to Twitter/http://www.joedolson.com/wp-to-twitter/',
-	) );
+	$result  = $request->request(
+		$url,
+		array(
+			'method'     => $method,
+			'body'       => $body,
+			'headers'    => $headers,
+			'sslverify'  => false,
+			'user-agent' => 'WP to Twitter/http://www.joedolson.com/wp-to-twitter/',
+		)
+	);
 
 	if ( ! is_wp_error( $result ) && isset( $result['body'] ) ) {
 		if ( 200 == $result['response']['code'] ) {

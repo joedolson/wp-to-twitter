@@ -26,11 +26,13 @@ function wpt_max_length() {
 			$config = $connection->get( 'https://api.twitter.com/1.1/help/configuration.json' );
 			set_transient( 'wpt_twitter_config', $config, 60 * 60 * 24 );
 		} else {
-			$config = json_encode( array(
-				'http_length'    => 23,
-				'https_length'   => 23,
-				'reserved_chars' => 24,
-			) );
+			$config = json_encode(
+				array(
+					'http_length'    => 23,
+					'https_length'   => 23,
+					'reserved_chars' => 24,
+				)
+			);
 		}
 	}
 

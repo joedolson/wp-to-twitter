@@ -217,13 +217,17 @@ function wpt_link( $post_ID ) {
 function wpt_saves_error( $id, $auth, $twit, $error, $http_code, $ts ) {
 	$http_code = (int) $http_code;
 	if ( 200 != $http_code ) {
-		add_post_meta( $id, '_wpt_failed', array(
-			'author'    => $auth,
-			'sentence'  => $twit,
-			'error'     => $error,
-			'code'      => $http_code,
-			'timestamp' => $ts,
-		) );
+		add_post_meta(
+			$id,
+			'_wpt_failed',
+			array(
+				'author'    => $auth,
+				'sentence'  => $twit,
+				'error'     => $error,
+				'code'      => $http_code,
+				'timestamp' => $ts,
+			)
+		);
 	} else {
 		if ( 1 == get_option( 'wpt_rate_limiting' ) ) {
 			wpt_log_success( $auth, $ts, $id );
@@ -343,10 +347,13 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$connection = wpt_oauth_connection( $auth );
 			if ( $connection ) {
 				if ( $media && $attachment && ! $media_id ) {
-					$media_id = $connection->media( $upload_api, array(
-						'auth'  => $auth,
-						'media' => $attachment,
-					) );
+					$media_id = $connection->media(
+						$upload_api,
+						array(
+							'auth'  => $auth,
+							'media' => $attachment,
+						)
+					);
 					wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment", $id );
 					if ( $media_id ) {
 						$status['media_ids'] = $media_id;
@@ -858,16 +865,19 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 							$offset = ( $auth != $acct ) ? apply_filters( 'wpt_random_delay', rand( 60, 480 ) ) : 0;
 							if ( wtt_oauth_test( $acct, 'verify' ) ) {
 								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
-								wp_schedule_single_event( time() + $time + $offset, 'wpt_schedule_tweet_action', array(
-									'id'       => $acct,
-									'sentence' => $sentence,
-									'rt'       => 0,
-									'post_id'  => $post_ID,
-								) );
+								wp_schedule_single_event(
+									time() + $time + $offset, 'wpt_schedule_tweet_action',
+									array(
+										'id'       => $acct,
+										'sentence' => $sentence,
+										'rt'       => 0,
+										'post_id'  => $post_ID,
+									)
+								);
 								if ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) {
 									$author_id = ( $acct ) ? "#$acct" : 'Main';
-									wpt_mail( 
-										"7a: Tweet Scheduled for author $author_id", 
+									wpt_mail(
+										"7a: Tweet Scheduled for author $author_id",
 										print_r( array(
 											'id'               => $acct,
 											'sentence'         => $sentence,
@@ -879,7 +889,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 											'timestamp_string' => date( 'Y-m-d H:i:s', time() + $time + $offset ),
 											'current_ts'       => date( 'Y-m-d H:i:s', time() ),
 										), 1 ),
-										$post_ID 
+										$post_ID
 									);
 									// DEBUG.
 								}
@@ -914,7 +924,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 											} else {
 												$author_id = 'Main';
 											}
-											wpt_mail( 
+											wpt_mail(
 												"7b: Retweet Scheduled for author $author_id",
 												print_r( array(
 													'id'       => $acct,

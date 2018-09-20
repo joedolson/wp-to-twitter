@@ -159,20 +159,24 @@ add_shortcode( 'get_tweets', 'wpt_get_twitter_feed' );
  * @return Twitter feed.
  */
 function wpt_get_twitter_feed( $atts, $content ) {
-	$atts     = ( shortcode_atts( array(
-		'id'          => false,
-		'num'         => 10,
-		'duration'    => 1800,
-		'replies'     => 0,
-		'rts'         => 1,
-		'links'       => 1,
-		'mentions'    => 1,
-		'hashtags'    => 0,
-		'intents'     => 1,
-		'source'      => 0,
-		'show_images' => 1,
-		'hide_header' => 0,
-	), $atts, 'get_tweets' ) );
+	$atts     = shortcode_atts(
+		array(
+			'id'          => false,
+			'num'         => 10,
+			'duration'    => 1800,
+			'replies'     => 0,
+			'rts'         => 1,
+			'links'       => 1,
+			'mentions'    => 1,
+			'hashtags'    => 0,
+			'intents'     => 1,
+			'source'      => 0,
+			'show_images' => 1,
+			'hide_header' => 0,
+		),
+		$atts,
+		'get_tweets'
+	);
 	$instance = array(
 		'twitter_id'           => $atts['id'],
 		'twitter_num'          => $atts['num'],
