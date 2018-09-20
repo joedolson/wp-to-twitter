@@ -321,6 +321,8 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				$size = array_pop( $image_sizes );
 			}
 			$upload    = wp_get_attachment_image_src( $attachment, apply_filters( 'wpt_upload_image_size', $size ) );
+			$parent    = get_post_ancestors( $attachment );
+			$parent    = ( is_array( $parent ) ) ? $parent[0] : false;
 			$image_url = $upload[0];
 			$remote    = wp_remote_get( $image_url );
 			if ( is_wp_error( $remote ) ) {
@@ -330,7 +332,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				$transport = 'wp_http';
 				$binary    = wp_remote_retrieve_body( $remote );
 			}
-			wpt_mail( 'Media fetched binary', print_r( $remote, 1 ) . "\n\n" . print_r( $binary, 1 ) );
+			wpt_mail( 'Media fetched binary', print_r( $remote, 1 ) . "\n\n" . print_r( $binary, 1 ), $parent );
 			if ( ! $binary ) {
 				return;
 			}
@@ -347,7 +349,8 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				Media ID #$args[media] ($transport)" . "\n\n" .
 				'Twitter Response' . "\n" . print_r( $full, 1 ) . "\n\n" .
 				'Attachment Details' . "\n" . print_r( $upload, 1 ) . "\n\n" .
-				'Img Request Response' . "\n" . print_r( $remote, 1 )
+				'Img Request Response' . "\n" . print_r( $remote, 1 ).
+				$parent
 			);
 
 			if ( is_wp_error( $response ) ) {

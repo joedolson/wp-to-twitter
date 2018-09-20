@@ -68,7 +68,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.3.8 =
 
 * Change function name for checking edit vs. new for clarity.
-* 
+* [TODO: Prevent setting up additional accounts that already exist? PRO]
 
 = 3.3.7 =
 

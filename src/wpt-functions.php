@@ -288,12 +288,12 @@ function wpt_cap_checkbox( $role, $cap, $name ) {
  * @param string  $body Body of error.
  * @param boolean $override Send message if debug disabled.
  */
-function wpt_mail( $subject, $body, $override = false ) {
+function wpt_mail( $subject, $body, $post_ID = false, $override = false ) {
 	if ( ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) || true == $override ) {
 		if ( WPT_DEBUG_BY_EMAIL ) {
 			wp_mail( WPT_DEBUG_ADDRESS, $subject, $body, WPT_FROM );
 		} else {
-			wpt_debug_log( $subject, $body );
+			wpt_debug_log( $subject, $body, $post_ID );
 		}
 	}
 }
@@ -304,8 +304,10 @@ function wpt_mail( $subject, $body, $override = false ) {
  * @param string $subject Subject of error.
  * @param string $body Body of error.
  */
-function wpt_debug_log( $subject, $body ) {
-	global $post_ID;
+function wpt_debug_log( $subject, $body, $post_ID ) {
+	if ( ! $post_ID ) {
+		global $post_ID;
+	}
 	if ( $post_ID ) {
 		$time = current_time( 'timestamp' );
 		add_post_meta( $post_ID, '_wpt_debug_log', array( $time, $subject, $body ) );
@@ -366,9 +368,7 @@ function wpt_show_debug() {
  */
 function wpt_remote_json( $url, $array = true, $method = 'GET' ) {
 	$input = wpt_fetch_url( $url, $method );
-	wpt_mail( 'Remote JSON input', print_r( $input, 1 ) . "\n\n" . $url );
 	$obj = json_decode( $input, $array );
-	wpt_mail( 'Remote JSON return value', print_r( $obj, 1 ) . "\n\n" . "$url" );
 	if ( function_exists( 'json_last_error' ) ) { // > PHP 5.3.
 		try {
 			if ( is_null( $obj ) ) {
