@@ -409,6 +409,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			switch ( $http_code ) {
 				case '000':
 					$error = '';
+					break;
 				case '100':
 					$error = __( '100 Continue: Twitter received the header of your submission, but your server did not follow through by sending the body of the data.', 'wp-to-twitter' );
 					break;
