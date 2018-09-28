@@ -65,6 +65,10 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.3.9 =
+
+* Added filter to cancel Tweets for custom reasons after all other filters executed.
+
 = 3.3.8 =
 
 * Change function name for checking edit vs. new for clarity.

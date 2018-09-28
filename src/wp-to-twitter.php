@@ -385,9 +385,16 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				$http_code  = 200;
 				$notice     = __( 'In Staging Mode:', 'wp-to-twitter' ) . ' ';
 			} else {
-				$connection->post( $api, $status );
-				$http_code = ( $connection ) ? $connection->http_code : 'failed';
-				$notice    = '';
+				// Cancel this Tweet for your own custom reasons.
+				$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id );
+				if ( $do_tweet ) {
+					$connection->post( $api, $status );
+					$http_code = ( $connection ) ? $connection->http_code : 'failed';
+					$notice    = '';
+				} else {
+					$http_code = '000';
+					$notice    = __( 'Tweet Canceled by custom filter.', 'wp-to-twitter' );
+				}
 			}
 		}
 		wpt_mail( 'Twitter Connection', print_r( $connection, 1 ) . " - $twit, $auth, $id, $media", $id );
@@ -400,6 +407,8 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			}
 			$return = false;
 			switch ( $http_code ) {
+				case '000':
+					$error = '';
 				case '100':
 					$error = __( '100 Continue: Twitter received the header of your submission, but your server did not follow through by sending the body of the data.', 'wp-to-twitter' );
 					break;
