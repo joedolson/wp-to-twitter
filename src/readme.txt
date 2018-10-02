@@ -23,8 +23,6 @@ Yep. That's the basic functionality. But it's not the only thing you can do:
 
 [Upgrade to WP Tweets Pro](http://www.joedolson.com/wp-tweets-pro/) and schedule Tweets, set up automatic reposts, upload images and more!
 
-[youtube https://www.youtube.com/watch?v=3YIia5dQBSk]
-
 WP to Twitter uses a customizable Tweet template for Tweets sent when updating or editing posts and pages or custom post types. You can customize your Tweet for each post, using custom template tags to generate the Tweet. 
 
 = Free Features =
