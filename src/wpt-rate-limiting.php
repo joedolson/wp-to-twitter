@@ -231,6 +231,7 @@ function wpt_view_rate_limits() {
 	} else {
 		$output = __( 'No Tweets have been sent this hour.', 'wp-to-twitter' );
 	}
+	// Translators: Time until next scheduled rate limiting reset.
 	$next = wpautop( sprintf( __( ' Next reset in %s.', 'wp-to-twitter' ), $next_scheduled ) );
 
 	return $output . $next;
