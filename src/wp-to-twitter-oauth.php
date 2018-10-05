@@ -259,15 +259,15 @@ function wtt_connect_oauth( $auth = false ) {
 			<div class="notes">
 			<h4>' . __( 'WP to Twitter Set-up', 'wp-to-twitter' ) . '</h4>
 			</div>
-					<h4>' . sprintf( __( '1. Apply for a Developer Account with Twitter at %s', 'wp-to-twitter' ), '<a href="https://developer.twitter.com/">Twitter</a>' ) . '</h4>
+					<h4>' . __( '1. Apply for a Developer Account with Twitter at <a href="https://developer.twitter.com/">Twitter</a>', 'wp-to-twitter' ) . '</h4>
 					<h4>' . __( '2. Register this site as an application on ', 'wp-to-twitter' ) . '<a href="https://developer.twitter.com/en/apps">' . __( 'Twitter\'s application registration page', 'wp-to-twitter' ) . '</a></h4>
 						<ul class="wpt-bullets">
 						<li>' . __( 'If you\'re not currently logged in to Twitter, log-in to the account you want associated with this site', 'wp-to-twitter' ) . '</li>
 						<li>' . __( 'Your app name cannot include the word "Twitter."', 'wp-to-twitter' ) . '</li>
 						<li>' . __( 'Your Application Description can be anything.', 'wp-to-twitter' ) . '</li>
-						<li>' . __( 'The WebSite and Callback URL should be ', 'wp-to-twitter' ) . '<strong>' . esc_url( home_url() ) . '</strong></li>
+						<li>' . __( 'The WebSite and Callback URL should be: ', 'wp-to-twitter' ) . '<strong>' . esc_url( home_url() ) . '</strong></li>
 						<li>' . __( 'For this app, you do not need any other URL fields.', 'wp-to-twitter' ) . '</li>
-						<li>' . __( 'Describe how the app will be used. E.g. "This app will be used to send notifications about new WordPress posts or other types of WordPress content to Twitter on or after publication."' ). '</li>
+						<li>' . __( 'Describe how the app will be used. E.g. "This app will be used to send notifications about new WordPress posts or other types of WordPress content to Twitter on or after publication."' ) . '</li>
 						</ul>
 					<p><em>' . __( 'Read the Twitter Developer Agreement and continue.', 'wp-to-twitter' ) . '</em></p>
 					<h4>' . __( '3. Switch to the "Permissions" tab in Twitter apps', 'wp-to-twitter' ) . '</h4>
