@@ -66,6 +66,8 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.3.9 =
 
 * Added filter to cancel Tweets for custom reasons after all other filters executed.
+* Removed video on app creation, due to Twitter's radical revision of creation process.
+* Update setup instructions inside app.
 
 = 3.3.8 =
 
@@ -407,6 +409,10 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = Where are your Frequently Asked Questions? Why aren't they here? =
 
 Right here: [WP to Twitter FAQ](http://www.joedolson.com/wp-to-twitter/support-2/). I don't maintain them here because I would prefer to only maintain one copy. This is better for everybody, since the responses are much more likely to be up to date!
+
+= Twitter's Application creation process is very difficult. Why do I have to do this? =
+
+WP to Twitter has always followed the principle that you are the owner of your own application. Many other applications require you to pass your data through a 3rd party that you authenticate to post to Twitter. Twitter has gradually made the process to create a new application more and more difficult. There is nothing I can do about that. 
 
 = How can I help you make WP to Twitter a better plug-in? =
 
