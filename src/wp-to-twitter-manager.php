@@ -306,10 +306,14 @@ function wpt_update_settings() {
 						<?php
 						echo apply_filters( 'wpt_tweet_length', '' );
 						echo apply_filters( 'wpt_pick_shortener', '' );
-						$post_types   = get_post_types( array( 'public' => true ), 'objects' );
+						$post_types   = get_post_types( array(), 'objects' );
 						$wpt_settings = get_option( 'wpt_post_types' );
 						$tabs         = "<ul class='tabs' role='tablist'>";
 						foreach ( $post_types as $type ) {
+							// If post type is both private & has no UI, don't show.
+							if ( false == $type->public && false == $type->show_ui ) {
+								continue;
+							}
 							$name = $type->labels->name;
 							$slug = $type->name;
 							if ( 'attachment' == $slug || 'nav_menu_item' == $slug || 'revision' == $slug ) {
@@ -320,6 +324,9 @@ function wpt_update_settings() {
 						$tabs .= "<li><a href='#wpt_links' id='tab_wpt_links' aria-controls='wpt_links'>" . __( 'Links', 'wp-to-twitter' ) . '</a></li></ul>';
 						echo $tabs;
 						foreach ( $post_types as $type ) {
+							if ( false == $type->public && false == $type->show_ui ) {
+								continue;
+							}
 							$name = $type->labels->name;
 							$slug = $type->name;
 							if ( 'attachment' == $slug || 'nav_menu_item' == $slug || 'revision' == $slug ) {
