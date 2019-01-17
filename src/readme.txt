@@ -63,6 +63,11 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.3.10 =
+
+* Change: Display UI for post types that are private but have a UI (e.g., WooCommerce coupons)
+* 
+
 = 3.3.9 =
 
 * Added filter to cancel Tweets for custom reasons after all other filters executed.
