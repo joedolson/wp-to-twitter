@@ -30,7 +30,7 @@ function wpt_twitter_profile() {
 	$is_enabled       = get_user_meta( $user_edit, 'wp-to-twitter-enable-user', true );
 	$twitter_username = get_user_meta( $user_edit, 'wp-to-twitter-user-username', true );
 	$wpt_remove       = get_user_meta( $user_edit, 'wpt-remove', true );
-	if ( current_user_can( 'wpt_twitter_oauth' ) || current_user_can( 'manage_options' ) ) {
+	if ( $current_user->ID == $user_ID || current_user_can( 'manage_options' ) ) {
 		?>
 		<h3><?php _e( 'WP Tweets User Settings', 'wp-to-twitter' ); ?></h3>
 		<?php
@@ -64,7 +64,7 @@ function wpt_twitter_profile() {
 			<?php echo apply_filters( 'wpt_twitter_user_fields', $user_edit ); ?>
 		</table>
 		<?php
-		if ( function_exists( 'wpt_schedule_tweet' ) ) {
+		if ( current_user_can( 'wpt_twitter_oauth' ) || current_user_can( 'manage_options' ) ) {
 			if ( function_exists( 'wtt_connect_oauth' ) ) {
 				wtt_connect_oauth( $user_edit );
 			}
