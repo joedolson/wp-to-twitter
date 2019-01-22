@@ -66,7 +66,8 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.3.10 =
 
 * Change: Display UI for post types that are private but have a UI (e.g., WooCommerce coupons)
-* 
+* Bug fix: User permissions for connecting to Oauth overrode ability to enter personal settings.
+* Bug fix: Exit meta migration if post does not exist.
 
 = 3.3.9 =
 

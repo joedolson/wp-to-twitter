@@ -822,7 +822,7 @@ function wpt_migrate_url_meta() {
 	}
 
 	$post = get_post( $post_id );
-	if ( strtotime( $post->post_date ) > 1449764285 ) {
+	if ( ! $post || strtotime( $post->post_date ) > 1449764285 ) {
 		// if this post was added after the migration function was added, it will not need to be migrated. Guaranteed.
 		return;
 	}
