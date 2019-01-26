@@ -21,7 +21,7 @@
  */
 
 /*
-	Copyright 2008-2018  Joe Dolson (email : joe@joedolson.com)
+	Copyright 2008-2019  Joe Dolson (email : joe@joedolson.com)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ require_once( plugin_dir_path( __FILE__ ) . 'wpt-widget.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php' );
 
 global $wpt_version;
-$wpt_version = '3.3.9';
+$wpt_version = '3.3.10';
 
 add_action( 'init', 'wpt_load_textdomain' );
 /**
