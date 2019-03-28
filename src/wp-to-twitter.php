@@ -812,6 +812,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 			// identify whether limited by category/taxonomy.
 			$continue = wpt_category_limit( $post_type, $post_info, $post_ID );
 			if ( false == $continue ) {
+				wpt_mail( '4b: Limited by category filters', print_r( $post_info, 1 ), $post_ID );
 				return false;
 			}
 			// create Tweet and ID whether current action is edit or new.
@@ -919,7 +920,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 								for ( $i = 1; $i <= $repeat; $i ++ ) {
 									$continue = apply_filters( 'wpt_allow_reposts', true, $i, $post_ID, $acct );
 									if ( $continue ) {
-										$retweet = apply_filters( 'wpt_set_retweet_text', $template, $i );
+										$retweet = apply_filters( 'wpt_set_retweet_text', $template, $i, $post_ID );
 										$retweet = jd_truncate_tweet( $retweet, $post_info, $post_ID, true, $acct );
 										// add original delay to schedule.
 										$delay = ( isset( $post_info['wpt_delay_tweet'] ) ) ? ( (int) $post_info['wpt_delay_tweet'] ) * 60 : 0;
