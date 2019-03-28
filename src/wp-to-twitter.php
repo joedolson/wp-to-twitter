@@ -309,7 +309,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 
 	$check = ( ! $auth ) ? get_option( 'jd_last_tweet' ) : get_user_meta( $auth, 'wpt_last_tweet', true ); // get user's last tweet.
 	// prevent duplicate Tweets.
-	if ( $check == $twit ) {
+	if ( $check == $twit && '' != $twit ) {
 		wpt_mail( 'Matched: tweet identical', "This Tweet: $twit; Check Tweet: $check; $auth, $id, $media", $id ); // DEBUG.
 		$error = __( 'This tweet is identical to another Tweet recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'Twitter requires all Tweets to be unique.', 'wp-to-twitter' );
 		wpt_saves_error( $id, $auth, $twit, $error, '403-1', time() );
@@ -922,6 +922,10 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 									if ( $continue ) {
 										$retweet = apply_filters( 'wpt_set_retweet_text', $template, $i, $post_ID );
 										$retweet = jd_truncate_tweet( $retweet, $post_info, $post_ID, true, $acct );
+										if ( '' == $retweet ) {
+											// If a filter sets this value to empty, exit without scheduling.
+											return $post_ID;
+										}
 										// add original delay to schedule.
 										$delay = ( isset( $post_info['wpt_delay_tweet'] ) ) ? ( (int) $post_info['wpt_delay_tweet'] ) * 60 : 0;
 										// Don't delay the first Tweet of the group.
