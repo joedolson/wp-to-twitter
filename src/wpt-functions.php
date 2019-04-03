@@ -629,7 +629,7 @@ function wpt_get_support_form() {
 	global $current_user, $wpt_version;
 	$current_user   = wp_get_current_user();
 	$request        = '';
-	$response_email = '';
+	$response_email = $current_user->user_email;
 	// send fields for WP to Twitter.
 	$license = ( '' != get_option( 'wpt_license_key' ) ) ? get_option( 'wpt_license_key' ) : 'none';
 	if ( 'none' != $license ) {
