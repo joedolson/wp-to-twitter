@@ -63,6 +63,10 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.3.12 =
+
+* Missed ssl_verify=false removed
+
 = 3.3.11 =
 
 * Pass post ID to wpt_retweet_text filter.

@@ -440,7 +440,6 @@ function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $retur
 			'method'     => $method,
 			'body'       => $body,
 			'headers'    => $headers,
-			'sslverify'  => false,
 			'user-agent' => 'WP to Twitter/http://www.joedolson.com/wp-to-twitter/',
 		)
 	);
