@@ -1723,18 +1723,32 @@ add_action( 'save_post', 'wpt_save_post', 10 );
  * @return boolean True if post is allowed, false otherwise.
  */
 function wpt_in_post_type( $id ) {
+	$post_types = wpt_allowed_post_types();
+	$type       = get_post_type( $id );
+	if ( in_array( $type, $post_types ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Get array of post types that can be Tweeted. 
+ *
+ * @return array
+ */
+function wpt_allowed_post_types() {
 	$post_type_settings = get_option( 'wpt_post_types' );
+	$allowed_types      = array();
 	if ( is_array( $post_type_settings ) && ! empty( $post_type_settings ) ) {
-		$post_types = array_keys( $post_type_settings );
-		$type       = get_post_type( $id );
-		if ( in_array( $type, $post_types ) ) {
-			if ( '1' == $post_type_settings[ $type ]['post-edited-update'] || '1' == $post_type_settings[ $type ]['post-published-update'] ) {
-				return true;
+		foreach( $post_type_settings as $type => $settings ) {
+			if ( '1' == $settings['post-edited-update'] || '1' == $settings['post-published-update'] ) {
+				$allowed_types[] = $type;
 			}
 		}
 	}
 
-	return false;
+	return apply_filters( 'wpt_allowed_post_types', $allowed_types, $post_type_settings );
 }
 
 add_action( 'future_to_publish', 'wpt_future_to_publish', 16 );
