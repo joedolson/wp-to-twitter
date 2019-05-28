@@ -322,7 +322,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			}
 			$upload    = wp_get_attachment_image_src( $attachment, apply_filters( 'wpt_upload_image_size', $size ) );
 			$parent    = get_post_ancestors( $attachment );
-			$parent    = ( is_array( $parent ) ) ? $parent[0] : false;
+			$parent    = ( is_array( $parent ) && isset( $parent[0] ) ) ? $parent[0] : false;
 			$image_url = $upload[0];
 			$remote    = wp_remote_get( $image_url );
 			if ( is_wp_error( $remote ) ) {
