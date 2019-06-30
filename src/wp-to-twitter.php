@@ -1719,7 +1719,7 @@ function wpt_in_post_type( $id ) {
 }
 
 /**
- * Get array of post types that can be Tweeted. 
+ * Get array of post types that can be Tweeted.
  *
  * @return array
  */
@@ -1727,7 +1727,7 @@ function wpt_allowed_post_types() {
 	$post_type_settings = get_option( 'wpt_post_types' );
 	$allowed_types      = array();
 	if ( is_array( $post_type_settings ) && ! empty( $post_type_settings ) ) {
-		foreach( $post_type_settings as $type => $settings ) {
+		foreach ( $post_type_settings as $type => $settings ) {
 			if ( '1' == $settings['post-edited-update'] || '1' == $settings['post-published-update'] ) {
 				$allowed_types[] = $type;
 			}
