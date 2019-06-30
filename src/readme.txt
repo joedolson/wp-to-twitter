@@ -452,4 +452,4 @@ Writing and maintaining a plug-in is a lot of work. You can help me by providing
 
 == Upgrade Notice ==
 
-* 3.3.1: 280 character Tweets
+* 3.4.0: Removal of functions deprecated in January 2017 & March 2018. May break older Pro installations.
