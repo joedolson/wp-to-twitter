@@ -83,9 +83,9 @@ function wpt_set_log( $data, $id, $message ) {
  * @return stored message.
  */
 function wpt_log( $data, $id ) {
-	if ( 'test' == $id ) {
+	if ( 'test' === $id ) {
 		$log = get_option( $data );
-	} elseif ( 'last' == $id ) {
+	} elseif ( 'last' === $id ) {
 		$log = get_option( $data . '_last' );
 	} else {
 		$log = get_post_meta( $id, '_' . $data, true );
