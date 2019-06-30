@@ -43,21 +43,6 @@ function wpt_checkbox( $field, $sub1 = false, $sub2 = '' ) {
 }
 
 /**
- * See if checkboxes should be checked - fallback to old function.
- *
- * @param string $field Option name to check.
- * @param string $sub1 Array key if applicable.
- * @param string $sub2 Array key if applicable.
- *
- * @deprecated 3/26/2018
- *
- * @return Checked or unchecked.
- */
-function jd_checkCheckbox( $field, $sub1 = false, $sub2 = '' ) {
-	return wpt_checkbox( $field, $sub1, $sub2 );
-}
-
-/**
  * See if options should be selected
  *
  * @param string $field Option name to check.
@@ -71,21 +56,6 @@ function wpt_selected( $field, $value, $type = 'select' ) {
 		return ( 'select' == $type ) ? 'selected="selected"' : 'checked="checked"';
 	}
 	return '';
-}
-
-/**
- * See if options should be selected - fallback function
- *
- * @param string $field Option name to check.
- * @param string $value Value to verify against.
- * @param string $type Select or checkbox.
- *
- * @deprecated 3/26/2018
- *
- * @return Selected or unselected/ checked or unchecked..
- */
-function jd_checkSelect( $field, $value, $type = 'select' ) {
-	return wpt_selected( $field, $value, $type );
 }
 
 /**
@@ -980,29 +950,6 @@ function jd_post_info( $post_ID ) {
  */
 function jd_twit( $post_ID, $type = 'instant' ) {
 	return wpt_tweet( $post_ID, $type );
-}
-
-/**
- * Set up admin styles.
- */
-function jd_addTwitterAdminStyles() {
-	return wpt_admin_style();
-}
-
-/**
- * Send to Twitter API. Fallback; deprecated.
- *
- * @param string            $twit Tweet.
- * @param mixed boolean/int $auth Author ID.
- * @param int               $id Post ID.
- * @param boolean           $media Include media.
- *
- * @deprecated 1/19/2017
- *
- * @return boolean.
- */
-function jd_doTwitterAPIPost( $twit, $auth = false, $id = false, $media = false ) {
-	return wpt_post_to_twitter( $twit, $auth, $id, $media );
 }
 
 /**
