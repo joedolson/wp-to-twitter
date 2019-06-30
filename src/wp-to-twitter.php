@@ -130,8 +130,8 @@ function wptotwitter_activate() {
 		update_option( 'newlink-published-text', 'New link: #title# #url#' );
 		update_option( 'jd_shortener', '1' );
 		update_option( 'jd_strip_nonan', '0' );
-		update_option( 'jd_max_tags', 3 );
-		update_option( 'jd_max_characters', 15 );
+		update_option( 'jd_max_tags', 4 );
+		update_option( 'jd_max_characters', 20 );
 		$administrator = get_role( 'administrator' );
 		if ( is_object( $administrator ) ) {
 			// wpt_twitter_oauth is the general permission for editing user accounts.
@@ -357,20 +357,6 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment", $id );
 					if ( $media_id ) {
 						$status['media_ids'] = $media_id;
-						/**
-						 * Eventually, use this to add alt text. Not supported at this time.
-						$metadata_api = 'https://upload.twitter.com/1.1/media/metadata/create.json';
-						$alt_text     = get_post_meta( $args['media'], '_wp_attachment_image_alt', true );
-						if ( '' != $alt_text ) {
-							$image_alt = json_encode( array(
-								'media_id' => $media_id,
-								'alt_text' => array(
-									'text' => $alt_text,
-								),
-							) );
-							$post_alt = $connection->post( $metadata_api, array( 'auth' => $auth, 'json' => $image_alt ), true );
-						}
-						 */
 					}
 				}
 			}
@@ -1317,7 +1303,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			<div class='wptab' id='notes' aria-labelledby='tab_notes' role='tabpanel'>
 				<p>
 				<?php
-				_e( 'Template Tags: <code>#url#</code>, <code>#title#</code>, <code>#post#</code>, <code>#category#</code>, <code>#date#</code>, <code>#modified#</code>, <code>#author#</code>, <code>#account#</code>, <code>#tags#</code>, <code>#blog#</code>, <code>#longurl#</code>.', 'wp-to-twitter' );
+				_e( 'Template Tags: <code>#url#</code>, <code>#title#</code>, <code>#post#</code>, <code>#category#</code>, <code>#categories#</code>, <code>#date#</code>, <code>#modified#</code>, <code>#author#</code>, <code>#account#</code>, <code>#tags#</code>, <code>#blog#</code>, <code>#longurl#</code>.', 'wp-to-twitter' );
 				do_action( 'wpt_notes_tab', $post_id );
 				?>
 				</p>
