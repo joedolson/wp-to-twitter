@@ -364,7 +364,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 			/**
 			 * Eventually, use this to add alt text. Not supported at this time.
-			 
+
 			$metadata_api = 'https://upload.twitter.com/1.1/media/metadata/create.json';
 			$alt_text     = get_post_meta( $attachment, '_wp_attachment_image_alt', true );
 			if ( '' != $alt_text ) {
