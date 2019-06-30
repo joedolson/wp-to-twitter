@@ -7,7 +7,7 @@ Tested up to: 5.2
 Requires PHP: 5.3
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.3.12
+Stable tag: 3.4.0
 
 Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -63,12 +63,13 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
-= 3.3.13 =
+= 3.4.0 =
 
 * New function: wpt_allowed_post_types(). Returns array of post types that can be Tweeted.
 * New template tag: #categories# Return string of all categories on post. Filterable with 'wpt_twitter_category_names'
 * Change: default tag length allowed raised to 20
 * Change: default number of tags allowed raised to 4
+* Breaking change: Remove major function deprecated in January 2017 and minor functions deprecated March 2018. 
 
 = 3.3.12 =
 
