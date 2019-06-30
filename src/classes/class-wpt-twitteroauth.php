@@ -362,6 +362,33 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			$response            = json_decode( $response );
 			$media_id            = $response->media_id_string;
 
+			/**
+			 * Eventually, use this to add alt text. Not supported at this time.
+			 
+			$metadata_api = 'https://upload.twitter.com/1.1/media/metadata/create.json';
+			$alt_text     = get_post_meta( $attachment, '_wp_attachment_image_alt', true );
+			if ( '' != $alt_text ) {
+				$image_alt = json_encode(
+					array(
+						'media_id' => $media_id,
+						'alt_text' => array(
+							'text' => $alt_text,
+						),
+					)
+				);
+				$post_alt = $tmh_oauth->request(
+					'POST',
+					$metadata_api,
+					$image_alt,
+					true,
+					true,
+					array(
+						'content-type' => 'application/json',
+					)
+				);
+			}
+			*/
+
 			return $media_id;
 		}
 

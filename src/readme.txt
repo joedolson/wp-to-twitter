@@ -63,6 +63,13 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.3.13 =
+
+* New function: wpt_allowed_post_types(). Returns array of post types that can be Tweeted.
+* New template tag: #categories# Return string of all categories on post. Filterable with 'wpt_twitter_category_names'
+* Change: default tag length allowed raised to 20
+* Change: default number of tags allowed raised to 4
+
 = 3.3.12 =
 
 * Missed ssl_verify=false removed
