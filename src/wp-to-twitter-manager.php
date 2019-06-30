@@ -510,7 +510,7 @@ function wpt_update_settings() {
 							?>
 							<p>
 								<label for="jd_max_tags"><?php _e( 'Maximum number of tags to include:', 'wp-to-twitter' ); ?></label>
-								<input aria-describedby="jd_max_characters_label" type="text" name="jd_max_tags" id="jd_max_tags" value="<?php echo esc_attr( get_option( 'jd_max_tags' ) ); ?>" size="3"/>
+								<input aria-describedby="jd_max_characters_label" type="text" name="jd_max_tags" id="jd_max_tags" value="<?php echo esc_attr( get_option( 'jd_max_tags' ) ); ?>" size="3" />
 							</p>
 							<p>
 								<label for="jd_max_characters"><?php _e( 'Maximum length in characters for included tags:', 'wp-to-twitter' ); ?></label>
