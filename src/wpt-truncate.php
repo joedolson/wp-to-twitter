@@ -307,6 +307,7 @@ function wpt_remove_tag( $key ) {
 		case 'account':
 		case 'author':
 		case 'category':
+		case 'categories':
 		case 'date':
 		case 'modified':
 		case 'reference':
@@ -326,7 +327,7 @@ function wpt_remove_tag( $key ) {
  * @return array tags.
  */
 function wpt_tags() {
-	return apply_filters( 'wpt_tags', array( 'url', 'title', 'blog', 'post', 'category', 'date', 'author', 'displayname', 'tags', 'modified', 'reference', 'account', '@', 'cat_desc', 'longurl' ) );
+	return apply_filters( 'wpt_tags', array( 'url', 'title', 'blog', 'post', 'category', 'categories', 'date', 'author', 'displayname', 'tags', 'modified', 'reference', 'account', '@', 'cat_desc', 'longurl' ) );
 }
 
 /**
@@ -358,6 +359,7 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$excerpt      = trim( apply_filters( 'wpt_status', $post['postExcerpt'], $post_ID, 'post' ) );
 	$thisposturl  = trim( $shrink );
 	$category     = trim( $post['category'] );
+	$categories   = trim( $post['cats'] );
 	$cat_desc     = trim( $post['cat_desc'] );
 	$user_account = get_user_meta( $auth, 'wtt_twitter_username', true );
 	$tags         = wpt_generate_hash_tags( $post_ID );
@@ -402,6 +404,7 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 		'blog'        => $blogname,
 		'post'        => $excerpt,
 		'category'    => $category,
+		'categories'  => $categories,
 		'date'        => $date,
 		'author'      => $author,
 		'displayname' => $display_name,
