@@ -66,6 +66,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.4.1 =
 
 * Removed goo.gl shortener completely (disabled by Goo.gl in March 2019)
+* Removed su.pr shortener completely (Stumbleupon closed down in June 2018)
 
 
 = 3.4.0 =
