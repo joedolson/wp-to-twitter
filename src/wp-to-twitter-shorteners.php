@@ -181,30 +181,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					}
 					break;
 				case 7:
-					$suprapi   = trim( get_option( 'suprapi' ) );
-					$suprlogin = trim( get_option( 'suprlogin' ) );
-					if ( '' != $suprapi ) {
-						$decoded = wpt_remote_json( 'http://su.pr/api/shorten?longUrl=' . $encoded . '&login=' . $suprlogin . '&apiKey=' . $suprapi );
-					} else {
-						$decoded = wpt_remote_json( 'http://su.pr/api/shorten?longUrl=' . $encoded );
-					}
-					if ( $decoded && isset( $decoded['statusCode'] ) ) {
-						if ( 'OK' == $decoded['statusCode'] ) {
-							$page   = str_replace( '&', '&#38;', urldecode( $url ) );
-							$shrink = $decoded['results'][ $page ]['shortUrl'];
-							$error  = $decoded['errorMessage'];
-						} else {
-							$shrink = false;
-							$error  = $decoded['errorMessage'];
-						}
-					} else {
-						$shrink = false;
-						$error  = __( 'Su.pr query returned invalid data.', 'wp-to-twitter' );
-					}
-					if ( ! wpt_is_valid_url( $shrink ) ) {
-						$shrink = false;
-					}
-					break;
+					// Su.pr. Stumbleupon closed doors in June 2018.
 				case 8:
 					// Goo.gl. Service disabled March 2019.
 				case 9:
