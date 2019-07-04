@@ -342,25 +342,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				<div class="inside">
 					<?php
 					if ( 7 == $shortener ) {
-						?>
-						<?php echo $form_start; ?>
-						<p>
-							<label
-								for="suprlogin"><?php _e( 'Your Su.pr Username:', 'wp-to-twitter' ); ?></label>
-							<input type="text" name="suprlogin" id="suprlogin" size="40" value="<?php echo esc_attr( get_option( 'suprlogin' ) ); ?> "/>
-						</p>
-						<p>
-							<label
-								for="suprapi"><?php _e( "Your Su.pr <abbr title='application programming interface'>API</abbr> Key:", 'wp-to-twitter' ); ?></label>
-							<input type="text" name="suprapi" id="suprapi" size="40" value="<?php echo esc_attr( get_option( 'suprapi' ) ); ?> "/>
-						</p>
-
-						<div>
-							<input type="hidden" name="submit-type" value="suprapi"/>
-						</div>
-						<p><small><?php _e( "Don't have a Su.pr account or API key? <a href='http://su.pr/'>Get one here!</a> You'll need an API key in order to associate the URLs you create with your Su.pr account.", 'wp-to-twitter' ); ?></small></p>
-						<?php echo $form_end; ?>
-						<?php
+						echo '<p>' . __( 'The Su.pr URL shortener was shut down when Stumbleupon closed doors in June 2018.', 'wp-to-twitter' ) . '</p>';
 					} elseif ( 2 == $shortener ) {
 						echo $form_start;
 						?>
@@ -430,16 +412,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						<?php
 						echo $form_end;
 					} elseif ( 8 == $shortener ) {
-						echo '<p>' . __( 'The Goo.gl URL shortener will be shut down by Google on March 30th, 2019, and will be removed from WP to Twitter in the near future.', 'wp-to-twitter' ) . '</p>';
-						echo $form_start;
-						?>
-						<p>
-							<label for="googl_api_key"><?php _e( 'Goo.gl API Key:', 'wp-to-twitter' ); ?></label>
-							<input type="text" name="googl_api_key" id="googl_api_key" value="<?php echo esc_attr( get_option( 'googl_api_key' ) ); ?>"/>
-						</p>
-						<div><input type="hidden" name="submit-type" value="googlapi" /></div>
-						<?php
-						echo $form_end;
+						echo '<p>' . __( 'The Goo.gl URL shortener was shut down by Google in March 2019.', 'wp-to-twitter' ) . '</p>';
 					} elseif ( 10 == $shortener ) {
 						echo $form_start;
 						?>
@@ -527,20 +500,6 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			}
 		}
 
-		if ( isset( $post['submit-type'] ) && 'suprapi' == $post['submit-type'] ) {
-			if ( '' != $post['suprapi'] && isset( $post['submit'] ) ) {
-				update_option( 'suprapi', trim( $post['suprapi'] ) );
-				update_option( 'suprlogin', trim( $post['suprlogin'] ) );
-				$message = __( 'Su.pr API Key and Username Updated', 'wp-to-twitter' );
-			} elseif ( isset( $post['clear'] ) ) {
-				update_option( 'suprapi', '' );
-				update_option( 'suprlogin', '' );
-				$message = __( 'Su.pr API Key and username deleted. Su.pr URLs created by WP to Twitter will no longer be associated with your account.', 'wp-to-twitter' );
-			} else {
-				$message = __( "Su.pr API Key not added - <a href='http://su.pr/'>get one here</a>!", 'wp-to-twitter' );
-			}
-		}
-
 		if ( isset( $post['submit-type'] ) && 'bitlyapi' == $post['submit-type'] ) {
 			if ( '' != $post['bitlyapi'] && isset( $post['submit'] ) ) {
 				update_option( 'bitlyapi', trim( $post['bitlyapi'] ) );
@@ -559,14 +518,6 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				$message = __( 'Bit.ly User Login deleted. You cannot use the Bit.ly API without providing your username.', 'wp-to-twitter' );
 			} else {
 				$message = __( "Bit.ly Login not added - <a href='http://bit.ly/account/'>get one here</a>!", 'wp-to-twitter' );
-			}
-		}
-		if ( isset( $post['submit-type'] ) && 'googlapi' == $post['submit-type'] ) {
-			if ( '' != $post['googl_api_key'] && isset( $post['submit'] ) ) {
-				update_option( 'googl_api_key', trim( $post['googl_api_key'] ) );
-				$message .= __( 'Goo.gl API Key Updated.', 'wp-to-twitter' );
-			} else {
-				$message = __( "Goo.gl API Key not added - <a href='https://developers.google.com/url-shortener/v1/getting_started'>get one here</a>! ", 'wp-to-twitter' );
 			}
 		}
 
@@ -666,14 +617,6 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				<option value="3" <?php selected( $shortener, '3' ); ?>><?php _e( "Don't shorten URLs.", 'wp-to-twitter' ); ?></option>
 				<option value="4" <?php selected( $shortener, '4' ); ?>>WordPress</option>
 				<option value="2" <?php selected( $shortener, '2' ); ?>>Bit.ly</option>
-				<?php
-				if ( 8 == $shortener ) { // if already selected, leave available.
-					?>
-				<option value="8" <?php selected( $shortener, '8' ); ?>>Goo.gl</option>
-					<?php
-				}
-				?>
-				<option value="7" <?php selected( $shortener, '7' ); ?>>Su.pr</option>
 				<?php
 				if ( 5 == $shortener ) { // if the user has already selected local server, leave available.
 					?>

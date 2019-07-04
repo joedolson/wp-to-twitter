@@ -1,7 +1,7 @@
 === WP to Twitter ===
 Contributors: joedolson
 Donate link: http://www.joedolson.com/donate/
-Tags: twitter, microblogging, su.pr, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
+Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
 Requires at least: 4.4
 Tested up to: 5.2
 Requires PHP: 5.3
