@@ -206,17 +206,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					}
 					break;
 				case 8:
-					// Goo.gl.
-					$googl_api_key = ( '' == get_option( 'googl_api_key' ) ) ? 'AIzaSyBSnqQOg3vX1gwR7y2l-40yEG9SZiaYPUQ' : get_option( 'googl_api_key' );
-					$target        = "https://www.googleapis.com/urlshortener/v1/url?key=$googl_api_key";
-					$body          = "{'longUrl':'$url'}";
-					$json          = wpt_fetch_url( $target, 'POST', $body, 'Content-Type: application/json' );
-					$decoded       = json_decode( $json );
-					$shrink        = $decoded->id;
-					if ( ! wpt_is_valid_url( $shrink ) ) {
-						$shrink = false;
-					}
-					break;
+					// Goo.gl. Service disabled March 2019.
 				case 9:
 					// Twitter Friendly Links. This plugin not updated in 8 years.
 					$shrink = $url;

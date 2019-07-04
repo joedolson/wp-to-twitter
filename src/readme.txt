@@ -63,13 +63,18 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.4.1 =
+
+* Removed goo.gl shortener completely (disabled by Goo.gl in March 2019)
+
+
 = 3.4.0 =
 
 * New function: wpt_allowed_post_types(). Returns array of post types that can be Tweeted.
 * New template tag: #categories# Return string of all categories on post. Filterable with 'wpt_twitter_category_names'
 * Change: default tag length allowed raised to 20
 * Change: default number of tags allowed raised to 4
-* Breaking change: Remove major function deprecated in January 2017 and minor functions deprecated March 2018. 
+* Breaking change: Remove major function deprecated in January 2017 and minor functions deprecated March 2018.
 
 = 3.3.12 =
 
