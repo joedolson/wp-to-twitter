@@ -601,7 +601,6 @@ function wpt_update_settings() {
 					<div class="inside">
 						<fieldset>
 							<legend class='screen-reader-text'><?php _e( 'Google Analytics Settings', 'wp-to-twitter' ); ?></legend>
-
 							<p>
 								<input type="radio" name="twitter-analytics" id="use-twitter-analytics" value="1" <?php echo wpt_checkbox( 'use-twitter-analytics' ); ?> />
 								<label for="use-twitter-analytics"><?php _e( 'Use a Static Identifier', 'wp-to-twitter' ); ?></label><br/>
