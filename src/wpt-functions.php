@@ -28,7 +28,7 @@ function wpt_checkbox( $field, $sub1 = false, $sub2 = '' ) {
 	if ( $sub1 ) {
 		$setting = get_option( $field );
 		if ( isset( $setting[ $sub1 ] ) ) {
-			$value = ( '' != $sub2 ) ? $setting[ $sub1 ][ $sub2 ] : $setting[ $sub1 ];
+			$value = ( '' !== $sub2 ) ? $setting[ $sub1 ][ $sub2 ] : $setting[ $sub1 ];
 		} else {
 			$value = 0;
 		}
@@ -326,7 +326,7 @@ function wpt_show_debug() {
 		<li><input type='checkbox' name='wpt-delete-all-debug' value='true' id='wpt-delete-all-debug'> <label for='wpt-delete-all-debug'>" . __( 'Delete debugging logs for all posts', 'wp-to-twitter' ) . '</label></li>
 		</ul>';
 
-		echo ( '' != $records ) ? "$script<div class='wpt-debug-log'><h3>Debugging Log:</h3><ul>$records</ul></div>$delete" : '';
+		echo ( '' !== $records ) ? "$script<div class='wpt-debug-log'><h3>Debugging Log:</h3><ul>$records</ul></div>$delete" : '';
 	}
 }
 
@@ -602,8 +602,8 @@ function wpt_get_support_form() {
 	$request        = '';
 	$response_email = $current_user->user_email;
 	// send fields for WP to Twitter.
-	$license = ( '' != get_option( 'wpt_license_key' ) ) ? get_option( 'wpt_license_key' ) : 'none';
-	if ( 'none' != $license ) {
+	$license = ( get_option( 'wpt_license_key' ) ) ? get_option( 'wpt_license_key' ) : 'none';
+	if ( 'none' !== $license ) {
 		$valid = ( ( 'true' === get_option( 'wpt_license_valid' ) ) || ( 'active' === get_option( 'wpt_license_valid' ) ) || ( 'valid' === get_option( 'wpt_license_valid' ) ) ) ? ' (active)' : ' (inactive)';
 	} else {
 		$valid = '';
@@ -799,7 +799,7 @@ function wpt_migrate_url_meta() {
 	}
 
 	$short = wpt_short_url( $post_id );
-	if ( false != $short ) {
+	if ( false !== $short ) {
 		return;
 	}
 	if ( false === $short ) {
@@ -839,7 +839,7 @@ function wpt_migrate_url_meta() {
 		delete_post_meta( $post_id, '_wp_jd_clig' );
 	}
 
-	if ( '' != $short ) {
+	if ( false !== $short && '' !== $short ) {
 		update_post_meta( $post_id, '_wpt_short_url', $short );
 	}
 }
