@@ -108,7 +108,7 @@ function wpt_check_functions() {
 	if ( false === $shrink ) {
 		$error    = htmlentities( get_option( 'wpt_shortener_status' ) );
 		$message .= __( '<li class="error"><strong>WP to Twitter was unable to contact your selected URL shortening service.</strong></li>', 'wp-to-twitter' );
-		if ( is_string( $error ) && strlen( trim( $error ) > 0 ) {
+		if ( is_string( $error ) && strlen( trim( $error ) ) > 0 ) {
 			$message .= "<li><code>$error</code></li>";
 		} else {
 			$message .= '<li><code>' . __( 'No error message was returned.', 'wp-to-twitter' ) . '</code></li>';
