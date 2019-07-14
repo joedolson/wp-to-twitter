@@ -32,11 +32,11 @@ function wpt_checkbox( $field, $sub1 = false, $sub2 = '' ) {
 		} else {
 			$value = 0;
 		}
-		if ( 1 == $value ) {
+		if ( 1 === (int) $value ) {
 			return 'checked="checked"';
 		}
 	}
-	if ( '1' == get_option( $field ) ) {
+	if ( '1' === get_option( $field ) ) {
 		return 'checked="checked"';
 	}
 	return '';
