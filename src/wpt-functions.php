@@ -39,21 +39,22 @@ function wpt_checkbox( $field, $sub1 = false, $sub2 = '' ) {
 	if ( '1' === get_option( $field ) ) {
 		return 'checked="checked"';
 	}
+
 	return '';
 }
 
 /**
- * See if options should be selected
+ * See if options should be selected. Note: does not appear to be in use as of 7/14/2019.
  *
  * @param string $field Option name to check.
  * @param string $value Value to verify against.
  * @param string $type Select or checkbox.
  *
- * @return Selected or unselected/ checked or unchecked..
+ * @return Selected or unselected/ checked or unchecked.
  */
 function wpt_selected( $field, $value, $type = 'select' ) {
-	if ( get_option( $field ) == $value ) {
-		return ( 'select' == $type ) ? 'selected="selected"' : 'checked="checked"';
+	if ( get_option( $field ) === $value ) {
+		return ( 'select' === $type ) ? 'selected="selected"' : 'checked="checked"';
 	}
 	return '';
 }
@@ -66,7 +67,7 @@ function wpt_selected( $field, $value, $type = 'select' ) {
  * @param string $message Log message.
  */
 function wpt_set_log( $data, $id, $message ) {
-	if ( 'test' == $id ) {
+	if ( 'test' === $id ) {
 		update_option( $data, $message );
 	} else {
 		update_post_meta( $id, '_' . $data, $message );
@@ -104,10 +105,10 @@ function wpt_check_functions() {
 	$testpost = false;
 	$title    = urlencode( 'Your blog home' );
 	$shrink   = apply_filters( 'wptt_shorten_link', $testurl, $title, false, true );
-	if ( false == $shrink ) {
+	if ( false === $shrink ) {
 		$error    = htmlentities( get_option( 'wpt_shortener_status' ) );
 		$message .= __( '<li class="error"><strong>WP to Twitter was unable to contact your selected URL shortening service.</strong></li>', 'wp-to-twitter' );
-		if ( '' != $error ) {
+		if ( is_string( $error ) && strlen( trim( $error ) > 0 ) {
 			$message .= "<li><code>$error</code></li>";
 		} else {
 			$message .= '<li><code>' . __( 'No error message was returned.', 'wp-to-twitter' ) . '</code></li>';
@@ -130,7 +131,7 @@ function wpt_check_functions() {
 	} else {
 		$message .= '<strong>' . __( 'You have not connected WordPress to Twitter.', 'wp-to-twitter' ) . '</strong> ';
 	}
-	if ( false == $testpost && false == $shrink ) {
+	if ( false === $testpost && false === $shrink ) {
 		$message .= __( "<li class=\"error\"><strong>Your server does not appear to support the required methods for WP to Twitter to function.</strong> You can try it anyway - these tests aren't perfect.</li>", 'wp-to-twitter' );
 	}
 	if ( $testpost && $shrink ) {
@@ -147,7 +148,8 @@ function wpt_check_functions() {
  */
 function wpt_settings_tabs() {
 	$output   = '';
-	$default  = ( '' == get_option( 'wtt_twitter_username' ) ) ? 'connection' : 'basic';
+	$username = get_option( 'wtt_twitter_username' );
+	$default  = ( '' === $username || false === $username ) ? 'connection' : 'basic';
 	$current  = ( isset( $_GET['tab'] ) ) ? $_GET['tab'] : $default;
 	$pro_text = ( function_exists( 'wpt_pro_exists' ) ) ? __( 'Pro Settings', 'wp-to-twitter' ) : __( 'Get WP Tweets PRO', 'wp-to-twitter' );
 	$pages    = array(
@@ -158,7 +160,7 @@ function wpt_settings_tabs() {
 		'support'    => __( 'Get Help', 'wp-to-twitter' ),
 		'pro'        => $pro_text,
 	);
-	if ( '1' == get_option( 'jd_donations' ) && ! function_exists( 'wpt_pro_exists' ) ) {
+	if ( '1' === get_option( 'jd_donations' ) && ! function_exists( 'wpt_pro_exists' ) ) {
 		unset( $pages['pro'] );
 	}
 
@@ -166,9 +168,9 @@ function wpt_settings_tabs() {
 	$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 
 	foreach ( $pages as $key => $value ) {
-		$selected = ( $key == $current ) ? ' nav-tab-active' : '';
+		$selected = ( $key === $current ) ? ' nav-tab-active' : '';
 		$url      = esc_url( add_query_arg( 'tab', $key, $admin_url ) );
-		if ( 'pro' == $key ) {
+		if ( 'pro' === $key ) {
 			$output .= "<a class='wpt-pro-tab nav-tab$selected' href='$url'>$value</a>";
 		} else {
 			$output .= "<a class='nav-tab$selected' href='$url'>$value</a>";
@@ -201,10 +203,10 @@ function wpt_show_last_tweet() {
  * Handle Tweet & URL shortener errors.
  */
 function wpt_handle_errors() {
-	if ( isset( $_POST['submit-type'] ) && 'clear-error' == $_POST['submit-type'] ) {
+	if ( isset( $_POST['submit-type'] ) && 'clear-error' === $_POST['submit-type'] ) {
 		delete_option( 'wp_url_failure' );
 	}
-	if ( '1' == get_option( 'wp_url_failure' ) ) {
+	if ( '1' === get_option( 'wp_url_failure' ) ) {
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 		$nonce     = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
 		$error     = '<div class="error">' . __( '<p>The query to the URL shortener API failed, and your URL was not shrunk. The full post URL was attached to your Tweet. Check with your URL shortening provider to see if there are any known issues.</p>', 'wp-to-twitter' ) .
@@ -260,7 +262,7 @@ function wpt_cap_checkbox( $role, $cap, $name ) {
  * @param boolean $override Send message if debug disabled.
  */
 function wpt_mail( $subject, $body, $post_ID = false, $override = false ) {
-	if ( ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) || true == $override ) {
+	if ( ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) || true === $override ) {
 		if ( WPT_DEBUG_BY_EMAIL ) {
 			wp_mail( WPT_DEBUG_ADDRESS, $subject, $body, WPT_FROM );
 		} else {
@@ -415,8 +417,8 @@ function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $retur
 	);
 
 	if ( ! is_wp_error( $result ) && isset( $result['body'] ) ) {
-		if ( 200 == $result['response']['code'] ) {
-			if ( 'body' == $return ) {
+		if ( 200 === absint( $result['response']['code'] ) ) {
+			if ( 'body' === $return ) {
 				return $result['body'];
 			} else {
 				return $result;
@@ -440,7 +442,7 @@ if ( ! function_exists( 'mb_substr_split_unicode' ) ) {
 	 * @return split output.
 	 */
 	function mb_substr_split_unicode( $str, $split_pos ) {
-		if ( 0 == $split_pos ) {
+		if ( 0 === $split_pos ) {
 			return 0;
 		}
 		$byte_len = strlen( $str );
@@ -529,7 +531,7 @@ function wtt_option_selected( $field, $value, $type = 'checkbox' ) {
 		default:
 			$result = ' selected="selected"';
 	}
-	if ( $field == $value ) {
+	if ( $field === $value ) {
 		$output = $result;
 	} else {
 		$output = '';
@@ -602,7 +604,7 @@ function wpt_get_support_form() {
 	// send fields for WP to Twitter.
 	$license = ( '' != get_option( 'wpt_license_key' ) ) ? get_option( 'wpt_license_key' ) : 'none';
 	if ( 'none' != $license ) {
-		$valid = ( ( 'true' == get_option( 'wpt_license_valid' ) ) || ( 'active' == get_option( 'wpt_license_valid' ) ) || ( 'valid' == get_option( 'wpt_license_valid' ) ) ) ? ' (active)' : ' (inactive)';
+		$valid = ( ( 'true' === get_option( 'wpt_license_valid' ) ) || ( 'active' === get_option( 'wpt_license_valid' ) ) || ( 'valid' === get_option( 'wpt_license_valid' ) ) ) ? ' (active)' : ' (inactive)';
 	} else {
 		$valid = '';
 	}
@@ -678,7 +680,7 @@ $plugins_string
 		$request      = ( ! empty( $_POST['support_request'] ) ) ? stripslashes( $_POST['support_request'] ) : false;
 		$has_donated  = ( isset( $_POST['has_donated'] ) ) ? 'Donor' : 'No donation';
 		$has_read_faq = ( isset( $_POST['has_read_faq'] ) ) ? 'Read FAQ' : false;
-		if ( function_exists( 'wpt_pro_exists' ) && true == wpt_pro_exists() ) {
+		if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 			$pro = ' PRO';
 		} else {
 			$pro = '';
@@ -687,7 +689,7 @@ $plugins_string
 		$message = $request . "\n\n" . $data;
 		// Get the site domain and get rid of www. from pluggable.php.
 		$sitename = strtolower( $_SERVER['SERVER_NAME'] );
-		if ( 'www.' == substr( $sitename, 0, 4 ) ) {
+		if ( 'www.' === substr( $sitename, 0, 4 ) ) {
 			$sitename = substr( $sitename, 4 );
 		}
 		$response_email = ( isset( $_POST['response_email'] ) ) ? $_POST['response_email'] : false;
@@ -703,7 +705,7 @@ $plugins_string
 		} else {
 			$sent = wp_mail( 'plugins@joedolson.com', $subject, $message, $from );
 			if ( $sent ) {
-				if ( 'Donor' == $has_donated ) {
+				if ( 'Donor' === $has_donated ) {
 					// Translators: Email address.
 					echo "<div class='notice updated'><p>" . sprintf( __( 'Thank you for supporting WP to Twitter! I\'ll get back to you as soon as I can. Please make sure you can receive email at <code>%s</code>.', 'wp-to-twitter' ), $response_email ) . '</p></div>';
 				} else {
@@ -716,7 +718,7 @@ $plugins_string
 			}
 		}
 	}
-	if ( function_exists( 'wpt_pro_exists' ) && true == wpt_pro_exists() ) {
+	if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 		$checked = 'checked="checked"';
 	} else {
 		$checked = '';
@@ -797,42 +799,42 @@ function wpt_migrate_url_meta() {
 	}
 
 	$short = wpt_short_url( $post_id );
-	if ( '' != $short ) {
+	if ( false != $short ) {
 		return;
 	}
-	if ( '' == $short ) {
+	if ( false === $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_goo', true );
 		delete_post_meta( $post_id, '_wp_jd_goo' );
 	}
-	if ( '' == $short ) {
+	if ( false === $short || '' === $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_supr', true );
 		delete_post_meta( $post_id, '_wp_jd_supr' );
 	}
-	if ( '' == $short ) {
+	if ( false === $short || '' === $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_wp', true );
 		delete_post_meta( $post_id, '_wp_jd_wp' );
 	}
-	if ( '' == $short ) {
+	if ( false === $short || '' === $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_ind', true );
 		delete_post_meta( $post_id, '_wp_jd_ind' );
 	}
-	if ( '' == $short ) {
+	if ( false === $short || '' === $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_yourls', true );
 		delete_post_meta( $post_id, '_wp_jd_yourls' );
 	}
-	if ( '' == $short ) {
+	if ( false === $short || '' === $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_url', true );
 		delete_post_meta( $post_id, '_wp_jd_url' );
 	}
-	if ( '' == $short ) {
+	if ( false === $short || '' === $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_joturl', true );
 		delete_post_meta( $post_id, '_wp_jd_joturl' );
 	}
-	if ( '' == $short ) {
+	if ( false === $short || '' === $short ) {
 		// don't delete target link.
 		$short = get_post_meta( $post_id, '_wp_jd_target', true );
 	}
-	if ( '' == $short ) {
+	if ( false === $short || '' === $short ) {
 		$short = get_post_meta( $post_id, '_wp_jd_clig', true );
 		delete_post_meta( $post_id, '_wp_jd_clig' );
 	}
