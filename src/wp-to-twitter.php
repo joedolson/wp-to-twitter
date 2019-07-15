@@ -778,7 +778,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 			return false;
 		}
 		$post_type = $post_info['postType'];
-		if ( 'future' === $type || 'future' === get_post_meta( $post_ID, 'wpt_publishing' ) ) {
+		if ( 'future' === $type || 'future' === get_post_meta( $post_ID, 'wpt_publishing', true ) ) {
 			$new = 1; // if this is a future action, then it should be published regardless of relationship.
 			wpt_mail( '4a: Is a future post', print_r( $post_info, 1 ) . " / $type", $post_ID );
 			delete_post_meta( $post_ID, 'wpt_publishing' );
