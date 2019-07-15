@@ -438,7 +438,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				case 503:
 					$error = __( '503 Service Unavailable: The Twitter servers are up, but overloaded with requests - Please try again later.', 'wp-to-twitter' );
 					break;
-				case 504':
+				case 504:
 					$error = __( "504 Gateway Timeout: The Twitter servers are up, but the request couldn't be serviced due to some failure within our stack. Try again later.", 'wp-to-twitter' );
 					break;
 				default:
