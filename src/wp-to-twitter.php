@@ -789,16 +789,16 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 		}
 		// post is not previously published but has been backdated.
 		// (post date is edited, but save option is 'publish').
-		if ( 0 == $new && ( isset( $_POST['edit_date'] ) && 1 == $_POST['edit_date'] && ! isset( $_POST['save'] ) ) ) {
+		if ( 0 === $new && ( isset( $_POST['edit_date'] ) && '1' === $_POST['edit_date'] && ! isset( $_POST['save'] ) ) ) {
 			$new = 1;
 		}
 		// can't catch posts that were set to a past date as a draft, then published.
 		$post_type_settings = get_option( 'wpt_post_types' );
 		$post_types         = array_keys( $post_type_settings );
-		if ( in_array( $post_type, $post_types ) ) {
+		if ( in_array( $post_type, $post_types, true ) ) {
 			// identify whether limited by category/taxonomy.
 			$continue = wpt_category_limit( $post_type, $post_info, $post_ID );
-			if ( false == $continue ) {
+			if ( false === $continue ) {
 				wpt_mail( '4b: Limited by category filters', print_r( $post_info, 1 ), $post_ID );
 				return false;
 			}
@@ -809,49 +809,49 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 			}
 			$custom_tweet = ( '' != $ct ) ? stripcslashes( trim( $ct ) ) : '';
 			// if ops is set and equals 'publish', this is being edited. Otherwise, it's a new post.
-			if ( 0 == $new || true == $is_inline_edit ) {
+			if ( 0 === $new || true === $is_inline_edit ) {
 				// if this is an old post and editing updates are enabled.
-				if ( 1 == get_option( 'jd_tweet_default_edit' ) ) {
+				if ( '1' === get_option( 'jd_tweet_default_edit' ) ) {
 					$tweet_this = apply_filters( 'wpt_tweet_this_edit', $tweet_this, $_POST );
-					if ( 'yes' != $tweet_this ) {
+					if ( 'yes' !== $tweet_this ) {
 						return false;
 					}
 				}
 				wpt_mail( '4b: Is edited post', 'Tweet this: ' . print_r( $post_info, 1 ) . " / $type", $post_ID ); // DEBUG.
-				if ( '1' == $post_type_settings[ $post_type ]['post-edited-update'] ) {
+				if ( '1' === $post_type_settings[ $post_type ]['post-edited-update'] ) {
 					$nptext  = stripcslashes( $post_type_settings[ $post_type ]['post-edited-text'] );
 					$oldpost = true;
 				}
 			} else {
 				wpt_mail( '4c: Is new post', 'Tweet this: ' . print_r( $post_info, 1 ) . " / $type", $post_ID ); // DEBUG.
-				if ( '1' == $post_type_settings[ $post_type ]['post-published-update'] ) {
+				if ( '1' === $post_type_settings[ $post_type ]['post-published-update'] ) {
 					$nptext  = stripcslashes( $post_type_settings[ $post_type ]['post-published-text'] );
 					$newpost = true;
 				}
 			}
 			if ( $newpost || $oldpost ) {
-				$template = ( '' != $custom_tweet ) ? $custom_tweet : $nptext;
+				$template = ( '' !== $custom_tweet ) ? $custom_tweet : $nptext;
 				$sentence = jd_truncate_tweet( $template, $post_info, $post_ID );
 				wpt_mail( '5: Tweet Truncated', "Truncated Tweet: $sentence / $template / $type", $post_ID ); // DEBUG.
-				if ( function_exists( 'wpt_pro_exists' ) && true == wpt_pro_exists() ) {
+				if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 					$sentence2 = jd_truncate_tweet( $template, $post_info, $post_ID, false, $auth );
 				}
 			}
 			if ( '' != $sentence ) {
 				// WPT PRO.
-				if ( function_exists( 'wpt_pro_exists' ) && true == wpt_pro_exists() ) {
+				if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 					$wpt_selected_users = $post_info['wpt_authorized_users'];
 					// set up basic author/main account values.
 					$auth_verified = wtt_oauth_test( $auth, 'verify' );
-					if ( empty( $wpt_selected_users ) && 1 == get_option( 'jd_individual_twitter_users' ) ) {
+					if ( empty( $wpt_selected_users ) && '1' === get_option( 'jd_individual_twitter_users' ) ) {
 						$wpt_selected_users = ( $auth_verified ) ? array( $auth ) : array( false );
 					}
-					if ( 1 == $post_info['wpt_cotweet'] || 1 != get_option( 'jd_individual_twitter_users' ) || in_array( 'main', $wpt_selected_users ) ) {
+					if ( 1 == $post_info['wpt_cotweet'] || '1' !== get_option( 'jd_individual_twitter_users' ) || in_array( 'main', $wpt_selected_users, true ) ) {
 						$wpt_selected_users['main'] = false;
 					}
 					// filter selected users before using.
 					$wpt_selected_users = apply_filters( 'wpt_filter_users', $wpt_selected_users, $post_info );
-					if ( 0 == $post_info['wpt_delay_tweet'] || '' == $post_info['wpt_delay_tweet'] || 'on' == $post_info['wpt_no_delay'] ) {
+					if ( 0 == $post_info['wpt_delay_tweet'] || '' === $post_info['wpt_delay_tweet'] || 'on' === $post_info['wpt_no_delay'] ) {
 						foreach ( $wpt_selected_users as $acct ) {
 							if ( wtt_oauth_test( $acct, 'verify' ) ) {
 								wpt_post_to_twitter( $sentence2, $acct, $post_ID, $media );
@@ -859,8 +859,8 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 						}
 					} else {
 						foreach ( $wpt_selected_users as $acct ) {
-							$acct   = ( 'main' == $acct ) ? false : $acct;
-							$offset = ( $auth != $acct ) ? apply_filters( 'wpt_random_delay', rand( 60, 480 ) ) : 0;
+							$acct   = ( 'main' === $acct ) ? false : $acct;
+							$offset = ( $auth !== $acct ) ? apply_filters( 'wpt_random_delay', rand( 60, 480 ) ) : 0;
 							if ( wtt_oauth_test( $acct, 'verify' ) ) {
 								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
 								wp_schedule_single_event(
@@ -899,7 +899,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 						}
 					}
 					// This cycle handles scheduling the automatic retweets.
-					if ( 0 != $post_info['wpt_retweet_after'] && 'on' != $post_info['wpt_no_repost'] ) {
+					if ( 0 != $post_info['wpt_retweet_after'] && 'on' !== $post_info['wpt_no_repost'] ) {
 						$repeat = $post_info['wpt_retweet_repeat'];
 						$first  = true;
 						foreach ( $wpt_selected_users as $acct ) {
@@ -909,14 +909,14 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 									if ( $continue ) {
 										$retweet = apply_filters( 'wpt_set_retweet_text', $template, $i, $post_ID );
 										$retweet = jd_truncate_tweet( $retweet, $post_info, $post_ID, true, $acct );
-										if ( '' == $retweet ) {
+										if ( '' === $retweet ) {
 											// If a filter sets this value to empty, exit without scheduling.
 											return $post_ID;
 										}
 										// add original delay to schedule.
 										$delay = ( isset( $post_info['wpt_delay_tweet'] ) ) ? ( (int) $post_info['wpt_delay_tweet'] ) * 60 : 0;
 										// Don't delay the first Tweet of the group.
-										$offset = ( true == $first ) ? 0 : rand( 60, 240 ); // delay each co-tweet by 1-4 minutes.
+										$offset = ( true === $first ) ? 0 : rand( 60, 240 ); // delay each co-tweet by 1-4 minutes.
 										$time   = apply_filters( 'wpt_schedule_retweet', ( $post_info['wpt_retweet_after'] ) * ( 60 * 60 ) * $i, $acct, $i, $post_info );
 										wp_schedule_single_event(
 											time() + $time + $offset + $delay,
@@ -950,8 +950,8 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 												$post_ID
 											); // DEBUG.
 										}
-										$tweet_limit = apply_filters( 'wpt_tweet_repeat_limit', 4, $post_ID );
-										if ( $i == $tweet_limit ) {
+										$tweet_limit = (int) apply_filters( 'wpt_tweet_repeat_limit', 4, $post_ID );
+										if ( $i === $tweet_limit ) {
 											break;
 										}
 									}
@@ -987,7 +987,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 function wpt_twit_link( $link_id ) {
 	wpt_check_version();
 	$thislinkprivate = $_POST['link_visible'];
-	if ( 'N' != $thislinkprivate ) {
+	if ( 'N' !== $thislinkprivate ) {
 		$thislinkname        = stripslashes( $_POST['link_name'] );
 		$thispostlink        = $_POST['link_url'];
 		$thislinkdescription = stripcslashes( $_POST['link_description'] );
@@ -1011,7 +1011,7 @@ function wpt_twit_link( $link_id ) {
 			$sentence = str_ireplace( '#longurl#', $thispostlink, $sentence );
 		}
 
-		if ( '' != $sentence ) {
+		if ( '' !== $sentence ) {
 			wpt_post_to_twitter( $sentence, false, $link_id );
 		}
 
@@ -1032,14 +1032,14 @@ function wpt_generate_hash_tags( $post_ID ) {
 	$hashtags       = '';
 	$term_meta      = false;
 	$t_id           = false;
-	$max_tags       = get_option( 'jd_max_tags' );
-	$max_characters = get_option( 'jd_max_characters' );
-	$max_characters = ( 0 == $max_characters || '' == $max_characters ) ? 100 : $max_characters + 1;
-	if ( 0 == $max_tags || '' == $max_tags ) {
+	$max_tags       = get_option( 'jd_max_tags', '3' );
+	$max_characters = get_option( 'jd_max_characters', '20' );
+	$max_characters = ( '0' === $max_characters || '' === $max_characters ) ? 100 : $max_characters + 1;
+	if ( '0' === $max_tags || '' == $max_tags ) {
 		$max_tags = 100;
 	}
-	$use_cats = ( '1' == get_option( 'wpt_use_cats' ) ) ? true : false;
-	$tags     = ( true == $use_cats ) ? wp_get_post_categories( $post_ID, array( 'fields' => 'all' ) ) : get_the_tags( $post_ID );
+	$use_cats = ( '1' === get_option( 'wpt_use_cats' ) ) ? true : false;
+	$tags     = ( true === $use_cats ) ? wp_get_post_categories( $post_ID, array( 'fields' => 'all' ) ) : get_the_tags( $post_ID );
 	$tags     = apply_filters( 'wpt_hash_source', $tags, $post_ID );
 	if ( $tags && count( $tags ) > 0 ) {
 		$i = 1;
@@ -1048,7 +1048,7 @@ function wpt_generate_hash_tags( $post_ID ) {
 				$t_id      = $value->term_id;
 				$term_meta = get_option( "wpt_taxonomy_$t_id" );
 			}
-			if ( 'slug' == get_option( 'wpt_tag_source' ) ) {
+			if ( 'slug' === get_option( 'wpt_tag_source' ) ) {
 				$tag = $value->slug;
 			} else {
 				$tag = $value->name;
@@ -1056,14 +1056,14 @@ function wpt_generate_hash_tags( $post_ID ) {
 			$strip   = get_option( 'jd_strip_nonan' );
 			$search  = '/[^\p{L}\p{N}\s]/u';
 			$replace = get_option( 'jd_replace_character' );
-			$replace = ( '[ ]' == $replace || '' == $replace ) ? '' : $replace;
+			$replace = ( '[ ]' === $replace || '' === $replace ) ? '' : $replace;
 			if ( false !== strpos( $tag, ' ' ) ) {
 				// If multiple words, camelcase tag.
 				$tag = ucwords( $tag );
 			}
 			$tag = str_ireplace( ' ', $replace, trim( $tag ) );
 			$tag = preg_replace( '/[\/]/', $replace, $tag ); // remove forward slashes.
-			$tag = ( '1' == $strip ) ? preg_replace( $search, $replace, $tag ) : $tag;
+			$tag = ( '1' === $strip ) ? preg_replace( $search, $replace, $tag ) : $tag;
 
 			switch ( $term_meta ) {
 				case 1:
@@ -1149,31 +1149,31 @@ function wpt_add_twitter_inner_box( $post ) {
 		$post_id      = $post->ID;
 		$tweet_this   = get_post_meta( $post_id, '_jd_tweet_this', true );
 		if ( ! $tweet_this ) {
-			$tweet_this = ( '1' == get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
+			$tweet_this = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
 		}
-		if ( isset( $_GET['action'] ) && 'edit' == $_GET['action'] && '1' == get_option( 'jd_tweet_default_edit' ) && 'publish' == $status ) {
+		if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] && '1' === get_option( 'jd_tweet_default_edit' ) && 'publish' === $status ) {
 			$tweet_this = 'no';
 		}
-		if ( isset( $_REQUEST['message'] ) && 10 != $_REQUEST['message'] ) {
+		if ( isset( $_REQUEST['message'] ) && '10' !== $_REQUEST['message'] ) {
 			// don't display when draft is updated or if no message.
-			if ( ! ( ( 1 == $_REQUEST['message'] ) && ( 'publish' == $status && 1 != $options[ $type ]['post-edited-update'] ) ) && 'no' != $tweet_this ) {
+			if ( ! ( ( '1' === $_REQUEST['message'] ) && ( 'publish' === $status && 1 != $options[ $type ]['post-edited-update'] ) ) && 'no' !== $tweet_this ) {
 				$log   = wpt_log( 'wpt_status_message', $post_id );
 				$class = ( __( 'Tweet sent successfully.', 'wp-to-twitter' ) != $log ) ? 'error' : 'updated';
-				if ( '' != $log ) {
+				if ( '' !== trim( $log ) ) {
 					echo "<div class='$class'><p>$log</p></div>";
 				}
 			}
 		}
 		$tweet    = esc_attr( stripcslashes( get_post_meta( $post_id, '_jd_twitter', true ) ) );
 		$tweet    = apply_filters( 'wpt_user_text', $tweet, $status );
-		$template = ( 'publish' == $status ) ? $options[ $type ]['post-edited-text'] : $options[ $type ]['post-published-text'];
+		$template = ( 'publish' === $status ) ? $options[ $type ]['post-edited-text'] : $options[ $type ]['post-published-text'];
 
-		if ( 'publish' == $status && 1 != $options[ $type ]['post-edited-update'] ) {
+		if ( 'publish' === $status && 1 != $options[ $type ]['post-edited-update'] ) {
 			// Translators: post type.
 			$tweet_status = sprintf( __( '%s will not be Tweeted on update.', 'wp-to-twitter' ), ucfirst( $type ) );
 		}
 
-		if ( 'publish' == $status && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
+		if ( 'publish' === $status && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 			?>
 			<div class='tweet-buttons'>
 				<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-twitter' aria-hidden='true'></span><?php _e( 'Tweet Now', 'wp-to-twitter' ); ?></button>
@@ -1206,10 +1206,10 @@ function wpt_add_twitter_inner_box( $post ) {
 			</p>
 			<?php
 			$expanded = $template;
-			if ( '' != get_option( 'jd_twit_prepend' ) ) {
+			if ( '' !== get_option( 'jd_twit_prepend', '' ) ) {
 				$expanded = "<span title='" . __( 'Your prepended Tweet text; not part of your template.', 'wp-to-twitter' ) . "'>" . stripslashes( get_option( 'jd_twit_prepend' ) ) . '</span> ' . $expanded;
 			}
-			if ( '' != get_option( 'jd_twit_append' ) ) {
+			if ( '' !== get_option( 'jd_twit_append', '' ) ) {
 				$expanded = $expanded . " <span title='" . __( 'Your appended Tweet text; not part of your template.', 'wp-to-twitter' ) . "'>" . stripslashes( get_option( 'jd_twit_append' ) ) . '</span>';
 			}
 			?>
@@ -1220,7 +1220,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			</p>
 			<?php
 			echo apply_filters( 'wpt_custom_retweet_fields', '', $post_id );
-			if ( get_option( 'jd_keyword_format' ) == 2 ) {
+			if ( get_option( 'jd_keyword_format' ) === '2' ) {
 				$custom_keyword = get_post_meta( $post_id, '_yourls_keyword', true );
 				echo "<label for='yourls_keyword'>" . __( 'YOURLS Custom Keyword', 'wp-to-twitter' ) . "</label> <input type='text' name='_yourls_keyword' id='yourls_keyword' value='$custom_keyword' />";
 			}
@@ -1232,7 +1232,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		?>
 		<div class='wpt-options'>
 		<?php
-		if ( 'pro' == $is_pro ) {
+		if ( 'pro' === $is_pro ) {
 			$pro_active  = " class='active'";
 			$free_active = '';
 		} else {
@@ -1241,7 +1241,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		?>
 		<ul class='tabs' role="tablist">
-			<?php if ( get_option( 'jd_individual_twitter_users' ) == 1 ) { ?>
+			<?php if ( get_option( 'jd_individual_twitter_users' ) === '1' ) { ?>
 				<li><a href='#authors'<?php echo $pro_active; ?> aria-controls="authors" role="tab" id="tab_authors"><?php _e( 'Tweet to', 'wp-to-twitter' ); ?></a></li>
 			<?php } ?>
 			<li><a href='#custom' aria-controls="custom" role="tab" id="tab_custom"><?php _e( 'Options', 'wp-to-twitter' ); ?></a></li>
@@ -1250,7 +1250,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		<?php
 		// WPT PRO OPTIONS.
 		if ( current_user_can( 'edit_others_posts' ) ) {
-			if ( 1 == get_option( 'jd_individual_twitter_users' ) ) {
+			if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
 				echo "<div class='wptab' id='authors' aria-labelledby='tab_authors' role='tabpanel'>";
 				$selected = ( get_post_meta( $post_id, '_wpt_authorized_users', true ) ) ? get_post_meta( $post_id, '_wpt_authorized_users', true ) : array();
 				if ( function_exists( 'wpt_authorized_users' ) ) {
@@ -1273,7 +1273,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		?>
 		<div class='wptab' id='custom' aria-labelledby='tab_custom' role='tabpanel'>
 		<?php
-		if ( function_exists( 'wpt_pro_exists' ) && true == wpt_pro_exists() && ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
+		if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() && ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
 			wpt_schedule_values( $post_id );
 			do_action( 'wpt_custom_tab', $post_id, 'visible' );
 		} else {
@@ -1291,7 +1291,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			<div class='wptab' id='custom' aria-labelledby='tab_custom' role='tabpanel'>
 				<p><?php _e( 'Access to customizing WP to Twitter values is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
 				<?php
-				if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() == true ) {
+				if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() === true ) {
 					wpt_schedule_values( $post_id, 'hidden' );
 					do_action( 'wpt_custom_tab', $post_id, 'hidden' );
 				}
@@ -1316,8 +1316,8 @@ function wpt_add_twitter_inner_box( $post ) {
 		<?php
 		if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
 			// "no" means 'Don't Tweet' (is checked)
-			$nochecked  = ( 'no' == $tweet_this ) ? ' checked="checked"' : '';
-			$yeschecked = ( 'yes' == $tweet_this ) ? ' checked="checked"' : '';
+			$nochecked  = ( 'no' === $tweet_this ) ? ' checked="checked"' : '';
+			$yeschecked = ( 'yes' === $tweet_this ) ? ' checked="checked"' : '';
 			?>
 		<p class='toggle-btn-group'>
 			<input type="radio" name="_jd_tweet_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Tweet", 'wp-to-twitter' ); ?></label>
@@ -1345,7 +1345,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		?>
 		</p>
 		<?php
-		if ( '' != $tweet_status ) {
+		if ( '' !== $tweet_status ) {
 			echo "<p class='disabled'>$tweet_status</p>";
 		}
 		?>
@@ -1369,7 +1369,7 @@ function wpt_show_tweets( $post_id ) {
 	$previous_tweets = get_post_meta( $post_id, '_jd_wp_twitter', true );
 	$failed_tweets   = get_post_meta( $post_id, '_wpt_failed' );
 
-	if ( ! is_array( $previous_tweets ) && '' != $previous_tweets ) {
+	if ( ! is_array( $previous_tweets ) && '' !== $previous_tweets ) {
 		$previous_tweets = array( 0 => $previous_tweets );
 	}
 	if ( ! empty( $previous_tweets ) || ! empty( $failed_tweets ) ) {
@@ -1386,7 +1386,7 @@ function wpt_show_tweets( $post_id ) {
 		$hidden_fields = '';
 		if ( is_array( $previous_tweets ) ) {
 			foreach ( $previous_tweets as $previous_tweet ) {
-				if ( '' != $previous_tweet ) {
+				if ( '' !== $previous_tweet ) {
 					$has_history    = true;
 					$hidden_fields .= "<input type='hidden' name='_jd_wp_twitter[]' value='" . esc_attr( $previous_tweet ) . "' />";
 					echo "<li>$previous_tweet <a href='http://twitter.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>Retweet this</a></li>";
@@ -1408,7 +1408,7 @@ function wpt_show_tweets( $post_id ) {
 					$error_list .= "<li> <code>Error: $reason</code> $ft <a href='http://twitter.com/intent/tweet?text=" . urlencode( $ft ) . "'>Tweet this</a><br /><em>$error</em></li>";
 				}
 			}
-			if ( true == $list ) {
+			if ( true === $list ) {
 				echo "<p class='error'><em>" . __( 'Failed Tweets', 'wp-to-twitter' ) . ":</em></p>
 				<ul>$error_list</ul>";
 			}
@@ -1429,10 +1429,10 @@ add_action( 'admin_enqueue_scripts', 'wpt_admin_scripts', 10, 1 );
  */
 function wpt_admin_scripts() {
 	global $current_screen, $wpt_version;
-	if ( 'post' == $current_screen->base || 'wp-tweets-pro_page_wp-to-twitter-schedule' == $current_screen->id ) {
+	if ( 'post' === $current_screen->base || 'wp-tweets-pro_page_wp-to-twitter-schedule' === $current_screen->id ) {
 		wp_enqueue_script( 'charCount', plugins_url( 'wp-to-twitter/js/jquery.charcount.js' ), array( 'jquery' ), $wpt_version );
 	}
-	if ( 'post' == $current_screen->base && isset( $_GET['post'] ) && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
+	if ( 'post' === $current_screen->base && isset( $_GET['post'] ) && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 		wp_enqueue_script( 'wpt.ajax', plugins_url( 'js/ajax.js', __FILE__ ), array( 'jquery' ), $wpt_version );
 		wp_localize_script(
 			'wpt.ajax',
@@ -1444,7 +1444,7 @@ function wpt_admin_scripts() {
 			)
 		);
 	}
-	if ( 'settings_page_wp-to-twitter/wp-to-twitter' == $current_screen->id || 'toplevel_page_wp-tweets-pro' == $current_screen->id ) {
+	if ( 'settings_page_wp-to-twitter/wp-to-twitter' === $current_screen->id || 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
 		wp_enqueue_script( 'wpt.tabs', plugins_url( 'js/tabs.js', __FILE__ ), array( 'jquery' ), $wpt_version );
 		wp_localize_script( 'wpt.tabs', 'firstItem', 'wpt_post' );
 		wp_localize_script( 'wpt.tabs', 'firstPerm', 'wpt_editor' );
@@ -1461,7 +1461,7 @@ function wpt_ajax_tweet() {
 		echo 'Invalid Security Check';
 		die;
 	}
-	$action       = ( 'tweet' == $_REQUEST['tweet_action'] ) ? 'tweet' : 'schedule';
+	$action       = ( 'tweet' === $_REQUEST['tweet_action'] ) ? 'tweet' : 'schedule';
 	$authors      = ( isset( $_REQUEST['tweet_auth'] ) && null != $_REQUEST['tweet_auth'] ) ? $_REQUEST['tweet_auth'] : false;
 	$upload       = ( isset( $_REQUEST['tweet_upload'] ) && null != $_REQUEST['tweet_upload'] ) ? $_REQUEST['tweet_upload'] : 1;
 	$current_user = wp_get_current_user();
@@ -1485,7 +1485,7 @@ function wpt_ajax_tweet() {
 		$post_ID        = intval( $_REQUEST['tweet_post_id'] );
 		$type           = get_post_type( $post_ID );
 		$default        = ( isset( $options[ $type ]['post-edited-text'] ) ) ? $options[ $type ]['post-edited-text'] : '';
-		$sentence       = ( isset( $_REQUEST['tweet_text'] ) && '' != trim( $_REQUEST['tweet_text'] ) ) ? $_REQUEST['tweet_text'] : $default;
+		$sentence       = ( isset( $_REQUEST['tweet_text'] ) && '' !== trim( $_REQUEST['tweet_text'] ) ) ? $_REQUEST['tweet_text'] : $default;
 		$sentence       = stripcslashes( trim( $sentence ) );
 		$post_info      = wpt_post_info( $post_ID );
 		$sentence       = jd_truncate_tweet( $sentence, $post_info, $post_ID, false, $user_ID );
@@ -1493,11 +1493,11 @@ function wpt_ajax_tweet() {
 		$print_schedule = date_i18n( get_option( 'date_format' ) . ' @ ' . get_option( 'time_format' ), $schedule );
 		$offset         = ( 60 * 60 * get_option( 'gmt_offset' ) );
 		$schedule       = $schedule - $offset;
-		$media          = ( 1 == $upload ) ? false : true; // this is correct; the boolean logic is reversed. Blah.
+		$media          = ( '1' === $upload ) ? false : true; // this is correct; the boolean logic is reversed. Blah.
 
 		foreach ( $authors as $auth ) {
 
-			$auth = ( 'main' == $auth ) ? false : $auth;
+			$auth = ( 'main' === $auth ) ? false : $auth;
 
 			switch ( $action ) {
 				case 'tweet':
@@ -1517,7 +1517,7 @@ function wpt_ajax_tweet() {
 					break;
 			}
 			// Translators: Full text of Tweet, time scheduled for.
-			$return = ( 'tweet' == $action ) ? wpt_log( 'wpt_status_message', $post_ID ) : sprintf( __( 'Tweet scheduled: %1$s for %2$s', 'wp-tweets-pro' ), '"' . $sentence . '"', $print_schedule );
+			$return = ( 'tweet' === $action ) ? wpt_log( 'wpt_status_message', $post_ID ) : sprintf( __( 'Tweet scheduled: %1$s for %2$s', 'wp-tweets-pro' ), '"' . $sentence . '"', $print_schedule );
 			echo $return;
 			if ( count( $authors ) > 1 ) {
 				echo '<br />';
@@ -1535,17 +1535,17 @@ add_action( 'admin_head', 'wpt_admin_script' );
  */
 function wpt_admin_script() {
 	global $current_screen;
-	if ( 'post' == $current_screen->base || 'wp-tweets-pro_page_wp-to-twitter-schedule' == $current_screen->id ) {
+	if ( 'post' === $current_screen->base || 'wp-tweets-pro_page_wp-to-twitter-schedule' === $current_screen->id ) {
 		wp_register_style( 'wpt-post-styles', plugins_url( 'css/post-styles.css', __FILE__ ) );
 		wp_enqueue_style( 'wpt-post-styles' );
 		$config = wpt_max_length();
 		// add one; character count starts from 1.
-		if ( 'post' == $current_screen->base ) {
+		if ( 'post' === $current_screen->base ) {
 			$allowed = $config['base_length'] - mb_strlen( stripslashes( get_option( 'jd_twit_prepend' ) . get_option( 'jd_twit_append' ) ) ) + 1;
 		} else {
 			$allowed = $config['base_length'] + 1;
 		}
-		if ( function_exists( 'wpt_pro_exists' ) && 1 == get_option( 'jd_individual_twitter_users' ) ) {
+		if ( function_exists( 'wpt_pro_exists' ) && '1' === get_option( 'jd_individual_twitter_users' ) ) {
 			$first = '#authors';
 		} elseif ( function_exists( 'wpt_pro_exists' ) ) {
 			$first = '#custom';
@@ -1584,26 +1584,26 @@ function wpt_save_post( $id ) {
 		$yourls = $_POST['_yourls_keyword'];
 		$update = update_post_meta( $id, '_yourls_keyword', $yourls );
 	}
-	if ( isset( $_POST['_jd_twitter'] ) && '' != $_POST['_jd_twitter'] ) {
+	if ( isset( $_POST['_jd_twitter'] ) && '' !== $_POST['_jd_twitter'] ) {
 		$twitter = $_POST['_jd_twitter'];
 		$update  = update_post_meta( $id, '_jd_twitter', $twitter );
-	} elseif ( isset( $_POST['_jd_twitter'] ) && '' == $_POST['_jd_twitter'] ) {
+	} elseif ( isset( $_POST['_jd_twitter'] ) && '' === $_POST['_jd_twitter'] ) {
 		delete_post_meta( $id, '_jd_twitter' );
 	}
-	if ( isset( $_POST['_jd_wp_twitter'] ) && '' != $_POST['_jd_wp_twitter'] ) {
+	if ( isset( $_POST['_jd_wp_twitter'] ) && '' !== $_POST['_jd_wp_twitter'] ) {
 		$wp_twitter = $_POST['_jd_wp_twitter'];
 		$update     = update_post_meta( $id, '_jd_wp_twitter', $wp_twitter );
 	}
 	if ( isset( $_POST['_jd_tweet_this'] ) ) {
-		$tweet_this = ( 'no' == $_POST['_jd_tweet_this'] ) ? 'no' : 'yes';
+		$tweet_this = ( 'no' === $_POST['_jd_tweet_this'] ) ? 'no' : 'yes';
 		$update     = update_post_meta( $id, '_jd_tweet_this', $tweet_this );
 	} else {
 		if ( isset( $_POST['_wpnonce'] ) ) {
-			$tweet_default = ( 1 == get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
+			$tweet_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
 			$update        = update_post_meta( $id, '_jd_tweet_this', $tweet_default );
 		}
 	}
-	if ( isset( $_POST['wpt_clear_history'] ) && 'clear' == $_POST['wpt_clear_history'] ) {
+	if ( isset( $_POST['wpt_clear_history'] ) && 'clear' === $_POST['wpt_clear_history'] ) {
 		delete_post_meta( $id, '_wpt_failed' );
 		delete_post_meta( $id, '_jd_wp_twitter' );
 		delete_post_meta( $id, '_wpt_short_url' );
@@ -1613,13 +1613,13 @@ function wpt_save_post( $id ) {
 	$update = apply_filters( 'wpt_insert_post', $_POST, $id );
 	// WPT PRO.
 	// only send debug data if post meta is updated.
-	if ( true == $update || is_int( $update ) ) {
+	if ( true === $update || is_int( $update ) ) {
 		wpt_mail( 'Post Meta Inserted', print_r( $_POST, 1 ), $id ); // DEBUG.
 	}
-	if ( isset( $_POST['wpt-delete-debug'] ) && 'true' == $_POST['wpt-delete-debug'] ) {
+	if ( isset( $_POST['wpt-delete-debug'] ) && 'true' === $_POST['wpt-delete-debug'] ) {
 		delete_post_meta( $id, '_wpt_debug_log' );
 	}
-	if ( isset( $_POST['wpt-delete-all-debug'] ) && 'true' == $_POST['wpt-delete-all-debug'] ) {
+	if ( isset( $_POST['wpt-delete-all-debug'] ) && 'true' === $_POST['wpt-delete-all-debug'] ) {
 		delete_post_meta_by_key( '_wpt_debug_log' );
 	}
 }
@@ -1629,7 +1629,7 @@ add_action( 'init', 'wpt_old_admin_redirect' );
  * Send links to old admin to new admin page
  */
 function wpt_old_admin_redirect() {
-	if ( is_admin() && isset( $_GET['page'] ) && 'wp-to-twitter/wp-to-twitter.php' == $_GET['page'] ) {
+	if ( is_admin() && isset( $_GET['page'] ) && 'wp-to-twitter/wp-to-twitter.php' === $_GET['page'] ) {
 		wp_safe_redirect( admin_url( 'admin.php?page=wp-tweets-pro' ) );
 		exit;
 	}
@@ -1651,7 +1651,7 @@ add_action( 'admin_head', 'wpt_admin_style' );
  * Add stylesheets to WP to Twitter pages.
  */
 function wpt_admin_style() {
-	if ( isset( $_GET['page'] ) && ( 'wp-to-twitter' == $_GET['page'] || 'wp-tweets-pro' == $_GET['page'] || 'wp-to-twitter-schedule' == $_GET['page'] || 'wp-to-twitter-tweets' == $_GET['page'] || 'wp-to-twitter-errors' == $_GET['page'] ) ) {
+	if ( isset( $_GET['page'] ) && ( 'wp-to-twitter' === $_GET['page'] || 'wp-tweets-pro' === $_GET['page'] || 'wp-to-twitter-schedule' === $_GET['page'] || 'wp-to-twitter-tweets' === $_GET['page'] || 'wp-to-twitter-errors' === $_GET['page'] ) ) {
 		wp_enqueue_style( 'wpt-styles', plugins_url( 'css/styles.css', __FILE__ ) );
 	}
 }
@@ -1665,7 +1665,7 @@ function wpt_admin_style() {
  * @return link new array.
  */
 function wpt_plugin_action( $links, $file ) {
-	if ( plugin_basename( dirname( __FILE__ ) . '/wp-to-twitter.php' ) == $file ) {
+	if ( plugin_basename( dirname( __FILE__ ) . '/wp-to-twitter.php' ) === $file ) {
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 		$links[]   = "<a href='$admin_url'>" . __( 'WP to Twitter Settings', 'wp-to-twitter' ) . '</a>';
 		if ( ! function_exists( 'wpt_pro_exists' ) ) {
@@ -1696,7 +1696,7 @@ function wpt_plugin_update_message() {
 	echo $note;
 }
 
-if ( '1' == get_option( 'jd_twit_blogroll' ) ) {
+if ( '1' === get_option( 'jd_twit_blogroll' ) ) {
 	add_action( 'add_link', 'wpt_twit_link' );
 }
 
@@ -1712,7 +1712,7 @@ add_action( 'save_post', 'wpt_save_post', 10 );
 function wpt_in_post_type( $id ) {
 	$post_types = wpt_allowed_post_types();
 	$type       = get_post_type( $id );
-	if ( in_array( $type, $post_types ) ) {
+	if ( in_array( $type, $post_types, true ) ) {
 		return true;
 	}
 
@@ -1762,7 +1762,7 @@ function wpt_twit( $id ) {
 		return;
 	}
 	$post = get_post( $id );
-	if ( 'publish' != $post->post_status ) {
+	if ( 'publish' !== $post->post_status ) {
 		return;
 	}
 	// is there any reason to accept any other status?
@@ -1835,7 +1835,7 @@ add_action( 'wpt_schedule_promotion_action', 'wpt_schedule_promotion' );
  * Set an option indicating that a job has been scheduled for promoting WP Tweets PRO.
  */
 function wpt_schedule_promotion() {
-	if ( ! function_exists( 'wpt_pro_exists' ) && 1 == get_option( 'wpt_promotion_scheduled' ) ) {
+	if ( ! function_exists( 'wpt_pro_exists' ) && '1' === get_option( 'wpt_promotion_scheduled' ) ) {
 		update_option( 'wpt_promotion_scheduled', 2 );
 	}
 }
@@ -1844,7 +1844,7 @@ function wpt_schedule_promotion() {
  * Dismiss promotion notice.
  */
 function wpt_dismiss_promotion() {
-	if ( isset( $_GET['dismiss'] ) && 'promotion' == $_GET['dismiss'] ) {
+	if ( isset( $_GET['dismiss'] ) && 'promotion' === $_GET['dismiss'] ) {
 		update_option( 'wpt_promotion_scheduled', 3 );
 	}
 }
@@ -1865,7 +1865,7 @@ function wpt_debugging_enabled() {
  * Display promotion notice to admin users who have not donated or purchased WP Tweets PRO.
  */
 function wpt_promotion_notice() {
-	if ( current_user_can( 'activate_plugins' ) && 2 == get_option( 'wpt_promotion_scheduled' ) && 1 != get_option( 'jd_donations' ) ) {
+	if ( current_user_can( 'activate_plugins' ) && '2' === get_option( 'wpt_promotion_scheduled' ) && '1' !== get_option( 'jd_donations' ) ) {
 		$upgrade = 'http://www.wptweetspro.com/wp-tweets-pro/';
 		$dismiss = admin_url( 'admin.php?page=wp-tweets-pro&dismiss=promotion' );
 		// Translators: URL to upgrade.
@@ -1895,7 +1895,7 @@ add_filter( 'wpt_enqueue_feed_styles', 'wpt_permit_feed_styles' );
  * @return boolean $value False if settings disable styles.
  */
 function wpt_permit_feed_styles( $value ) {
-	if ( 1 == get_option( 'wpt_permit_feed_styles' ) ) {
+	if ( '1' === get_option( 'wpt_permit_feed_styles' ) ) {
 		$value = false;
 	}
 
