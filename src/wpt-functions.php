@@ -783,7 +783,9 @@ function wpt_is_writable( $file ) {
 
 add_action( 'load-post.php', 'wpt_migrate_url_meta' );
 /**
- *  Migrates post meta to new format when post is called in editor.
+ * Migrates post meta to new format when post is called in editor.
+ *
+ * Migration started 12/10/2015. This can probably be removed soon.
  */
 function wpt_migrate_url_meta() {
 	$post_id = isset( $_GET['post'] ) ? intval( $_GET['post'] ) : false;
