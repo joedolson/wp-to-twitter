@@ -196,7 +196,7 @@ class WPT_TwitterFeed {
 		$delete_cache = get_option( 'wpt_delete_cache' );
 		$file         = $this->get_cache_location();
 
-		if ( 'true' == $delete_cache ) {
+		if ( 'true' === $delete_cache ) {
 			update_option( 'wpt_delete_cache', 'false' );
 			$this->delete_cache( $file );
 		}
@@ -286,7 +286,7 @@ class WPT_TwitterFeed {
 				'q'           => urlencode( $options['search'] ),
 				'result_type' => urlencode( $options['result_type'] ),
 			);
-			if ( '' != $options['geocode'] ) {
+			if ( '' !== $options['geocode'] ) {
 				$args['geocode'] = urlencode( $options['geocode'] );
 			}
 			$url    = add_query_arg( $args, 'https://api.twitter.com/1.1/search/tweets.json' );

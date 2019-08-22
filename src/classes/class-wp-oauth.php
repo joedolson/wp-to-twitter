@@ -150,7 +150,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		public function check_signature( $request, $consumer, $token, $signature ) {
 			$built = $this->build_signature( $request, $consumer, $token );
 
-			return $built == $signature;
+			return $built === $signature;
 		}
 	}
 
@@ -322,7 +322,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			// Release the key resource.
 			openssl_free_key( $publickeyid );
 
-			return 1 == $ok;
+			return 1 === $ok;
 		}
 	}
 
@@ -396,7 +396,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @return WP_Oauth_Request object.
 		 */
 		public static function from_request( $http_method = null, $http_url = null, $parameters = null ) {
-			$scheme = ( ! isset( $_SERVER['HTTPS'] ) || 'on' != $_SERVER['HTTPS'] ) ? 'http' : 'https';
+			$scheme = ( ! isset( $_SERVER['HTTPS'] ) || 'on' !== $_SERVER['HTTPS'] ) ? 'http' : 'https';
 			if ( null === $http_url ) {
 				$http_url = $scheme . '://' . $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
 			}
@@ -416,7 +416,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				// It's a POST request of the proper content-type, so parse POST.
 				// parameters and add those overriding any duplicates from GET.
 				$content_type = isset( $request_headers['Content-Type'] ) ? $request_headers['Content-Type'] : '';
-				if ( 'POST' == $http_method && strstr( $content_type, 'application/x-www-form-urlencoded' ) ) {
+				if ( 'POST' === $http_method && strstr( $content_type, 'application/x-www-form-urlencoded' ) ) {
 					$post_data  = WPOAuthUtil::parse_parameters(
 						file_get_contents( self::$post_input )
 					);
@@ -426,7 +426,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				// We have a Authorization-header with OAuth data. Parse the header.
 				// and add those overriding any duplicates from GET or POST.
 				$authorization = isset( $request_headers['Authorization'] ) ? $request_headers['Authorization'] : '';
-				if ( 'OAuth ' == substr( $authorization, 0, 6 ) ) {
+				if ( 'OAuth ' === substr( $authorization, 0, 6 ) ) {
 					$header_parameters = WPOAuthUtil::split_header(
 						$request_headers['Authorization']
 					);
@@ -571,10 +571,10 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			$path   = isset( $parts['path'] ) ? $parts['path'] : '';
 
 			if ( ! $port ) {
-				$port = ( 'https' == $scheme ) ? '443' : '80';
+				$port = ( 'https' === $scheme ) ? '443' : '80';
 			}
 
-			if ( ( 'https' == $scheme && '443' != $port ) || ( 'http' == $scheme && '80' != $port )
+			if ( ( 'https' === $scheme && '443' != $port ) || ( 'http' === $scheme && '80' != $port )
 			) {
 				$host = "$host:$port";
 			}
