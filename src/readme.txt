@@ -7,7 +7,7 @@ Tested up to: 5.2
 Requires PHP: 5.3
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.4.0
+Stable tag: 3.4.1
 
 Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -68,6 +68,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Removed goo.gl shortener completely (disabled by Goo.gl in March 2019)
 * Removed su.pr shortener completely (Stumbleupon closed down in June 2018)
 * Prep for removal of Bit.ly URL shortener. (Bitly API v3 will shut down March 2020)
+* Misc. markup improvements.
 
 = 3.4.0 =
 

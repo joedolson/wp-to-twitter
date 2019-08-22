@@ -9,8 +9,8 @@ Automatically send your posts as Tweets.
 * Donate link: https://www.joedolson.com/donate/
 * Tags: accessibility, WordPress  
 * Requires at least: 4.4  
-* Tested up to: 5.1
-* Stable tag: `3.3.10`
+* Tested up to: 5.2
+* Stable tag: `3.4.1`
 * License: GPLv2 or later  
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
