@@ -67,7 +67,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 * Removed goo.gl shortener completely (disabled by Goo.gl in March 2019)
 * Removed su.pr shortener completely (Stumbleupon closed down in June 2018)
-
+* Prep for removal of Bit.ly URL shortener. (Bitly API v3 will shut down March 2020)
 
 = 3.4.0 =
 
