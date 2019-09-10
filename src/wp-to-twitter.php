@@ -673,11 +673,15 @@ function wpt_short_url( $post_id ) {
  */
 function wpt_post_with_media( $post_ID, $post_info = array() ) {
 	$return = false;
-	if ( isset( $post_info['wpt_image'] ) && 1 === $post_info['wpt_image'] ) {
+	if ( ! function_exists( 'wpt_pro_exists' ) ) {
 		return $return;
 	}
-
-	if ( ! function_exists( 'wpt_pro_exists' ) || '1' !== get_option( 'wpt_media' ) ) {
+	if ( isset( $post_info['wpt_image'] ) && 1 === (int) $post_info['wpt_image'] ) {
+		// Post settings win over filters.
+		return $return;
+	}
+	if ( ! get_option( 'wpt_media' ) ) {
+		// Don't return immediately, this needs to be overrideable for posts.
 		$return = false;
 	} else {
 		if ( has_post_thumbnail( $post_ID ) || wpt_post_attachment( $post_ID ) ) {
