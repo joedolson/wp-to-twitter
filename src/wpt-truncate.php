@@ -376,7 +376,7 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 				$account      = $user_account;
 			}
 		} else {
-			$account = "$user_account";
+			$account = $user_account;
 		}
 	}
 	$display_name = get_the_author_meta( 'display_name', $auth );
