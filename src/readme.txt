@@ -63,6 +63,12 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.4.2 =
+
+* Bug fix: don't parse Username settings if user is connected to Twitter (Pro)
+* Bug fix: Non-semantic text in user settings.
+* Improve logic for exiting media handling. (Pro)
+
 = 3.4.1 =
 
 * Removed goo.gl shortener completely (disabled by Goo.gl in March 2019)
