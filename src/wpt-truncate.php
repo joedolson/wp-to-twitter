@@ -363,10 +363,11 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$cat_desc     = trim( $post['cat_desc'] );
 	$user_account = get_user_meta( $auth, 'wtt_twitter_username', true );
 	$tags         = wpt_generate_hash_tags( $post_ID );
-	$account      = get_option( 'wtt_twitter_username' );
 	$date         = trim( $post['postDate'] );
 	$modified     = trim( $post['postModified'] );
-	if ( 1 == get_option( 'jd_individual_twitter_users' ) ) {
+
+	$account      = get_option( 'wtt_twitter_username' );
+	if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
 		if ( '' == $user_account ) {
 			if ( 'mainAtTwitter' == get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
 				$user_account = stripcslashes( get_user_meta( $auth, 'wp-to-twitter-user-username', true ) );
@@ -379,13 +380,15 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 			$account = $user_account;
 		}
 	}
+	$account      = ( '' != $account ) ? "@$account" : ''; // value of #account#.
+	// clean up data if extra @ included in user data.
+	$account = str_ireplace( '@@', '@', $account );
+	
+	$uaccount = ( '' != $user_account ) ? "@$user_account" : "$account"; // value of #@#.
+	$uaccount = str_ireplace( '@@', '@', $uaccount 
+	
 	$display_name = get_the_author_meta( 'display_name', $auth );
 	$author       = ( '' != $user_account ) ? "@$user_account" : $display_name; // value of #author#.
-	$account      = ( '' != $account ) ? "@$account" : ''; // value of #account#.
-	$uaccount     = ( '' != $user_account ) ? "@$user_account" : "$account"; // value of #@#.
-	// clean up data if extra @ included in user data.
-	$account  = str_ireplace( '@@', '@', $account );
-	$uaccount = str_ireplace( '@@', '@', $uaccount );
 	$author   = str_ireplace( '@@', '@', $author );
 
 	if ( 'on' == get_user_meta( $auth, 'wpt-remove', true ) ) {
