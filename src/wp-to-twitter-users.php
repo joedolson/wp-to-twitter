@@ -51,14 +51,14 @@ function wpt_twitter_profile() {
 					<label for="wpt-username"><?php _e( 'Your Twitter Username', 'wp-to-twitter' ); ?></label>
 				</th>
 				<td>
-					<input type="text" name="wpt-username" id="wpt-username" value="<?php echo esc_attr( $twitter_username ); ?>"/> <?php _e( 'Enter your own Twitter username.', 'wp-to-twitter' ); ?>
+					<input type="text" name="wpt-username" id="wpt-username" value="<?php echo esc_attr( $twitter_username ); ?>"/>
 				</td>
 			</tr>
 			<tr>
 				<th scope="row">
 					<label for="wpt-remove"><?php _e( 'Hide account name in Tweets', 'wp-to-twitter' ); ?></label></th>
 				<td>
-					<input type="checkbox" name="wpt-remove" id="wpt-remove" value="on"<?php checked( 'on', $wpt_remove ); ?>/> <?php _e( 'Do not display my account in the #account# template tag.', 'wp-to-twitter' ); ?>
+					<input type="checkbox" name="wpt-remove" id="wpt-remove" aria-describedby="wpt-remove-desc" value="on"<?php checked( 'on', $wpt_remove ); ?> /> <span id="wpt-remove-desc"><?php _e( 'Do not display my account in the #account# template tag.', 'wp-to-twitter' ); ?></span>
 				</td>
 			</tr>
 			<?php echo apply_filters( 'wpt_twitter_user_fields', $user_edit ); ?>
