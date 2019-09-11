@@ -42,16 +42,16 @@ function wpt_twitter_profile() {
 			<tr>
 				<th scope="row"><?php _e( 'Use My Twitter Username', 'wp-to-twitter' ); ?></th>
 				<td>
-					<input type="radio" name="wp-to-twitter-enable-user" id="wp-to-twitter-enable-user-3" value="mainAtTwitter"<?php checked( $is_enabled, 'mainAtTwitter' ); ?> /> <label for="wp-to-twitter-enable-user-3"><?php _e( 'Tweet my posts with an @ reference to my username.', 'wp-to-twitter' ); ?></label><br/>
-					<input type="radio" name="wp-to-twitter-enable-user" id="wp-to-twitter-enable-user-4" value="mainAtTwitterPlus"<?php checked( $is_enabled, 'mainAtTwitterPlus' ); ?> /> <label for="wp-to-twitter-enable-user-4"><?php _e( 'Tweet my posts with an @ reference to both my username and to the main site username.', 'wp-to-twitter' ); ?></label>
+					<input type="radio" name="wpt-enable-user" id="wpt-enable-user-3" value="mainAtTwitter"<?php checked( $is_enabled, 'mainAtTwitter' ); ?> /> <label for="wpt-enable-user-3"><?php _e( 'Tweet my posts with an @ reference to my username.', 'wp-to-twitter' ); ?></label><br/>
+					<input type="radio" name="wpt-enable-user" id="wpt-enable-user-4" value="mainAtTwitterPlus"<?php checked( $is_enabled, 'mainAtTwitterPlus' ); ?> /> <label for="wpt-enable-user-4"><?php _e( 'Tweet my posts with an @ reference to both my username and to the main site username.', 'wp-to-twitter' ); ?></label>
 				</td>
 			</tr>
 			<tr>
 				<th scope="row">
-					<label for="wp-to-twitter-user-username"><?php _e( 'Your Twitter Username', 'wp-to-twitter' ); ?></label>
+					<label for="wpt-username"><?php _e( 'Your Twitter Username', 'wp-to-twitter' ); ?></label>
 				</th>
 				<td>
-					<input type="text" name="wp-to-twitter-user-username" id="wp-to-twitter-user-username" value="<?php echo esc_attr( $twitter_username ); ?>"/> <?php _e( 'Enter your own Twitter username.', 'wp-to-twitter' ); ?>
+					<input type="text" name="wpt-username" id="wpt-username" value="<?php echo esc_attr( $twitter_username ); ?>"/> <?php _e( 'Enter your own Twitter username.', 'wp-to-twitter' ); ?>
 				</td>
 			</tr>
 			<tr>
@@ -110,8 +110,8 @@ function wpt_twitter_save_profile() {
 		$edit_id = $user_ID;
 	}
 	if ( current_user_can( 'wpt_twitter_oauth' ) || current_user_can( 'manage_options' ) ) {
-		$enable     = ( isset( $_POST['wp-to-twitter-enable-user'] ) ) ? $_POST['wp-to-twitter-enable-user'] : '';
-		$username   = ( isset( $_POST['wp-to-twitter-user-username'] ) ) ? $_POST['wp-to-twitter-user-username'] : '';
+		$enable     = ( isset( $_POST['wpt-enable-user'] ) ) ? $_POST['wpt-enable-user'] : '';
+		$username   = ( isset( $_POST['wpt-username'] ) ) ? $_POST['wpt-username'] : '';
 		$wpt_remove = ( isset( $_POST['wpt-remove'] ) ) ? 'on' : '';
 		update_user_meta( $edit_id, 'wp-to-twitter-enable-user', $enable );
 		update_user_meta( $edit_id, 'wp-to-twitter-user-username', $username );
