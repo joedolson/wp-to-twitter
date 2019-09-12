@@ -275,10 +275,10 @@ class TmhOAuth {
 		$path   = isset( $parts['path'] ) ? $parts['path'] : false;
 
 		if ( ! $port ) {
-			$port = ( 'https' == $scheme ) ? '443' : '80';
+			$port = ( 'https' === $scheme ) ? '443' : '80';
 		}
 
-		if ( ( 'https' == $scheme && '443' != $port ) || ( 'http' == $scheme && '80' != $port ) ) {
+		if ( ( 'https' === $scheme && '443' != $port ) || ( 'http' === $scheme && '80' != $port ) ) {
 			$host = "$host:$port";
 		}
 

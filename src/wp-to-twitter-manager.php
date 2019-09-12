@@ -38,7 +38,7 @@ function wpt_updated_settings() {
 
 	// notifications from oauth connection.
 	if ( isset( $_POST['oauth_settings'] ) ) {
-		if ( 'success' == $oauth_message ) {
+		if ( 'success' === $oauth_message ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro?tab=basic' );
 
 			print( '
@@ -46,19 +46,19 @@ function wpt_updated_settings() {
 					<p>' . __( 'WP to Twitter is now connected with Twitter.', 'wp-to-twitter' ) . " <a href='$admin_url'>" . __( 'Configure your Tweet templates', 'wp-to-twitter' ) . '</a></p>
 				</div>
 			' );
-		} elseif ( 'failed' == $oauth_message ) {
+		} elseif ( 'failed' === $oauth_message ) {
 			print( '
 				<div id="message" class="error fade">
 					<p>' . __( 'WP to Twitter failed to connect with Twitter.', 'wp-to-twitter' ) . ' <strong>' . __( 'Error:', 'wp-to-twitter' ) . '</strong> ' . get_option( 'wpt_error' ) . '</p>
 				</div>
 			' );
-		} elseif ( 'cleared' == $oauth_message ) {
+		} elseif ( 'cleared' === $oauth_message ) {
 			print( '
 				<div id="message" class="updated fade">
 					<p>' . __( 'OAuth Authentication Data Cleared.', 'wp-to-twitter' ) . '</p>
 				</div>
 			' );
-		} elseif ( 'nosync' == $oauth_message ) {
+		} elseif ( 'nosync' === $oauth_message ) {
 			print( '
 				<div id="message" class="error fade">
 					<p>' . __( 'OAuth Authentication Failed. Your server time is not in sync with the Twitter servers. Talk to your hosting service to see what can be done.', 'wp-to-twitter' ) . '</p>
@@ -73,7 +73,7 @@ function wpt_updated_settings() {
 		}
 	}
 
-	if ( isset( $_POST['submit-type'] ) && 'advanced' == $_POST['submit-type'] ) {
+	if ( isset( $_POST['submit-type'] ) && 'advanced' === $_POST['submit-type'] ) {
 		update_option( 'jd_tweet_default', ( isset( $_POST['jd_tweet_default'] ) ) ? $_POST['jd_tweet_default'] : 0 );
 		update_option( 'jd_tweet_default_edit', ( isset( $_POST['jd_tweet_default_edit'] ) ) ? $_POST['jd_tweet_default_edit'] : 0 );
 
@@ -97,7 +97,7 @@ function wpt_updated_settings() {
 		update_option( 'jd_max_tags', $_POST['jd_max_tags'] );
 		$use_cats = ( isset( $_POST['wpt_use_cats'] ) ) ? $_POST['wpt_use_cats'] : 0;
 		update_option( 'wpt_use_cats', $use_cats );
-		update_option( 'wpt_tag_source', ( ( isset( $_POST['wpt_tag_source'] ) && 'slug' == $_POST['wpt_tag_source'] ) ? 'slug' : '' ) );
+		update_option( 'wpt_tag_source', ( ( isset( $_POST['wpt_tag_source'] ) && 'slug' === $_POST['wpt_tag_source'] ) ? 'slug' : '' ) );
 		update_option( 'jd_max_characters', $_POST['jd_max_characters'] );
 		update_option( 'jd_replace_character', ( isset( $_POST['jd_replace_character'] ) ? $_POST['jd_replace_character'] : '' ) );
 		update_option( 'jd_date_format', $_POST['jd_date_format'] );
@@ -146,7 +146,7 @@ function wpt_updated_settings() {
 		$message .= __( 'WP to Twitter Advanced Options Updated', 'wp-to-twitter' ) . '. ' . $extend;
 	}
 
-	if ( isset( $_POST['submit-type'] ) && 'options' == $_POST['submit-type'] ) {
+	if ( isset( $_POST['submit-type'] ) && 'options' === $_POST['submit-type'] ) {
 		// UPDATE OPTIONS.
 		$wpt_settings = get_option( 'wpt_post_types' );
 		if ( ! is_array( $wpt_settings ) ) {
@@ -178,12 +178,12 @@ function wpt_updated_settings() {
 		$message  = apply_filters( 'wpt_settings', $message, $_POST );
 	}
 
-	if ( isset( $_POST['wpt_shortener_update'] ) && 'true' == $_POST['wpt_shortener_update'] ) {
+	if ( isset( $_POST['wpt_shortener_update'] ) && 'true' === $_POST['wpt_shortener_update'] ) {
 		$message = wpt_shortener_update( $_POST );
 	}
 
 	// Check whether the server has supported for needed functions.
-	if ( isset( $_POST['submit-type'] ) && 'check-support' == $_POST['submit-type'] ) {
+	if ( isset( $_POST['submit-type'] ) && 'check-support' === $_POST['submit-type'] ) {
 		$message = wpt_check_functions();
 	}
 
@@ -219,12 +219,12 @@ function wpt_update_settings() {
 	<?php
 		$default = ( '' == get_option( 'wtt_twitter_username' ) ) ? 'connection' : 'basic';
 		$current = ( isset( $_GET['tab'] ) ) ? $_GET['tab'] : $default;
-	if ( 'connection' == $current ) {
+	if ( 'connection' === $current ) {
 		if ( function_exists( 'wtt_connect_oauth' ) ) {
 			wtt_connect_oauth();
 		}
 	}
-	if ( 'pro' == $current ) {
+	if ( 'pro' === $current ) {
 		if ( function_exists( 'wpt_pro_functions' ) ) {
 			wpt_pro_functions();
 			if ( function_exists( 'wpt_notes' ) ) {
@@ -290,7 +290,7 @@ function wpt_update_settings() {
 			}
 		}
 	}
-	if ( 'basic' == $current ) {
+	if ( 'basic' === $current ) {
 		?>
 	<div class="ui-sortable meta-box-sortables">
 		<div class="postbox">
@@ -316,7 +316,7 @@ function wpt_update_settings() {
 							}
 							$name = $type->labels->name;
 							$slug = $type->name;
-							if ( 'attachment' == $slug || 'nav_menu_item' == $slug || 'revision' == $slug ) {
+							if ( 'attachment' === $slug || 'nav_menu_item' === $slug || 'revision' === $slug ) {
 							} else {
 								$tabs .= "<li><a href='#wpt_$slug' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name</a></li>";
 							}
@@ -329,14 +329,14 @@ function wpt_update_settings() {
 							}
 							$name = $type->labels->name;
 							$slug = $type->name;
-							if ( 'attachment' == $slug || 'nav_menu_item' == $slug || 'revision' == $slug ) {
+							if ( 'attachment' === $slug || 'nav_menu_item' === $slug || 'revision' === $slug ) {
 								continue;
 							} else {
 								?>
 								<div class='wptab wpt_types wpt_<?php echo $slug; ?>' aria-labelledby='tab_wpt_<?php echo $slug; ?>' role="tabpanel" id='wpt_<?php echo $slug; ?>'>
 								<?php
 								// share information about any usage of pre 2.8 category filters.
-								if ( '0' != get_option( 'limit_categories' ) && 'post' == $slug ) {
+								if ( '0' != get_option( 'limit_categories' ) && 'post' === $slug ) {
 									$falseness  = get_option( 'jd_twit_cats' );
 									$categories = get_option( 'tweet_categories' );
 									if ( 1 == $falseness ) {
@@ -468,11 +468,11 @@ function wpt_update_settings() {
 		</div>
 		<?php
 	}
-	if ( 'shortener' == $current ) {
+	if ( 'shortener' === $current ) {
 		echo apply_filters( 'wpt_shortener_controls', '' );
 	}
 
-	if ( 'advanced' == $current ) {
+	if ( 'advanced' === $current ) {
 		?>
 	<form method="post" action="">
 	<div class="ui-sortable meta-box-sortables">
@@ -499,7 +499,7 @@ function wpt_update_settings() {
 								<label for="wpt_use_cats"><?php _e( 'Use categories instead of tags', 'wp-to-twitter' ); ?></label><br/>
 							</p>
 							<?php
-							if ( ! ( '[ ]' == get_option( 'jd_replace_character' ) || '' == get_option( 'jd_replace_character' ) ) ) {
+							if ( ! ( '[ ]' === get_option( 'jd_replace_character' ) || '' === get_option( 'jd_replace_character', '' ) ) ) {
 								?>
 							<p>
 								<label for="jd_replace_character"><?php _e( 'Spaces in tags replaced with:', 'wp-to-twitter' ); ?></label>
@@ -534,7 +534,7 @@ function wpt_update_settings() {
 								<label for="jd_date_format"><?php _e( 'Date Format (#date#):', 'wp-to-twitter' ); ?></label>
 								<input type="text" aria-describedby="date_format_label" name="jd_date_format" id="jd_date_format" size="12" maxlength="12" value="
 								<?php
-								if ( '' == get_option( 'jd_date_format' ) ) {
+								if ( '' === get_option( 'jd_date_format', '' ) ) {
 									echo( esc_attr( stripslashes( get_option( 'date_format' ) ) ) );
 								} else {
 									echo( esc_attr( get_option( 'jd_date_format' ) ) );
@@ -651,7 +651,7 @@ function wpt_update_settings() {
 								$role_tabs      = '';
 								$role_container = '';
 								foreach ( $roles as $role => $rolename ) {
-									if ( 'administrator' == $role ) {
+									if ( 'administrator' === $role ) {
 										continue;
 									}
 									$role_tabs      .= "<li><a href='#wpt_" . sanitize_title( $role ) . "'>$rolename</a></li>\n";
@@ -703,9 +703,9 @@ function wpt_update_settings() {
 						}
 						asort( $default_order );
 						foreach ( $default_order as $k => $v ) {
-							if ( 'blogname' == $k ) {
+							if ( 'blogname' === $k ) {
 								$label = '<code>#blog#</code>';
-							} elseif ( 'excerpt' == $k ) {
+							} elseif ( 'excerpt' === $k ) {
 								$label = '<code>#post#</code>';
 							} else {
 								$label = '<code>#' . $k . '#</code>';
@@ -758,7 +758,7 @@ function wpt_update_settings() {
 	</div>
 		<?php
 	}
-	if ( 'support' == $current ) {
+	if ( 'support' === $current ) {
 		?>
 	<div class="postbox" id="get-support">
 		<h3><span><?php _e( 'Get Plug-in Support', 'wp-to-twitter' ); ?></span></h3>
@@ -803,7 +803,7 @@ function wpt_sidebar() {
 		<div class="ui-sortable meta-box-sortables<?php echo ' ' . $context; ?>">
 			<div class="postbox">
 				<?php
-				if ( 'free' == $context ) {
+				if ( 'free' === $context ) {
 					?>
 					<h3><span><strong><?php _e( 'Support WP to Twitter', 'wp-to-twitter' ); ?></strong></span></h3>
 					<?php
@@ -834,7 +834,7 @@ function wpt_sidebar() {
 							}(document, "script", "twitter-wjs");</script>
 					</p>
 					<?php
-					if ( 'premium' == $context ) {
+					if ( 'premium' === $context ) {
 						$support_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 						$support     = '<a href="' . esc_url( add_query_arg( 'tab', 'support', $support_url ) ) . '#get-support">' . __( 'Get Support', 'wp-to-twitter' ) . '</a> &bull;';
 					} else {

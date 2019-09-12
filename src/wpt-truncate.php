@@ -370,10 +370,10 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
 		// Only execute these changes if the user is not connected to Twitter.
 		if ( '' != $user_account ) {
-			if ( 'mainAtTwitter' == get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
+			if ( 'mainAtTwitter' === get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
 				$user_account = stripcslashes( get_user_meta( $auth, 'wp-to-twitter-user-username', true ) );
 				$account      = $user_account;
-			} elseif ( 'mainAtTwitterPlus' == get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
+			} elseif ( 'mainAtTwitterPlus' == = get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
 				$user_account = stripcslashes( get_user_meta( $auth, 'wp-to-twitter-user-username', true ) . ' @' . get_option( 'wtt_twitter_username' ) );
 				$account      = $user_account;
 			}
