@@ -160,10 +160,10 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 			asort( $order );
 			$preferred = array();
 			foreach ( $order as $k => $v ) {
-				if ( 'excerpt' == $k ) {
+				if ( 'excerpt' === $k ) {
 					$k     = 'post';
 					$value = $length_array['post'];
-				} elseif ( 'blogname' == $k ) {
+				} elseif ( 'blogname' === $k ) {
 					$k     = 'blog';
 					$value = $length_array['blog'];
 				} else {
@@ -183,7 +183,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 		if ( $str_length > ( $length + 1 + $diff ) ) {
 			foreach ( $preferred as $key => $value ) {
 				// don't truncate content of post excerpt or title if those tags not in use.
-				if ( ! ( 'excerpt' == $key && ! $has_excerpt_tag ) && ! ( 'title' == $key && ! $has_title_tag ) ) {
+				if ( ! ( 'excerpt' === $key && ! $has_excerpt_tag ) && ! ( 'title' === $key && ! $has_title_tag ) ) {
 					$str_length = mb_strlen( urldecode( wpt_normalize( trim( $post_tweet ) ) ), $encoding );
 					if ( $str_length > ( $length + 1 + $diff ) ) {
 						$trim      = $str_length - ( $length + 1 + $diff );
@@ -195,7 +195,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 						if ( wpt_remove_tag( $key ) ) {
 							$new_value = '';
 							// These tag fields should have stray characters removed on word boundaries.
-						} elseif ( 'tags' == $key ) {
+						} elseif ( 'tags' === $key ) {
 							// remove any stray hash characters due to string truncation.
 							if ( mb_strlen( $old_value ) - $trim <= 2 ) {
 								$new_value = '';
@@ -392,11 +392,11 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$author       = ( '' != $user_account ) ? "@$user_account" : $display_name; // value of #author#.
 	$author       = str_ireplace( '@@', '@', $author );
 
-	if ( 'on' == get_user_meta( $auth, 'wpt-remove', true ) ) {
+	if ( 'on' === get_user_meta( $auth, 'wpt-remove', true ) ) {
 		$account = '';
 	}
 
-	if ( function_exists( 'wpt_pro_exists' ) && true == wpt_pro_exists() ) {
+	if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 		$reference = ( $ref ) ? $account : '@' . get_option( 'wtt_twitter_username' );
 	} else {
 		$reference = '';

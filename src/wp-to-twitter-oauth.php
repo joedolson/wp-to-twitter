@@ -185,7 +185,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 				} else {
 					$message = 'nodata';
 				}
-				if ( 'failed' == $message && ( time() < strtotime( $connection->http_header['date'] ) - 300 || time() > strtotime( $connection->http_header['date'] ) + 300 ) ) {
+				if ( 'failed' === $message && ( time() < strtotime( $connection->http_header['date'] ) - 300 || time() > strtotime( $connection->http_header['date'] ) + 300 ) ) {
 					$message = 'nosync';
 				}
 

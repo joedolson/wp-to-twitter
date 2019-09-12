@@ -43,16 +43,16 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			if ( 1 == get_option( 'use-twitter-analytics' ) || 1 == get_option( 'use_dynamic_analytics' ) ) {
 				if ( '1' == get_option( 'use_dynamic_analytics' ) ) {
 					$campaign_type = get_option( 'jd_dynamic_analytics' );
-					if ( 'post_category' == $campaign_type && 'link' != $testmode ) {
+					if ( 'post_category' === $campaign_type && 'link' !== $testmode ) {
 						$category = get_the_category( $post_ID );
 						$campaign = sanitize_title( $category[0]->cat_name );
-					} elseif ( 'post_ID' == $campaign_type ) {
+					} elseif ( 'post_ID' === $campaign_type ) {
 						$campaign = $post_ID;
-					} elseif ( 'post_title' == $campaign_type && 'link' != $testmode ) {
+					} elseif ( 'post_title' === $campaign_type && 'link' !== $testmode ) {
 						$post     = get_post( $post_ID );
 						$campaign = sanitize_title( $post->post_title );
 					} else {
-						if ( 'link' != $testmode ) {
+						if ( 'link' !== $testmode ) {
 							$post        = get_post( $post_ID );
 							$post_author = $post->post_author;
 							$campaign    = urlencode( get_the_author_meta( 'user_login', $post_author ) );
@@ -462,7 +462,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 */
 	function wpt_shortener_update( $post ) {
 		$message = '';
-		if ( isset( $post['submit-type'] ) && 'yourlsapi' == $post['submit-type'] ) {
+		if ( isset( $post['submit-type'] ) && 'yourlsapi' === $post['submit-type'] ) {
 			$message = '';
 			if ( '' != $post['yourlstoken'] && isset( $post['submit'] ) ) {
 				update_option( 'yourlstoken', trim( $post['yourlstoken'] ) );
@@ -501,7 +501,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			}
 		}
 
-		if ( isset( $post['submit-type'] ) && 'bitlyapi' == $post['submit-type'] ) {
+		if ( isset( $post['submit-type'] ) && 'bitlyapi' === $post['submit-type'] ) {
 			if ( '' != $post['bitlyapi'] && isset( $post['submit'] ) ) {
 				update_option( 'bitlyapi', trim( $post['bitlyapi'] ) );
 				$message = __( 'Bit.ly API Key Updated.', 'wp-to-twitter' );
@@ -522,7 +522,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			}
 		}
 
-		if ( isset( $post['submit-type'] ) && 'joturlapi' == $post['submit-type'] ) {
+		if ( isset( $post['submit-type'] ) && 'joturlapi' === $post['submit-type'] ) {
 			if ( '' != $post['joturlapi'] && isset( $post['submit'] ) ) {
 				update_option( 'joturlapi', trim( $post['joturlapi'] ) );
 				$message = __( 'jotURL private API Key Updated.', 'wp-to-twitter' );
