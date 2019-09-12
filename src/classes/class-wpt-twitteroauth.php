@@ -403,7 +403,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 */
 		function wp_oauth_request( $url, $args = array(), $method = null ) {
 			// Handle media requests using tmhOAuth library.
-			if ( 'MEDIA' == $method ) {
+			if ( 'MEDIA' === $method ) {
 				return $this->handle_media_request( $url, $args );
 			}
 
