@@ -368,21 +368,21 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 
 	$account = get_option( 'wtt_twitter_username' );
 	if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
-		// Only execute these changes if the user is not connected to Twitter.
-		if ( '' != $user_account ) {
+		// Only execute these changes if the user is not connected to Twitter and does have a username entered.
+		$user_meta = get_user_meta( $auth, 'wp-to-twitter-user-username', true );
+		if ( '' == $user_account && '' != trim( $user_meta ) ) {
 			if ( 'mainAtTwitter' === get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
-				$user_account = stripcslashes( get_user_meta( $auth, 'wp-to-twitter-user-username', true ) );
+				$user_account = stripcslashes( $user_meta );
 				$account      = $user_account;
 			} elseif ( 'mainAtTwitterPlus' === get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
-				$user_account = stripcslashes( get_user_meta( $auth, 'wp-to-twitter-user-username', true ) . ' @' . get_option( 'wtt_twitter_username' ) );
+				$user_account = stripcslashes( $user_meta . ' @' . get_option( 'wtt_twitter_username' ) );
 				$account      = $user_account;
 			}
-		} else {
+		} else if ( '' != $user_account ) {
 			$account = $user_account;
 		}
 	}
 	$account = ( '' != $account ) ? "@$account" : ''; // value of #account#.
-	// clean up data if extra @ included in user data.
 	$account = str_ireplace( '@@', '@', $account );
 
 	$uaccount = ( '' != $user_account ) ? "@$user_account" : "$account"; // value of #@#.
@@ -397,7 +397,7 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	}
 
 	if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
-		$reference = ( $ref ) ? $account : '@' . get_option( 'wtt_twitter_username' );
+		$reference = ( $ref ) ? $uaccount : '@' . get_option( 'wtt_twitter_username' );
 	} else {
 		$reference = '';
 	}
