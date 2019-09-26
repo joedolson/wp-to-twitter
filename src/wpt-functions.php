@@ -694,7 +694,7 @@ $plugins_string
 		}
 		$response_email = ( isset( $_POST['response_email'] ) ) ? $_POST['response_email'] : false;
 		$from_email     = 'wordpress@' . $sitename;
-		$from           = "From: \"$current_user->display_name\" <$response_email>\r\nReply-to: \"$current_user->display_name\" <$response_email>\r\n";
+		$from           = "From: $current_user->display_name <$response_email>\r\nReply-to: $current_user->display_name <$response_email>\r\n";
 
 		if ( ! $has_read_faq ) {
 			echo "<div class='notice error'><p>" . __( 'Please read the FAQ and other Help documents before making a support request.', 'wp-to-twitter' ) . '</p></div>';
