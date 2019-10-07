@@ -67,6 +67,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 * Bug fix: don't parse Username settings if user is connected to Twitter (Pro)
 * Bug fix: Non-semantic text in user settings.
+* Bug fix: type error in media comparison.
 * Improve logic for exiting media handling. (Pro)
 
 = 3.4.1 =

@@ -1467,7 +1467,7 @@ function wpt_ajax_tweet() {
 	}
 	$action       = ( 'tweet' === $_REQUEST['tweet_action'] ) ? 'tweet' : 'schedule';
 	$authors      = ( isset( $_REQUEST['tweet_auth'] ) && null != $_REQUEST['tweet_auth'] ) ? $_REQUEST['tweet_auth'] : false;
-	$upload       = ( isset( $_REQUEST['tweet_upload'] ) && null != $_REQUEST['tweet_upload'] ) ? $_REQUEST['tweet_upload'] : 1;
+	$upload       = ( isset( $_REQUEST['tweet_upload'] ) && null != $_REQUEST['tweet_upload'] ) ? $_REQUEST['tweet_upload'] : '1';
 	$current_user = wp_get_current_user();
 	if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
 		if ( wtt_oauth_test( $current_user->ID, 'verify' ) ) {
