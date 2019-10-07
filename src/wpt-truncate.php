@@ -351,7 +351,7 @@ function wpt_make_tag( $value ) {
  * @return array of values.
  */
 function wpt_create_values( $post, $post_ID, $ref ) {
-	$shrink = ( '' !== $post['shortUrl'] ) ? $post['shortUrl'] : apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
+	$shrink = ( '' !== $post['shortUrl'] && false !== $post['shortUrl'] ) ? $post['shortUrl'] : apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
 	// generate template variable values.
 	$auth         = $post['authId'];
 	$title        = trim( apply_filters( 'wpt_status', $post['postTitle'], $post_ID, 'title' ) );
