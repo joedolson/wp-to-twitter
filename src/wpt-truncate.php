@@ -108,14 +108,14 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 	$tweet     = apply_filters( 'wpt_tweet_sentence', $tweet, $post_ID );
 	$tweet     = trim( wpt_custom_shortcodes( $tweet, $post_ID ) );
 	$tweet     = trim( wpt_user_meta_shortcodes( $tweet, $post['authId'] ) );
-	$encoding  = ( 'UTF-8' != get_option( 'blog_charset' ) && '' != get_option( 'blog_charset' ) ) ? get_option( 'blog_charset' ) : 'UTF-8';
+	$encoding  = ( 'UTF-8' !== get_option( 'blog_charset' ) && '' !== get_option( 'blog_charset', '' ) ) ? get_option( 'blog_charset' ) : 'UTF-8';
 	$diff      = 0;
 
 	// Add custom append/prepend fields to Tweet text.
-	if ( '' != get_option( 'jd_twit_prepend' ) && '' != $tweet ) {
+	if ( '' !== get_option( 'jd_twit_prepend', '' ) && '' !== $tweet ) {
 		$tweet = stripslashes( get_option( 'jd_twit_prepend' ) ) . ' ' . $tweet;
 	}
-	if ( '' != get_option( 'jd_twit_append' ) && '' != $tweet ) {
+	if ( '' !== get_option( 'jd_twit_append', '' ) && '' !== $tweet ) {
 		$tweet = $tweet . ' ' . stripslashes( get_option( 'jd_twit_append' ) );
 	}
 
@@ -244,7 +244,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 
 			if ( ! $tweet ) {
 				$temp = str_ireplace( $url, $tag, $post_tweet );
-				if ( mb_strlen( wpt_normalize( $temp ) ) > ( ( $length + 1 ) - ( $tco - strlen( $tag ) ) ) && $temp != $post_tweet ) {
+				if ( mb_strlen( wpt_normalize( $temp ) ) > ( ( $length + 1 ) - ( $tco - strlen( $tag ) ) ) && $temp !== $post_tweet ) {
 					if ( false === stripos( $temp, '#url#' ) && false === stripos( $temp, '#longurl#' ) ) {
 						$post_tweet = trim( mb_substr( $temp, 0, $length, $encoding ) );
 					} else {
@@ -351,7 +351,7 @@ function wpt_make_tag( $value ) {
  * @return array of values.
  */
 function wpt_create_values( $post, $post_ID, $ref ) {
-	$shrink = ( '' != $post['shortUrl'] ) ? $post['shortUrl'] : apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
+	$shrink = ( '' !== $post['shortUrl'] ) ? $post['shortUrl'] : apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
 	// generate template variable values.
 	$auth         = $post['authId'];
 	$title        = trim( apply_filters( 'wpt_status', $post['postTitle'], $post_ID, 'title' ) );
@@ -366,11 +366,11 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$date         = trim( $post['postDate'] );
 	$modified     = trim( $post['postModified'] );
 
-	$account = get_option( 'wtt_twitter_username' );
+	$account = get_option( 'wtt_twitter_username', '' );
 	if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
 		// Only execute these changes if the user is not connected to Twitter and does have a username entered.
 		$user_meta = get_user_meta( $auth, 'wp-to-twitter-user-username', true );
-		if ( '' == $user_account && '' != trim( $user_meta ) ) {
+		if ( '' === $user_account && '' !== trim( $user_meta ) ) {
 			if ( 'mainAtTwitter' === get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
 				$user_account = stripcslashes( $user_meta );
 				$account      = $user_account;
@@ -378,18 +378,18 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 				$user_account = stripcslashes( $user_meta . ' @' . get_option( 'wtt_twitter_username' ) );
 				$account      = $user_account;
 			}
-		} else if ( '' != $user_account ) {
+		} elseif ( '' !== $user_account ) {
 			$account = $user_account;
 		}
 	}
-	$account = ( '' != $account ) ? "@$account" : ''; // value of #account#.
+	$account = ( '' !== $account ) ? "@$account" : ''; // value of #account#.
 	$account = str_ireplace( '@@', '@', $account );
 
-	$uaccount = ( '' != $user_account ) ? "@$user_account" : "$account"; // value of #@#.
+	$uaccount = ( '' !== $user_account ) ? "@$user_account" : "$account"; // value of #@#.
 	$uaccount = str_ireplace( '@@', '@', $uaccount );
 
 	$display_name = get_the_author_meta( 'display_name', $auth );
-	$author       = ( '' != $user_account ) ? "@$user_account" : $display_name; // value of #author#.
+	$author       = ( '' !== $user_account ) ? "@$user_account" : $display_name; // value of #author#.
 	$author       = str_ireplace( '@@', '@', $author );
 
 	if ( 'on' === get_user_meta( $auth, 'wpt-remove', true ) ) {
