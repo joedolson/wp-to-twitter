@@ -63,6 +63,10 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.4.4 =
+
+* Bug fix: Due to external add-ons, need to test URL shortener settings as strings, not integers.
+
 = 3.4.3 =
 
 * Bug fix: Failed to account for a URL value that could be false in template parsing.
