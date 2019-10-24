@@ -194,6 +194,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					$joturlapi             = trim( get_option( 'joturlapi' ) );
 					$joturllogin           = trim( get_option( 'joturllogin' ) );
 					$joturl_longurl_params = trim( get_option( 'joturl_longurl_params' ) );
+					$domain                = trim( get_option( 'joturl_domain', false ) );
 					if ( '' != $joturl_longurl_params ) {
 						if ( false === strpos( $url, '%3F' ) && false == strpos( $url, '?' ) ) {
 							$ct = '?';
@@ -203,7 +204,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						$url    .= $ct . $joturl_longurl_params;
 						$encoded = urlencode( urldecode( trim( $url ) ) ); // prevent double-encoding.
 					}
-					$decoded = wpt_fetch_url( 'https://api.joturl.com/a/v1/shorten?url=' . $encoded . '&login=' . $joturllogin . '&key=' . $joturlapi . '&format=plain' );
+					$domain  = ( $domain ) ? '&domain=' . $domain : '';
+					$decoded = wpt_fetch_url( 'https://api.joturl.com/a/v1/shorten?url=' . $encoded . '&login=' . $joturllogin . '&key=' . $joturlapi . '&format=plain' . $domain );
 					if ( false !== $decoded ) {
 						$shrink                 = $decoded;
 						$joturl_shorturl_params = trim( get_option( 'joturl_shorturl_params' ) );
@@ -426,6 +428,10 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 							<input type="text" name="joturlapi" id="joturlapi" size="40" value="<?php echo esc_attr( get_option( 'joturlapi' ) ); ?>"/>
 						</p>
 						<p>
+							<label for="joturl_domain"><?php _e( "Your jotURL custom domain:", 'wp-to-twitter' ); ?></label>
+							<input type="text" name="joturl_domain" id="joturl_domain" size="40" value="<?php echo esc_attr( get_option( 'joturl_domain' ) ); ?>"/>
+						</p>
+						<p>
 							<label for="joturl_longurl_params"><?php _e( 'Parameters to add to the long URL (before shortening):', 'wp-to-twitter' ); ?></label>
 							<input type="text" name="joturl_longurl_params" id="joturl_longurl_params" size="40" value="<?php echo esc_attr( get_option( 'joturl_longurl_params' ) ); ?>"/>
 						</p>
@@ -539,7 +545,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				update_option( 'joturllogin', '' );
 				$message = __( 'jotURL public API Key deleted. You cannot use the jotURL API without providing your public API Key.', 'wp-to-twitter' );
 			} else {
-				$message = __( "jotURL public API Key not added - <a href='https://www.joturl.com/reserved/api.html'>get one here</a>! ", 'wp-to-twitter' );
+				$message = __( "jotURL public API Key not added - <a href='https://www.joturl.com/reserved/settings.html#tools-api'>get one here</a>! ", 'wp-to-twitter' );
 			}
 			if ( '' != $post['joturl_longurl_params'] && isset( $post['submit'] ) ) {
 				$v = trim( $post['joturl_longurl_params'] );
@@ -551,6 +557,13 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			} elseif ( isset( $post['clear'] ) ) {
 				update_option( 'joturl_longurl_params', '' );
 				$message = __( 'Long URL parameters deleted.', 'wp-to-twitter' );
+			}
+			if ( '' != $post['joturl_domain'] && isset( $post['submit'] ) ) {
+				update_option( 'joturl_domain', $post['joturl_domain'] );
+				$message .= __( 'Custom jotURL domain saved.', 'wp-to-twitter' );
+			} elseif ( isset( $post['clear'] ) ) {
+				update_option( 'joturl_domain', '' );
+				$message = __( 'Custom jotURL domain deleted.', 'wp-to-twitter' );
 			}
 			if ( '' != $post['joturl_shorturl_params'] && isset( $post['submit'] ) ) {
 				$v = trim( $post['joturl_shorturl_params'] );
