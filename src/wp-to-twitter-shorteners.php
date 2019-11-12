@@ -177,7 +177,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					if ( is_object( $json ) ) {
 						$shrink = $json->shorturl;
 					} else {
-						$error  = 'Error code: ' . $json->shorturl . ' ' . $json->message;
+						$error  = 'Error code: YOURLS response is not an object';
 						$shrink = false;
 					}
 					break;
