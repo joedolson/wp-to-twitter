@@ -3,11 +3,11 @@ Contributors: joedolson
 Donate link: http://www.joedolson.com/donate/
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
 Requires at least: 4.4
-Tested up to: 5.2
+Tested up to: 5.3
 Requires PHP: 5.3
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.4.3
+Stable tag: 3.4.4
 
 Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -66,6 +66,9 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.4.4 =
 
 * Bug fix: Due to external add-ons, need to test URL shortener settings as strings, not integers.
+* Bugfix: If YOURLS JSON object does not exist, it cannot have values.
+* Change: Support custom domains in jotURL.
+* Change: Add user info to debugging records.
 
 = 3.4.3 =
 
