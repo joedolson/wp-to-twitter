@@ -892,6 +892,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 												'timezone' => get_option( 'gmt_offset' ),
 												'timestring' => date( 'Y-m-d H:i:s', time() + $time + $offset ),
 												'current_ts' => date( 'Y-m-d H:i:s', time() ),
+												'users'      => $wpt_selected_users,
 											),
 											1
 										),
