@@ -537,28 +537,6 @@ function wpt_is_ssl( $url ) {
 }
 
 /**
- * Deprecated; still used if configured.
- * Uses old option 'tweet_categories' and verifies whether category of current post allows it to be Tweeted.
- *
- * @param array $array Array of categories for post.
- *
- * @return boolean.
- */
-function wpt_in_allowed_category( $array ) {
-	$allowed_categories = get_option( 'tweet_categories' );
-	if ( is_array( $array ) && is_array( $allowed_categories ) ) {
-		$common = array_intersect( $array, $allowed_categories );
-		if ( count( $common ) >= 1 ) {
-			return true;
-		} else {
-			return false;
-		}
-	} else {
-		return true;
-	}
-}
-
-/**
  * Builds array of post info for use in Tweet functions.
  *
  * @param integer $post_ID Post ID.
@@ -698,22 +676,9 @@ function wpt_post_with_media( $post_ID, $post_info = array() ) {
  * @param string $post_type Type of post.
  * @param array  $post_info Post info.
  * @param int    $post_ID Post ID.
- *
- * @deprecated
  */
 function wpt_category_limit( $post_type, $post_info, $post_ID ) {
-	$post_type_cats = get_object_taxonomies( $post_type );
 	$continue       = true;
-	if ( in_array( 'category', $post_type_cats, true ) ) {
-		// 'category' is assigned to this post type, so apply filters.
-		if ( '1' === get_option( 'jd_twit_cats' ) ) {
-			$continue = ( ! wpt_in_allowed_category( $post_info['categoryIds'] ) ) ? true : false;
-		} else {
-			$continue = ( wpt_in_allowed_category( $post_info['categoryIds'] ) ) ? true : false;
-		}
-	}
-
-	$continue = ( '0' === get_option( 'limit_categories' ) ) ? true : $continue;
 	$args     = array(
 		'type' => $post_type,
 		'info' => $post_info,

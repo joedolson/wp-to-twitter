@@ -336,28 +336,9 @@ function wpt_update_settings() {
 								<div class='wptab wpt_types wpt_<?php echo $slug; ?>' aria-labelledby='tab_wpt_<?php echo $slug; ?>' role="tabpanel" id='wpt_<?php echo $slug; ?>'>
 								<?php
 								// share information about any usage of pre 2.8 category filters.
-								if ( '0' != get_option( 'limit_categories' ) && 'post' === $slug ) {
-									$falseness  = get_option( 'jd_twit_cats' );
-									$categories = get_option( 'tweet_categories' );
-									if ( 1 == $falseness ) {
-										echo '<p>' . __( 'These categories are currently <strong>excluded</strong> by the deprecated WP to Twitter category filters.', 'wp-to-twitter' ) . '</p>';
-									} else {
-										echo '<p>' . __( 'These categories are currently <strong>allowed</strong> by the deprecated WP to Twitter category filters.', 'wp-to-twitter' ) . '</p>';
-									}
-									echo '<ul>';
-									if ( is_array( $categories ) ) {
-										foreach ( $categories as $cat ) {
-											$category = get_the_category_by_ID( $cat );
-											echo "<li>$category</li>";
-										}
-									}
-									echo '</ul>';
-									if ( ! function_exists( 'wpt_pro_exists' ) ) {
-										// Translators: Link to sales page.
-										printf( __( '<a href="%s">Upgrade to WP Tweets PRO</a> to filter posts in all custom post types on any taxonomy.', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro' );
-									} else {
-										_e( 'Updating the WP Tweets PRO taxonomy filters will overwrite your old category filters.', 'wp-to-twitter' );
-									}
+								if ( ! function_exists( 'wpt_pro_exists' ) ) {
+									// Translators: Link to sales page.
+									printf( __( '<a href="%s">Upgrade to WP Tweets PRO</a> to filter posts in all custom post types on any taxonomy.', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro' );
 								}
 								?>
 								<fieldset>
