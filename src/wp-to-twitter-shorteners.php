@@ -146,38 +146,40 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					// remote YOURLS installation.
 					$yourlslogin = trim( get_option( 'yourlslogin' ) );
 					$yourlsapi   = stripcslashes( get_option( 'yourlsapi' ) );
-					$token       = stripcslashes( get_option( 'yourlstoken' ) );
-					$yourlsurl   = esc_url( get_option( 'yourlsurl' ) );
-					if ( $token ) {
-						$args = array(
-							'signature' => $token,
-							'url'       => $encoded,
-							'action'    => 'shorturl',
-							'format'    => 'json',
-							'title'     => urlencode( $post_title ),
-						);
-					} else {
-						$args = array(
-							'username' => $yourlslogin,
-							'password' => $yourlsapi,
-							'url'      => $encoded,
-							'action'   => 'shorturl',
-							'format'   => 'json',
-							'title'    => urlencode( $post_title ),
-						);
-					}
-					if ( $keyword_format ) {
-						$args['keyword'] = $keyword_format;
-					}
+					if ( $yourlslogin && $yourlsapi ) {
+						$token       = stripcslashes( get_option( 'yourlstoken' ) );
+						$yourlsurl   = esc_url( get_option( 'yourlsurl' ) );
+						if ( $token ) {
+							$args = array(
+								'signature' => $token,
+								'url'       => $encoded,
+								'action'    => 'shorturl',
+								'format'    => 'json',
+								'title'     => urlencode( $post_title ),
+							);
+						} else {
+							$args = array(
+								'username' => $yourlslogin,
+								'password' => $yourlsapi,
+								'url'      => $encoded,
+								'action'   => 'shorturl',
+								'format'   => 'json',
+								'title'    => urlencode( $post_title ),
+							);
+						}
+						if ( $keyword_format ) {
+							$args['keyword'] = $keyword_format;
+						}
 
-					$api_url = add_query_arg( $args, $yourlsurl );
-					$json    = wpt_remote_json( $api_url, false );
-					wpt_mail( 'YOURLS JSON Response', print_r( $json, 1 ), $post_ID ); // DEBUG YOURLS response.
-					if ( is_object( $json ) ) {
-						$shrink = $json->shorturl;
-					} else {
-						$error  = 'Error code: YOURLS response is not an object';
-						$shrink = false;
+						$api_url = add_query_arg( $args, $yourlsurl );
+						$json    = wpt_remote_json( $api_url, false );
+						wpt_mail( 'YOURLS JSON Response', print_r( $json, 1 ), $post_ID ); // DEBUG YOURLS response.
+						if ( is_object( $json ) ) {
+							$shrink = $json->shorturl;
+						} else {
+							$error  = 'Error code: YOURLS response is not an object';
+							$shrink = false;
+						}
 					}
 					break;
 				case 7:
