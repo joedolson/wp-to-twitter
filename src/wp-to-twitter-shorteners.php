@@ -171,8 +171,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					}
 
 					$api_url = add_query_arg( $args, $yourlsurl );
-
-					$json = wpt_remote_json( $api_url, false );
+					$json    = wpt_remote_json( $api_url, false );
 					wpt_mail( 'YOURLS JSON Response', print_r( $json, 1 ), $post_ID ); // DEBUG YOURLS response.
 					if ( is_object( $json ) ) {
 						$shrink = $json->shorturl;
@@ -193,36 +192,38 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					// jotURL, added: 2013-04-10.
 					$joturlapi             = trim( get_option( 'joturlapi' ) );
 					$joturllogin           = trim( get_option( 'joturllogin' ) );
-					$joturl_longurl_params = trim( get_option( 'joturl_longurl_params' ) );
-					$domain                = trim( get_option( 'joturl_domain', false ) );
-					if ( '' != $joturl_longurl_params ) {
-						if ( false === strpos( $url, '%3F' ) && false == strpos( $url, '?' ) ) {
-							$ct = '?';
-						} else {
-							$ct = '&';
-						}
-						$url    .= $ct . $joturl_longurl_params;
-						$encoded = urlencode( urldecode( trim( $url ) ) ); // prevent double-encoding.
-					}
-					$domain  = ( $domain ) ? '&domain=' . $domain : '';
-					$decoded = wpt_fetch_url( 'https://api.joturl.com/a/v1/shorten?url=' . $encoded . '&login=' . $joturllogin . '&key=' . $joturlapi . '&format=plain' . $domain );
-					if ( false !== $decoded ) {
-						$shrink                 = $decoded;
-						$joturl_shorturl_params = trim( get_option( 'joturl_shorturl_params' ) );
-						if ( '' != $joturl_shorturl_params ) {
-							if ( false === strpos( $shrink, '%3F' ) && false === strpos( $shrink, '?' ) ) {
+					if ( ! empty( $joturlapi ) && ! empty( $joturllogin ) ) {
+						$joturl_longurl_params = trim( get_option( 'joturl_longurl_params' ) );
+						$domain                = trim( get_option( 'joturl_domain', false ) );
+						if ( '' != $joturl_longurl_params ) {
+							if ( false === strpos( $url, '%3F' ) && false == strpos( $url, '?' ) ) {
 								$ct = '?';
 							} else {
 								$ct = '&';
 							}
-							$shrink .= $ct . $joturl_shorturl_params;
+							$url    .= $ct . $joturl_longurl_params;
+							$encoded = urlencode( urldecode( trim( $url ) ) ); // prevent double-encoding.
 						}
-					} else {
-						$error  = $decoded;
-						$shrink = false;
-					}
-					if ( ! wpt_is_valid_url( $shrink ) ) {
-						$shrink = false;
+						$domain  = ( $domain ) ? '&domain=' . $domain : '';
+						$decoded = wpt_fetch_url( 'https://api.joturl.com/a/v1/shorten?url=' . $encoded . '&login=' . $joturllogin . '&key=' . $joturlapi . '&format=plain' . $domain );
+						if ( false !== $decoded ) {
+							$shrink                 = $decoded;
+							$joturl_shorturl_params = trim( get_option( 'joturl_shorturl_params' ) );
+							if ( '' != $joturl_shorturl_params ) {
+								if ( false === strpos( $shrink, '%3F' ) && false === strpos( $shrink, '?' ) ) {
+									$ct = '?';
+								} else {
+									$ct = '&';
+								}
+								$shrink .= $ct . $joturl_shorturl_params;
+							}
+						} else {
+							$error  = $decoded;
+							$shrink = false;
+						}
+						if ( ! wpt_is_valid_url( $shrink ) ) {
+							$shrink = false;
+						}
 					}
 					break;
 				default:
