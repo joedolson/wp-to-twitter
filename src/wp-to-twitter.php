@@ -1048,6 +1048,9 @@ function wpt_generate_hash_tags( $post_ID ) {
 				case 4:
 					$newtag = $tag;
 					break;
+				case 5:
+					$newtag = "@$tag";
+					break;
 				default:
 					$newtag = apply_filters( 'wpt_tag_default', '#', $t_id ) . $tag;
 			}
