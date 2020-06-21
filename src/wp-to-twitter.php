@@ -182,6 +182,11 @@ function wptotwitter_activate() {
 	if ( $upgrade ) {
 		$administrator->add_cap( 'wpt_tweet_now' );
 	}
+	$upgrade = version_compare( $prev_version, '3.4.4', '<' );
+	if ( $upgrade ) {
+		delete_option( 'bitlyapi' );
+		delete_option( 'bitlylogin' );
+	}
 
 	update_option( 'wp_to_twitter_version', $wpt_version );
 }

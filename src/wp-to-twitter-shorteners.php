@@ -95,21 +95,13 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					break;
 				case 2: // updated to v3 3/31/2010.
 					// v3 is being sunsetted 3/31/2020. Option to enable removed 7/4/2019.
-					$bitlyapi   = trim( get_option( 'bitlyapi' ) );
-					$bitlylogin = trim( strtolower( get_option( 'bitlylogin' ) ) );
-					$decoded    = wpt_remote_json( 'https://api-ssl.bitly.com/v3/shorten?longUrl=' . $encoded . '&login=' . $bitlylogin . '&apiKey=' . $bitlyapi . '&format=json' );
-					if ( $decoded && isset( $decoded['status_code'] ) ) {
-						if ( 200 != $decoded['status_code'] ) {
-							$shrink = $url;
-							$error  = $decoded['status_txt'];
-						} else {
-							$shrink = $decoded['data']['url'];
-						}
+					$bitlyurl = get_post_meta( $post_ID, '_wbitly_shorturl', true );
+					if ( ! empty( $bitlyurl ) ) {
+						$shrink = $bitlyurl;
 					} else {
-						$shrink = false;
-					}
-					if ( ! wpt_is_valid_url( $shrink ) ) {
-						$shrink = false;
+						if ( function_exists( 'wbitly_update_shorturl' ) ) {
+							$shrink = wbitly_shorten_url( $url );
+						}
 					}
 					break;
 				case 4:
@@ -350,24 +342,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					if ( 7 == $shortener ) {
 						echo '<p>' . __( 'The Su.pr URL shortener was shut down when Stumbleupon closed doors in June 2018.', 'wp-to-twitter' ) . '</p>';
 					} elseif ( 2 == $shortener ) {
-						echo $form_start;
-						?>
-						<p>
-							<label for="bitlylogin"><?php _e( 'Your Bit.ly username:', 'wp-to-twitter' ); ?></label>
-							<input type="text" name="bitlylogin" id="bitlylogin" value="<?php echo esc_attr( get_option( 'bitlylogin' ) ); ?>"/>
-						</p>
-						<p>
-							<label for="bitlyapi"><?php _e( "Your Bit.ly <abbr title='application programming interface'>API</abbr> Key:", 'wp-to-twitter' ); ?></label>
-							<input type="text" name="bitlyapi" id="bitlyapi" size="40" value="<?php echo esc_attr( get_option( 'bitlyapi' ) ); ?>"/>
-						</p>
-						<p>
-							<a href="http://bitly.com/a/your_api_key"><?php _e( 'View your Bit.ly username and API key', 'wp-to-twitter' ); ?></a>
-						</p>
-						<div>
-							<input type="hidden" name="submit-type" value="bitlyapi"/>
-						</div>
-						<?php
-						echo $form_end;
+						echo '<p>' . __( 'WP to Twitter supports Bit.ly shortened links via <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>. This is the only WordPress plug-in supporting the current Bit.ly API I\'m aware of.', 'wp-to-twitter' ) . '</p>';
 					} elseif ( 5 == $shortener || 6 == $shortener ) {
 						echo $form_start;
 						if ( 5 == $shortener ) {
@@ -507,27 +482,6 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				delete_option( 'yourlspath' );
 				delete_option( 'yourlsurl' );
 				$message .= __( 'YOURLS data cleared.', 'wp-to-twitter' );
-			}
-		}
-
-		if ( isset( $post['submit-type'] ) && 'bitlyapi' === $post['submit-type'] ) {
-			if ( '' != $post['bitlyapi'] && isset( $post['submit'] ) ) {
-				update_option( 'bitlyapi', trim( $post['bitlyapi'] ) );
-				$message = __( 'Bit.ly API Key Updated.', 'wp-to-twitter' );
-			} elseif ( isset( $post['clear'] ) ) {
-				update_option( 'bitlyapi', '' );
-				$message = __( 'Bit.ly API Key deleted. You cannot use the Bit.ly API without an API key.', 'wp-to-twitter' );
-			} else {
-				$message = __( "Bit.ly API Key not added - <a href='http://bit.ly/account/'>get one here</a>! An API key is required to use the Bit.ly URL shortening service.", 'wp-to-twitter' );
-			}
-			if ( '' != $post['bitlylogin'] && isset( $post['submit'] ) ) {
-				update_option( 'bitlylogin', trim( $post['bitlylogin'] ) );
-				$message .= __( 'Bit.ly User Login Updated.', 'wp-to-twitter' );
-			} elseif ( isset( $post['clear'] ) ) {
-				update_option( 'bitlylogin', '' );
-				$message = __( 'Bit.ly User Login deleted. You cannot use the Bit.ly API without providing your username.', 'wp-to-twitter' );
-			} else {
-				$message = __( "Bit.ly Login not added - <a href='http://bit.ly/account/'>get one here</a>!", 'wp-to-twitter' );
 			}
 		}
 
