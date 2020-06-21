@@ -7,7 +7,7 @@ Tested up to: 5.4
 Requires PHP: 5.6
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.4.4
+Stable tag: 3.4.5
 
 Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -66,8 +66,9 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.4.5 =
 
 * Add support for @ references on tags.
+* Add support for <a href="https://wordpress.org/support/plugin/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>
 * Remove deprecated category filters. (UI disabled in 2014.)
-* Don't query shorteners if they are enabled but missing settings.
+* Don't query shorteners if they are enabled but settings are missing.
 
 = 3.4.4 =
 
