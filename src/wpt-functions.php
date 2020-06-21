@@ -209,8 +209,8 @@ function wpt_handle_errors() {
 	if ( '1' === get_option( 'wp_url_failure' ) ) {
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 		$nonce     = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
-		$error     = '<div class="error">' . __( '<p>The query to the URL shortener API failed, and your URL was not shrunk. The full post URL was attached to your Tweet. Check with your URL shortening provider to see if there are any known issues.</p>', 'wp-to-twitter' ) .
-			'<form method="post" action="' . $admin_url . '">
+		$error     = '<div class="error"><p>' . __( 'The query to the URL shortener API failed, and your URL was not shrunk. The full post URL was attached to your Tweet. Check with your URL shortening provider to see if there are any known issues.', 'wp-to-twitter' ) .
+			'</p><form method="post" action="' . $admin_url . '">
 				<div>
 					<input type="hidden" name="submit-type" value="clear-error"/>
 					' . $nonce . '

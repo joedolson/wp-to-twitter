@@ -1164,12 +1164,13 @@ function wpt_add_twitter_inner_box( $post ) {
 			</button>
 			<div id="jts">
 				<?php
-				$datavalue = date( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+				$datavalue = gmdate( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
+				$timevalue = date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
 				?>
 				<label for='wpt_date'><?php _e( 'Date', 'wp-to-twitter' ); ?></label>
-				<input type='date' value='' class='wpt_date date' name='wpt_datetime' id='wpt_date' data-value='<?php echo $datavalue ?>' /><br/>
+				<input type='date' value='' class='wpt_date date' name='wpt_datetime' id='wpt_date' data-value='<?php echo $datavalue; ?>' /><br/>
 				<label for='wpt_time'><?php _e( 'Time', 'wp-to-twitter' ); ?></label>
-				<input type='text' value='<?php echo date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); ?>' class='wpt_time time' name='wpt_datetime' id='wpt_time'/>
+				<input type='text' value='<?php echo $timevalue; ?>' class='wpt_time time' name='wpt_datetime' id='wpt_time'/>
 			</div>
 				<?php
 			}
