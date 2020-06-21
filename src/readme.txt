@@ -3,8 +3,8 @@ Contributors: joedolson
 Donate link: http://www.joedolson.com/donate/
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
 Requires at least: 4.4
-Tested up to: 5.3
-Requires PHP: 5.3
+Tested up to: 5.4
+Requires PHP: 5.6
 License: GPLv2 or later
 Text Domain: wp-to-twitter
 Stable tag: 3.4.4
@@ -66,6 +66,8 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.4.5 =
 
 * Add support for @ references on tags.
+* Remove deprecated category filters. (UI disabled in 2014.)
+* Don't query shorteners if they are enabled but missing settings.
 
 = 3.4.4 =
 
