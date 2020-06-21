@@ -34,7 +34,7 @@ require_once( dirname( __FILE__ ) . '/classes/class-wpt-search-tweets-widget.php
  * @return string Linkified tweet content
  */
 function wpt_tweet_linkify( $text, $opts, $tweet ) {
-	if ( true == $opts['show_images'] ) {
+	if ( true === (bool) $opts['show_images'] ) {
 		$media = isset( $tweet['entities']['media'] ) ? $tweet['entities']['media'] : false;
 		if ( $media ) {
 			$media_urls = array();
@@ -58,17 +58,17 @@ function wpt_tweet_linkify( $text, $opts, $tweet ) {
 		$text    = str_replace( '…', ' ______ ', $text );
 		$restore = true;
 	}
-	$text = ( true == $opts['links'] ) ? preg_replace( '#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t< ]*)#', '\\1<a href="\\2" rel="nofollow">\\2</a>', $text ) : $text;
-	$text = ( true == $opts['links'] ) ? preg_replace( '#(^|[\n ])((www|ftp)\.[^ \"\t\n\r< ]*)#', '\\1<a href="http://\\2" rel="nofollow">\\2</a>', $text ) : $text;
-	$text = ( true == $opts['mentions'] ) ? preg_replace( '/@(\w+)/', '<a href="https://twitter.com/\\1" rel="nofollow">@\\1</a>', $text ) : $text;
-	$text = ( true == $opts['hashtags'] ) ? preg_replace( '/#(\w+)/', '<a href="https://twitter.com/search?q=%23\\1" rel="nofollow">#\\1</a>', $text ) : $text;
+	$text = ( true === (bool) $opts['links'] ) ? preg_replace( '#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t< ]*)#', '\\1<a href="\\2" rel="nofollow">\\2</a>', $text ) : $text;
+	$text = ( true === (bool) $opts['links'] ) ? preg_replace( '#(^|[\n ])((www|ftp)\.[^ \"\t\n\r< ]*)#', '\\1<a href="http://\\2" rel="nofollow">\\2</a>', $text ) : $text;
+	$text = ( true === (bool) $opts['mentions'] ) ? preg_replace( '/@(\w+)/', '<a href="https://twitter.com/\\1" rel="nofollow">@\\1</a>', $text ) : $text;
+	$text = ( true === (bool) $opts['hashtags'] ) ? preg_replace( '/#(\w+)/', '<a href="https://twitter.com/search?q=%23\\1" rel="nofollow">#\\1</a>', $text ) : $text;
 	$urls = $tweet['entities']['urls'];
 	if ( is_array( $urls ) ) {
 		foreach ( $urls as $url ) {
 			$text = str_replace( ">$url[url]<", ">$url[display_url]<", $text );
 		}
 	}
-	if ( true == $restore ) {
+	if ( true === $restore ) {
 		$text = str_replace( ' ______ ', '…', $text );
 	}
 
@@ -205,7 +205,7 @@ function wpt_get_twitter_feed( $atts, $content ) {
 function wpt_twitter_feed( $instance ) {
 	$header = '';
 	if ( ! isset( $instance['search'] ) ) {
-		$twitter_id = ( isset( $instance['twitter_id'] ) && '' != $instance['twitter_id'] ) ? $instance['twitter_id'] : get_option( 'wtt_twitter_username' );
+		$twitter_id = ( isset( $instance['twitter_id'] ) && '' !== $instance['twitter_id'] ) ? $instance['twitter_id'] : get_option( 'wtt_twitter_username' );
 		$user       = wpt_get_user( $twitter_id );
 		if ( empty( $user ) ) {
 			return __( 'Error: You are not connected to Twitter.', 'wp-to-twitter' );
@@ -232,7 +232,7 @@ function wpt_twitter_feed( $instance ) {
 		$twitter_id = false;
 	}
 
-	$hide_header = ( isset( $instance['hide_header'] ) && 1 == $instance['hide_header'] ) ? true : false;
+	$hide_header = ( isset( $instance['hide_header'] ) && 1 === (int) $instance['hide_header'] ) ? true : false;
 
 	if ( ! isset( $instance['search'] ) ) {
 		$options['exclude_replies'] = ( isset( $instance['twitter_hide_replies'] ) ) ? $instance['twitter_hide_replies'] : false;

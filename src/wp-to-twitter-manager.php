@@ -77,9 +77,9 @@ function wpt_updated_settings() {
 		update_option( 'jd_tweet_default', ( isset( $_POST['jd_tweet_default'] ) ) ? $_POST['jd_tweet_default'] : 0 );
 		update_option( 'jd_tweet_default_edit', ( isset( $_POST['jd_tweet_default_edit'] ) ) ? $_POST['jd_tweet_default_edit'] : 0 );
 
-		if ( isset( $_POST['wpt_rate_limiting'] ) && 1 != get_option( 'wpt_rate_limiting' ) ) {
+		if ( isset( $_POST['wpt_rate_limiting'] ) && '1' !== get_option( 'wpt_rate_limiting' ) ) {
 			$extend = __( 'Rate Limiting is enabled. Default rate limits are set at 10 posts per category/term per hour. <a href="#special_cases">Edit global default</a> or edit individual terms to customize limits for each category or taxonomy term.', 'wp-to-twitter' );
-			wp_schedule_event( current_time( 'timestamp' ) + 3600, 'hourly', 'wptratelimits' );
+			wp_schedule_event( time() + 3600, 'hourly', 'wptratelimits' );
 		} else {
 			$extend = '';
 			wp_clear_scheduled_hook( 'wptratelimits' );
@@ -104,11 +104,11 @@ function wpt_updated_settings() {
 		update_option( 'jd_dynamic_analytics', $_POST['jd-dynamic-analytics'] );
 
 		$twitter_analytics = ( isset( $_POST['twitter-analytics'] ) ) ? $_POST['twitter-analytics'] : 0;
-		if ( 1 == $twitter_analytics ) {
+		if ( 1 === (int) $twitter_analytics ) {
 			update_option( 'use_dynamic_analytics', 0 );
 			update_option( 'use-twitter-analytics', 1 );
 			update_option( 'no-analytics', 0 );
-		} elseif ( 2 == $twitter_analytics ) {
+		} elseif ( 2 === (int) $twitter_analytics ) {
 			update_option( 'use_dynamic_analytics', 1 );
 			update_option( 'use-twitter-analytics', 0 );
 			update_option( 'no-analytics', 0 );
@@ -199,7 +199,7 @@ function wpt_update_settings() {
 	?>
 	<div class="wrap" id="wp-to-twitter">
 	<?php
-	if ( defined( 'WPT_STAGING_MODE' ) && true == WPT_STAGING_MODE ) {
+	if ( defined( 'WPT_STAGING_MODE' ) && true === WPT_STAGING_MODE ) {
 		echo "<div class='updated notice'><p>" . __( 'WP to Twitter is in staging mode. Tweets will be reported as if successfully sent to Twitter but will not be sent.', 'wp-to-twitter' ) . '</p></div>';
 	}
 	wpt_updated_settings();
@@ -217,7 +217,7 @@ function wpt_update_settings() {
 	<div class="metabox-holder">
 
 	<?php
-		$default = ( '' == get_option( 'wtt_twitter_username' ) ) ? 'connection' : 'basic';
+		$default = ( '' === get_option( 'wtt_twitter_username' ) ) ? 'connection' : 'basic';
 		$current = ( isset( $_GET['tab'] ) ) ? $_GET['tab'] : $default;
 	if ( 'connection' === $current ) {
 		if ( function_exists( 'wtt_connect_oauth' ) ) {
@@ -311,7 +311,7 @@ function wpt_update_settings() {
 						$tabs         = "<ul class='tabs' role='tablist'>";
 						foreach ( $post_types as $type ) {
 							// If post type is both private & has no UI, don't show.
-							if ( false == $type->public && false == $type->show_ui ) {
+							if ( false === $type->public && false === $type->show_ui ) {
 								continue;
 							}
 							$name = $type->labels->name;
@@ -324,7 +324,7 @@ function wpt_update_settings() {
 						$tabs .= "<li><a href='#wpt_links' id='tab_wpt_links' aria-controls='wpt_links'>" . __( 'Links', 'wp-to-twitter' ) . '</a></li></ul>';
 						echo $tabs;
 						foreach ( $post_types as $type ) {
-							if ( false == $type->public && false == $type->show_ui ) {
+							if ( false === $type->public && false === $type->show_ui ) {
 								continue;
 							}
 							$name = $type->labels->name;
@@ -427,7 +427,7 @@ function wpt_update_settings() {
 						<li><?php _e( '<code>#@#</code>: the twitter @reference for the author or blank, if not set', 'wp-to-twitter' ); ?></li>
 						<li><?php _e( '<code>#tags#</code>: your tags modified into hashtags.', 'wp-to-twitter' ); ?></li>
 						<?php
-						if ( function_exists( 'wpt_pro_exists' ) && true == wpt_pro_exists() ) {
+						if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 							?>
 						<li><?php _e( '<code>#reference#</code>: Used only in co-tweeting. @reference to main account when posted to author account, @reference to author account in post to main account.', 'wp-to-twitter' ); ?></li>
 							<?php
@@ -523,7 +523,7 @@ function wpt_update_settings() {
 								?>
 								"/>
 								<?php
-								if ( '' != get_option( 'jd_date_format' ) ) {
+								if ( '' !== get_option( 'jd_date_format', '' ) ) {
 									echo date_i18n( get_option( 'jd_date_format' ) );
 								} else {
 									echo '<em>' . date_i18n( get_option( 'date_format' ) ) . '</em>';
@@ -564,7 +564,7 @@ function wpt_update_settings() {
 								<input type="checkbox" name="wpt_rate_limiting" id="wpt_rate_limiting" value="1" <?php echo wpt_checkbox( 'wpt_rate_limiting' ); ?> />
 								<label for="wpt_rate_limiting"><?php _e( 'Enable Rate Limiting', 'wp-to-twitter' ); ?></label><br/>
 								<?php
-								if ( get_option( 'wpt_rate_limiting' ) == 1 ) {
+								if ( '1' === get_option( 'wpt_rate_limiting' ) ) {
 									?>
 								<input type="number" name="wpt_default_rate_limit" min="1" id="wpt_default_rate_limit" value="<?php echo wpt_default_rate_limit(); ?>" />
 								<label for="wpt_default_rate_limit"><?php _e( 'Default Rate Limit per category per hour', 'wp-to-twitter' ); ?></label><br/>
@@ -796,7 +796,7 @@ function wpt_sidebar() {
 				?>
 				<div class="inside resources">
 					<?php
-					if ( 1 != get_option( 'jd_donations' ) && ! function_exists( 'wpt_pro_exists' ) ) {
+					if ( '1' !== get_option( 'jd_donations' ) && ! function_exists( 'wpt_pro_exists' ) ) {
 						?>
 					<p class='cta'><?php _e( '<a href="http://www.wptweetspro.com/wp-tweets-pro">Get WP Tweets Pro</a>', 'wp-to-twitter' ); ?></p>
 						<?php
@@ -866,7 +866,7 @@ function wpt_sidebar() {
 		</div>
 
 		<?php
-		if ( 1 == get_option( 'wpt_rate_limiting' ) ) {
+		if ( '1' === get_option( 'wpt_rate_limiting' ) ) {
 			?>
 		<div class="ui-sortable meta-box-sortables">
 			<div class="postbox">
@@ -891,8 +891,8 @@ function wpt_sidebar() {
  */
 function wpt_do_server_check( $test = false ) {
 	$wpt_server_string = get_option( 'wpt_server_string' );
-	if ( ! $wpt_server_string || isset( $_GET['refresh_wpt_server_string'] ) || true == $test ) {
-		$server_time = date( DATE_COOKIE );
+	if ( ! $wpt_server_string || isset( $_GET['refresh_wpt_server_string'] ) || true === $test ) {
+		$server_time = gmdate( DATE_COOKIE );
 		$response    = wp_remote_get(
 			'https://twitter.com/',
 			array(
@@ -915,7 +915,7 @@ function wpt_do_server_check( $test = false ) {
 			}
 			$errors = '<li>' . $ssl . $warning . '</li>';
 		} else {
-			$date   = date( DATE_COOKIE, strtotime( $response['headers']['date'] ) );
+			$date   = gmdate( DATE_COOKIE, strtotime( $response['headers']['date'] ) );
 			$errors = '';
 		}
 

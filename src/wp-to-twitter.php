@@ -683,7 +683,7 @@ function wpt_post_with_media( $post_ID, $post_info = array() ) {
  * @param int    $post_ID Post ID.
  */
 function wpt_category_limit( $post_type, $post_info, $post_ID ) {
-	$continue       = true;
+	$continue = true;
 	$args     = array(
 		'type' => $post_type,
 		'info' => $post_info,
@@ -860,8 +860,8 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 												'timestamp' => time() + $time + $offset,
 												'current_time' => time(),
 												'timezone' => get_option( 'gmt_offset' ),
-												'timestring' => date( 'Y-m-d H:i:s', time() + $time + $offset ),
-												'current_ts' => date( 'Y-m-d H:i:s', time() ),
+												'timestring' => gmdate( 'Y-m-d H:i:s', time() + $time + $offset ),
+												'current_ts' => gmdate( 'Y-m-d H:i:s', time() ),
 												'users'      => $wpt_selected_users,
 											),
 											1
@@ -917,8 +917,8 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 														'sentence'   => array( $retweet, $i, $post_ID ),
 														'timestamp'  => time() + $time + $offset + $delay,
 														'time'       => array( $time, $offset, $delay, get_option( 'gmt_offset' ), time() ),
-														'timestring' => date( 'Y-m-d H:i:s', time() + $time + $offset + $delay ),
-														'current_ts' => date( 'Y-m-d H:i:s', time() ),
+														'timestring' => gmdate( 'Y-m-d H:i:s', time() + $time + $offset + $delay ),
+														'current_ts' => gmdate( 'Y-m-d H:i:s', time() ),
 													),
 													1
 												),
@@ -1440,8 +1440,8 @@ function wpt_ajax_tweet() {
 		die;
 	}
 	$action       = ( 'tweet' === $_REQUEST['tweet_action'] ) ? 'tweet' : 'schedule';
-	$authors      = ( isset( $_REQUEST['tweet_auth'] ) && null != $_REQUEST['tweet_auth'] ) ? $_REQUEST['tweet_auth'] : false;
-	$upload       = ( isset( $_REQUEST['tweet_upload'] ) && null != $_REQUEST['tweet_upload'] ) ? $_REQUEST['tweet_upload'] : '1';
+	$authors      = ( isset( $_REQUEST['tweet_auth'] ) && null !== $_REQUEST['tweet_auth'] ) ? $_REQUEST['tweet_auth'] : false;
+	$upload       = ( isset( $_REQUEST['tweet_upload'] ) && null !== $_REQUEST['tweet_upload'] ) ? $_REQUEST['tweet_upload'] : '1';
 	$current_user = wp_get_current_user();
 	if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
 		if ( wtt_oauth_test( $current_user->ID, 'verify' ) ) {
@@ -1707,7 +1707,7 @@ function wpt_allowed_post_types() {
 	$allowed_types      = array();
 	if ( is_array( $post_type_settings ) && ! empty( $post_type_settings ) ) {
 		foreach ( $post_type_settings as $type => $settings ) {
-			if ( '1' == $settings['post-edited-update'] || '1' == $settings['post-published-update'] ) {
+			if ( '1' === $settings['post-edited-update'] || '1' === $settings['post-published-update'] ) {
 				$allowed_types[] = $type;
 			}
 		}
@@ -1761,7 +1761,7 @@ add_action( 'publish_phone', 'wpt_twit_xmlrpc' );
 function wpt_twit_future( $id ) {
 	set_transient( '_wpt_twit_future', $id, 10 );
 	// instant action has already run for this post. // prevent running actions twice (need both for older WP).
-	if ( get_transient( '_wpt_twit_instant' ) && get_transient( '_wpt_twit_instant' ) == $id ) {
+	if ( get_transient( '_wpt_twit_instant' ) && (int) get_transient( '_wpt_twit_instant' ) === $id ) {
 		delete_transient( '_wpt_twit_instant' );
 
 		return;
@@ -1778,13 +1778,13 @@ function wpt_twit_future( $id ) {
 function wpt_twit_instant( $id ) {
 	set_transient( '_wpt_twit_instant', $id, 10 );
 	// future action has already run for this post.
-	if ( get_transient( '_wpt_twit_future' ) && get_transient( '_wpt_twit_future' ) == $id ) {
+	if ( get_transient( '_wpt_twit_future' ) && (int) get_transient( '_wpt_twit_future' ) === $id ) {
 		delete_transient( '_wpt_twit_future' );
 
 		return;
 	}
 	// xmlrpc action has already run for this post.
-	if ( get_transient( '_wpt_twit_xmlrpc' ) && get_transient( '_wpt_twit_xmlrpc' ) == $id ) {
+	if ( get_transient( '_wpt_twit_xmlrpc' ) && (int) get_transient( '_wpt_twit_xmlrpc' ) === $id ) {
 		delete_transient( '_wpt_twit_xmlrpc' );
 
 		return;

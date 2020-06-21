@@ -100,8 +100,8 @@ function wpt_test_rate_limit( $post_ID, $auth ) {
  * @return integer Default rate limit
  */
 function wpt_default_rate_limit( $term = false ) {
-	$limit = ( '' != get_option( 'wpt_default_rate_limit' ) ) ? get_option( 'wpt_default_rate_limit' ) : 10;
-	$limit = ( 0 == $limit ) ? 1 : $limit;
+	$limit = ( '' !== get_option( 'wpt_default_rate_limit' ) ) ? get_option( 'wpt_default_rate_limit' ) : 10;
+	$limit = ( '0' === (string) $limit ) ? 1 : $limit;
 
 	return apply_filters( 'wpt_default_rate_limit', $limit, $term );
 }
@@ -203,13 +203,13 @@ function wpt_add_term_rate_limit( $term ) {
 function wpt_view_rate_limits() {
 	$limits = get_option( 'wpt_rate_limits' );
 	if ( ! wp_next_scheduled( 'wptratelimits' ) ) {
-		wp_schedule_event( current_time( 'timestamp' ) + 3600, 'hourly', 'wptratelimits' );
+		wp_schedule_event( time() + 3600, 'hourly', 'wptratelimits' );
 	}
 	$next_scheduled = human_time_diff( wp_next_scheduled( 'wptratelimits' ), time() );
 	if ( is_array( $limits ) ) {
 		$output = '<ul>';
 		foreach ( $limits as $auth => $term ) {
-			$author  = ( 0 == $auth ) ? get_option( 'wtt_twitter_username' ) : get_user_meta( $auth, 'wtt_twitter_username', true );
+			$author  = ( 0 === (int) $auth ) ? get_option( 'wtt_twitter_username' ) : get_user_meta( $auth, 'wtt_twitter_username', true );
 			$output .= "<li><h4><a href='https://twitter.com/$author'>@$author</a>:</h4><ul>";
 			foreach ( $term as $id => $value ) {
 				$count         = count( $value );

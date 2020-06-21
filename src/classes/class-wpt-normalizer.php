@@ -200,7 +200,7 @@ class WPT_Normalizer {
 
 					if ( isset( $comp_map[ $last_uchr . $uchr ] ) && ( ! $last_ucls || $last_ucls < $ucls ) ) {
 						$last_uchr = $comp_map[ $last_uchr . $uchr ];
-					} elseif ( $last_ucls == $ucls ) {
+					} elseif ( $last_ucls === $ucls ) {
 						$tail .= $uchr;
 					} else {
 						if ( $tail ) {
@@ -293,13 +293,13 @@ class WPT_Normalizer {
 						// Table lookup.
 						$j = isset( $compat_map[ $uchr ] ) ? $compat_map[ $uchr ] : ( isset( $decomp_map[ $uchr ] ) ? $decomp_map[ $uchr ] : $uchr );
 
-						if ( $uchr != $j ) {
+						if ( $uchr !== $j ) {
 							$uchr = $j;
 
 							$j    = strlen( $uchr );
 							$ulen = $uchr[0] < "\x80" ? 1 : $ulen_mask[ $uchr[0] & "\xF0" ];
 
-							if ( $ulen != $j ) {
+							if ( $ulen !== $j ) {
 								// Put trailing chars in $s.
 								$j -= $ulen;
 								$i -= $j;
@@ -324,7 +324,7 @@ class WPT_Normalizer {
 
 						$uchr = "\xE1\x84" . chr( 0x80 + (int) ( $j / 588 ) ) . "\xE1\x85" . chr( 0xA1 + (int) ( ( $j % 588 ) / 28 ) );
 
-						if ( $j %= 28 ) {
+						if ( $j %= 28 ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.Found
 							$uchr .= $j < 25 ? ( "\xE1\x86" . chr( 0xA7 + $j ) ) : ( "\xE1\x87" . chr( 0x67 + $j ) );
 						}
 					}

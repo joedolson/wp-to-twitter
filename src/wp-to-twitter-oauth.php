@@ -23,11 +23,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function wtt_oauth_test( $auth = false, $context = '' ) {
 	if ( ! $auth ) {
-		return ( wtt_oauth_credentials_to_hash() == get_option( 'wtt_oauth_hash' ) );
+		return ( wtt_oauth_credentials_to_hash() === get_option( 'wtt_oauth_hash' ) );
 	} else {
-		$return = ( wtt_oauth_credentials_to_hash( $auth ) == wpt_get_user_verification( $auth ) );
-		if ( ! $return && 'verify' != $context ) {
-			return ( wtt_oauth_credentials_to_hash() == get_option( 'wtt_oauth_hash' ) );
+		$return = ( wtt_oauth_credentials_to_hash( $auth ) === wpt_get_user_verification( $auth ) );
+		if ( ! $return && 'verify' !== $context ) {
+			return ( wtt_oauth_credentials_to_hash() === get_option( 'wtt_oauth_hash' ) );
 		} else {
 			return $return;
 		}
@@ -42,7 +42,7 @@ function wtt_oauth_test( $auth = false, $context = '' ) {
  * @return author hash.
  */
 function wpt_get_user_verification( $auth ) {
-	if ( get_option( 'jd_individual_twitter_users' ) != '1' ) {
+	if ( get_option( 'jd_individual_twitter_users' ) !== '1' ) {
 		return false;
 	} else {
 		$auth = get_user_meta( $auth, 'wtt_oauth_hash', true );
@@ -135,7 +135,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 					$connection = wpt_oauth_connection( $auth );
 					if ( $connection ) {
 						$data = $connection->get( 'https://api.twitter.com/1.1/account/verify_credentials.json' );
-						if ( '200' != $connection->http_code ) {
+						if ( '200' !== (string) $connection->http_code ) {
 							$data  = json_decode( $data );
 							$code  = "<a href='https://dev.twitter.com/docs/error-codes-responses'>" . $data->errors[0]->code . '</a>';
 							$error = $data->errors[0]->message;
@@ -143,7 +143,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 						} else {
 							delete_option( 'wpt_error' );
 						}
-						if ( '200' == $connection->http_code ) {
+						if ( '200' === (string) $connection->http_code ) {
 							$error_information = '';
 							$decode            = json_decode( $data );
 							if ( ! $auth ) {
@@ -159,7 +159,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 							}
 							$message = 'success';
 							delete_option( 'wpt_curl_error' );
-						} elseif ( 0 == $connection->http_code ) {
+						} elseif ( '0' === (string) $connection->http_code ) {
 							$error_information = __( 'WP to Twitter was unable to establish a connection to Twitter.', 'wp-to-twitter' );
 							update_option( 'wpt_curl_error', "$error_information" );
 						} else {
@@ -172,7 +172,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 							$error_code = sprintf( __( 'Twitter response: http_code %s', 'wp-to-twitter' ), "$error_information[http_code] - $error_information[status]" );
 							update_option( 'wpt_curl_error', $error_code );
 						}
-						if ( '1' == get_option( 'wp_debug_oauth' ) ) {
+						if ( '1' === get_option( 'wp_debug_oauth' ) ) {
 							echo '<pre><strong>Summary Connection Response:</strong><br />';
 							print_r( $error_information );
 							echo '<br /><strong>Account Verification Data:</strong><br />';

@@ -169,7 +169,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			$r = array();
 			foreach ( explode( '&', $response_string ) as $param ) {
 				$pair = explode( '=', $param, 2 );
-				if ( count( $pair ) != 2 ) {
+				if ( count( $pair ) !== 2 ) {
 					continue;
 				}
 				$r[ urldecode( $pair[0] ) ] = urldecode( $pair[1] );
@@ -315,7 +315,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			$attachment = $args['media'];
 
 			$image_sizes = get_intermediate_image_sizes();
-			if ( in_array( 'large', $image_sizes ) ) {
+			if ( in_array( 'large', $image_sizes, true ) ) {
 				$size = 'large';
 			} else {
 				$size = array_pop( $image_sizes );

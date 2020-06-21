@@ -107,14 +107,14 @@ function wpt_check_functions() {
 	$shrink   = apply_filters( 'wptt_shorten_link', $testurl, $title, false, true );
 	if ( false === $shrink ) {
 		$error    = htmlentities( get_option( 'wpt_shortener_status' ) );
-		$message .= __( '<li class="error"><strong>WP to Twitter was unable to contact your selected URL shortening service.</strong></li>', 'wp-to-twitter' );
+		$message .= '<li class="error"><strong>' . __( 'WP to Twitter was unable to contact your selected URL shortening service.', 'wp-to-twitter' ) . '</strong></li>';
 		if ( is_string( $error ) && strlen( trim( $error ) ) > 0 ) {
 			$message .= "<li><code>$error</code></li>";
 		} else {
 			$message .= '<li><code>' . __( 'No error message was returned.', 'wp-to-twitter' ) . '</code></li>';
 		}
 	} else {
-		$message .= __( "<li><strong>WP to Twitter successfully contacted your URL shortening service.</strong>  This link should point to your site's homepage:", 'wp-to-twitter' );
+		$message .= '<li><strong>' . __( "WP to Twitter successfully contacted your URL shortening service.</strong>  This link should point to your site's homepage:", 'wp-to-twitter' );
 		$message .= " <a href='$shrink'>$shrink</a></li>";
 	}
 	// check twitter credentials.
@@ -122,20 +122,20 @@ function wpt_check_functions() {
 		$rand     = rand( 1000000, 9999999 );
 		$testpost = wpt_post_to_twitter( "This is a test of WP to Twitter. $shrink ($rand)" );
 		if ( $testpost ) {
-			$message .= __( '<li><strong>WP to Twitter successfully submitted a status update to Twitter.</strong></li>', 'wp-to-twitter' );
+			$message .= '<li><strong>' . __( 'WP to Twitter successfully submitted a status update to Twitter.', 'wp-to-twitter' ) . '</strong></li>';
 		} else {
 			$error    = wpt_log( 'wpt_status_message', 'test' );
-			$message .= __( '<li class="error"><strong>WP to Twitter failed to submit an update to Twitter.</strong></li>', 'wp-to-twitter' );
+			$message .= '<li class="error"><strong>' . __( 'WP to Twitter failed to submit an update to Twitter.', 'wp-to-twitter' ) . '</strong></li>';
 			$message .= "<li class='error'>$error</li>";
 		}
 	} else {
 		$message .= '<strong>' . __( 'You have not connected WordPress to Twitter.', 'wp-to-twitter' ) . '</strong> ';
 	}
 	if ( false === $testpost && false === $shrink ) {
-		$message .= __( "<li class=\"error\"><strong>Your server does not appear to support the required methods for WP to Twitter to function.</strong> You can try it anyway - these tests aren't perfect.</li>", 'wp-to-twitter' );
+		$message .= '<li class="error">' . __( "<strong>Your server does not appear to support the required methods for WP to Twitter to function.</strong> You can try it anyway - these tests aren't perfect.", 'wp-to-twitter' ) . '</li>';
 	}
 	if ( $testpost && $shrink ) {
-		$message .= __( '<li><strong>Your server should run WP to Twitter successfully.</strong></li>', 'wp-to-twitter' );
+		$message .= '<li><strong>' . __( 'Your server should run WP to Twitter successfully.', 'wp-to-twitter' ) . '</strong></li>';
 	}
 	$message .= '</ul>
 	</div>';
@@ -283,7 +283,7 @@ function wpt_debug_log( $subject, $body, $post_ID ) {
 		global $post_ID;
 	}
 	if ( $post_ID ) {
-		$time = current_time( 'timestamp' );
+		$time = current_time( 'timestamp' ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
 		add_post_meta( $post_ID, '_wpt_debug_log', array( $time, $subject, $body ) );
 	}
 }

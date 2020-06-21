@@ -574,7 +574,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				$port = ( 'https' === $scheme ) ? '443' : '80';
 			}
 
-			if ( ( 'https' === $scheme && '443' != $port ) || ( 'http' === $scheme && '80' != $port )
+			if ( ( 'https' === $scheme && '443' !== (string) $port ) || ( 'http' === $scheme && '80' !== (string) $port )
 			) {
 				$host = "$host:$port";
 			}
@@ -621,7 +621,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 			$total = array();
 			foreach ( $this->parameters as $k => $v ) {
-				if ( 'oauth' != substr( $k, 0, 5 ) ) {
+				if ( 'oauth' !== substr( $k, 0, 5 ) ) {
 					continue;
 				}
 				if ( is_array( $v ) ) {
@@ -683,7 +683,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 */
 		private static function generate_timestamp() {
 			// make sure that timestamp is in UTC.
-			date_default_timezone_set( 'UTC' );
+			date_default_timezone_set( 'UTC' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.timezone_change_date_default_timezone_set
 
 			return time();
 		}
@@ -852,7 +852,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				throw new WPOAuthException( 'No signature method parameter. This parameter is required' );
 			}
 
-			if ( ! in_array( $signature_method, array_keys( $this->signature_methods ) ) ) {
+			if ( ! in_array( $signature_method, array_keys( $this->signature_methods ), true ) ) {
 				throw new WPOAuthException(
 					"Signature method '$signature_method' not supported " .
 					'try one of the following: ' .
@@ -1150,7 +1150,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				}
 
 				foreach ( $_SERVER as $key => $value ) {
-					if ( substr( $key, 0, 5 ) == 'HTTP_' ) {
+					if ( substr( $key, 0, 5 ) === 'HTTP_' ) {
 						// this is chaos, basically it is just there to capitalize the first.
 						// letter of every word that is not an initial HTTP and strip HTTP.
 						// code from przemek.

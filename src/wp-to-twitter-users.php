@@ -9,7 +9,7 @@
  * @link     https://www.joedolson.com/wp-to-twitter/
  */
 
-if ( '1' == get_option( 'jd_individual_twitter_users' ) ) {
+if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
 	add_action( 'show_user_profile', 'wpt_twitter_profile' );
 	add_action( 'edit_user_profile', 'wpt_twitter_profile' );
 	add_action( 'profile_update', 'wpt_twitter_save_profile' );
@@ -30,7 +30,7 @@ function wpt_twitter_profile() {
 	$is_enabled       = get_user_meta( $user_edit, 'wp-to-twitter-enable-user', true );
 	$twitter_username = get_user_meta( $user_edit, 'wp-to-twitter-user-username', true );
 	$wpt_remove       = get_user_meta( $user_edit, 'wpt-remove', true );
-	if ( $current_user->ID == $user_ID || current_user_can( 'manage_options' ) ) {
+	if ( $current_user->ID === $user_ID || current_user_can( 'manage_options' ) ) {
 		?>
 		<h3><?php _e( 'WP Tweets User Settings', 'wp-to-twitter' ); ?></h3>
 		<?php

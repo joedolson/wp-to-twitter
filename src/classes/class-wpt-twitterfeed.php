@@ -320,10 +320,10 @@ class WPT_TwitterFeed {
 		} else {
 			if ( is_array( $result ) && isset( $result['errors'][0] ) && isset( $result['errors'][0]['message'] ) ) {
 				// Translators: Error message.
-				$last_error          = '[' . date( 'r' ) . '] ' . sprintf( __( 'Twitter error: %s', 'wp-to-twitter' ), $result['errors'][0]['message'] );
+				$last_error          = '[' . gmdate( 'r' ) . '] ' . sprintf( __( 'Twitter error: %s', 'wp-to-twitter' ), $result['errors'][0]['message'] );
 				$this->st_last_error = $last_error;
 			} else {
-				$last_error          = '[' . date( 'r' ) . ']' . __( 'Twitter returned an invalid response. It is probably down.', 'wp-to-twitter' );
+				$last_error          = '[' . gmdate( 'r' ) . ']' . __( 'Twitter returned an invalid response. It is probably down.', 'wp-to-twitter' );
 				$this->st_last_error = $last_error;
 			}
 		}

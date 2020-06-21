@@ -39,9 +39,9 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			return $shrink;
 		}
 		$url = apply_filters( 'wpt_shorten_link', $url, $shortener, $post_ID );
-		if ( false == $testmode ) {
-			if ( 1 == get_option( 'use-twitter-analytics' ) || 1 == get_option( 'use_dynamic_analytics' ) ) {
-				if ( '1' == get_option( 'use_dynamic_analytics' ) ) {
+		if ( false === $testmode ) {
+			if ( '1' === get_option( 'use-twitter-analytics' ) || '1' === get_option( 'use_dynamic_analytics' ) ) {
+				if ( '1' === get_option( 'use_dynamic_analytics' ) ) {
 					$campaign_type = get_option( 'jd_dynamic_analytics' );
 					if ( 'post_category' === $campaign_type && 'link' !== $testmode ) {
 						$category = get_the_category( $post_ID );
@@ -82,8 +82,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		}
 
 		// custom word setting.
-		$keyword_format = ( '1' == get_option( 'jd_keyword_format' ) ) ? $post_ID : '';
-		$keyword_format = ( '2' == get_option( 'jd_keyword_format' ) ) ? get_post_meta( $post_ID, '_yourls_keyword', true ) : $keyword_format;
+		$keyword_format = ( '1' === get_option( 'jd_keyword_format' ) ) ? $post_ID : '';
+		$keyword_format = ( '2' === get_option( 'jd_keyword_format' ) ) ? get_post_meta( $post_ID, '_yourls_keyword', true ) : $keyword_format;
 		// Generate and grab the short url.
 		$shrink = apply_filters( 'wpt_do_shortening', false, $shortener, $url, $post_title, $post_ID, $testmode );
 		// if an add-on has shortened the link, skip shortening.
@@ -107,7 +107,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				case 4:
 					if ( function_exists( 'wp_get_shortlink' ) ) {
 						// wp_get_shortlink doesn't natively support custom post types; but don't return an error in that case.
-						$shrink = ( false != $post_ID ) ? wp_get_shortlink( $post_ID, 'post' ) : $url;
+						$shrink = ( false !== $post_ID ) ? wp_get_shortlink( $post_ID, 'post' ) : $url;
 					}
 					if ( ! $shrink ) {
 						$shrink = $url;
@@ -139,8 +139,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					$yourlslogin = trim( get_option( 'yourlslogin' ) );
 					$yourlsapi   = stripcslashes( get_option( 'yourlsapi' ) );
 					if ( $yourlslogin && $yourlsapi ) {
-						$token       = stripcslashes( get_option( 'yourlstoken' ) );
-						$yourlsurl   = esc_url( get_option( 'yourlsurl' ) );
+						$token     = stripcslashes( get_option( 'yourlstoken' ) );
+						$yourlsurl = esc_url( get_option( 'yourlsurl' ) );
 						if ( $token ) {
 							$args = array(
 								'signature' => $token,
@@ -184,13 +184,13 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					break;
 				case 10:
 					// jotURL, added: 2013-04-10.
-					$joturlapi             = trim( get_option( 'joturlapi' ) );
-					$joturllogin           = trim( get_option( 'joturllogin' ) );
+					$joturlapi   = trim( get_option( 'joturlapi' ) );
+					$joturllogin = trim( get_option( 'joturllogin' ) );
 					if ( ! empty( $joturlapi ) && ! empty( $joturllogin ) ) {
 						$joturl_longurl_params = trim( get_option( 'joturl_longurl_params' ) );
 						$domain                = trim( get_option( 'joturl_domain', false ) );
-						if ( '' != $joturl_longurl_params ) {
-							if ( false === strpos( $url, '%3F' ) && false == strpos( $url, '?' ) ) {
+						if ( '' !== $joturl_longurl_params ) {
+							if ( false === strpos( $url, '%3F' ) && false === strpos( $url, '?' ) ) {
 								$ct = '?';
 							} else {
 								$ct = '&';
@@ -203,7 +203,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						if ( false !== $decoded ) {
 							$shrink                 = $decoded;
 							$joturl_shorturl_params = trim( get_option( 'joturl_shorturl_params' ) );
-							if ( '' != $joturl_shorturl_params ) {
+							if ( '' !== $joturl_shorturl_params ) {
 								if ( false === strpos( $shrink, '%3F' ) && false === strpos( $shrink, '?' ) ) {
 									$ct = '?';
 								} else {
@@ -253,7 +253,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		$store_urls = apply_filters( 'wpt_store_urls', true, $post_ID, $url );
 		if ( function_exists( 'wpt_shorten_url' ) && $store_urls ) {
 			$shortener = get_option( 'jd_shortener' );
-			if ( wpt_short_url( $post_ID ) != $url && wpt_is_valid_url( $url ) ) {
+			if ( wpt_short_url( $post_ID ) !== $url && wpt_is_valid_url( $url ) ) {
 				update_post_meta( $post_ID, '_wpt_short_url', $url );
 			}
 			switch ( $shortener ) {
@@ -279,7 +279,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 * @return long url.
 	 */
 	function wpt_expand_yourl( $short_url, $remote ) {
-		if ( 6 == $remote ) {
+		if ( 6 === (int) $remote ) {
 			$short_url = urlencode( $short_url );
 			$yourl_api = get_option( 'yourlsurl' );
 			$user      = get_option( 'yourlslogin' );
@@ -339,17 +339,17 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 
 				<div class="inside">
 					<?php
-					if ( 7 == $shortener ) {
+					if ( 7 === (int) $shortener ) {
 						echo '<p>' . __( 'The Su.pr URL shortener was shut down when Stumbleupon closed doors in June 2018.', 'wp-to-twitter' ) . '</p>';
-					} elseif ( 2 == $shortener ) {
+					} elseif ( 2 === (int) $shortener ) {
 						if ( function_exists( 'wbitly_shorten_url' ) ) {
 							echo '<p>' . __( 'WP to Twitter supports Bit.ly shortened links via <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>. If you are having issues with Bit.ly URLs, please request support from <a href="https://wordpress.org/support/plugin/codehaveli-bitly-url-shortener/">the plugin support forums</a>.', 'wp-to-twitter' ) . '</p>';
 						} else {
 							echo '<p>' . __( 'WP to Twitter supports Bit.ly shortened links via <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>. Install that plug-in to use Bit.ly', 'wp-to-twitter' ) . '</p>';
 						}
-					} elseif ( 5 == $shortener || 6 == $shortener ) {
+					} elseif ( 5 === (int) $shortener || 6 === (int) $shortener ) {
 						echo $form_start;
-						if ( 5 == $shortener ) {
+						if ( 5 === (int) $shortener ) {
 							?>
 						<p>
 							<label for="yourlspath"><?php _e( 'Path to your YOURLS config file', 'wp-to-twitter' ); ?></label><br/>
@@ -359,7 +359,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						</p>
 							<?php
 						}
-						if ( 6 == $shortener ) {
+						if ( 6 === (int) $shortener ) {
 							?>
 						<p>
 							<label for="yourlsurl"><?php _e( 'URI to the YOURLS API', 'wp-to-twitter' ); ?></label><br/>
@@ -396,9 +396,9 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						</div>
 						<?php
 						echo $form_end;
-					} elseif ( 8 == $shortener ) {
+					} elseif ( 8 === (int) $shortener ) {
 						echo '<p>' . __( 'The Goo.gl URL shortener was shut down by Google in March 2019.', 'wp-to-twitter' ) . '</p>';
-					} elseif ( 10 == $shortener ) {
+					} elseif ( 10 === (int) $shortener ) {
 						echo $form_start;
 						?>
 						<p>
@@ -410,7 +410,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 							<input type="text" name="joturlapi" id="joturlapi" size="40" value="<?php echo esc_attr( get_option( 'joturlapi' ) ); ?>"/>
 						</p>
 						<p>
-							<label for="joturl_domain"><?php _e( "Your jotURL custom domain:", 'wp-to-twitter' ); ?></label>
+							<label for="joturl_domain"><?php _e( 'Your jotURL custom domain:', 'wp-to-twitter' ); ?></label>
 							<input type="text" name="joturl_domain" id="joturl_domain" size="40" value="<?php echo esc_attr( get_option( 'joturl_domain' ) ); ?>"/>
 						</p>
 						<p>
@@ -430,7 +430,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						echo $form_end;
 					} else {
 						$form = apply_filters( 'wpt_shortener_settings', '', $shortener );
-						if ( '' != $form ) {
+						if ( '' !== $form ) {
 							echo $form_start . $form . $form_end;
 						} else {
 							_e( 'Your shortener does not require any account settings.', 'wp-to-twitter' );
@@ -452,7 +452,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		$message = '';
 		if ( isset( $post['submit-type'] ) && 'yourlsapi' === $post['submit-type'] ) {
 			$message = '';
-			if ( '' != $post['yourlstoken'] && isset( $post['submit'] ) ) {
+			if ( '' !== $post['yourlstoken'] && isset( $post['submit'] ) ) {
 				update_option( 'yourlstoken', trim( $post['yourlstoken'] ) );
 				delete_option( 'yourlsapi' );
 				delete_option( 'yourlslogin' );
@@ -460,7 +460,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			}
 			update_option( 'yourlsurl', trim( $post['yourlsurl'] ) );
 			// yourls path is deprecated.
-			if ( isset( $post['yourlspath'] ) && '' != $post['yourlspath'] ) {
+			if ( isset( $post['yourlspath'] ) && '' !== $post['yourlspath'] ) {
 				update_option( 'yourlspath', trim( $post['yourlspath'] ) );
 				if ( file_exists( $post['yourlspath'] ) ) {
 					$message .= ' ' . __( 'YOURLS local server path added. ', 'wp-to-twitter' );
@@ -468,11 +468,11 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					$message .= ' ' . __( 'The path to your YOURLS installation is not correct. ', 'wp-to-twitter' );
 				}
 			}
-			if ( '' != $post['jd_keyword_format'] ) {
+			if ( '' !== $post['jd_keyword_format'] ) {
 				update_option( 'jd_keyword_format', $post['jd_keyword_format'] );
-				if ( 1 == $post['jd_keyword_format'] ) {
+				if ( '1' === $post['jd_keyword_format'] ) {
 					$message .= ' ' . __( 'YOURLS will use Post ID for short URL slug.', 'wp-to-twitter' );
-				} elseif ( 0 == $post['jd_keyword_format'] ) {
+				} elseif ( '0' === $post['jd_keyword_format'] ) {
 					$message .= ' ' . __( 'YOURLS will use default URL structures.', 'wp-to-twitter' );
 				} else {
 					$message .= ' ' . __( 'YOURLS will use your custom keyword for short URL slug.', 'wp-to-twitter' );
@@ -490,7 +490,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		}
 
 		if ( isset( $post['submit-type'] ) && 'joturlapi' === $post['submit-type'] ) {
-			if ( '' != $post['joturlapi'] && isset( $post['submit'] ) ) {
+			if ( '' !== $post['joturlapi'] && isset( $post['submit'] ) ) {
 				update_option( 'joturlapi', trim( $post['joturlapi'] ) );
 				$message = __( 'jotURL private API Key Updated.', 'wp-to-twitter' );
 			} elseif ( isset( $post['clear'] ) ) {
@@ -499,7 +499,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			} else {
 				$message = __( "jotURL private API Key not added - <a href='https://www.joturl.com/reserved/api.html'>get one here</a>! A private API key is required to use the jotURL URL shortening service. ", 'wp-to-twitter' );
 			}
-			if ( '' != $post['joturllogin'] && isset( $post['submit'] ) ) {
+			if ( '' !== $post['joturllogin'] && isset( $post['submit'] ) ) {
 				update_option( 'joturllogin', trim( $post['joturllogin'] ) );
 				$message .= __( 'jotURL public API Key Updated.', 'wp-to-twitter' );
 			} elseif ( isset( $post['clear'] ) ) {
@@ -508,9 +508,9 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			} else {
 				$message = __( "jotURL public API Key not added - <a href='https://www.joturl.com/reserved/settings.html#tools-api'>get one here</a>! ", 'wp-to-twitter' );
 			}
-			if ( '' != $post['joturl_longurl_params'] && isset( $post['submit'] ) ) {
+			if ( '' !== $post['joturl_longurl_params'] && isset( $post['submit'] ) ) {
 				$v = trim( $post['joturl_longurl_params'] );
-				if ( substr( $v, 0, 1 ) == '&' || substr( $v, 0, 1 ) == '?' ) {
+				if ( substr( $v, 0, 1 ) === '&' || substr( $v, 0, 1 ) === '?' ) {
 					$v = substr( $v, 1 );
 				}
 				update_option( 'joturl_longurl_params', $v );
@@ -519,16 +519,16 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				update_option( 'joturl_longurl_params', '' );
 				$message = __( 'Long URL parameters deleted.', 'wp-to-twitter' );
 			}
-			if ( '' != $post['joturl_domain'] && isset( $post['submit'] ) ) {
+			if ( '' !== $post['joturl_domain'] && isset( $post['submit'] ) ) {
 				update_option( 'joturl_domain', $post['joturl_domain'] );
 				$message .= __( 'Custom jotURL domain saved.', 'wp-to-twitter' );
 			} elseif ( isset( $post['clear'] ) ) {
 				update_option( 'joturl_domain', '' );
 				$message = __( 'Custom jotURL domain deleted.', 'wp-to-twitter' );
 			}
-			if ( '' != $post['joturl_shorturl_params'] && isset( $post['submit'] ) ) {
+			if ( '' !== $post['joturl_shorturl_params'] && isset( $post['submit'] ) ) {
 				$v = trim( $post['joturl_shorturl_params'] );
-				if ( substr( $v, 0, 1 ) == '&' || substr( $v, 0, 1 ) == '?' ) {
+				if ( substr( $v, 0, 1 ) === '&' || substr( $v, 0, 1 ) === '?' ) {
 					$v = substr( $v, 1 );
 				}
 				update_option( 'joturl_shorturl_params', $v );

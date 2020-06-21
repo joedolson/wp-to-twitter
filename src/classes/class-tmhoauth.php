@@ -102,7 +102,7 @@ class TmhOAuth {
 			$config
 		);
 		$this->set_user_agent();
-		date_default_timezone_set( $this->config['timezone'] );
+		date_default_timezone_set( $this->config['timezone'] ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.timezone_change_date_default_timezone_set
 	}
 
 	/**
@@ -137,7 +137,7 @@ class TmhOAuth {
 	 * @return void value is stored to the config array class variable
 	 */
 	private function create_nonce( $length = 12, $include_time = true ) {
-		if ( false == $this->config['force_nonce'] ) {
+		if ( false === $this->config['force_nonce'] ) {
 			$sequence = array_merge( range( 0, 9 ), range( 'A', 'Z' ), range( 'a', 'z' ) );
 			$length   = $length > count( $sequence ) ? count( $sequence ) : $length;
 			shuffle( $sequence );
@@ -154,7 +154,7 @@ class TmhOAuth {
 	 * @return void value is stored to the config array class variable
 	 */
 	private function create_timestamp() {
-		$this->config['timestamp'] = ( false == $this->config['force_timestamp'] ? time() : $this->config['timestamp'] );
+		$this->config['timestamp'] = ( false === $this->config['force_timestamp'] ? time() : $this->config['timestamp'] );
 	}
 
 	/**
@@ -278,7 +278,7 @@ class TmhOAuth {
 			$port = ( 'https' === $scheme ) ? '443' : '80';
 		}
 
-		if ( ( 'https' === $scheme && '443' != $port ) || ( 'http' === $scheme && '80' != $port ) ) {
+		if ( ( 'https' === $scheme && '443' !== (string) $port ) || ( 'http' === $scheme && '80' !== (string) $port ) ) {
 			$host = "$host:$port";
 		}
 
@@ -748,7 +748,7 @@ class TmhOAuth {
 			curl_setopt( $c, CURLOPT_HTTPHEADER, $headers );
 		}
 
-		if ( isset( $this->config['prevent_request'] ) && ( true == $this->config['prevent_request'] ) ) {
+		if ( isset( $this->config['prevent_request'] ) && ( true === $this->config['prevent_request'] ) ) {
 			return 0;
 		}
 
