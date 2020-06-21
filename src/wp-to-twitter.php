@@ -862,7 +862,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 												'timezone' => get_option( 'gmt_offset' ),
 												'timestring' => gmdate( 'Y-m-d H:i:s', time() + $time + $offset ),
 												'current_ts' => gmdate( 'Y-m-d H:i:s', time() ),
-												'users'      => $wpt_selected_users,
+												'users'    => $wpt_selected_users,
 											),
 											1
 										),
@@ -1163,8 +1163,11 @@ function wpt_add_twitter_inner_box( $post ) {
 				<span class="dashicons dashicons-clock" aria-hidden="true"></span><span class="screen-reader-text"><?php _e( 'Set Date/Time', 'wp-to-twitter' ); ?></span>
 			</button>
 			<div id="jts">
+				<?php
+				$datavalue = date( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+				?>
 				<label for='wpt_date'><?php _e( 'Date', 'wp-to-twitter' ); ?></label>
-				<input type='date' value='' class='wpt_date date' name='wpt_datetime' id='wpt_date' data-value='<?php echo date( 'Y-m-d', current_time( 'timestamp' ) ); ?>' /><br/>
+				<input type='date' value='' class='wpt_date date' name='wpt_datetime' id='wpt_date' data-value='<?php echo $datavalue ?>' /><br/>
 				<label for='wpt_time'><?php _e( 'Time', 'wp-to-twitter' ); ?></label>
 				<input type='text' value='<?php echo date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); ?>' class='wpt_time time' name='wpt_datetime' id='wpt_time'/>
 			</div>
