@@ -342,7 +342,11 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					if ( 7 == $shortener ) {
 						echo '<p>' . __( 'The Su.pr URL shortener was shut down when Stumbleupon closed doors in June 2018.', 'wp-to-twitter' ) . '</p>';
 					} elseif ( 2 == $shortener ) {
-						echo '<p>' . __( 'WP to Twitter supports Bit.ly shortened links via <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>. This is the only WordPress plug-in supporting the current Bit.ly API I\'m aware of.', 'wp-to-twitter' ) . '</p>';
+						if ( function_exists( 'wbitly_shorten_url' ) ) {
+							echo '<p>' . __( 'WP to Twitter supports Bit.ly shortened links via <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>. If you are having issues with Bit.ly URLs, please request support from <a href="https://wordpress.org/support/plugin/codehaveli-bitly-url-shortener/">the plugin support forums</a>.', 'wp-to-twitter' ) . '</p>';
+						} else {
+							echo '<p>' . __( 'WP to Twitter supports Bit.ly shortened links via <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>. Install that plug-in to use Bit.ly', 'wp-to-twitter' ) . '</p>';
+						}
 					} elseif ( 5 == $shortener || 6 == $shortener ) {
 						echo $form_start;
 						if ( 5 == $shortener ) {
@@ -578,8 +582,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 */
 	function wpt_pick_shortener() {
 		$shortener = (string) get_option( 'jd_shortener' );
-		if ( '2' === $shortener ) {
-			echo '<p>' . __( 'The Bit.ly URL shortener API will be removed from WP to Twitter in March 2020. The version 3 API will be shut down on March 1st, and the plug-in will not be updated to version 4.', 'wp-to-twitter' ) . '</p>';
+		if ( '2' === $shortener && ! function_exists( 'wbitly_shorten_url' ) ) {
+			echo '<p>' . __( 'Bit.ly support is provided via the <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a> plug-in, available from WordPress.org', 'wp-to-twitter' ) . '</p>';
 		}
 		?>
 		<p>
@@ -587,12 +591,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			<select name="jd_shortener" id="jd_shortener">
 				<option value="3" <?php selected( $shortener, '3' ); ?>><?php _e( "Don't shorten URLs.", 'wp-to-twitter' ); ?></option>
 				<option value="4" <?php selected( $shortener, '4' ); ?>>WordPress</option>
-				<?php
-				if ( '2' === $shortener ) { // If Bit.ly is currently enabled, leave available.
-					?>
 				<option value="2" <?php selected( $shortener, '2' ); ?>>Bit.ly</option>
-					<?php
-				}
+				<?php
 				if ( '5' === $shortener ) { // if the user has already selected local server, leave available.
 					?>
 				<option value="5" <?php selected( $shortener, '5' ); ?>><?php _e( 'YOURLS (this server)', 'wp-to-twitter' ); ?></option>
