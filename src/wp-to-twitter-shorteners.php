@@ -136,11 +136,12 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					break;
 				case 6:
 					// remote YOURLS installation.
+					$yourlstoken = trim( get_option( 'yourlstoken' ) );
 					$yourlslogin = trim( get_option( 'yourlslogin' ) );
-					$yourlsapi   = stripcslashes( get_option( 'yourlsapi' ) );
-					if ( $yourlslogin && $yourlsapi ) {
-						$token     = stripcslashes( get_option( 'yourlstoken' ) );
-						$yourlsurl = esc_url( get_option( 'yourlsurl' ) );
+					$yourlsurl   = stripcslashes( get_option( 'yourlsurl' ) );
+					if ( $yourlstoken && $yourlsurl ) {
+						$token     = stripcslashes( $yourlstoken );
+						$yourlsurl = esc_url( $yourlsurl );
 						if ( $token ) {
 							$args = array(
 								'signature' => $token,
@@ -152,7 +153,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						} else {
 							$args = array(
 								'username' => $yourlslogin,
-								'password' => $yourlsapi,
+								'password' => $yourlsurl,
 								'url'      => $encoded,
 								'action'   => 'shorturl',
 								'format'   => 'json',
@@ -286,7 +287,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			$pass      = stripslashes( get_option( 'yourlsapi' ) );
 			$token     = get_option( 'yourlstoken' );
 			if ( $token ) {
-				$decoded = wpt_remote_json( $yourl_api . "?action=expand&shorturl=$short_url&format=json&signature=$token&username=$user&password=$pass" );
+				$decoded = wpt_remote_json( $yourl_api . "?action=expand&shorturl=$short_url&format=json&signature=$token" );
 			} else {
 				$decoded = wpt_remote_json( $yourl_api . "?action=expand&shorturl=$short_url&format=json&username=$user&password=$pass" );
 			}
