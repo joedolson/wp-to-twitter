@@ -99,7 +99,10 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					if ( ! empty( $bitlyurl ) ) {
 						$shrink = $bitlyurl;
 					} else {
-						if ( function_exists( 'wbitly_shorten_url' ) ) {
+						if ( function_exists( 'wbitly_generate_shorten_url' ) ) {
+							$shrink = wbitly_generate_shorten_url( $url );
+						}
+						if ( function_exists( 'wbitly_shorten_url' ) && ! $shrink ) {
 							$shrink = wbitly_shorten_url( $url );
 						}
 					}
