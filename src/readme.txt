@@ -63,6 +63,11 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.4.7 =
+
+* Bug fix: Due to slower processing in the block editor, changed rules for differentiating between new and edited posts.
+* Bug fix: Bit.ly supporting plug-in changed function name.
+
 = 3.4.6 =
 
 * Bug fix: YOURLS queries not executing.

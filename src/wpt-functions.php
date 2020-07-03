@@ -549,7 +549,8 @@ function wtt_option_selected( $field, $value, $type = 'checkbox' ) {
  * @return integer (boolean)
  */
 function wpt_post_is_new( $modified, $postdate ) {
-	$modifier  = apply_filters( 'wpt_edit_sensitivity', 0 ); // alter time in seconds to modified date.
+	// Default allows up to a 10 second discrepancy for slow processing. 
+	$modifier  = apply_filters( 'wpt_edit_sensitivity', 10 ); // alter time in seconds to modified date.
 	$mod_date  = strtotime( $modified );
 	$post_date = strtotime( $postdate ) + $modifier;
 	if ( $mod_date <= $post_date ) { // if post_modified is before or equal to post_date.
