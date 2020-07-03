@@ -332,7 +332,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				$transport = 'wp_http';
 				$binary    = wp_remote_retrieve_body( $remote );
 			}
-			wpt_mail( 'Media fetched binary', print_r( $remote, 1 ) . "\n\n" . print_r( $binary, 1 ), $parent );
+			wpt_mail( 'WP to Twitter: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . print_r( $remote, 1 ), $parent );
 			if ( ! $binary ) {
 				return;
 			}

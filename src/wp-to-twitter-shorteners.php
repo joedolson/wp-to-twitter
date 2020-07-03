@@ -29,7 +29,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 * @return shortened URL.
 	 */
 	function wpt_shorten_url( $url, $post_title, $post_ID, $testmode = false, $store_urls = true ) {
-		wpt_mail( 'Initial Link', "$url, $post_title, $post_ID, $testmode", $post_ID ); // DEBUG.
+		wpt_mail( 'Shortener running: initial link', "Url: $url, Title: $post_title, Post ID: $post_ID, Test mode: $testmode", $post_ID ); // DEBUG.
 		// filter link before sending to shortener or adding analytics.
 		$shortener = get_option( 'jd_shortener' );
 		// if the URL already exists, return it without processing.
@@ -169,7 +169,6 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 
 						$api_url = add_query_arg( $args, $yourlsurl );
 						$json    = wpt_remote_json( $api_url, false );
-						wpt_mail( 'YOURLS JSON Response', print_r( $json, 1 ), $post_ID ); // DEBUG YOURLS response.
 						if ( is_object( $json ) ) {
 							$shrink = $json->shorturl;
 						} else {

@@ -724,11 +724,13 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 		}
 	}
 	if ( '0' === get_option( 'jd_tweet_default' ) ) {
-		$default = ( 'no' !== $tweet_this ) ? true : false;
+		$default      = ( 'no' !== $tweet_this ) ? true : false;
+		$text_default = 'no';
 	} else {
-		$default = ( 'yes' === $tweet_this ) ? true : false;
+		$default      = ( 'yes' === $tweet_this ) ? true : false;
+		$text_default = 'yes';
 	}
-	wpt_mail( '1: Tweet Template', "$tweet_this / (Original: " . get_option( 'jd_tweet_default' ) . ") / $type", $post_ID ); // DEBUG.
+	wpt_mail( '1: Tweet Status', "Should tweet: $tweet_this; Setting: $text_default; Publication method: $type", $post_ID ); // DEBUG.
 	if ( $default ) { // default switch: depend on default settings.
 		$post_info = wpt_post_info( $post_ID );
 		$media     = wpt_post_with_media( $post_ID, $post_info );
@@ -737,11 +739,14 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 		} else {
 			$auth = $post_info['authId'];
 		}
-		wpt_mail( '2: POST Debug Data', 'Post_Info: ' . print_r( $post_info, 1 ) . " / $type", $post_ID ); // DEBUG.
+		$debug_post_info = $post_info;
+		unset( $debug_post_info['post_content'] );
+		unset( $debug_post_info['postContent'] );
+		wpt_mail( '2: WP to Twitter Post Info (post content omitted)', print_r( $debug_post_info, 1 ), $post_ID ); // DEBUG.
 		if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() && function_exists( 'wpt_filter_post_info' ) ) {
 			$filter = wpt_filter_post_info( $post_info );
 			if ( true === $filter ) {
-				wpt_mail( '3: Post caught by wpt_filter_post_info', print_r( $post_info, 1 ) . " / $type", $post_ID );
+				wpt_mail( '3: Post blocked by WP Tweets Pro custom filters', 'No additional data available', $post_ID );
 
 				return false;
 			}
@@ -754,7 +759,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 		$post_type = $post_info['postType'];
 		if ( 'future' === $type || 'future' === get_post_meta( $post_ID, 'wpt_publishing', true ) ) {
 			$new = 1; // if this is a future action, then it should be published regardless of relationship.
-			wpt_mail( '4a: Is a future post', print_r( $post_info, 1 ) . " / $type", $post_ID );
+			wpt_mail( '4a: Post is a scheduled post', 'See Post Info data', $post_ID );
 			delete_post_meta( $post_ID, 'wpt_publishing' );
 		} else {
 			// if the post modified date and the post date are the same, this is new.
@@ -773,7 +778,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 			// identify whether limited by category/taxonomy.
 			$continue = wpt_category_limit( $post_type, $post_info, $post_ID );
 			if ( false === $continue ) {
-				wpt_mail( '4b: Limited by category filters', print_r( $post_info, 1 ), $post_ID );
+				wpt_mail( '4b: WP Tweets Pro: Limited by term filters', 'This post was rejected by a taxonomy/term filter', $post_ID );
 				return false;
 			}
 			// create Tweet and ID whether current action is edit or new.
@@ -791,13 +796,13 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 						return false;
 					}
 				}
-				wpt_mail( '4b: Is edited post', 'Tweet this: ' . print_r( $post_info, 1 ) . " / $type", $post_ID ); // DEBUG.
+				wpt_mail( '4b: Post action is edit', 'This event was a post edit action, not a post publication.' . "\n" . 'Modified Date: ' . $post_info['post_modified'] . "\n\n" . 'Publication date:' . $post_info['post_date'], $post_ID ); // DEBUG.
 				if ( '1' === $post_type_settings[ $post_type ]['post-edited-update'] ) {
 					$nptext  = stripcslashes( $post_type_settings[ $post_type ]['post-edited-text'] );
 					$oldpost = true;
 				}
 			} else {
-				wpt_mail( '4c: Is new post', 'Tweet this: ' . print_r( $post_info, 1 ) . " / $type", $post_ID ); // DEBUG.
+				wpt_mail( '4c: Post action is publish', 'This event was a post publish action.' . "\n" . 'Modified Date: ' . $post_info['post_modified'] . "\n\n" . 'Publication date:' . $post_info['post_date'], $post_ID ); // DEBUG.
 				if ( '1' === $post_type_settings[ $post_type ]['post-published-update'] ) {
 					$nptext  = stripcslashes( $post_type_settings[ $post_type ]['post-published-text'] );
 					$newpost = true;
@@ -806,7 +811,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 			if ( $newpost || $oldpost ) {
 				$template = ( '' !== $custom_tweet ) ? $custom_tweet : $nptext;
 				$sentence = jd_truncate_tweet( $template, $post_info, $post_ID );
-				wpt_mail( '5: Tweet Truncated', "Truncated Tweet: $sentence / $template / $type", $post_ID ); // DEBUG.
+				wpt_mail( '5: Tweet Template Processed', "Template: $template; Tweet: $sentence", $post_ID ); // DEBUG.
 				if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 					$sentence2 = jd_truncate_tweet( $template, $post_info, $post_ID, false, $auth );
 				}
@@ -942,7 +947,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 			}
 		} else {
 			if ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) {
-				wpt_mail( '3c: Not a Tweeted post type', 'Post_Info: ' . print_r( $post_info, 1 ) . " / $type", $post_ID );
+				wpt_mail( '3c: Not a Tweeted post type', 'This post type is not enabled for Tweeting: ' . $post_type, $post_ID );
 			}
 
 			return $post_ID;
@@ -1596,7 +1601,7 @@ function wpt_save_post( $id ) {
 	// WPT PRO.
 	// only send debug data if post meta is updated.
 	if ( true === $update || is_int( $update ) ) {
-		wpt_mail( 'Post Meta Inserted', print_r( $_POST, 1 ), $id ); // DEBUG.
+		wpt_mail( 'Post Meta Inserted', 'WP to Twitter post meta was updated', $id ); // DEBUG.
 	}
 	if ( isset( $_POST['wpt-delete-debug'] ) && 'true' === $_POST['wpt-delete-debug'] ) {
 		delete_post_meta( $id, '_wpt_debug_log' );
