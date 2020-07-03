@@ -549,7 +549,7 @@ function wtt_option_selected( $field, $value, $type = 'checkbox' ) {
  * @return integer (boolean)
  */
 function wpt_post_is_new( $modified, $postdate ) {
-	// Default allows up to a 10 second discrepancy for slow processing. 
+	// Default allows up to a 10 second discrepancy for slow processing.
 	$modifier  = apply_filters( 'wpt_edit_sensitivity', 10 ); // alter time in seconds to modified date.
 	$mod_date  = strtotime( $modified );
 	$post_date = strtotime( $postdate ) + $modifier;

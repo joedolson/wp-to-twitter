@@ -67,6 +67,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 * Bug fix: Due to slower processing in the block editor, changed rules for differentiating between new and edited posts.
 * Bug fix: Bit.ly supporting plug-in changed function name.
+* Update debugging messages & data for better clarity.
 
 = 3.4.6 =
 
