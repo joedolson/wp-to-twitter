@@ -945,12 +945,6 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 				}
 				// END WPT PRO.
 			}
-		} else {
-			if ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) {
-				wpt_mail( '3c: Not a Tweeted post type', 'This post type is not enabled for Tweeting: ' . $post_type, $post_ID );
-			}
-
-			return $post_ID;
 		}
 	}
 
@@ -1701,6 +1695,9 @@ function wpt_in_post_type( $id ) {
 	$type       = get_post_type( $id );
 	if ( in_array( $type, $post_types, true ) ) {
 		return true;
+	}
+	if ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) {
+		wpt_mail( '0: Not a Tweeted post type', 'This post type is not enabled for Tweeting: ' . $type, $id );
 	}
 
 	return false;
