@@ -289,6 +289,17 @@ function wpt_check_recent_tweet( $id, $auth ) {
  * @return boolean Success of query.
  */
 function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false ) {
+	// If an ID is set but the post is not currently present or published, ignore.
+	if ( $id ) {
+		$status = get_post_status( $id );
+		if ( ! $status || 'publish' !== $status ) {
+			$error = __( 'This post is no longer published or has been deleted', 'wp-to-twitter' );
+			wpt_saves_error( $id, $auth, $twit, $error, '404', time() );
+			wpt_set_log( 'wpt_status_message', $id, $error );
+
+			return false;
+		}
+	}
 	$recent = wpt_check_recent_tweet( $id, $auth );
 	$error  = false;
 	if ( '1' === get_option( 'wpt_rate_limiting' ) ) {
