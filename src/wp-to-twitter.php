@@ -301,7 +301,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			return false;
 		}
 	}
-	$error  = false;
+	$error = false;
 	if ( '1' === get_option( 'wpt_rate_limiting' ) ) {
 		// check whether this post needs to be rate limited.
 		$continue = wpt_test_rate_limit( $id, $auth );
@@ -314,7 +314,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 
 	$recent = wpt_check_recent_tweet( $id, $auth );
 	if ( $recent ) {
-		wpt_mail( 'This post was just Tweeted, and this is a duplicate.',  'Post ID: ' . $id . '; Account: ' . $auth );
+		wpt_mail( 'This post was just Tweeted, and this is a duplicate.', 'Post ID: ' . $id . '; Account: ' . $auth );
 
 		return false;
 	}
