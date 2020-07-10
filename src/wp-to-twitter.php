@@ -1823,6 +1823,7 @@ function wpt_twit_xmlrpc( $id ) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || wp_is_post_revision( $id ) || ! wpt_in_post_type( $id ) ) {
 		return $id;
 	}
+	wpt_mail( 'Tweeting XMLRPC published post', $id );
 	wpt_tweet( $id, 'xmlrpc' );
 	return $id;
 }
