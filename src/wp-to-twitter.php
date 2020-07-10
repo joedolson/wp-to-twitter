@@ -17,7 +17,7 @@
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
  * Domain Path: lang
- * Version:     3.4.6
+ * Version:     3.4.7
  */
 
 /*
@@ -57,7 +57,7 @@ require_once( plugin_dir_path( __FILE__ ) . 'wpt-widget.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php' );
 
 global $wpt_version;
-$wpt_version = '3.4.6';
+$wpt_version = '3.4.7';
 
 add_action( 'init', 'wpt_load_textdomain' );
 /**
@@ -808,7 +808,7 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 					}
 				}
 				wpt_mail( '4b: Post action is edit', 'This event was a post edit action, not a post publication.' . "\n" . 'Modified Date: ' . $post_info['post_modified'] . "\n\n" . 'Publication date:' . $post_info['post_date'], $post_ID ); // DEBUG.
-				if ( '1' ===  (string) $post_type_settings[ $post_type ]['post-edited-update'] ) {
+				if ( '1' === (string) $post_type_settings[ $post_type ]['post-edited-update'] ) {
 					$nptext  = stripcslashes( $post_type_settings[ $post_type ]['post-edited-text'] );
 					$oldpost = true;
 				}
@@ -1093,7 +1093,7 @@ function wpt_add_twitter_outer_box() {
 	$wpt_post_types = get_option( 'wpt_post_types' );
 	if ( is_array( $wpt_post_types ) ) {
 		foreach ( $wpt_post_types as $key => $value ) {
-			if ( '1' ===  (string) $value['post-published-update'] || '1' ===  (string) $value['post-edited-update'] ) {
+			if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] ) {
 				add_meta_box( 'wp2t', 'WP to Twitter', 'wpt_add_twitter_inner_box', $key, 'side' );
 			}
 		}
@@ -1724,7 +1724,7 @@ function wpt_allowed_post_types() {
 	$allowed_types      = array();
 	if ( is_array( $post_type_settings ) && ! empty( $post_type_settings ) ) {
 		foreach ( $post_type_settings as $type => $settings ) {
-			if ( '1' ===  (string) $settings['post-edited-update'] || '1' ===  (string) $settings['post-published-update'] ) {
+			if ( '1' === (string) $settings['post-edited-update'] || '1' === (string) $settings['post-published-update'] ) {
 				$allowed_types[] = $type;
 			}
 		}
