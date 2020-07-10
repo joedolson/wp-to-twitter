@@ -68,6 +68,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Bug fix: Changed rules for differentiating between new and edited posts.
 * Bug fix: Bit.ly supporting plug-in changed function name.
 * Bug fix: Variable types different between default settings & saved settings.
+* Bug fix: Prevent scheduled Tweets (Pro) if post has been deleted.
 * Update debugging messages & data for better clarity.
 
 = 3.4.6 =
