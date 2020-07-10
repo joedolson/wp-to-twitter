@@ -1744,6 +1744,7 @@ function wpt_future_to_publish( $post ) {
 	if ( wp_is_post_autosave( $id ) || wp_is_post_revision( $id ) || ! wpt_in_post_type( $id ) ) {
 		return;
 	}
+	wpt_mail( 'Transitioning future to publish', $id );
 	wpt_twit_future( $id );
 }
 
@@ -1763,6 +1764,7 @@ function wpt_twit( $id ) {
 	// is there any reason to accept any other status?
 	// This is an issue only until the release of WP 4.7.
 	remove_action( 'save_post', 'wpt_twit', 15 );
+	wpt_mail( 'Tweeting published post', $id );
 	wpt_twit_instant( $id );
 	add_action( 'save_post', 'wpt_twit', 15 );
 }
