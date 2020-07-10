@@ -289,6 +289,7 @@ function wpt_check_recent_tweet( $id, $auth ) {
  * @return boolean Success of query.
  */
 function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false ) {
+	$http_code = 0;
 	// If an ID is set but the post is not currently present or published, ignore.
 	if ( $id ) {
 		$status = get_post_status( $id );
@@ -300,18 +301,21 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			return false;
 		}
 	}
-	$recent = wpt_check_recent_tweet( $id, $auth );
 	$error  = false;
 	if ( '1' === get_option( 'wpt_rate_limiting' ) ) {
 		// check whether this post needs to be rate limited.
 		$continue = wpt_test_rate_limit( $id, $auth );
 		if ( ! $continue ) {
+			wpt_mail( 'This post was blocked by WP to Twitter rate limiting.', 'Post ID: ' . $id . '; Account: ' . $auth );
+
 			return false;
 		}
 	}
 
-	$http_code = 0;
+	$recent = wpt_check_recent_tweet( $id, $auth );
 	if ( $recent ) {
+		wpt_mail( 'This post was just Tweeted, and this is a duplicate.',  'Post ID: ' . $id . '; Account: ' . $auth );
+
 		return false;
 	}
 
@@ -319,6 +323,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		$error = __( 'This account is not authorized to post to Twitter.', 'wp-to-twitter' );
 		wpt_saves_error( $id, $auth, $twit, $error, '401', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
+		wpt_mail( 'Account not authorized with Twitter', 'Post ID: ' . $id );
 
 		return false;
 	} // exit silently if not authorized.
@@ -1111,7 +1116,7 @@ function wpt_add_twitter_debug_box() {
 		$wpt_post_types = get_option( 'wpt_post_types' );
 		if ( is_array( $wpt_post_types ) ) {
 			foreach ( $wpt_post_types as $key => $value ) {
-				if ( '1' === $value['post-published-update'] || '1' === $value['post-edited-update'] ) {
+				if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] ) {
 					add_meta_box( 'wp2t-debug', 'WP to Twitter Debugging', 'wpt_show_debug', $key, 'advanced' );
 				}
 			}
