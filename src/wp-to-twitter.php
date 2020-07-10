@@ -113,15 +113,15 @@ function wptotwitter_activate() {
 	if ( $new_install ) {
 		$initial_settings = array(
 			'post' => array(
-				'post-published-update' => 1,
+				'post-published-update' => '1',
 				'post-published-text'   => 'New post: #title# #url#',
-				'post-edited-update'    => 0,
+				'post-edited-update'    => '0',
 				'post-edited-text'      => 'Post Edited: #title# #url#',
 			),
 			'page' => array(
-				'post-published-update' => 0,
+				'post-published-update' => '0',
 				'post-published-text'   => 'New page: #title# #url#',
-				'post-edited-update'    => 0,
+				'post-edited-update'    => '0',
 				'post-edited-text'      => 'Page edited: #title# #url#',
 			),
 		);
