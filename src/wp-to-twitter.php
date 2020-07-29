@@ -812,13 +812,13 @@ function wpt_tweet( $post_ID, $type = 'instant' ) {
 						return false;
 					}
 				}
-				wpt_mail( '4b: Post action is edit', 'This event was a post edit action, not a post publication.' . "\n" . 'Modified Date: ' . $post_info['post_modified'] . "\n\n" . 'Publication date:' . $post_info['post_date'], $post_ID ); // DEBUG.
+				wpt_mail( '4b: Post action is edit', 'This event was a post edit action, not a post publication.' . "\n" . 'Modified Date: ' . $post_info['postModified'] . "\n\n" . 'Publication date:' . $post_info['postDate'], $post_ID ); // DEBUG.
 				if ( '1' === (string) $post_type_settings[ $post_type ]['post-edited-update'] ) {
 					$nptext  = stripcslashes( $post_type_settings[ $post_type ]['post-edited-text'] );
 					$oldpost = true;
 				}
 			} else {
-				wpt_mail( '4c: Post action is publish', 'This event was a post publish action.' . "\n" . 'Modified Date: ' . $post_info['post_modified'] . "\n\n" . 'Publication date:' . $post_info['post_date'], $post_ID ); // DEBUG.
+				wpt_mail( '4c: Post action is publish', 'This event was a post publish action.' . "\n" . 'Modified Date: ' . $post_info['postModified'] . "\n\n" . 'Publication date:' . $post_info['postDate'], $post_ID ); // DEBUG.
 				if ( '1' === (string) $post_type_settings[ $post_type ]['post-published-update'] ) {
 					$nptext  = stripcslashes( $post_type_settings[ $post_type ]['post-published-text'] );
 					$newpost = true;
