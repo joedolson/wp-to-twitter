@@ -217,7 +217,7 @@ function wpt_update_settings() {
 	<div class="metabox-holder">
 
 	<?php
-		$default = ( '' === get_option( 'wtt_twitter_username' ) ) ? 'connection' : 'basic';
+		$default = ( '' === get_option( 'wtt_twitter_username', '' ) ) ? 'connection' : 'basic';
 		$current = ( isset( $_GET['tab'] ) ) ? $_GET['tab'] : $default;
 	if ( 'connection' === $current ) {
 		if ( function_exists( 'wtt_connect_oauth' ) ) {
