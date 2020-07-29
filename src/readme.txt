@@ -63,6 +63,12 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.4.8 =
+
+* Bug fix: Incorrect variable type in default tab assignment.
+* Bug fix: Two incorrectly named array keys in debugging.
+* Bug fix: Shortened URLs shouldn't be called if using WP permalinks.
+
 = 3.4.7 =
 
 * Bug fix: Changed rules for differentiating between new and edited posts.
