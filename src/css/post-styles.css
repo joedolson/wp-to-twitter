@@ -27,6 +27,12 @@
 	border: 1px solid #eee; 
 }
 
+#wpt_selected_image img {
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+}
+
 
 .wp-to-twitter .panel-toggle {
 	margin-bottom: 0;
