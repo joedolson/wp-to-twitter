@@ -63,6 +63,11 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.4.9 =
+
+* Clear a couple PHP notices.
+* Add styles for Pro.
+
 = 3.4.8 =
 
 * Bug fix: Incorrect variable type in default tab assignment.
