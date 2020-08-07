@@ -83,7 +83,7 @@ function wpt_set_log( $data, $id, $message ) {
  *
  * @return stored message.
  */
-function wpt_log( $data, $id ) {
+function wpt_get_log( $data, $id ) {
 	if ( 'test' === $id ) {
 		$log = get_option( $data );
 	} elseif ( 'last' === $id ) {
@@ -124,7 +124,7 @@ function wpt_check_functions() {
 		if ( $testpost ) {
 			$message .= '<li><strong>' . __( 'WP to Twitter successfully submitted a status update to Twitter.', 'wp-to-twitter' ) . '</strong></li>';
 		} else {
-			$error    = wpt_log( 'wpt_status_message', 'test' );
+			$error    = wpt_get_log( 'wpt_status_message', 'test' );
 			$message .= '<li class="error"><strong>' . __( 'WP to Twitter failed to submit an update to Twitter.', 'wp-to-twitter' ) . '</strong></li>';
 			$message .= "<li class='error'>$error</li>";
 		}
@@ -184,7 +184,7 @@ function wpt_settings_tabs() {
  */
 function wpt_show_last_tweet() {
 	if ( apply_filters( 'wpt_show_last_tweet', true ) ) {
-		$log = wpt_log( 'wpt_status_message', 'last' );
+		$log = wpt_get_log( 'wpt_status_message', 'last' );
 		if ( ! empty( $log ) && is_array( $log ) ) {
 			$post_ID = $log[0];
 			$post    = get_post( $post_ID );

@@ -1150,7 +1150,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( isset( $_REQUEST['message'] ) && '10' !== $_REQUEST['message'] ) {
 			// don't display when draft is updated or if no message.
 			if ( ! ( ( '1' === $_REQUEST['message'] ) && ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) ) && 'no' !== $tweet_this ) {
-				$log   = wpt_log( 'wpt_status_message', $post_id );
+				$log   = wpt_get_log( 'wpt_status_message', $post_id );
 				$class = ( __( 'Tweet sent successfully.', 'wp-to-twitter' ) !== $log ) ? 'error' : 'updated';
 				if ( '' !== trim( $log ) ) {
 					echo "<div class='$class'><p>$log</p></div>";
@@ -1514,7 +1514,7 @@ function wpt_ajax_tweet() {
 					break;
 			}
 			// Translators: Full text of Tweet, time scheduled for.
-			$return = ( 'tweet' === $action ) ? wpt_log( 'wpt_status_message', $post_ID ) : sprintf( __( 'Tweet scheduled: %1$s for %2$s', 'wp-tweets-pro' ), '"' . $sentence . '"', $print_schedule );
+			$return = ( 'tweet' === $action ) ? wpt_get_log( 'wpt_status_message', $post_ID ) : sprintf( __( 'Tweet scheduled: %1$s for %2$s', 'wp-tweets-pro' ), '"' . $sentence . '"', $print_schedule );
 			echo $return;
 			if ( count( $authors ) > 1 ) {
 				echo '<br />';
