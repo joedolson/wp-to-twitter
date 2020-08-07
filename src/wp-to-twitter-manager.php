@@ -891,6 +891,7 @@ function wpt_sidebar() {
  */
 function wpt_do_server_check( $test = false ) {
 	$wpt_server_string = get_option( 'wpt_server_string' );
+	$date              = '';
 	if ( ! $wpt_server_string || isset( $_GET['refresh_wpt_server_string'] ) || true === $test ) {
 		$server_time = gmdate( DATE_COOKIE );
 		$response    = wp_remote_get(
@@ -913,7 +914,7 @@ function wpt_do_server_check( $test = false ) {
 				}
 				$warning .= '</ul>';
 			}
-			$errors = '<li>' . $ssl . $warning . '</li>';
+			$errors = '<li>' . $warning . '</li>';
 		} else {
 			$date   = gmdate( DATE_COOKIE, strtotime( $response['headers']['date'] ) );
 			$errors = '';

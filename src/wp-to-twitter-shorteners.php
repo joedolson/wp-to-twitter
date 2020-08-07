@@ -258,7 +258,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			$shortener = get_option( 'jd_shortener' );
 			// Don't store URLs if the not shortening is selected.
 			if ( '3' === $shortener ) {
-				return void;
+				return;
 			}
 			if ( wpt_short_url( $post_ID ) !== $url && wpt_is_valid_url( $url ) ) {
 				update_post_meta( $post_ID, '_wpt_short_url', $url );
