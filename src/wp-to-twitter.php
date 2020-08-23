@@ -1038,10 +1038,19 @@ function wpt_generate_hash_tags( $post_ID ) {
 				$t_id      = $value->term_id;
 				$term_meta = get_option( "wpt_taxonomy_$t_id" );
 			}
-			if ( 'slug' === get_option( 'wpt_tag_source' ) ) {
+			$source = get_option( 'wpt_tag_source' );
+			if ( 'slug' === $source ) {
+				// If the tag has an '@' symbol as the first character, assume it is a mention unless set.
+				if ( 0 === stripos( $value->name, '@' ) && ! $term_meta ) {
+					$term_meta = 5;
+				}
 				$tag = $value->slug;
 			} else {
 				$tag = $value->name;
+				// If the tag has an '@' symbol as the first character, assume it is a mention unless set.
+				if ( 0 === stripos( $value->name, '@' ) && ! $term_meta ) {
+					$term_meta = 4;
+				}
 			}
 			$strip   = get_option( 'jd_strip_nonan' );
 			$search  = '/[^\p{L}\p{N}\s]/u';
