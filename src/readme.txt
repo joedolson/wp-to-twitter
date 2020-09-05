@@ -63,6 +63,10 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.4.11 =
+
+* Add support for <a href="https://wordpress.org/plugins/hum/">Hum URL shortener</a>
+
 = 3.4.10 =
 
 * Feature: ability to add mentions in tags to be parsed with @ instead of #.

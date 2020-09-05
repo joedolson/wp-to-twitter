@@ -223,6 +223,15 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						}
 					}
 					break;
+				case 11:
+					// Hum URL shortener.
+					if ( class_exists( 'Hum' ) && method_exists( 'Hum', 'get_shortlink' ) ) {
+						$hum    = new Hum;
+						$shrink = $hum->get_shortlink( $url, $post_ID, 'post', true );
+					} else {
+						$shrink = $url;
+					}
+					break;
 				default:
 					$shrink = $url;
 			}
@@ -590,7 +599,12 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	function wpt_pick_shortener() {
 		$shortener = (string) get_option( 'jd_shortener' );
 		if ( '2' === $shortener && ! function_exists( 'wbitly_shorten_url' ) ) {
-			echo '<p>' . __( 'Bit.ly support is provided via the <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a> plug-in, available from WordPress.org', 'wp-to-twitter' ) . '</p>';
+			$install_bitly = admin_url( 'plugin-install.php?s=codehaveli+bitly+url+shortener&tab=search&type=term' );
+			echo '<p>' . __( 'Bit.ly support is provided via the <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a> (<a href="' . $install_bitly . '">Install</a>) plug-in, available from WordPress.org', 'wp-to-twitter' ) . '</p>';
+		}
+		$install_hum = admin_url( 'plugin-install.php?s=hum+url+shortener+norris&tab=search&type=term' );
+		if ( '11' === $shortener && ! class_exists( 'Hum' ) ) {
+			echo '<p>' . __( 'Hum is a custom shortener plug-in. Support is provided via the <a href="https://wordpress.org/plugins/hum/">Hum URL Shortener</a> (<a href="' . $install_hum . '">Install</a>) plug-in, available from WordPress.org', 'wp-to-twitter' ) . '</p>';
 		}
 		?>
 		<p>
@@ -608,6 +622,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				?>
 				<option value="6" <?php selected( $shortener, '6' ); ?>><?php _e( 'YOURLS (remote server)', 'wp-to-twitter' ); ?></option>
 				<option value="10" <?php selected( $shortener, '10' ); ?>>jotURL</option>
+				<option value="11" <?php selected( $shortener, '11' ); ?>>Hum</option>
 				<?php
 				// Add a custom shortener.
 				echo apply_filters( 'wpt_choose_shortener', '', $shortener );
