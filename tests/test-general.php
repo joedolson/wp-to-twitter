@@ -8,7 +8,7 @@
 /**
  * Sample test case.
  */
-class Tests_WP_to_Twitter_General extends WP_UnitTestCase {
+class Tests_WP_To_Twitter_General extends WP_UnitTestCase {
 	/**
 	 * Verify not in debug mode.
 	 */
