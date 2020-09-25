@@ -7,7 +7,7 @@ Tested up to: 5.5
 Requires PHP: 5.6
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.4.9
+Stable tag: 3.4.10
 
 Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -69,7 +69,6 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Feature: Add support for <a href="https://wordpress.org/plugins/hum/">Hum URL shortener</a>
 * Improve install process for 3rd-party plugin URL shorteners.
 * Use Full post modified & publish dates in debugging info. (Including seconds.)
-* 
 
 = 3.4.9 =
 
