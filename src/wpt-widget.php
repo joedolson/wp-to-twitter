@@ -225,7 +225,7 @@ function wpt_twitter_feed( $instance ) {
 		<p>
 			<img src='$avatar' alt='' class='wpt-twitter-avatar $img_alignment $verified' />
 			<span class='wpt-twitter-name'>$name</span><br />
-			<span class='wpt-twitter-id'><a href='$follow_url'>@" . esc_html( $twitter_id ) . '</a></span>
+			<span class='wpt-twitter-id'><a href='$follow_url'>@" . esc_html( str_replace( '@', '', $twitter_id ) ) . '</a></span>
 		</p>';
 		$header          .= '</div>';
 	} else {
