@@ -361,25 +361,20 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$category     = trim( $post['category'] );
 	$categories   = trim( $post['cats'] );
 	$cat_desc     = trim( $post['cat_desc'] );
-	$user_account = get_user_meta( $auth, 'wtt_twitter_username', true );
 	$tags         = wpt_generate_hash_tags( $post_ID );
 	$date         = trim( $post['postDate'] );
 	$modified     = trim( $post['postModified'] );
-
-	$account = get_option( 'wtt_twitter_username', '' );
+	$account      = get_option( 'wtt_twitter_username', '' );
+	$user_meta    = get_user_meta( $auth, 'wp-to-twitter-user-username', true );
+	$user_account = get_user_meta( $auth, 'wtt_twitter_username', true );
+	$user_account = ( $user_account ) ? $user_account: $user_meta;
 	if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
-		// Only execute these changes if the user is not connected to Twitter and does have a username entered.
-		$user_meta = get_user_meta( $auth, 'wp-to-twitter-user-username', true );
-		if ( '' === $user_account && '' !== trim( $user_meta ) ) {
-			if ( 'mainAtTwitter' === get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
-				$user_account = stripcslashes( $user_meta );
-				$account      = $user_account;
-			} elseif ( 'mainAtTwitterPlus' === get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
-				$user_account = stripcslashes( $user_meta . ' @' . get_option( 'wtt_twitter_username' ) );
-				$account      = $user_account;
-			}
-		} elseif ( '' !== $user_account ) {
-			$account = $user_account;
+		if ( 'mainAtTwitter' === get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
+			$account      = $user_account;
+		} elseif ( 'mainAtTwitterPlus' === get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
+			$account = stripcslashes( $user_account . ' @' . get_option( 'wtt_twitter_username' ) );
+		} else {
+			$account = ( $user_account ) ? $user_account : $account;
 		}
 	}
 	$account = ( '' !== $account ) ? "@$account" : ''; // value of #account#.
