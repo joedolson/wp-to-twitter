@@ -182,12 +182,6 @@ label[for="wpt_license_key"] {
 	color: #213e7f;
 }
 
-#wpt_settings_page input[type=text] {
-	font-size: 1.3em;
-	padding: 4px;
-	margin: 0 0 4px;
-}
-
 .wpt-permissions .wptab {
 	padding: 10px;
 	min-height: 160px !important;
