@@ -141,7 +141,7 @@ function wpt_get_user( $twitter_id = false ) {
 	$token_secret = get_option( 'oauth_token_secret' );
 	if ( $key && $secret && $token && $token_secret ) {
 		$connection = new Wpt_TwitterOAuth( $key, $secret, $token, $token_secret );
-		$result     = $connection->get( "https://api.twitter.com/1.1/users/show.json?screen_name=$twitter_id&include_ext_alt_text=true", $options );
+		$result     = $connection->get( "https://api.twitter.com/1.1/users/show.json?screen_name=$twitter_id", $options );
 
 		return json_decode( $result );
 	} else {

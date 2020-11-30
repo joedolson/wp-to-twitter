@@ -259,7 +259,6 @@ class WPT_TwitterFeed {
 			array(
 				'screen_name'          => $screenname,
 				'count'                => 20,
-				'include_ext_alt_text' => 'true',
 			)
 		);
 
