@@ -64,6 +64,12 @@ function wpt_updated_settings() {
 					<p>' . __( 'OAuth Authentication Failed. Your server time is not in sync with the Twitter servers. Talk to your hosting service to see what can be done.', 'wp-to-twitter' ) . '</p>
 				</div>
 			' );
+		} elseif ( 'noconnection' === $oauth_message ) {
+			print( '
+				<div id="message" class="error fade">
+					<p>' . __( 'OAuth Authentication Failed. WP to Twitter was unable to complete a connection with those credentials.', 'wp-to-twitter' ) . '</p>
+				</div>
+			' );
 		} else {
 			print( '
 				<div id="message" class="error fade">
@@ -623,7 +629,7 @@ function wpt_update_settings() {
 
 						<p>
 							<input type="checkbox" name="jd_individual_twitter_users" id="jd_individual_twitter_users" value="1" <?php echo wpt_checkbox( 'jd_individual_twitter_users' ); ?> />
-							<label for="jd_individual_twitter_users"><?php _e( 'Authors have individual Twitter accounts', 'wp-to-twitter' ); ?></label>
+							<label for="jd_individual_twitter_users"><?php _e( 'Enable User Account Settings', 'wp-to-twitter' ); ?></label>
 						</p>
 
 						<div class='wpt-permissions'>
@@ -969,12 +975,23 @@ add_filter( 'wpt_tweet_length', 'wpt_tweet_length' );
  * @return string HTML control.
  */
 function wpt_tweet_length() {
-	$tweet_length = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : 140 );
+	$language = get_locale();
+	switch ( $language ) {
+		case 'zh_CN':
+		case 'zh_HK':
+		case 'zh_HK':
+		case 'ja':
+		case 'ko_KR':
+			$default = 140;
+			break;
+		default:
+			$default = 280;
+	}
+	$tweet_length = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : $default );
 	$control      = "<p class='tweet_length_control'>
-					<label for='wpt_tweet_length'>" . __( 'Tweet Length (max 280 characters)', 'wp-to-twitter' ) . "</label>
+					<label for='wpt_tweet_length'>" . __( 'Maximum Tweet Length', 'wp-to-twitter' ) . "</label>
 					<input type='number' min='0' max='280' step='1' value='$tweet_length' id='wpt_tweet_length' name='wpt_tweet_length' />
-					<a href='https://www.joedolson.com/2017/11/twitter-expands-280-characters-sort/'>" . __( 'About this setting', 'wp-to-twitter' ) . '</a>
-				</p>';
+				</p>";
 
 	return $control;
 }
