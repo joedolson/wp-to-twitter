@@ -200,6 +200,18 @@
     font-size: 1em;
 }
 
+.wpt-player-card-settings {
+	padding: .5em;
+	margin: -.5em -.5em 0;
+	background: rgba( 0,0,0,.05 );
+}
+.wpt-player-card-settings input {
+	width: 100%;
+}
+.wpt-player-card-settings select {
+	width: calc(100% - 34px);
+}
+
 button.time div {
     vertical-align: text-bottom;
 }
