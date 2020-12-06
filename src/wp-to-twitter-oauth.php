@@ -122,29 +122,29 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 					$ots = trim( $post['wtt_oauth_token_secret'] );
 					if ( ! $auth ) {
 						// If values are filled with asterisks, do not update; these are masked values.
-						if ( stripos( $ack, '***' ) !== false ) {
+						if ( stripos( $ack, '***' ) === false ) {
 							update_option( 'app_consumer_key', $ack );
 						}
-						if ( stripos( $acs, '***' ) !== false ) {
+						if ( stripos( $acs, '***' ) === false ) {
 							update_option( 'app_consumer_secret', $acs );
 						}
-						if ( stripos( $ot, '***' ) !== false ) {
+						if ( stripos( $ot, '***' ) === false ) {
 							update_option( 'oauth_token', $ot );
 						}
-						if ( stripos( $ots, '***' ) !== false ) {
+						if ( stripos( $ots, '***' ) === false ) {
 							update_option( 'oauth_token_secret', $ots );
 						}
 					} else {
-						if ( stripos( $ack, '***' ) !== false ) {
+						if ( stripos( $ack, '***' ) === false ) {
 							update_user_meta( $auth, 'app_consumer_key', $ack );
 						}
-						if ( stripos( $acs, '***' ) !== false ) {
+						if ( stripos( $acs, '***' ) === false ) {
 							update_user_meta( $auth, 'app_consumer_secret', $acs );
 						}
-						if ( stripos( $ot, '***' ) !== false ) {
+						if ( stripos( $ot, '***' ) === false ) {
 							update_user_meta( $auth, 'oauth_token', $ot );
 						}
-						if ( stripos( $ots, '***' ) !== false ) {
+						if ( stripos( $ots, '***' ) === false ) {
 							update_user_meta( $auth, 'oauth_token_secret', $ots );
 						}
 					}
@@ -198,6 +198,8 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 							print_r( $connection );
 							echo '</pre>';
 						}
+					} else {
+						$message = 'noconnection';
 					}
 				} else {
 					$message = 'nodata';
@@ -257,7 +259,7 @@ function wtt_connect_oauth( $auth = false ) {
 	if ( ! wtt_oauth_test( $auth, 'verify' ) ) {
 
 		// show notification to authenticate with OAuth. No longer global; settings only.
-		if ( ! wpt_check_oauth() ) {
+		if ( ! wpt_check_oauth() && ! isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 			// Translators: Settings page to authenticate via OAuth.
 			$message = sprintf( __( "Twitter requires authentication by OAuth. You will need to <a href='%s'>update your settings</a> to complete installation of WP to Twitter.", 'wp-to-twitter' ), $admin_url );
@@ -273,32 +275,27 @@ function wtt_connect_oauth( $auth = false ) {
 		print( '
 			<h3><span>' . __( 'Connect to Twitter', 'wp-to-twitter' ) . '</span></h3>
 			<div class="inside ' . $class . '">
-			<div class="notes">
-			<h4>' . __( 'WP to Twitter Set-up', 'wp-to-twitter' ) . '</h4>
-			</div>
-					<h4>' . __( '1. Apply for a Developer Account with Twitter at <a href="https://developer.twitter.com/">Twitter</a>', 'wp-to-twitter' ) . '</h4>
-					<h4>' . __( '2. Register this site as an application on ', 'wp-to-twitter' ) . '<a href="https://developer.twitter.com/en/apps">' . __( 'Twitter\'s application registration page', 'wp-to-twitter' ) . '</a></h4>
-						<ul class="wpt-bullets">
-						<li>' . __( 'If you\'re not currently logged in to Twitter, log-in to the account you want associated with this site', 'wp-to-twitter' ) . '</li>
-						<li>' . __( 'Your app name cannot include the word "Twitter."', 'wp-to-twitter' ) . '</li>
-						<li>' . __( 'Your Application Description can be anything.', 'wp-to-twitter' ) . '</li>
-						<li>' . __( 'The WebSite and Callback URL should be: ', 'wp-to-twitter' ) . '<strong>' . esc_url( home_url() ) . '</strong></li>
-						<li>' . __( 'For this app, you do not need any other URL fields.', 'wp-to-twitter' ) . '</li>
-						<li>' . __( 'Describe how the app will be used. E.g. "This app will be used to send notifications about new WordPress posts or other types of WordPress content to Twitter on or after publication."' ) . '</li>
-						</ul>
-					<p><em>' . __( 'Read the Twitter Developer Agreement and continue.', 'wp-to-twitter' ) . '</em></p>
-					<h4>' . __( '3. Switch to the "Permissions" tab in Twitter apps', 'wp-to-twitter' ) . '</h4>
+				<ol class="wpt-oauth-settings">
+					<li>' . __( 'Apply for a <a href="https://developer.twitter.com/en/apply-for-access">Developer Account with Twitter</a>', 'wp-to-twitter' ) . '</li>
+					<li>' . __( 'Add a new application in <a href="https://developer.twitter.com/en/portal/projects/new">Twitter\'s project and app portal</a>', 'wp-to-twitter' ) . '
 						<ul>
-						<li>' . __( 'Select "Read and Write" for the Access Permission', 'wp-to-twitter' ) . '</li>
-						<li>' . __( 'Save the application settings', 'wp-to-twitter' ) . '</li>
+							<li>' . __( 'If you\'re not currently logged in to Twitter, log-in to the account you want associated with this site', 'wp-to-twitter' ) . '</li>
+							<li>' . __( 'Your app name cannot include the word "Twitter."', 'wp-to-twitter' ) . '</li>
+							<li>' . __( 'Your Application Description can be anything.', 'wp-to-twitter' ) . '</li>
 						</ul>
-					<h4>' . __( '4. Switch to the Keys and Access Tokens tab and regenerate your consumer key and secret, then create your access token.', 'wp-to-twitter' ) . '</h4>
+					</li>
+					<li>' . __( 'Scroll to the "App Permissions" section', 'wp-to-twitter' ) . '
 						<ul>
-						<li>' . __( 'Copy your API key and API secret from the "Application Settings" section.', 'wp-to-twitter' ) . '</li>
-						<li>' . __( 'Copy your Access token and Access token secret from the "Your Access Token" section.', 'wp-to-twitter' ) . '</li>
+							<li>' . __( 'Edit, and select "Read and Write" for your app\'s Access Permissions', 'wp-to-twitter' ) . '</li>
+							<li>' . __( 'Save the application settings', 'wp-to-twitter' ) . '</li>
 						</ul>
+					</li>
+					<li>' . __( 'Switch to the Keys and Tokens tab at the top of the screen.', 'wp-to-twitter' ) . '
+						<ul>
+						<li>' . __( 'Regenerate your API key and secret from the "Consumer Keys" section.', 'wp-to-twitter' ) . '</li>
+						</ul>
+	
 			' . $form . '
-				<fieldset class="options">
 					<div class="tokens">
 					<p>
 						<label for="wtt_app_consumer_key">' . __( 'API Key', 'wp-to-twitter' ) . '</label>
@@ -309,8 +306,10 @@ function wtt_connect_oauth( $auth = false ) {
 						<input type="text" size="45" name="wtt_app_consumer_secret" id="wtt_app_consumer_secret" value="' . wpt_mask_attr( $acs ) . '" />
 					</p>
 					</div>
-					<h4>' . __( '4. Copy and paste your Access Token and Access Token Secret into the fields below', 'wp-to-twitter' ) . '</h4>
-					<p>' . __( 'If the Access Level for your Access Token is not "<em>Read and write</em>", you must return to step 3, set your permissions correctly, and generate a new Access Token.', 'wp-to-twitter' ) . '</p>
+					</li>
+					<li>' . __( 'Regenerate your Access token and secret from the "Authentication Tokens" section.', 'wp-to-twitter' ) . '</li>
+					<li>' . __( 'Paste your Access Token and Secret into the fields below', 'wp-to-twitter' ) . '
+					<ul><li>' . __( 'If the Access Level for your Access Token is not "<em>Read and write</em>", return to step 3, change your permissions, and generate a new Access Token.', 'wp-to-twitter' ) . '</li></ul>
 					<div class="tokens">
 					<p>
 						<label for="wtt_oauth_token">' . __( 'Access Token', 'wp-to-twitter' ) . '</label>
@@ -321,11 +320,12 @@ function wtt_connect_oauth( $auth = false ) {
 						<input type="text" size="45" name="wtt_oauth_token_secret" id="wtt_oauth_token_secret" value="' . wpt_mask_attr( $ots ) . '" />
 					</p>
 					</div>
-				</fieldset>
 				' . $submit . '
 				<input type="hidden" name="oauth_settings" value="wtt_oauth_test" class="hidden" style="display: none;" />
 				' . $nonce . '
 			</div>
+			</li>
+			</ol>
 				' );
 	} elseif ( wtt_oauth_test( $auth ) ) {
 		$ack   = ( ! $auth ) ? get_option( 'app_consumer_key' ) : get_user_meta( $auth, 'app_consumer_key', true );
@@ -379,7 +379,7 @@ function wtt_connect_oauth( $auth = false ) {
 function wpt_mask_attr( $value ) {
 	$count  = strlen( $value );
 	$substr = substr( $value, -5 );
-	$return = str_pad( $substr, $count, '*' );
+	$return = str_pad( $substr, $count, '*', STR_PAD_LEFT );
 
 	return $return;
 }
