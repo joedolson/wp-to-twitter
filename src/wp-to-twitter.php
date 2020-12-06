@@ -46,6 +46,13 @@ define( 'WPT_DEBUG_BY_EMAIL', false ); // Email debugging no longer default as o
 define( 'WPT_DEBUG_ADDRESS', get_option( 'admin_email' ) );
 define( 'WPT_FROM', 'From: \"' . get_option( 'blogname' ) . '\" <' . get_option( 'admin_email' ) . '>' );
 
+// If current environment tests as staging, enable staging mode.
+if ( function_exists( 'wp_get_environment_type' ) ) {
+	if ( 'staging' === wp_get_environment_type() && ! defined( 'WPT_STAGING_MODE' ) ) {
+		define( 'WPT_STAGING_MODE', true );
+	}
+}
+
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-functions.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-users.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php' );
@@ -113,12 +120,14 @@ function wptotwitter_activate() {
 	if ( $new_install ) {
 		$initial_settings = array(
 			'post' => array(
+				'ondemand'              => '1',
 				'post-published-update' => '1',
 				'post-published-text'   => 'New post: #title# #url#',
 				'post-edited-update'    => '0',
 				'post-edited-text'      => 'Post Edited: #title# #url#',
 			),
 			'page' => array(
+				'ondemand'              => '0',
 				'post-published-update' => '0',
 				'post-published-text'   => 'New page: #title# #url#',
 				'post-edited-update'    => '0',
@@ -378,6 +387,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment", $id );
 					if ( $media_id ) {
 						$status['media_ids'] = $media_id;
+						
 					}
 				}
 			}
@@ -408,7 +418,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		if ( $connection ) {
 			if ( isset( $connection->http_header['x-access-level'] ) && 'read' === $connection->http_header['x-access-level'] ) {
 				// Translators: Twitter App editing URL.
-				$supplement = sprintf( __( 'Your Twitter application does not have read and write permissions. Go to <a href="%s">your Twitter apps</a> to modify these settings.', 'wp-to-twitter' ), 'https://dev.twitter.com/apps/' );
+				$supplement = sprintf( __( 'Your Twitter application does not have read and write permissions. Go to <a href="%s">your Twitter apps</a> to modify these settings.', 'wp-to-twitter' ), 'https://developer.twitter.com/en/portal/projects-and-apps' );
 			} else {
 				$supplement = '';
 			}
@@ -629,7 +639,7 @@ function wpt_post_info( $post_ID ) {
 	$values['postTitle']  = html_entity_decode( $thisposttitle, ENT_QUOTES, $encoding );
 	$values['postLink']   = wpt_link( $post_ID );
 	$values['blogTitle']  = get_bloginfo( 'name' );
-	$values['shortUrl']   = wpt_short_url( $post_ID );
+	$values['shortUrl']   = '';
 	$values['postStatus'] = $post->post_status;
 	$values['postType']   = $post->post_type;
 	/**
@@ -642,25 +652,6 @@ function wpt_post_info( $post_ID ) {
 	$values = apply_filters( 'wpt_post_info', $values, $post_ID );
 
 	return $values;
-}
-
-/**
- * Retrieve stored short URL.
- *
- * @param int $post_id Post ID.
- *
- * @return mixed
- */
-function wpt_short_url( $post_id ) {
-	global $post_ID;
-	if ( ! $post_id ) {
-		$post_id = $post_ID;
-	}
-	$use_urls = ( get_option( 'wpt_use_stored_urls' ) === 'false' ) ? false : true;
-	$short    = ( $use_urls ) ? get_post_meta( $post_id, '_wpt_short_url', true ) : false;
-	$short    = ( '' === $short ) ? false : $short;
-
-	return $short;
 }
 
 /**
@@ -1107,7 +1098,10 @@ function wpt_add_twitter_outer_box() {
 	$wpt_post_types = get_option( 'wpt_post_types' );
 	if ( is_array( $wpt_post_types ) ) {
 		foreach ( $wpt_post_types as $key => $value ) {
-			if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] ) {
+			if ( ! isset( $value['ondemand'] ) ) {
+				$value['ondemand'] = '0';
+			}
+			if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] || '1' === (string) $value['ondemand'] ) {
 				add_meta_box( 'wp2t', 'WP to Twitter', 'wpt_add_twitter_inner_box', $key, 'side' );
 			}
 		}
@@ -1125,7 +1119,10 @@ function wpt_add_twitter_debug_box() {
 		$wpt_post_types = get_option( 'wpt_post_types' );
 		if ( is_array( $wpt_post_types ) ) {
 			foreach ( $wpt_post_types as $key => $value ) {
-				if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] ) {
+				if ( ! isset( $value['ondemand'] ) ) {
+					$value['ondemand'] = '0';
+				}
+				if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] || '1' === (string) $value['ondemand'] ) {
 					add_meta_box( 'wp2t-debug', 'WP to Twitter Debugging', 'wpt_show_debug', $key, 'advanced' );
 				}
 			}
@@ -1738,7 +1735,7 @@ function wpt_allowed_post_types() {
 	$allowed_types      = array();
 	if ( is_array( $post_type_settings ) && ! empty( $post_type_settings ) ) {
 		foreach ( $post_type_settings as $type => $settings ) {
-			if ( '1' === (string) $settings['post-edited-update'] || '1' === (string) $settings['post-published-update'] ) {
+			if ( '1' === (string) $settings['post-edited-update'] || '1' === (string) $settings['post-published-update'] || '1' === (string) $settings['ondemand'] ) {
 				$allowed_types[] = $type;
 			}
 		}
