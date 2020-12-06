@@ -160,6 +160,7 @@ function wpt_updated_settings() {
 			// ...but I haven't found a way to convert the saved emoji *back* to unicode.
 			// sending the HTML entity just yields a broken character on Twitter.
 			$array = array(
+				'ondemand'              => ( isset( $value['ondemand'] ) ) ? $value['ondemand'] : '',
 				'post-published-update' => ( isset( $value['post-published-update'] ) ) ? $value['post-published-update'] : '',
 				'post-published-text'   => $value['post-published-text'],
 				'post-edited-update'    => ( isset( $value['post-edited-update'] ) ) ? $value['post-edited-update'] : '',
@@ -343,6 +344,15 @@ function wpt_update_settings() {
 								?>
 								<fieldset>
 									<legend><?php _e( 'Tweet Templates', 'wp-to-twitter' ); ?></legend>
+									<p>
+										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][ondemand]" id="<?php echo $slug; ?>-ondemand" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'ondemand' ); ?> />
+										<label for="<?php echo $slug; ?>-ondemand"><strong>
+										<?php
+										// Translators: post type.
+										printf( __( 'Show WP to Twitter without auto-publishing', 'wp-to-twitter' ), $name );
+										?>
+										</strong></label>
+									</p>
 									<p>
 										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][post-published-update]" id="<?php echo $slug; ?>-post-published-update" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'post-published-update' ); ?> />
 										<label for="<?php echo $slug; ?>-post-published-update"><strong>
