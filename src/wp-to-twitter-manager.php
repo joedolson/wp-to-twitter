@@ -350,7 +350,7 @@ function wpt_update_settings() {
 								?>
 								<fieldset>
 									<legend><?php _e( 'Tweet Templates', 'wp-to-twitter' ); ?></legend>
-									<p>
+									<p class='wpt-ondemand'>
 										<input type="checkbox" name="wpt_post_types[<?php echo $slug; ?>][ondemand]" id="<?php echo $slug; ?>-ondemand" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'ondemand' ); ?> />
 										<label for="<?php echo $slug; ?>-ondemand"><strong>
 										<?php

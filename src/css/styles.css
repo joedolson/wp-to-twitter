@@ -46,6 +46,12 @@
 	right: 10px;
 }
 
+#wp-to-twitter .wpt-ondemand {
+	float: right;
+	position: relative;
+	top: -3.25em;
+}
+
 #wp-to-twitter .tokens label {
 	display: block;
 }
