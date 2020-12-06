@@ -1248,7 +1248,7 @@ function wpt_add_twitter_inner_box( $post ) {
 				<li><a href='#authors'<?php echo $pro_active; ?> aria-controls="authors" role="tab" id="tab_authors"><?php _e( 'Tweet to', 'wp-to-twitter' ); ?></a></li>
 			<?php } ?>
 			<li><a href='#custom' aria-controls="custom" role="tab" id="tab_custom"><?php _e( 'Options', 'wp-to-twitter' ); ?></a></li>
-			<li><a href='#notes'<?php echo $free_active; ?> aria-controls="notes" role="tab" id="tab_notes"><?php _e( 'Notes', 'wp-to-twitter' ); ?></a></li>
+			<li><a href='#notes'<?php echo $free_active; ?> aria-controls="notes" role="tab" id="tab_notes"><?php _e( 'Tags', 'wp-to-twitter' ); ?></a></li>
 		</ul>
 		<?php
 		// WPT PRO OPTIONS.
@@ -1307,7 +1307,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			<div class='wptab' id='notes' aria-labelledby='tab_notes' role='tabpanel'>
 				<p>
 				<?php
-				_e( 'Template Tags: <code>#url#</code>, <code>#title#</code>, <code>#post#</code>, <code>#category#</code>, <code>#categories#</code>, <code>#date#</code>, <code>#modified#</code>, <code>#author#</code>, <code>#account#</code>, <code>#tags#</code>, <code>#blog#</code>, <code>#longurl#</code>.', 'wp-to-twitter' );
+				_e( 'Template Tags:<br /><code>#url#</code>, <code>#title#</code>, <code>#post#</code>, <code>#category#</code>, <code>#categories#</code>, <code>#date#</code>, <code>#modified#</code>, <code>#author#</code>, <code>#account#</code>, <code>#tags#</code>, <code>#blog#</code>, <code>#longurl#</code>.', 'wp-to-twitter' );
 				do_action( 'wpt_notes_tab', $post_id );
 				?>
 				</p>
