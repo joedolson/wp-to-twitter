@@ -94,13 +94,8 @@
 }
 
 #wp2t .wpt_auth_users select {
-    width: 100%;
-    max-height: 21em;
-}
-
-#side-sortables #wp2t .wpt_auth_users select {
-    width: 98%;
-    max-height: 120px;
+	width: calc( 100% - 24px );
+	max-height: 21em;
 }
 
 .panel-toggle a {
@@ -122,24 +117,19 @@
 
 .wp-to-twitter .dashicons-clock {
 	font-size: 20px;
+	line-height: 1.4;
 }
 
 .wpt-options {
-    -moz-column-count: 3;
-    -webkit-column-count: 3;
-    column-count: 3;
+	column-count: 3;
 }
 
 .free .wpt-options {
-    -moz-column-count: 2;
-    -webkit-column-count: 2;
-    column-count: 2;
+	column-count: 2;
 }
 
 #side-sortables .wpt-options {
-    -moz-column-count: 1;
-    -webkit-column-count: 1;
-    column-count: 1;
+	column-count: 1;
 }
 
 .wpt-debug-details {
@@ -222,7 +212,6 @@ button.time div {
 
 .wpt-options .tabs {
     margin: 0;
-    padding: 0 2px;
     position: relative;
     top: 3px;
 }
@@ -259,6 +248,9 @@ button.time div {
 }
 
 .tweet-buttons {
+	display: grid;
+	grid-template-columns: 48% 34% 18%;
+	column-gap: 2px;
     padding: .75em 12px;
     margin: -10px -12px 0;
     background: #f3f3f3;
