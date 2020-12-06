@@ -30,13 +30,14 @@
 	border: 1px solid #000;
 }
 
-.wpt-bullets li {
+.wpt-oauth-settings ul {
 	list-style: disc;
 	margin-left: 2em;
+	margin-top: .5em;
 }
 
 #wp-to-twitter .inside em {
-	color: #f33;
+	color: #d33;
 }
 
 #wp-to-twitter .button-side {
@@ -46,10 +47,7 @@
 }
 
 #wp-to-twitter .tokens label {
-	width: 13em;
 	display: block;
-	float: left;
-	margin-top: 5px;
 }
 
 #wp-to-twitter .wpt-terms p {
@@ -270,13 +268,6 @@ label[for='wpt_prepend_rt'], label[for='wpt_prepend_rt2'], label[for='wpt_prepen
 .wpt-button .cta a:hover, .wpt-button .cta a:focus {
 	text-decoration: underline;
 	background: #233c7f;
-}
-
-.tweet_length_control {
-	background: #ffd;
-	color:  #000;
-	border: 2px solid #dd1;
-	padding: .5em;
 }
 
 .jcd-narrow .free .postbox, .jcd-narrow .free .postbox a, .jcd-narrow .free .postbox h3 {
