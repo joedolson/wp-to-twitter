@@ -120,14 +120,12 @@ function wptotwitter_activate() {
 	if ( $new_install ) {
 		$initial_settings = array(
 			'post' => array(
-				'ondemand'              => '1',
 				'post-published-update' => '1',
 				'post-published-text'   => 'New post: #title# #url#',
 				'post-edited-update'    => '0',
 				'post-edited-text'      => 'Post Edited: #title# #url#',
 			),
 			'page' => array(
-				'ondemand'              => '0',
 				'post-published-update' => '0',
 				'post-published-text'   => 'New page: #title# #url#',
 				'post-edited-update'    => '0',
@@ -1098,10 +1096,7 @@ function wpt_add_twitter_outer_box() {
 	$wpt_post_types = get_option( 'wpt_post_types' );
 	if ( is_array( $wpt_post_types ) ) {
 		foreach ( $wpt_post_types as $key => $value ) {
-			if ( ! isset( $value['ondemand'] ) ) {
-				$value['ondemand'] = '0';
-			}
-			if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] || '1' === (string) $value['ondemand'] ) {
+			if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] ) {
 				add_meta_box( 'wp2t', 'WP to Twitter', 'wpt_add_twitter_inner_box', $key, 'side' );
 			}
 		}
@@ -1119,10 +1114,7 @@ function wpt_add_twitter_debug_box() {
 		$wpt_post_types = get_option( 'wpt_post_types' );
 		if ( is_array( $wpt_post_types ) ) {
 			foreach ( $wpt_post_types as $key => $value ) {
-				if ( ! isset( $value['ondemand'] ) ) {
-					$value['ondemand'] = '0';
-				}
-				if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] || '1' === (string) $value['ondemand'] ) {
+				if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] ) {
 					add_meta_box( 'wp2t-debug', 'WP to Twitter Debugging', 'wpt_show_debug', $key, 'advanced' );
 				}
 			}
@@ -1712,7 +1704,7 @@ function wpt_allowed_post_types() {
 	$allowed_types      = array();
 	if ( is_array( $post_type_settings ) && ! empty( $post_type_settings ) ) {
 		foreach ( $post_type_settings as $type => $settings ) {
-			if ( '1' === (string) $settings['post-edited-update'] || '1' === (string) $settings['post-published-update'] || '1' === (string) $settings['ondemand'] ) {
+			if ( '1' === (string) $settings['post-edited-update'] || '1' === (string) $settings['post-published-update'] ) {
 				$allowed_types[] = $type;
 			}
 		}
