@@ -115,7 +115,8 @@
 	line-height: inherit;
 }
 
-.wp-to-twitter .dashicons-clock {
+.wp-to-twitter .dashicons-clock,
+.wp-to-twitter .dashicons-upload {
 	font-size: 20px;
 	line-height: 1.4;
 }
@@ -254,6 +255,21 @@ button.time div {
 	padding: .75em 12px;
 	margin: -10px -12px 0;
 	background: #f3f3f3;
+}
+
+.wpt-wrap {
+	display: grid;
+	grid-template-columns: 1fr 44px;
+}
+
+.wpt-wrap input {
+	border-bottom-right-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.wpt-wrap button {
+	border-bottom-left-radius: 0;
+	border-top-left-radius: 0;
 }
 
 .wp-to-twitter .wpt-template {
