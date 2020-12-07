@@ -1216,9 +1216,8 @@ function wpt_add_twitter_inner_box( $post ) {
 				$expanded = $expanded . " <span title='" . __( 'Your appended Tweet text; not part of your template.', 'wp-to-twitter' ) . "'>" . stripslashes( get_option( 'jd_twit_append' ) ) . '</span>';
 			}
 			?>
-			<p class='template'>
-				<?php _e( 'Template:', 'wp-to-twitter' ); ?><br />
-				<code><?php echo stripcslashes( $expanded ); ?></code>
+			<p class='wpt-template'>
+				<?php _e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo stripcslashes( $expanded ); ?></code>
 				<?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
 			</p>
 			<?php
@@ -1230,6 +1229,21 @@ function wpt_add_twitter_inner_box( $post ) {
 		} else {
 			?>
 			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $tweet ); ?>'/>
+			<?php
+		}
+		if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
+			// "no" means 'Don't Tweet' (is checked)
+			$nochecked  = ( 'no' === $tweet_this ) ? ' checked="checked"' : '';
+			$yeschecked = ( 'yes' === $tweet_this ) ? ' checked="checked"' : '';
+			?>
+		<p class='toggle-btn-group'>
+			<input type="radio" name="_jd_tweet_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Tweet", 'wp-to-twitter' ); ?></label>
+			<input type="radio" name="_jd_tweet_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( 'Tweet', 'wp-to-twitter' ); ?></label>
+		</p>
+			<?php
+		} else {
+			?>
+		<input type='hidden' name='_jd_tweet_this' value='<?php echo $tweet_this; ?>'/>
 			<?php
 		}
 		?>
@@ -1244,36 +1258,9 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		?>
 		<ul class='tabs' role="tablist">
-			<?php if ( get_option( 'jd_individual_twitter_users' ) === '1' ) { ?>
-				<li><a href='#authors'<?php echo $pro_active; ?> aria-controls="authors" role="tab" id="tab_authors"><?php _e( 'Tweet to', 'wp-to-twitter' ); ?></a></li>
-			<?php } ?>
 			<li><a href='#custom' aria-controls="custom" role="tab" id="tab_custom"><?php _e( 'Options', 'wp-to-twitter' ); ?></a></li>
-			<li><a href='#notes'<?php echo $free_active; ?> aria-controls="notes" role="tab" id="tab_notes"><?php _e( 'Tags', 'wp-to-twitter' ); ?></a></li>
+			<li><a href='#notes'<?php echo $free_active; ?> aria-controls="notes" role="tab" id="tab_notes"><?php _e( 'Help', 'wp-to-twitter' ); ?></a></li>
 		</ul>
-		<?php
-		// WPT PRO OPTIONS.
-		if ( current_user_can( 'edit_others_posts' ) ) {
-			if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
-				echo "<div class='wptab' id='authors' aria-labelledby='tab_authors' role='tabpanel'>";
-				$selected = ( get_post_meta( $post_id, '_wpt_authorized_users', true ) ) ? get_post_meta( $post_id, '_wpt_authorized_users', true ) : array();
-				if ( function_exists( 'wpt_authorized_users' ) ) {
-					echo wpt_authorized_users( $selected );
-					do_action( 'wpt_authors_tab', $post_id, $selected );
-				} else {
-					echo '<p>';
-					if ( function_exists( 'wpt_pro_exists' ) ) {
-						// Translators: URL to account.
-						printf( __( 'WP Tweets PRO allows you to select Twitter accounts. <a href="%s">Log in and download now!</a>', 'wp-to-twitter' ), 'http://www.wptweetspro.com/account/' );
-					} else {
-						// Translators: URL to buy WP Tweets Pro.
-						printf( __( 'Upgrade to WP Tweets PRO to select Twitter accounts! <a href="%s">Upgrade now!</a>', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro/' );
-					}
-					echo '</p>';
-				}
-				echo '</div>';
-			}
-		}
-		?>
 		<div class='wptab' id='custom' aria-labelledby='tab_custom' role='tabpanel'>
 		<?php
 		if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() && ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
@@ -1282,7 +1269,17 @@ function wpt_add_twitter_inner_box( $post ) {
 		} else {
 			if ( ! function_exists( 'wpt_pro_exists' ) ) {
 				// Translators: premium sales link.
-				echo '<p>' . sprintf( __( 'Upgrade to WP Tweets PRO to configure options! <a href="%s">Upgrade now!</a>', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro/' ) . '</p>';
+				echo '<p>' . sprintf( __( 'Upgrade to WP Tweets PRO to configure options and select multiple accounts! <a href="%s">Upgrade now!</a>', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro/' ) . '</p>';
+			}
+		}
+		// WPT PRO OPTIONS.
+		if ( current_user_can( 'edit_others_posts' ) ) {
+			if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
+				$selected = ( get_post_meta( $post_id, '_wpt_authorized_users', true ) ) ? get_post_meta( $post_id, '_wpt_authorized_users', true ) : array();
+				if ( function_exists( 'wpt_authorized_users' ) ) {
+					echo wpt_authorized_users( $selected );
+					do_action( 'wpt_authors_tab', $post_id, $selected );
+				}
 			}
 		}
 		?>
@@ -1316,24 +1313,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		?>
 		</div>
-		<?php
-		if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
-			// "no" means 'Don't Tweet' (is checked)
-			$nochecked  = ( 'no' === $tweet_this ) ? ' checked="checked"' : '';
-			$yeschecked = ( 'yes' === $tweet_this ) ? ' checked="checked"' : '';
-			?>
-		<p class='toggle-btn-group'>
-			<input type="radio" name="_jd_tweet_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Tweet", 'wp-to-twitter' ); ?></label>
-			<input type="radio" name="_jd_tweet_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( 'Tweet', 'wp-to-twitter' ); ?></label>
-		</p>
-			<?php
-		} else {
-			?>
-		<input type='hidden' name='_jd_tweet_this' value='<?php echo $tweet_this; ?>'/>
-			<?php
-		}
-		wpt_show_tweets( $post_id );
-		?>
+		<?php wpt_show_tweets( $post_id ); ?>
 		<p class="wpt-support">
 		<?php
 		if ( ! function_exists( 'wpt_pro_exists' ) ) {
@@ -1377,7 +1357,6 @@ function wpt_show_tweets( $post_id ) {
 	}
 	if ( ! empty( $previous_tweets ) || ! empty( $failed_tweets ) ) {
 		?>
-	<hr>
 	<p class='panel-toggle'>
 		<a href='#wpt_tweet_history' class='history-toggle'><span class='dashicons dashicons-plus' aria-hidden="true"></span><?php _e( 'View Tweet History', 'wp-to-twitter' ); ?></a>
 	</p>
@@ -1548,9 +1527,7 @@ function wpt_admin_script() {
 		} else {
 			$allowed = $config['base_length'] + 1;
 		}
-		if ( function_exists( 'wpt_pro_exists' ) && '1' === get_option( 'jd_individual_twitter_users' ) ) {
-			$first = '#authors';
-		} elseif ( function_exists( 'wpt_pro_exists' ) ) {
+		if ( function_exists( 'wpt_pro_exists' ) ) {
 			$first = '#custom';
 		} else {
 			$first = '#notes';

@@ -251,17 +251,19 @@ button.time div {
 	display: grid;
 	grid-template-columns: 48% 34% 18%;
 	column-gap: 2px;
-    padding: .75em 12px;
-    margin: -10px -12px 0;
-    background: #f3f3f3;
+	padding: .75em 12px;
+	margin: -10px -12px 0;
+	background: #f3f3f3;
 }
 
-.wp-to-twitter .template {
+.wp-to-twitter .wpt-template {
 	margin: 0;
+	padding: .5em;
+	background: rgba( 0, 0, 0, .05 );
 }
 
 .toggle-btn-group {
-    margin: .25em auto .5em;
+	margin: .5em auto .5em !important;
 	width: auto;
 }
 
