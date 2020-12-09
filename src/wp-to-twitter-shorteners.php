@@ -569,6 +569,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	function wpt_select_shortener( $post ) {
 		$message = '';
 		// don't return a message if unchanged.
+		$stored = ( isset( $_POST['wpt_use_stored_urls'] ) ) ? 'false' : 'true';
+		update_option( 'wpt_use_stored_urls', $stored );
 		if ( get_option( 'jd_shortener' ) === $post['jd_shortener'] ) {
 			return;
 		}
@@ -628,6 +630,13 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				echo apply_filters( 'wpt_choose_shortener', '', $shortener );
 				?>
 			</select>
+		<?php
+		if ( '3' !== $shortener ) {
+			?>
+			<input type='checkbox' value='false' name='wpt_use_stored_urls' id='wpt_use_stored_urls' <?php checked( get_option( 'wpt_use_stored_urls' ), 'false' ); ?>> <label for='wpt_use_stored_urls'><?php _e( 'Always request a new short URL for Tweets', 'wp-to-twitter' ); ?></label>
+			<?php
+		}
+		?>
 		</p>
 		<?php
 	}
