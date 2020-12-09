@@ -239,13 +239,13 @@ button.time div {
 	font-weight: 700;
 }
 
-.wpt_log, #jts {
-    padding: .5em;
+.wpt_log, #wpt_set_tweet_time {
+	padding: .5em;
 }
 
-#jts {
-    background: #f6f6f6;
-    color: #333;
+#wpt_set_tweet_time {
+	background: #f6f6f6;
+	color: #333;
 }
 
 .tweet-buttons {

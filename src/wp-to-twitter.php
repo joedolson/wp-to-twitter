@@ -1175,7 +1175,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			<button type='button' class='time button-secondary'>
 				<span class="dashicons dashicons-clock" aria-hidden="true"></span><span class="screen-reader-text"><?php _e( 'Set Date/Time', 'wp-to-twitter' ); ?></span>
 			</button>
-			<div id="jts">
+			<div id="wpt_set_tweet_time">
 				<?php
 				$datavalue = gmdate( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
 				$timevalue = date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
@@ -1195,8 +1195,8 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			?>
 			<p class='jtw'>
-				<label for="jtw"><?php _e( 'Custom Twitter Post', 'wp-to-twitter' ); ?></label><br/>
-				<textarea class="wpt_tweet_box" name="_jd_twitter" id="jtw" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
+				<label for="wpt_custom_tweet"><?php _e( 'Custom Twitter Post', 'wp-to-twitter' ); ?></label><br/>
+				<textarea class="wpt_tweet_box" name="_jd_twitter" id="wpt_custom_tweet" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
 				<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
 			</p>
 			<?php

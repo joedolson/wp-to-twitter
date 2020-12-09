@@ -44,10 +44,11 @@ Upgrade to [WP Tweets Pro](http://www.joedolson.com/wp-tweets-pro/) for extra fe
 * Simultaneously Tweet to site and author Twitter accounts
 * Preview and Tweet comments
 * Filter Tweets by taxonomy (categories, tags, or custom taxonomies)
-* Upload images to Twitter
+* Upload images to Twitter with alt attributes
 * Integrated Twitter Card support
+* Support for Player Cards with integrated captions
 * Automatically schedule Tweets of old posts
-* [Try out WP Tweets PRO!](http://www.joedolson.com/wp-tweets-pro/)
+* [Get a license for WP Tweets PRO!](http://www.joedolson.com/wp-tweets-pro/)
 
 Want to stay up to date on WP to Twitter? [Follow me on Twitter!](https://twitter.com/joedolson)
 
@@ -72,6 +73,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Mask app tokens after saving.
 * Numerous updates for WP Tweets Pro users.
 * Automatically switch to staging mode if environment query returns staging.
+* Bug fix: remove whitespace in some settings inputs
 
 = 3.4.10 =
 
