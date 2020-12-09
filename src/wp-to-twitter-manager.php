@@ -517,17 +517,16 @@ function wpt_update_settings() {
 								<label for="jd_post_excerpt"><?php _e( 'Post excerpt (#post#) in characters:', 'wp-to-twitter' ); ?></label>
 								<input type="text" name="jd_post_excerpt" id="jd_post_excerpt" size="3" maxlength="3" value="<?php echo( esc_attr( get_option( 'jd_post_excerpt' ) ) ); ?>"/>
 							</p>
+							<?php
+							if ( '' === get_option( 'jd_date_format', '' ) ) {
+								$format = ( esc_attr( stripslashes( get_option( 'date_format' ) ) ) );
+							} else {
+								$format = ( esc_attr( get_option( 'jd_date_format' ) ) );
+							}
+							?>
 							<p>
 								<label for="jd_date_format"><?php _e( 'Date Format (#date#):', 'wp-to-twitter' ); ?></label>
-								<input type="text" aria-describedby="date_format_label" name="jd_date_format" id="jd_date_format" size="12" maxlength="12" value="
-								<?php
-								if ( '' === get_option( 'jd_date_format', '' ) ) {
-									echo( esc_attr( stripslashes( get_option( 'date_format' ) ) ) );
-								} else {
-									echo( esc_attr( get_option( 'jd_date_format' ) ) );
-								}
-								?>
-								"/>
+								<input type="text" aria-describedby="date_format_label" name="jd_date_format" id="jd_date_format" size="12" maxlength="12" value="<?php echo trim( $format ); ?>" />
 								<?php
 								if ( '' !== get_option( 'jd_date_format', '' ) ) {
 									echo date_i18n( get_option( 'jd_date_format' ) );
@@ -535,7 +534,7 @@ function wpt_update_settings() {
 									echo '<em>' . date_i18n( get_option( 'date_format' ) ) . '</em>';
 								}
 								?>
-								(<em id="date_format_label"><a href='http://codex.wordpress.org/Formatting_Date_and_Time'><?php _e( 'Date Formatting', 'wp-to-twitter' ); ?></a></em>)
+								(<em id="date_format_label"><a href='https://wordpress.org/support/article/formatting-date-and-time/'><?php _e( 'Date Formatting', 'wp-to-twitter' ); ?></a></em>)
 							</p>
 
 							<p>
