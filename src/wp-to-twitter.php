@@ -1159,13 +1159,19 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		$tweet    = esc_attr( stripcslashes( get_post_meta( $post_id, '_jd_twitter', true ) ) );
 		$tweet    = apply_filters( 'wpt_user_text', $tweet, $status );
+		// Formulate Template display.
 		$template = ( 'publish' === $status ) ? $options[ $type ]['post-edited-text'] : $options[ $type ]['post-published-text'];
-
+		$expanded = $template;
+		if ( '' !== get_option( 'jd_twit_prepend', '' ) ) {
+			$expanded = "<em>" . stripslashes( get_option( 'jd_twit_prepend' ) ) . '</em> ' . $expanded;
+		}
+		if ( '' !== get_option( 'jd_twit_append', '' ) ) {
+			$expanded = $expanded . " <em>" . stripslashes( get_option( 'jd_twit_append' ) ) . '</em>';
+		}
 		if ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) {
 			// Translators: post type.
 			$tweet_status = sprintf( __( '%s will not be Tweeted on update.', 'wp-to-twitter' ), ucfirst( $type ) );
 		}
-
 		if ( 'publish' === $status && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 			?>
 			<div class='tweet-buttons'>
@@ -1201,15 +1207,6 @@ function wpt_add_twitter_inner_box( $post ) {
 				<textarea class="wpt_tweet_box" name="_jd_twitter" id="wpt_custom_tweet" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
 				<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
 			</p>
-			<?php
-			$expanded = $template;
-			if ( '' !== get_option( 'jd_twit_prepend', '' ) ) {
-				$expanded = "<span title='" . __( 'Your prepended Tweet text; not part of your template.', 'wp-to-twitter' ) . "'>" . stripslashes( get_option( 'jd_twit_prepend' ) ) . '</span> ' . $expanded;
-			}
-			if ( '' !== get_option( 'jd_twit_append', '' ) ) {
-				$expanded = $expanded . " <span title='" . __( 'Your appended Tweet text; not part of your template.', 'wp-to-twitter' ) . "'>" . stripslashes( get_option( 'jd_twit_append' ) ) . '</span>';
-			}
-			?>
 			<p class='wpt-template'>
 				<?php _e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo stripcslashes( $expanded ); ?></code>
 				<?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
@@ -1222,7 +1219,11 @@ function wpt_add_twitter_inner_box( $post ) {
 			}
 		} else {
 			?>
-			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $tweet ); ?>'/>
+			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $tweet ); ?>' />
+			<p class='wpt-template'>
+				<?php _e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo stripcslashes( $expanded ); ?></code>
+				<?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
+			</p>
 			<?php
 		}
 		if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
@@ -1242,55 +1243,52 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		?>
 		<div class='wpt-options'>
-		<?php
-		if ( 'pro' === $is_pro ) {
-			$pro_active  = " class='active'";
-			$free_active = '';
-		} else {
-			$free_active = " class='active'";
-			$pro_active  = '';
-		}
-		?>
-		<ul class='tabs' role="tablist">
-			<li><a href='#custom' aria-controls="custom" role="tab" id="tab_custom"><?php _e( 'Options', 'wp-to-twitter' ); ?></a></li>
-			<li><a href='#notes'<?php echo $free_active; ?> aria-controls="notes" role="tab" id="tab_notes"><?php _e( 'Help', 'wp-to-twitter' ); ?></a></li>
-		</ul>
-		<div class='wptab' id='custom' aria-labelledby='tab_custom' role='tabpanel'>
-		<?php
-		if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() && ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
-			wpt_schedule_values( $post_id );
-			do_action( 'wpt_custom_tab', $post_id, 'visible' );
-			// WPT PRO OPTIONS.
-			if ( current_user_can( 'edit_others_posts' ) ) {
-				if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
-					$selected = ( get_post_meta( $post_id, '_wpt_authorized_users', true ) ) ? get_post_meta( $post_id, '_wpt_authorized_users', true ) : array();
-					if ( function_exists( 'wpt_authorized_users' ) ) {
-						echo wpt_authorized_users( $selected );
-						do_action( 'wpt_authors_tab', $post_id, $selected );
+			<?php
+			if ( 'pro' === $is_pro ) {
+				$pro_active  = " class='active'";
+				$free_active = '';
+			} else {
+				$free_active = " class='active'";
+				$pro_active  = '';
+			}
+			?>
+			<ul class='tabs' role="tablist">
+				<li><a href='#custom' aria-controls="custom" role="tab" id="tab_custom"><?php _e( 'Options', 'wp-to-twitter' ); ?></a></li>
+				<li><a href='#notes'<?php echo $free_active; ?> aria-controls="notes" role="tab" id="tab_notes"><?php _e( 'Help', 'wp-to-twitter' ); ?></a></li>
+			</ul>
+			<div class='wptab' id='custom' aria-labelledby='tab_custom' role='tabpanel'>
+			<?php
+			if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() && ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
+				wpt_schedule_values( $post_id );
+				do_action( 'wpt_custom_tab', $post_id, 'visible' );
+				// WPT PRO OPTIONS.
+				if ( current_user_can( 'edit_others_posts' ) ) {
+					if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
+						$selected = ( get_post_meta( $post_id, '_wpt_authorized_users', true ) ) ? get_post_meta( $post_id, '_wpt_authorized_users', true ) : array();
+						if ( function_exists( 'wpt_authorized_users' ) ) {
+							echo wpt_authorized_users( $selected );
+							do_action( 'wpt_authors_tab', $post_id, $selected );
+						}
 					}
 				}
+			} else {
+				if ( ! function_exists( 'wpt_pro_exists' ) ) {
+					// Translators: premium sales link.
+					echo '<p>' . sprintf( __( 'Upgrade to WP Tweets PRO to configure options and select multiple accounts! <a href="%s">Upgrade now!</a>', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro/' ) . '</p>';
+				}
 			}
-		} else {
-			if ( ! function_exists( 'wpt_pro_exists' ) ) {
-				// Translators: premium sales link.
-				echo '<p>' . sprintf( __( 'Upgrade to WP Tweets PRO to configure options and select multiple accounts! <a href="%s">Upgrade now!</a>', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro/' ) . '</p>';
+			// WPT PRO.
+			if ( ! current_user_can( 'wpt_twitter_custom' ) && ! current_user_can( 'manage_options' ) ) {
+				?>
+				<p><?php _e( 'Customizing WP to Twitter options is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
+				<?php
+				if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() === true ) {
+					wpt_schedule_values( $post_id, 'hidden' );
+					do_action( 'wpt_custom_tab', $post_id, 'hidden' );
+				}
 			}
-		}
-		// WPT PRO.
-		if ( ! current_user_can( 'wpt_twitter_custom' ) && ! current_user_can( 'manage_options' ) ) {
 			?>
-			<p><?php _e( 'Access to customizing WP to Twitter values is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
-			<?php
-			if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() === true ) {
-				wpt_schedule_values( $post_id, 'hidden' );
-				do_action( 'wpt_custom_tab', $post_id, 'hidden' );
-			}
-		}
-		?>
-		</div>
-		<?php
-		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
-			?>
+			</div>
 			<div class='wptab' id='notes' aria-labelledby='tab_notes' role='tabpanel'>
 				<p>
 				<?php
@@ -1299,9 +1297,6 @@ function wpt_add_twitter_inner_box( $post ) {
 				?>
 				</p>
 			</div>
-			<?php
-		}
-		?>
 		</div>
 		<?php wpt_show_tweets( $post_id ); ?>
 		<p class="wpt-support">
