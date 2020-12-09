@@ -464,7 +464,7 @@ function wpt_update_settings() {
 	<form method="post" action="">
 	<div class="ui-sortable meta-box-sortables">
 		<div class="postbox">
-			<h3><span><?php _e( 'Advanced Settings', 'wp-to-twitter' ); ?></span></h3>
+			<h3><span><?php _e( 'Tag Settings', 'wp-to-twitter' ); ?></span></h3>
 			<div class="inside">
 					<div>
 						<?php
