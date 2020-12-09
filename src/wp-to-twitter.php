@@ -1097,7 +1097,9 @@ function wpt_add_twitter_outer_box() {
 	if ( is_array( $wpt_post_types ) ) {
 		foreach ( $wpt_post_types as $key => $value ) {
 			if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] ) {
-				add_meta_box( 'wp2t', 'WP to Twitter', 'wpt_add_twitter_inner_box', $key, 'side' );
+				if ( current_user_can( 'wpt_can_tweet' ) ) {
+					add_meta_box( 'wp2t', 'WP to Twitter', 'wpt_add_twitter_inner_box', $key, 'side' );
+				}
 			}
 		}
 	}
