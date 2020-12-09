@@ -1260,39 +1260,35 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() && ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
 			wpt_schedule_values( $post_id );
 			do_action( 'wpt_custom_tab', $post_id, 'visible' );
+			// WPT PRO OPTIONS.
+			if ( current_user_can( 'edit_others_posts' ) ) {
+				if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
+					$selected = ( get_post_meta( $post_id, '_wpt_authorized_users', true ) ) ? get_post_meta( $post_id, '_wpt_authorized_users', true ) : array();
+					if ( function_exists( 'wpt_authorized_users' ) ) {
+						echo wpt_authorized_users( $selected );
+						do_action( 'wpt_authors_tab', $post_id, $selected );
+					}
+				}
+			}
 		} else {
 			if ( ! function_exists( 'wpt_pro_exists' ) ) {
 				// Translators: premium sales link.
 				echo '<p>' . sprintf( __( 'Upgrade to WP Tweets PRO to configure options and select multiple accounts! <a href="%s">Upgrade now!</a>', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro/' ) . '</p>';
 			}
 		}
-		// WPT PRO OPTIONS.
-		if ( current_user_can( 'edit_others_posts' ) ) {
-			if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
-				$selected = ( get_post_meta( $post_id, '_wpt_authorized_users', true ) ) ? get_post_meta( $post_id, '_wpt_authorized_users', true ) : array();
-				if ( function_exists( 'wpt_authorized_users' ) ) {
-					echo wpt_authorized_users( $selected );
-					do_action( 'wpt_authors_tab', $post_id, $selected );
-				}
+		// WPT PRO.
+		if ( ! current_user_can( 'wpt_twitter_custom' ) && ! current_user_can( 'manage_options' ) ) {
+			?>
+			<p><?php _e( 'Access to customizing WP to Twitter values is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
+			<?php
+			if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() === true ) {
+				wpt_schedule_values( $post_id, 'hidden' );
+				do_action( 'wpt_custom_tab', $post_id, 'hidden' );
 			}
 		}
 		?>
 		</div>
 		<?php
-		// WPT PRO.
-		if ( ! current_user_can( 'wpt_twitter_custom' ) && ! current_user_can( 'manage_options' ) ) {
-			?>
-			<div class='wptab' id='custom' aria-labelledby='tab_custom' role='tabpanel'>
-				<p><?php _e( 'Access to customizing WP to Twitter values is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
-				<?php
-				if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() === true ) {
-					wpt_schedule_values( $post_id, 'hidden' );
-					do_action( 'wpt_custom_tab', $post_id, 'hidden' );
-				}
-				?>
-			</div>
-			<?php
-		}
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			?>
 			<div class='wptab' id='notes' aria-labelledby='tab_notes' role='tabpanel'>
