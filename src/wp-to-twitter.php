@@ -637,7 +637,7 @@ function wpt_post_info( $post_ID ) {
 	$values['postTitle']  = html_entity_decode( $thisposttitle, ENT_QUOTES, $encoding );
 	$values['postLink']   = wpt_link( $post_ID );
 	$values['blogTitle']  = get_bloginfo( 'name' );
-	$values['shortUrl']   = '';
+	$values['shortUrl']   = wpt_short_url( $post_ID );
 	$values['postStatus'] = $post->post_status;
 	$values['postType']   = $post->post_type;
 	/**
@@ -650,6 +650,25 @@ function wpt_post_info( $post_ID ) {
 	$values = apply_filters( 'wpt_post_info', $values, $post_ID );
 
 	return $values;
+}
+
+/**
+ * Retrieve stored short URL.
+ *
+ * @param int $post_id Post ID.
+ *
+ * @return mixed
+ */
+function wpt_short_url( $post_id ) {
+	global $post_ID;
+	if ( ! $post_id ) {
+		$post_id = $post_ID;
+	}
+	$use_urls = ( get_option( 'wpt_use_stored_urls' ) === 'false' ) ? false : true;
+	$short    = ( $use_urls ) ? get_post_meta( $post_id, '_wpt_short_url', true ) : false;
+	$short    = ( '' === $short ) ? false : $short;
+
+	return $short;
 }
 
 /**
