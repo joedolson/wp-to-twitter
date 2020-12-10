@@ -252,12 +252,13 @@ function wpt_update_settings() {
 								<li><?php _e( 'Publish to unique Twitter accounts for each site author.', 'wp-to-twitter' ); ?></li>
 								<li><?php _e( 'Schedule up to 3 re-posts of Tweets at an interval of your choice.', 'wp-to-twitter' ); ?></li>
 								<li><?php _e( 'With a delay between publishing and Tweeting, verify your tweets before you share online.', 'wp-to-twitter' ); ?></li>
-								<li><?php _e( 'Automatically your great old posts every few hours, days, or weeks!', 'wp-to-twitter' ); ?></li>
-								<li><?php _e( 'Upload your featured images to Twitter with each Tweet', 'wp-to-twitter' ); ?></li>
+								<li><?php _e( 'Automatically Tweet your best old posts every few hours, days, or weeks!', 'wp-to-twitter' ); ?></li>
+								<li><?php _e( 'Upload images to Twitter with each Tweet', 'wp-to-twitter' ); ?></li>
+								<li><?php _e( 'Harness the power of video with support for Twitter\'s Player cards', 'wp-to-twitter' ); ?></li>
 								<li>
 								<?php
 								// Translators: Link to sales page.
-								printf( __( 'Take a look at the <a href="%s">complete feature list</a>', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro/' );
+								printf( __( 'Take a look at the <a href="%1$s">feature list</a> or <a href="%2$s">read the user guide</a> to get the whole picture!', 'wp-to-twitter' ), 'http://www.wptweetspro.com/wp-tweets-pro/', 'https://www.joedolson.com/wp-content/uploads/wp-tweets-pro-users-guide-current.pdf' );
 								?>
 								</li>
 							</ul>
@@ -288,6 +289,10 @@ function wpt_update_settings() {
 
 							<p class='wpt-button'>
 								<strong class='cta'><a href="http://www.wptweetspro.com/wp-tweets-pro"><?php _e( 'Buy WP Tweets PRO today!', 'wp-to-twitter' ); ?></a></strong>
+							</p>
+							<h4><?php _e( 'Support WP to Twitter', 'wp-to-twitter' ); ?></h4>
+							<p>
+								<?php _e( "I know that not everybody has a use for the features supported by WP Tweets Pro. If you're happy with what you've found in WP to Twitter, you can still support me - either by <a href='$1$s'>making a donation</a> or by <a href='%2$s'>writing a review</a>. If you have the time or money, I'll sincerely appreciate anything you can do!", 'wp-to-twitter' ); ?>
 							</p>
 						</div>
 					</div>
