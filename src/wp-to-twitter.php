@@ -720,12 +720,15 @@ function wpt_category_limit( $post_type, $post_info, $post_ID ) {
 /**
  * Set up a Tweet to be sent.
  *
- * @param int    $post_ID Post ID.
- * @param string $type Publishing context (publishing, scheduled, xmlrpc, etc.).
+ * @param int     $post_ID Post ID.
+ * @param string  $type Publishing context: instant, future, xmlrpc.
+ * @param object  $post Post object.
+ * @param boolean $updated True if updated, false if inserted.
+ * @param object  $post_before The post prior to this update, or null for new posts.
  *
  * @return int $post_ID
  */
-function wpt_tweet( $post_ID, $type = 'instant' ) {
+function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, $post_before = null ) {
 	if ( wp_is_post_autosave( $post_ID ) || wp_is_post_revision( $post_ID ) ) {
 		return $post_ID;
 	}
@@ -1684,7 +1687,11 @@ if ( '1' === get_option( 'jd_twit_blogroll' ) ) {
 	add_action( 'add_link', 'wpt_twit_link' );
 }
 
-add_action( 'save_post', 'wpt_twit', 15 );
+if ( function_exists( 'wp_after_insert_post' ) ) {
+	add_action( 'wp_after_insert_post', 'wpt_twit', 10, 4 );
+} else {
+	add_action( 'save_post', 'wpt_twit', 15 );
+}
 add_action( 'save_post', 'wpt_save_post', 10 );
 /**
  * Check whether a given post is in an allowed post type and has an update template configured.
@@ -1741,11 +1748,14 @@ function wpt_future_to_publish( $post ) {
 }
 
 /**
- * Handle Tweeting posts published directly.
+ * Handle Tweeting posts published directly. As of 12/10/2020, supports new wp_after_insert_post to improve support when used with block editor.
  *
- * @param object $id Post ID.
+ * @param int    $id Post ID.
+ * @param object $post Post object.
+ * @param boolean $updated True if updated, false if inserted.
+ * @param object $post_before The post prior to this update, or null for new posts.
  */
-function wpt_twit( $id ) {
+function wpt_twit( $id, $post = null, $updated = null, $post_before = null ) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || wp_is_post_revision( $id ) || ! wpt_in_post_type( $id ) ) {
 		return;
 	}
@@ -1757,7 +1767,7 @@ function wpt_twit( $id ) {
 	// This is an issue only until the release of WP 4.7.
 	remove_action( 'save_post', 'wpt_twit', 15 );
 	wpt_mail( 'Tweeting published post', $id );
-	wpt_twit_instant( $id );
+	wpt_twit_instant( $id, $post, $updated, $post_before );
 	add_action( 'save_post', 'wpt_twit', 15 );
 }
 
@@ -1771,7 +1781,8 @@ add_action( 'publish_phone', 'wpt_twit_xmlrpc' );
  */
 function wpt_twit_future( $id ) {
 	set_transient( '_wpt_twit_future', $id, 10 );
-	// instant action has already run for this post. // prevent running actions twice (need both for older WP).
+	// instant action has already run for this post. 
+	// prevent running actions twice (need both for older WP).
 	if ( get_transient( '_wpt_twit_instant' ) && (int) get_transient( '_wpt_twit_instant' ) === $id ) {
 		delete_transient( '_wpt_twit_instant' );
 
@@ -1784,9 +1795,12 @@ function wpt_twit_future( $id ) {
 /**
  * For immediate posts, check transients to see whether this post has already been published. Prevents duplicate Tweet attempts in older versions of WP or cases where a future action is being run after the initial action.
  *
- * @param integer $id Post ID.
+ * @param int     $id Post ID.
+ * @param object  $post Post object.
+ * @param boolean $updated True if updated, false if inserted.
+ * @param object  $post_before The post prior to this update, or null for new posts.
  */
-function wpt_twit_instant( $id ) {
+function wpt_twit_instant( $id, $post, $updated, $post_before ) {
 	set_transient( '_wpt_twit_instant', $id, 10 );
 	// future action has already run for this post.
 	if ( get_transient( '_wpt_twit_future' ) && (int) get_transient( '_wpt_twit_future' ) === $id ) {
@@ -1800,7 +1814,7 @@ function wpt_twit_instant( $id ) {
 
 		return;
 	}
-	wpt_tweet( $id, 'instant' );
+	wpt_tweet( $id, 'instant', $post, $updated, $post_before );
 }
 
 /**
