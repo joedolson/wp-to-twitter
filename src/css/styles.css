@@ -103,14 +103,12 @@
 	display: block;
 }
 
-#wpt_license_key {
-	font-size: 1.3em;
-	padding: 5px;
-	letter-spacing: .5px;
-}
-
 #wp-to-twitter input {
 	max-width: 100%;
+}
+
+#wp2t #wpt_custom_tweet {
+	width: 100%;
 }
 
 label[for="wpt_license_key"] {
@@ -118,10 +116,9 @@ label[for="wpt_license_key"] {
 }
 
 #wp-to-twitter .wpt-upgrade {
-	background: #e25822;
+	background: #c24822;
 	color: #fff;
-	text-shadow: #000 0 1px 0;
-	border-radius: 2px 2px 0 0;
+	text-shadow: 1px 1px 0 #000;
 }
 
 .wp-tweets-pro .widefat input[type=text] {
@@ -255,7 +252,7 @@ label[for='wpt_prepend_rt'], label[for='wpt_prepend_rt2'], label[for='wpt_prepen
 .wpt-button .cta a {
 	padding: 1em;
 	font-size: 1.2em;
-	background: #5993c1;
+	background: #c24822;
 	color: #fff;
 	text-decoration: none;
 	display: inline-block;
