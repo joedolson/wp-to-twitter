@@ -188,13 +188,14 @@ label[for="wpt_license_key"] {
 }
 
 .inside.purchase {
-	width: 70%;
+	max-width: 45em;
+	font-size: 1.1em;
 	margin: 0 auto;
-	min-width: 300px;
 }
 
-.inside.purchase h4 {
+.inside.purchase h3 {
 	font-size: 1.8em;
+	margin: 1.33em 0 0;
 }
 
 .wpt-terms li {

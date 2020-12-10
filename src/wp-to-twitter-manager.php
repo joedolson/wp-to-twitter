@@ -241,10 +241,8 @@ function wpt_update_settings() {
 				?>
 				<div class="ui-sortable meta-box-sortables">
 					<div class="postbox">
-						<h3 class='wpt-upgrade'><span><strong><?php _e( 'Upgrade Now!', 'wp-to-twitter' ); ?></strong></span></h3>
-
 						<div class="inside purchase">
-							<h4><strong><?php _e( 'What can WP Tweets PRO do for you?', 'wp-to-twitter' ); ?></strong></h4>
+							<h3><strong><?php _e( 'What can WP Tweets PRO do for you?', 'wp-to-twitter' ); ?></strong></h3>
 							<p>
 								<?php _e( 'WP Tweets PRO takes the great Tweeting abilities from WP to Twitter and puts them in high gear.', 'wp-to-twitter' ); ?>
 							</p>
@@ -269,7 +267,7 @@ function wpt_update_settings() {
 								<strong class='cta'><a href="http://www.wptweetspro.com/wp-tweets-pro"><?php _e( 'Upgrade to <strong>WP Tweets PRO</strong>!', 'wp-to-twitter' ); ?></a></strong>
 							</p>
 
-							<h4><?php _e( 'What else does WP Tweets PRO do?', 'wp-to-twitter' ); ?></h4>
+							<h3><?php _e( 'What else does WP Tweets PRO do?', 'wp-to-twitter' ); ?></h3>
 
 							<p>
 								<?php _e( 'WP Tweets PRO is packed with features to help you increase engagement with your Twitter followers. Upload images, use Twitter Cards, and automated re-posting of your Tweets are just a few of the features available in the premium add-on to WP to Twitter.', 'wp-to-twitter' ); ?>
@@ -290,7 +288,10 @@ function wpt_update_settings() {
 							<p class='wpt-button'>
 								<strong class='cta'><a href="http://www.wptweetspro.com/wp-tweets-pro"><?php _e( 'Buy WP Tweets PRO today!', 'wp-to-twitter' ); ?></a></strong>
 							</p>
-							<h4><?php _e( 'Support WP to Twitter', 'wp-to-twitter' ); ?></h4>
+							<h3><?php _e( 'Support WP to Twitter', 'wp-to-twitter' ); ?></h3>
+							<p>
+								<?php _e( 'The core WP to Twitter plug-in is free, and has been since 2008. WP Tweets Pro sales help keep this going, but they don\'t cover everything.', 'wp-to-twitter' ); ?>
+							</p>
 							<p>
 								<?php _e( "I know that not everybody has a use for the features supported by WP Tweets Pro. If you're happy with what you've found in WP to Twitter, you can still support me - either by <a href='$1$s'>making a donation</a> or by <a href='%2$s'>writing a review</a>. If you have the time or money, I'll sincerely appreciate anything you can do!", 'wp-to-twitter' ); ?>
 							</p>
