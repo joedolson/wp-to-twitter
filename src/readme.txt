@@ -71,10 +71,10 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Toggle default length based on current locale.
 * Remove stored URLs; no longer important to avoid repeat shortener queries.
 * Mask app tokens after saving.
-* Numerous updates for WP Tweets Pro users.
 * Automatically switch to staging mode if environment query returns staging.
 * Bug fix: remove whitespace in some settings inputs
-* New: use wp_after_insert_post action (new in WP 5.6) so terms & metadata are saved at the time posts are published.
+* New: use wp_after_insert_post action (new in WP 5.6) so terms & metadata are saved at the time posts are published when using the block editor.
+* Numerous updates for WP Tweets Pro users.
 
 = 3.4.10 =
 
