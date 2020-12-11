@@ -857,7 +857,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 					}
 					// filter selected users before using.
 					$wpt_selected_users = apply_filters( 'wpt_filter_users', $wpt_selected_users, $post_info );
-					if ( 0 === $post_info['wpt_delay_tweet'] || '' === $post_info['wpt_delay_tweet'] || 'on' === $post_info['wpt_no_delay'] ) {
+					if ( '0' === (string) $post_info['wpt_delay_tweet'] || '' === $post_info['wpt_delay_tweet'] || 'on' === $post_info['wpt_no_delay'] ) {
 						foreach ( $wpt_selected_users as $acct ) {
 							if ( wtt_oauth_test( $acct, 'verify' ) ) {
 								wpt_post_to_twitter( $sentence2, $acct, $post_ID, $media );
@@ -882,7 +882,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 								if ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) {
 									$author_id = ( $acct ) ? "#$acct" : 'Main';
 									wpt_mail(
-										"7a: Tweet Scheduled for author $author_id",
+										"7a: Tweet Scheduled for author: $author_id",
 										print_r(
 											array(
 												'id'       => $acct,
@@ -1688,6 +1688,9 @@ if ( '1' === get_option( 'jd_twit_blogroll' ) ) {
 }
 
 if ( function_exists( 'wp_after_insert_post' ) ) {
+	/**
+	 * @since WordPress 5.6
+	 */
 	add_action( 'wp_after_insert_post', 'wpt_twit', 10, 4 );
 } else {
 	add_action( 'save_post', 'wpt_twit', 15 );
@@ -1759,7 +1762,7 @@ function wpt_twit( $id, $post = null, $updated = null, $post_before = null ) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || wp_is_post_revision( $id ) || ! wpt_in_post_type( $id ) ) {
 		return;
 	}
-	$post = get_post( $id );
+	$post = ( null === $post ) ? get_post( $id ) : $post;
 	if ( 'publish' !== $post->post_status ) {
 		return;
 	}
