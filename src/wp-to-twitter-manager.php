@@ -843,7 +843,7 @@ function wpt_sidebar() {
 					}
 					echo $support;
 					?>
-					<a href="https://www.joedolson.com/wp-content/uploads/wp-tweets-pro-users-guide-current.pdf"><?php _e( 'Read the Manual', 'wp-to-twitter' ); ?></a>
+					<a href="<?php echo plugins_url( 'wp-tweets-pro-2.0.0.pdf', __FILE__ ); ?>"><?php _e( 'Read the Manual', 'wp-to-twitter' ); ?></a>
 				</div>
 			</div>
 		</div>
