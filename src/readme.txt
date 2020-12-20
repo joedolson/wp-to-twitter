@@ -64,6 +64,11 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.5.1 =
+
+* Move PHP tests from Travis-CI to GitHub Actions.
+* Fix results of PHP testing.
+
 = 3.5.0 =
 
 * Update connection instructions to match Project & App structure at Twitter.
