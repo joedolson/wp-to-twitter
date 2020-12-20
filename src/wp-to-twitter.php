@@ -10,7 +10,7 @@
  * @wordpress-plugin
  * Plugin Name: WP to Twitter
  * Plugin URI:  http://www.joedolson.com/wp-to-twitter/
- * Description: Posts a Tweet when you update your WordPress blog or post a link, using your URL shortener. Rich options to customize and promote your Tweets.
+ * Description: Posts a Tweet when you update your WordPress blog or post a link, using your URL shortener. Many options to customize and promote your Tweets.
  * Author:      Joseph C Dolson
  * Author URI:  http://www.joedolson.com
  * Text Domain: wp-to-twitter
