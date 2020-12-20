@@ -262,7 +262,7 @@ function wpt_cap_checkbox( $role, $cap, $name ) {
  * @param boolean $override Send message if debug disabled.
  */
 function wpt_mail( $subject, $body, $post_ID = false, $override = false ) {
-	if ( ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) || true === $override ) {
+	if ( ( WPT_DEBUG ) ) {
 		if ( WPT_DEBUG_BY_EMAIL ) {
 			wp_mail( WPT_DEBUG_ADDRESS, $subject, $body, WPT_FROM );
 		} else {
