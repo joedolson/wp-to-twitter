@@ -367,10 +367,10 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$account      = get_option( 'wtt_twitter_username', '' );
 	$user_meta    = get_user_meta( $auth, 'wp-to-twitter-user-username', true );
 	$user_account = get_user_meta( $auth, 'wtt_twitter_username', true );
-	$user_account = ( $user_account ) ? $user_account: $user_meta;
+	$user_account = ( $user_account ) ? $user_account : $user_meta;
 	if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
 		if ( 'mainAtTwitter' === get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
-			$account      = $user_account;
+			$account = $user_account;
 		} elseif ( 'mainAtTwitterPlus' === get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
 			$account = stripcslashes( $user_account . ' @' . get_option( 'wtt_twitter_username' ) );
 		} else {

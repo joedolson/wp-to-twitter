@@ -368,7 +368,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			$metadata_api = 'https://upload.twitter.com/1.1/media/metadata/create.json';
 			$alt_text     = get_post_meta( $attachment, '_wp_attachment_image_alt', true );
 			$alt_text     = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
-			if ( '' != $alt_text ) {
+			if ( '' !== $alt_text ) {
 				$image_alt = json_encode(
 					array(
 						'media_id' => $media_id,
@@ -377,7 +377,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 						),
 					)
 				);
-				$post_alt = $tmh_oauth->request(
+				$post_alt  = $tmh_oauth->request(
 					'POST',
 					$metadata_api,
 					$image_alt,

@@ -257,8 +257,8 @@ class WPT_TwitterFeed {
 		$options      = array_merge(
 			$options,
 			array(
-				'screen_name'          => $screenname,
-				'count'                => 20,
+				'screen_name' => $screenname,
+				'count'       => 20,
 			)
 		);
 

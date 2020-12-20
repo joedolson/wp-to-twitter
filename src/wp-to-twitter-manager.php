@@ -293,7 +293,10 @@ function wpt_update_settings() {
 								<?php _e( 'The core WP to Twitter plug-in is free, and has been since 2008. WP Tweets Pro sales help keep this going, but they don\'t cover everything.', 'wp-to-twitter' ); ?>
 							</p>
 							<p>
-								<?php _e( 'I know that not everybody has a use for the features supported by WP Tweets Pro. If you\'re happy with what you\'ve found in WP to Twitter, you can still support me - either by <a href="%1$s">making a donation</a> or by <a href="%2$s">writing a review</a>. If you have the time or money, I\'ll sincerely appreciate anything you can do!', 'wp-to-twitter' ); ?>
+								<?php
+								// Translators: Donation link, review link.
+								sprintf( __( 'I know that not everybody has a use for the features supported by WP Tweets Pro. If you\'re happy with what you\'ve found in WP to Twitter, you can still support me - either by <a href="%1$s">making a donation</a> or by <a href="%2$s">writing a review</a>. If you have the time or money, I\'ll sincerely appreciate anything you can do!', 'wp-to-twitter' ), 'https://www.joedolson.com/donate/', 'https://wordpress.org/support/plugin/wp-to-twitter/reviews/#new-post' );
+								?>
 							</p>
 						</div>
 					</div>

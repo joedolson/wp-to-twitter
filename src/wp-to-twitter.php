@@ -385,7 +385,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment", $id );
 					if ( $media_id ) {
 						$status['media_ids'] = $media_id;
-						
+
 					}
 				}
 			}
@@ -1179,16 +1179,16 @@ function wpt_add_twitter_inner_box( $post ) {
 				}
 			}
 		}
-		$tweet    = esc_attr( stripcslashes( get_post_meta( $post_id, '_jd_twitter', true ) ) );
-		$tweet    = apply_filters( 'wpt_user_text', $tweet, $status );
+		$tweet = esc_attr( stripcslashes( get_post_meta( $post_id, '_jd_twitter', true ) ) );
+		$tweet = apply_filters( 'wpt_user_text', $tweet, $status );
 		// Formulate Template display.
 		$template = ( 'publish' === $status ) ? $options[ $type ]['post-edited-text'] : $options[ $type ]['post-published-text'];
 		$expanded = $template;
 		if ( '' !== get_option( 'jd_twit_prepend', '' ) ) {
-			$expanded = "<em>" . stripslashes( get_option( 'jd_twit_prepend' ) ) . '</em> ' . $expanded;
+			$expanded = '<em>' . stripslashes( get_option( 'jd_twit_prepend' ) ) . '</em> ' . $expanded;
 		}
 		if ( '' !== get_option( 'jd_twit_append', '' ) ) {
-			$expanded = $expanded . " <em>" . stripslashes( get_option( 'jd_twit_append' ) ) . '</em>';
+			$expanded = $expanded . ' <em>' . stripslashes( get_option( 'jd_twit_append' ) ) . '</em>';
 		}
 		if ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) {
 			// Translators: post type.
@@ -1689,6 +1689,8 @@ if ( '1' === get_option( 'jd_twit_blogroll' ) ) {
 
 if ( function_exists( 'wp_after_insert_post' ) ) {
 	/**
+	 * Use the `wp_after_insert_post` action to run Tweets.
+	 *
 	 * @since WordPress 5.6
 	 */
 	add_action( 'wp_after_insert_post', 'wpt_twit', 10, 4 );
@@ -1753,10 +1755,10 @@ function wpt_future_to_publish( $post ) {
 /**
  * Handle Tweeting posts published directly. As of 12/10/2020, supports new wp_after_insert_post to improve support when used with block editor.
  *
- * @param int    $id Post ID.
- * @param object $post Post object.
+ * @param int     $id Post ID.
+ * @param object  $post Post object.
  * @param boolean $updated True if updated, false if inserted.
- * @param object $post_before The post prior to this update, or null for new posts.
+ * @param object  $post_before The post prior to this update, or null for new posts.
  */
 function wpt_twit( $id, $post = null, $updated = null, $post_before = null ) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || wp_is_post_revision( $id ) || ! wpt_in_post_type( $id ) ) {
@@ -1784,7 +1786,7 @@ add_action( 'publish_phone', 'wpt_twit_xmlrpc' );
  */
 function wpt_twit_future( $id ) {
 	set_transient( '_wpt_twit_future', $id, 10 );
-	// instant action has already run for this post. 
+	// instant action has already run for this post.
 	// prevent running actions twice (need both for older WP).
 	if ( get_transient( '_wpt_twit_instant' ) && (int) get_transient( '_wpt_twit_instant' ) === $id ) {
 		delete_transient( '_wpt_twit_instant' );
