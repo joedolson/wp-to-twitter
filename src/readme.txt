@@ -68,6 +68,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 * Move PHP tests from Travis-CI to GitHub Actions.
 * Fix results of PHP testing.
+* Minor clean-up in debugging.
 
 = 3.5.0 =
 
