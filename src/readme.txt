@@ -66,10 +66,12 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 = 3.5.1 =
 
-* Run metadate save on wp_after_insert_post, as well, when it exists.
+* Bug fix: Run metadate save on wp_after_insert_post, as well, when it exists.
+* Bug fix: Incorrect value passed to wp_localize_script.
 * Move PHP tests from Travis-CI to GitHub Actions.
 * Fix results of PHP testing.
 * Minor clean-up in debugging.
+* Update screenshots for repository.
 
 = 3.5.0 =
 
@@ -525,13 +527,11 @@ Writing and maintaining a plug-in is a lot of work. You can help me by providing
 
 == Screenshots ==
 
-1. WP to Twitter OAuth settings.
-2. WP to Twitter post meta box settings.
-3. WP to Twitter post meta box with WP Tweets PRO.
+1. WP to Twitter Set up.
+2. WP to Twitter Post Meta box.
+3. WP to Twitter post meta box with WP Tweets PRO active.
 4. WP Tweets PRO settings.
-5. Twitter Feed 
-6. Settings
+5. Example Twitter Feed (Twenty Nineteen)
+6. Basic WP to Twitter Settings
 
 == Upgrade Notice ==
-
-* 3.4.0: Removal of functions deprecated in January 2017 & March 2018. May break older Pro installations.
