@@ -1692,10 +1692,11 @@ if ( function_exists( 'wp_after_insert_post' ) ) {
 	 * @since WordPress 5.6
 	 */
 	add_action( 'wp_after_insert_post', 'wpt_twit', 10, 4 );
+	add_action( 'wp_after_insert_post', 'wpt_save_post', 10 );
 } else {
+	add_action( 'save_post', 'wpt_save_post', 10 );
 	add_action( 'save_post', 'wpt_twit', 15 );
 }
-add_action( 'save_post', 'wpt_save_post', 10 );
 /**
  * Check whether a given post is in an allowed post type and has an update template configured.
  *
