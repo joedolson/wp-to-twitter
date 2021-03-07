@@ -259,7 +259,7 @@ function wtt_connect_oauth( $auth = false ) {
 	if ( ! wtt_oauth_test( $auth, 'verify' ) ) {
 
 		// show notification to authenticate with OAuth. No longer global; settings only.
-		if ( ! wpt_check_oauth() && ! isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) {
+		if ( ! wpt_check_oauth() && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 			// Translators: Settings page to authenticate via OAuth.
 			$message = sprintf( __( "Twitter requires authentication by OAuth. You will need to <a href='%s'>update your settings</a> to complete installation of WP to Twitter.", 'wp-to-twitter' ), $admin_url );
