@@ -4,7 +4,7 @@
  *
  * @package     WP to Twitter
  * @author      Joe Dolson
- * @copyright   2008-2020 Joe Dolson
+ * @copyright   2008-2021 Joe Dolson
  * @license     GPL-2.0+
  *
  * @wordpress-plugin
@@ -17,11 +17,11 @@
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
  * Domain Path: lang
- * Version:     3.5.0
+ * Version:     3.5.1
  */
 
 /*
-	Copyright 2008-2020  Joe Dolson (email : joe@joedolson.com)
+	Copyright 2008-2021  Joe Dolson (email : joe@joedolson.com)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by

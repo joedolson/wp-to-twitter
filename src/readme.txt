@@ -3,11 +3,11 @@ Contributors: joedolson
 Donate link: http://www.joedolson.com/donate/
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
 Requires at least: 4.4
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 5.6
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.5.0
+Stable tag: 3.5.1
 
 Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -66,6 +66,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 = 3.5.1 =
 
+* Run metadate save on wp_after_insert_post, as well, when it exists.
 * Move PHP tests from Travis-CI to GitHub Actions.
 * Fix results of PHP testing.
 * Minor clean-up in debugging.
