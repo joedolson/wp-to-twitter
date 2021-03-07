@@ -167,6 +167,13 @@ label[for="wpt_license_key"] {
 	margin-left: 2em;
 }
 
+#wpt_settings_page .postbox > h2 {
+	font-size: 14px;
+	padding: 8px 12px;
+	margin: 0;
+	line-height: 1.4;
+}
+
 #wp-to-twitter  .wpt-pro-tab {
 	background: #213e7f;
 	color: #fff;
