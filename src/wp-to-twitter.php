@@ -732,7 +732,6 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 	if ( wp_is_post_autosave( $post_ID ) || wp_is_post_revision( $post_ID ) ) {
 		return $post_ID;
 	}
-
 	wpt_check_version();
 	$tweet_this     = get_post_meta( $post_ID, '_jd_tweet_this', true );
 	$newpost        = false;
@@ -879,7 +878,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 										'post_id'  => $post_ID,
 									)
 								);
-								if ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) {
+								if ( WPT_DEBUG ) {
 									$author_id = ( $acct ) ? "#$acct" : 'Main';
 									wpt_mail(
 										"7a: Tweet Scheduled for author: $author_id",
@@ -933,7 +932,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 												'post_id'  => $post_ID,
 											)
 										);
-										if ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) {
+										if ( WPT_DEBUG ) {
 											if ( $acct ) {
 												$author_id = "#$acct";
 											} else {
@@ -1133,13 +1132,9 @@ function wpt_add_twitter_debug_box() {
 	if ( WPT_DEBUG && current_user_can( 'manage_options' ) ) {
 		wpt_check_version();
 		// add Twitter panel to post types where it's enabled.
-		$wpt_post_types = get_option( 'wpt_post_types' );
-		if ( is_array( $wpt_post_types ) ) {
-			foreach ( $wpt_post_types as $key => $value ) {
-				if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] ) {
-					add_meta_box( 'wp2t-debug', 'WP to Twitter Debugging', 'wpt_show_debug', $key, 'advanced' );
-				}
-			}
+		$wpt_post_types = wpt_allowed_post_types();
+		foreach ( $wpt_post_types as $type ) {
+			add_meta_box( 'wp2t-debug', 'WP to Twitter Debugging', 'wpt_show_debug', $type, 'advanced' );
 		}
 	}
 }
@@ -1567,9 +1562,9 @@ function wpt_admin_script() {
  *
  * @param integer $id Post ID.
  */
-function wpt_save_post( $id ) {
+function wpt_save_post( $id, $post ) {
 	if ( empty( $_POST ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $id ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! wpt_in_post_type( $id ) ) {
-		return;
+		return $id;
 	}
 	if ( isset( $_POST['_yourls_keyword'] ) ) {
 		$yourls = $_POST['_yourls_keyword'];
@@ -1604,9 +1599,8 @@ function wpt_save_post( $id ) {
 	$update = apply_filters( 'wpt_insert_post', $_POST, $id );
 	// WPT PRO.
 	// only send debug data if post meta is updated.
-	if ( true === $update || is_int( $update ) ) {
-		wpt_mail( 'Post Meta Inserted', 'WP to Twitter post meta was updated', $id ); // DEBUG.
-	}
+	wpt_mail( 'Post Meta Processed', 'WP to Twitter post meta was updated' . print_r( $_POST, 1 ), $id ); // DEBUG.
+
 	if ( isset( $_POST['wpt-delete-debug'] ) && 'true' === $_POST['wpt-delete-debug'] ) {
 		delete_post_meta( $id, '_wpt_debug_log' );
 	}
@@ -1697,10 +1691,10 @@ if ( function_exists( 'wp_after_insert_post' ) ) {
 	 *
 	 * @since WordPress 5.6
 	 */
-	add_action( 'wp_after_insert_post', 'wpt_twit', 10, 4 );
-	add_action( 'wp_after_insert_post', 'wpt_save_post', 10 );
+	add_action( 'wp_after_insert_post', 'wpt_save_post', 10, 2 );
+	add_action( 'wp_after_insert_post', 'wpt_twit', 15, 4 );
 } else {
-	add_action( 'save_post', 'wpt_save_post', 10 );
+	add_action( 'save_post', 'wpt_save_post', 10, 2 );
 	add_action( 'save_post', 'wpt_twit', 15 );
 }
 /**
@@ -1716,7 +1710,7 @@ function wpt_in_post_type( $id ) {
 	if ( in_array( $type, $post_types, true ) ) {
 		return true;
 	}
-	if ( WPT_DEBUG && function_exists( 'wpt_pro_exists' ) ) {
+	if ( WPT_DEBUG ) {
 		wpt_mail( '0: Not a Tweeted post type', 'This post type is not enabled for Tweeting: ' . $type, $id );
 	}
 
@@ -1766,19 +1760,17 @@ function wpt_future_to_publish( $post ) {
  * @param object  $post_before The post prior to this update, or null for new posts.
  */
 function wpt_twit( $id, $post = null, $updated = null, $post_before = null ) {
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || wp_is_post_revision( $id ) || ! wpt_in_post_type( $id ) ) {
-		return;
+	if ( empty( $_POST ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $id ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! wpt_in_post_type( $id ) ) {
+		return $id;
 	}
+
 	$post = ( null === $post ) ? get_post( $id ) : $post;
 	if ( 'publish' !== $post->post_status ) {
-		return;
+		return $id;
 	}
 	// is there any reason to accept any other status?
-	// This is an issue only until the release of WP 4.7.
-	remove_action( 'save_post', 'wpt_twit', 15 );
 	wpt_mail( 'Tweeting published post', $id );
 	wpt_twit_instant( $id, $post, $updated, $post_before );
-	add_action( 'save_post', 'wpt_twit', 15 );
 }
 
 add_action( 'xmlrpc_publish_post', 'wpt_twit_xmlrpc' );

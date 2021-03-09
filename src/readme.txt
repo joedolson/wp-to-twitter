@@ -2,7 +2,7 @@
 Contributors: joedolson
 Donate link: http://www.joedolson.com/donate/
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
-Requires at least: 4.4
+Requires at least: 4.9.8
 Tested up to: 5.7
 Requires PHP: 5.6
 License: GPLv2 or later
@@ -72,6 +72,8 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Fix results of PHP testing.
 * Minor clean-up in debugging.
 * Update screenshots for repository.
+* Changed WP requirement to >= 4.9.8
+* Bug fix: Post meta saving after post published in block editor
 
 = 3.5.0 =
 

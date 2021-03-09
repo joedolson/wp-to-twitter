@@ -262,6 +262,7 @@ function wpt_cap_checkbox( $role, $cap, $name ) {
  * @param boolean $override Send message if debug disabled.
  */
 function wpt_mail( $subject, $body, $post_ID = false, $override = false ) {
+	$body .= ' Active Filter:' . current_filter();
 	if ( ( WPT_DEBUG ) ) {
 		if ( WPT_DEBUG_BY_EMAIL ) {
 			wp_mail( WPT_DEBUG_ADDRESS, $subject, $body, WPT_FROM );
@@ -283,7 +284,7 @@ function wpt_debug_log( $subject, $body, $post_ID ) {
 		global $post_ID;
 	}
 	if ( $post_ID ) {
-		$time = current_time( 'timestamp' ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
+		$time = microtime();
 		add_post_meta( $post_ID, '_wpt_debug_log', array( $time, $subject, $body ) );
 	}
 }
@@ -298,7 +299,7 @@ function wpt_show_debug() {
 		$debug_log = get_post_meta( $post_ID, '_wpt_debug_log' );
 		if ( is_array( $debug_log ) ) {
 			foreach ( $debug_log as $entry ) {
-				$date     = date_i18n( 'Y-m-d H:i', $entry[0] );
+				$date     = date_i18n( 'Y-m-d H:i:s', $entry[0] );
 				$subject  = $entry[1];
 				$body     = $entry[2];
 				$records .= "<li><button type='button' class='toggle-debug button-secondary' aria-expanded='false'><strong>$date</strong>:<br />$subject</button><pre class='wpt-debug-details'>" . esc_html( $body ) . '</pre></li>';
