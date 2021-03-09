@@ -1561,6 +1561,9 @@ function wpt_admin_script() {
  * Post the Custom Tweet & custom Tweet data into the post meta table
  *
  * @param integer $id Post ID.
+ * @param object  $post Post object.
+ *
+ * @return bool
  */
 function wpt_save_post( $id, $post ) {
 	if ( empty( $_POST ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $id ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! wpt_in_post_type( $id ) ) {
@@ -1607,6 +1610,8 @@ function wpt_save_post( $id, $post ) {
 	if ( isset( $_POST['wpt-delete-all-debug'] ) && 'true' === $_POST['wpt-delete-all-debug'] ) {
 		delete_post_meta_by_key( '_wpt_debug_log' );
 	}
+
+	return $id;
 }
 
 add_action( 'init', 'wpt_old_admin_redirect' );
