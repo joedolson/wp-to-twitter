@@ -278,8 +278,13 @@ function wpt_twitter_feed( $instance ) {
 
 			if ( $instance['source'] ) {
 				$source = $tweet['source'];
-				// Translators: 1 - time string, 2 - name of Tweet app, 3 - Link to Tweet.
-				$timetweet = sprintf( __( '<a href="%3$s">about %1$s ago</a> via %2$s', 'wp-to-twitter' ), human_time_diff( strtotime( $tweet['created_at'] ) ), $source, 'http://twitter.com/' . $posted_by . "/status/$tweet[id_str]" );
+				if ( '' !== $source ) {
+					// Translators: 1 - time string, 2 - name of Tweet app, 3 - Link to Tweet.
+					$timetweet = sprintf( __( '<a href="%3$s">about %1$s ago</a> via %2$s', 'wp-to-twitter' ), human_time_diff( strtotime( $tweet['created_at'] ) ), $source, 'http://twitter.com/' . $posted_by . "/status/$tweet[id_str]" );
+				} else {
+					// Translators: 1 - time string, 2 - Link to Tweet.
+					$timetweet = sprintf( __( '<a href="%2$s">about %1$s ago</a>', 'wp-to-twitter' ), human_time_diff( strtotime( $tweet['created_at'] ) ), $source, 'http://twitter.com/' . $posted_by . "/status/$tweet[id_str]" );
+				}
 			} else {
 				// Translators: 1 - time string; 2 - link to Tweet.
 				$timetweet = sprintf( __( '<a href="%2$s">about %1$s ago</a>', 'wp-to-twitter' ), human_time_diff( strtotime( $tweet['created_at'] ) ), "http://twitter.com/$posted_by/status/$tweet[id_str]" );
