@@ -1757,6 +1757,20 @@ function wpt_future_to_publish( $post ) {
 }
 
 /**
+ * Check whether autotweeting has been allowed.
+ *
+ * @param int $post_id Post ID.
+ *
+ * @return bool
+ */
+function wpt_auto_tweet_allowed( $post_id ) {
+	$state = get_option( 'wpt_auto_tweet_allowed', '0' );
+	$return = ( '0' !== $state ) ? true : false;
+
+	return apply_filters( 'wpt_auto_tweet_allowed', $return, $post_id );
+}
+
+/**
  * Handle Tweeting posts published directly. As of 12/10/2020, supports new wp_after_insert_post to improve support when used with block editor.
  *
  * @param int     $id Post ID.
@@ -1765,7 +1779,7 @@ function wpt_future_to_publish( $post ) {
  * @param object  $post_before The post prior to this update, or null for new posts.
  */
 function wpt_twit( $id, $post = null, $updated = null, $post_before = null ) {
-	if ( empty( $_POST ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $id ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! wpt_in_post_type( $id ) ) {
+	if ( ( empty( $_POST ) && ! wpt_auto_tweet_allowed( $id ) ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $id ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX && ! wpt_auto_tweet_allowed( $id ) ) || ! wpt_in_post_type( $id ) ) {
 		return $id;
 	}
 
