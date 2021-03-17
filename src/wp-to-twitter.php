@@ -1764,7 +1764,7 @@ function wpt_future_to_publish( $post ) {
  * @return bool
  */
 function wpt_auto_tweet_allowed( $post_id ) {
-	$state = get_option( 'wpt_auto_tweet_allowed', '0' );
+	$state  = get_option( 'wpt_auto_tweet_allowed', '0' );
 	$return = ( '0' !== $state ) ? true : false;
 
 	return apply_filters( 'wpt_auto_tweet_allowed', $return, $post_id );
