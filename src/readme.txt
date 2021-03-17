@@ -64,6 +64,11 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.5.2 =
+
+* Bug fix: missing CSS for headings.
+*
+
 = 3.5.1 =
 
 * Bug fix: Run metadate save on wp_after_insert_post, as well, when it exists.
