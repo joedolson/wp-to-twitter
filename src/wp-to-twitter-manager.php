@@ -320,6 +320,7 @@ function wpt_update_settings() {
 					<div>
 						<?php
 						echo apply_filters( 'wpt_tweet_length', '' );
+						echo apply_filters( 'wpt_auto_tweet', '' );
 						echo apply_filters( 'wpt_pick_shortener', '' );
 						$post_types   = get_post_types( array(), 'objects' );
 						$wpt_settings = get_option( 'wpt_post_types' );
@@ -1009,5 +1010,34 @@ add_filter( 'wpt_settings', 'wpt_set_tweet_length' );
 function wpt_set_tweet_length() {
 	if ( isset( $_POST['wpt_tweet_length'] ) ) {
 		update_option( 'wpt_tweet_length', intval( $_POST['wpt_tweet_length'] ) );
+	}
+}
+
+
+add_filter( 'wpt_auto_tweet', 'wpt_auto_tweet' );
+/**
+ * Add control to set maximum length for a Tweet.
+ *
+ * @return string HTML control.
+ */
+function wpt_auto_tweet() {
+	$allow   = ( '0' === get_option( 'wpt_auto_tweet_allowed', '0' ) ) ? false : true;
+	$note    = ( $allow ) ? '<strong id="auto_tweet_note">(' . __( 'When publishing manually, you will need to save drafts prior to publishing to support WP to Twitter metabox options.', 'wp-to-twitter' ) . ')</strong>' : '';
+	$control = "<p class='wpt_auto_tweet_allowed'>
+					<input type='checkbox' value='1' " . checked( $allow, true, false ) . "id='wpt_auto_tweet_allowed' name='wpt_auto_tweet_allowed' aria-describedby='auto_tweet_note' /> <label for='wpt_auto_tweet_allowed'>" . __( 'Allow Tweets from Post Importers', 'wp-to-twitter' ) . "</label> $note
+				</p>";
+
+	return $control;
+}
+
+add_filter( 'wpt_settings', 'wpt_set_auto_tweet_allowed' );
+/**
+ * Set the automatic Tweet allowed parameter..
+ */
+function wpt_set_auto_tweet_allowed() {
+	if ( isset( $_POST['wpt_auto_tweet_allowed'] ) ) {
+		update_option( 'wpt_auto_tweet_allowed', '1' );
+	} else {
+		delete_option( 'wpt_auto_tweet_allowed' );
 	}
 }
