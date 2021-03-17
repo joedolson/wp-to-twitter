@@ -7,7 +7,7 @@ Tested up to: 5.7
 Requires PHP: 5.6
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.5.1
+Stable tag: 3.5.2
 
 Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -67,7 +67,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.5.2 =
 
 * Bug fix: missing CSS for headings.
-*
+* Bug fix: Add option to allow autoposting to work. Option will break manual posting, however.
 
 = 3.5.1 =
 
