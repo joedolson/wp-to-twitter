@@ -167,6 +167,7 @@ label[for="wpt_license_key"] {
 	margin-left: 2em;
 }
 
+#wp-to-twitter .postbox > h2,
 #wpt_settings_page .postbox > h2 {
 	font-size: 14px;
 	padding: 8px 12px;
