@@ -24,7 +24,6 @@ function wpt_max_length() {
 		$connection = wpt_oauth_connection();
 		if ( $connection ) {
 			$config = $connection->get( 'https://api.twitter.com/1.1/help/configuration.json' );
-			set_transient( 'wpt_twitter_config', $config, 60 * 60 * 24 );
 		} else {
 			$config = json_encode(
 				array(
@@ -34,6 +33,7 @@ function wpt_max_length() {
 				)
 			);
 		}
+		set_transient( 'wpt_twitter_config', $config, 60 * 60 * 24 );
 	}
 
 	$decoded = json_decode( $config );
