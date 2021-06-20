@@ -64,6 +64,10 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.5.3 =
+
+* Bug fix: Query to Twitter config endpoint should never run more than once a day.
+
 = 3.5.2 =
 
 * Bug fix: missing CSS for headings.
