@@ -514,6 +514,11 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				wpt_set_log( 'wpt_status_message', $id, $error );
 			} else {
 				do_action( 'wpt_tweet_posted', $connection, $id );
+				// Log the Tweet ID of the first Tweet for this post.
+				$has_tweet_id = get_post_meta( $id, '_wpt_tweet_id', true );
+				if ( ! $has_tweet_id ) {
+					update_post_meta( $id, '_wpt_tweet_id', $connection->body->id );
+				}
 				wpt_set_log( 'wpt_status_message', $id, $notice . __( 'Tweet sent successfully.', 'wp-to-twitter' ) );
 			}
 
