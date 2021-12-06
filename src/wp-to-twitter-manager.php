@@ -716,7 +716,7 @@ function wpt_update_settings() {
 							} else {
 								$label = '<code>#' . $k . '#</code>';
 							}
-							$inputs .= "<div class='wpt-truncate'><label for='" . esc_attr( $k-$v ) . "'>$label</label><br /><input type='number' size='3' value='" . esc_attr( $v ) . "' name='wpt_truncation_order[" . esc_attr( $k ) . "]' /></div> ";
+							$inputs .= "<div class='wpt-truncate'><label for='" . esc_attr( "$k-$v" ) . "'>$label</label><br /><input type='number' size='3' value='" . esc_attr( $v ) . "' name='wpt_truncation_order[" . esc_attr( $k ) . "]' /></div> ";
 						}
 						?>
 						<fieldset>
