@@ -189,7 +189,7 @@ function wpt_show_last_tweet() {
 			$post_ID = $log[0];
 			$post    = get_post( $post_ID );
 			if ( is_object( $post ) ) {
-				$title = "<a href='" . esc_url( get_edit_post_link( $post_ID ) ) . "'>" . esc_html( $post->post_title ) '</a>';
+				$title = "<a href='" . esc_url( get_edit_post_link( $post_ID ) ) . "'>" . esc_html( $post->post_title ) . '</a>';
 			} else {
 				$title = '(' . __( 'No post', 'wp-to-twitter' ) . ')';
 			}
