@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WPT_DEBUG', false ); // Debugging only works with WP Tweets PRO.
+define( 'WPT_DEBUG', false );
 define( 'WPT_DEBUG_BY_EMAIL', false ); // Email debugging no longer default as of 3.3.0.
 define( 'WPT_DEBUG_ADDRESS', get_option( 'admin_email' ) );
 define( 'WPT_FROM', 'From: \"' . get_option( 'blogname' ) . '\" <' . get_option( 'admin_email' ) . '>' );
