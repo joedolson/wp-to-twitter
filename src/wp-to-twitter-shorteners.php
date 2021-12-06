@@ -303,6 +303,17 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			$token     = get_option( 'yourlstoken' );
 			if ( $token ) {
 				$decoded = wpt_remote_json( $yourl_api . "?action=expand&shorturl=$short_url&format=json&signature=$token" );
+				if ( '404' === (string) $decoded ) {
+					$short_url = urldecode( $short_url );
+					if ( false === stripos( $short_url, 'https://' ) ) {
+						// Yourls will throw an error for mismatched protocol.
+						$short_url = str_replace( 'http://', 'https://', $short_url );
+					} else {
+						$short_url = str_replace( 'https://', 'http://', $short_url );
+					}
+					$short_url = urlencode( $short_url );
+					$decoded   = wpt_remote_json( $yourl_api . "?action=expand&shorturl=$short_url&format=json&signature=$token" );
+				}
 			} else {
 				$decoded = wpt_remote_json( $yourl_api . "?action=expand&shorturl=$short_url&format=json&username=$user&password=$pass" );
 			}
