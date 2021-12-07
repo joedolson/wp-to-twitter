@@ -361,7 +361,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		<div class="ui-sortable meta-box-sortables">
 			<div class="postbox">
 				<h3>
-					<span><?php esc_html_e( '<abbr title="Uniform Resource Locator">URL</abbr> Shortener Account Settings', 'wp-to-twitter' ); ?></span>
+					<span><?php esc_html_e( 'URL Shortener Account Settings', 'wp-to-twitter' ); ?></span>
 				</h3>
 
 				<div class="inside">
