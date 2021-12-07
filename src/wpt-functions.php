@@ -160,7 +160,7 @@ function wpt_settings_tabs() {
 		'support'    => __( 'Get Help', 'wp-to-twitter' ),
 		'pro'        => $pro_text,
 	);
-	if ( '1' === get_option( 'jd_donations' ) && ! function_exists( 'wpt_pro_exists' ) ) {
+	if ( ! function_exists( 'wpt_pro_exists' ) ) {
 		unset( $pages['pro'] );
 	}
 

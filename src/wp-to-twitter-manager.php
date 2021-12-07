@@ -147,7 +147,6 @@ function wpt_updated_settings() {
 
 		update_option( 'wpt_permit_feed_styles', ( isset( $_POST['wpt_permit_feed_styles'] ) ) ? 1 : 0 );
 		update_option( 'wp_debug_oauth', ( isset( $_POST['wp_debug_oauth'] ) ) ? 1 : 0 );
-		update_option( 'jd_donations', ( isset( $_POST['jd_donations'] ) ) ? 1 : 0 );
 		$wpt_truncation_order = $_POST['wpt_truncation_order'];
 		update_option( 'wpt_truncation_order', map_deep( $wpt_truncation_order, 'sanitize_text_field' ) );
 		$message .= __( 'WP to Twitter Advanced Options Updated', 'wp-to-twitter' ) . '. ' . $extend;
@@ -748,9 +747,6 @@ function wpt_update_settings() {
 								<li>
 									<input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" <?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> <label for="wp_debug_oauth"><?php _e( 'Get Debugging Data for OAuth Connection', 'wp-to-twitter' ); ?></label>
 								</li>
-								<li>
-									<input type="checkbox" name="jd_donations" id="jd_donations" value="1" <?php echo wpt_checkbox( 'jd_donations' ); ?> /> <label for="jd_donations"><strong><?php _e( 'I made a donation, so stop whinging at me, please.', 'wp-to-twitter' ); ?></strong></label>
-								</li>
 							</ul>
 						</fieldset>
 						<div>
@@ -821,7 +817,7 @@ function wpt_sidebar() {
 				?>
 				<div class="inside resources">
 					<?php
-					if ( '1' !== get_option( 'jd_donations' ) && ! function_exists( 'wpt_pro_exists' ) ) {
+					if ( ! function_exists( 'wpt_pro_exists' ) ) {
 						?>
 					<p class='cta'><?php _e( '<a href="http://www.wptweetspro.com/wp-tweets-pro">Get WP Tweets Pro</a>', 'wp-to-twitter' ); ?></p>
 						<?php

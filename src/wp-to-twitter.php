@@ -1894,7 +1894,7 @@ function wpt_debugging_enabled() {
  * Display promotion notice to admin users who have not donated or purchased WP Tweets PRO.
  */
 function wpt_promotion_notice() {
-	if ( current_user_can( 'activate_plugins' ) && '2' === get_option( 'wpt_promotion_scheduled' ) && '1' !== get_option( 'jd_donations' ) ) {
+	if ( current_user_can( 'activate_plugins' ) && '2' === get_option( 'wpt_promotion_scheduled' ) ) {
 		$upgrade = 'http://www.wptweetspro.com/wp-tweets-pro/';
 		$dismiss = admin_url( 'admin.php?page=wp-tweets-pro&dismiss=promotion' );
 		// Translators: URL to upgrade.
