@@ -64,6 +64,14 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 3.5.4 =
+
+* Change: Twitter help/configuration endpoint retired. Values changed to static.
+* Change: Misc. UI updates.
+* Bug fix: Re-query YOURLS endpoint if format throws no-match result.
+* Allow enabling debugging without Pro.
+* Log Tweet status IDs.
+
 = 3.5.3 =
 
 * Bug fix: Query to Twitter config endpoint should never run more than once a day.
