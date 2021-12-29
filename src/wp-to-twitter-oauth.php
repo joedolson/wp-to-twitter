@@ -299,8 +299,9 @@ function wtt_connect_oauth( $auth = false ) {
 					<li>' . __( 'Click "App Settings" to configure your app', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Click "Set up" to configure User authentication settings', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Enable OAuth 1.0a', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Set "App Permissions" to "Read and write".', 'wp-to-twitter' ) . '</li>
-					<li>' . sprintf( __( 'Add your website as the Website URL and the Callback URI: %s', 'wp-to-twitter' ), '<code>' . home_url() . '</code>' ) . '</li>
+					<li>' . __( 'Set "App Permissions" to "Read and write".', 'wp-to-twitter' ) . '</li>' .
+					// Translators: Site URL.
+					'<li>' . sprintf( __( 'Add your website as the Website URL and the Callback URI: %s', 'wp-to-twitter' ), '<code>' . home_url() . '</code>' ) . '</li>
 					<li>' . __( 'Click "Save" to save settings.', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Click "Edit" at top of Settings screen to edit your App', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Change to the "Keys and Tokens" tab', 'wp-to-twitter' ) . '</li>
