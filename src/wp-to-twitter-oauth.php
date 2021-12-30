@@ -276,7 +276,10 @@ function wtt_connect_oauth( $auth = false ) {
 			<h3><span>' . __( 'Connect to Twitter', 'wp-to-twitter' ) . '</span></h3>
 			<div class="inside ' . $class . '">
 				<ol class="wpt-oauth-settings">
-					<li>' . __( 'Apply for a <a href="https://developer.twitter.com/en/apply-for-access">Developer Account with Twitter</a>', 'wp-to-twitter' ) . '</li>
+					<li>' . __( 'Apply for a <a href="https://developer.twitter.com/en/apply-for-access">Developer Account with Twitter</a>', 'wp-to-twitter' ) . '<ul>
+						<li><a href="https://developer.twitter.com/en/developer-terms/policy">' . __( 'Review the Terms of Service for use of the Twitter API', 'wp-to-twitter' ) . '</a></li>
+						<li>' . __( 'If your app is suspended by Twitter, contact <a href="https://help.twitter.com/forms/platform">their API Policy Support</a>.', 'wp-to-twitter' ) . '</li>
+					</ul></li>
 					<li>' . __( 'Add a new application in <a href="https://developer.twitter.com/en/portal/apps/new">Twitter\'s project and app portal</a>', 'wp-to-twitter' ) . '
 						<ul>
 							<li>' . __( 'Name your application.', 'wp-to-twitter' ) . '(' . __( 'Your app name cannot include the word "Twitter."', 'wp-to-twitter' ) . ')</li>
