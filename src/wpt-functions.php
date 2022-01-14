@@ -579,7 +579,7 @@ function wpt_post_attachment( $post_ID ) {
 		$args        = array(
 			'post_type'      => 'attachment',
 			'numberposts'    => 1,
-			'post_status'    => 'publish',
+			'post_status'    => 'any',
 			'post_parent'    => $post_ID,
 			'post_mime_type' => 'image',
 			'order'          => 'ASC',

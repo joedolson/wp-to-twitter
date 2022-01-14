@@ -67,6 +67,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.5.5 =
 
 * Change: Twitter app setup instructions updated.
+* Removed: URL data migration. Any data that needs migrating should be long completed.
 
 = 3.5.4 =
 
