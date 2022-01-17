@@ -63,16 +63,18 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				} else {
 					$campaign = get_option( 'twitter-analytics-campaign' );
 				}
-				$medium = urlencode( trim( apply_filters( 'wpt_utm_medium', 'twitter' ) ) );
-				$source = urlencode( trim( apply_filters( 'wpt_utm_source', 'twitter' ) ) );
-				$url    = add_query_arg(
+				$medium   = urlencode( trim( apply_filters( 'wpt_utm_medium', 'twitter' ) ) );
+				$source   = urlencode( trim( apply_filters( 'wpt_utm_source', 'twitter' ) ) );
+				$tracking = apply_filters(
+					'wpt_analytics_arguments',
 					array(
 						'utm_campaign' => $campaign,
 						'utm_medium'   => $medium,
 						'utm_source'   => $source,
 					),
-					$url
+					$post_ID
 				);
+				$url      = add_query_arg( $tracking, $url );
 			}
 			$url     = urldecode( trim( $url ) ); // prevent double-encoding.
 			$encoded = urlencode( $url );
