@@ -3,7 +3,7 @@ Contributors: joedolson
 Donate link: http://www.joedolson.com/donate/
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
 Requires at least: 4.9.8
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 5.6
 License: GPLv2 or later
 Text Domain: wp-to-twitter
