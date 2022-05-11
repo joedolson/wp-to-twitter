@@ -147,6 +147,7 @@ function wpt_updated_settings() {
 
 		update_option( 'wpt_permit_feed_styles', ( isset( $_POST['wpt_permit_feed_styles'] ) ) ? 1 : 0 );
 		update_option( 'wp_debug_oauth', ( isset( $_POST['wp_debug_oauth'] ) ) ? 1 : 0 );
+		update_option( 'wpt_debug_tweets', ( isset( $_POST['wpt_debug_tweets'] ) ) ? 1 : 0 );
 		$wpt_truncation_order = $_POST['wpt_truncation_order'];
 		update_option( 'wpt_truncation_order', map_deep( $wpt_truncation_order, 'sanitize_text_field' ) );
 		$message .= __( 'WP to Twitter Advanced Options Updated', 'wp-to-twitter' ) . '. ' . $extend;
@@ -734,9 +735,9 @@ function wpt_update_settings() {
 				</div>
 			</div>
 			<div class="ui-sortable meta-box-sortables">
-			<div class="postbox">
-				<h3><span><?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?></span></h3>
-				<div class="inside">
+				<div class="postbox">
+					<h3><span><?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?></span></h3>
+					<div class="inside">
 						<fieldset>
 							<legend class='screen-reader-text'><?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?></legend>
 							<ul>
@@ -746,6 +747,9 @@ function wpt_update_settings() {
 								</li>
 								<li>
 									<input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" <?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> <label for="wp_debug_oauth"><?php _e( 'Get Debugging Data for OAuth Connection', 'wp-to-twitter' ); ?></label>
+								</li>
+								<li>
+									<input type="checkbox" name="wpt_debug_tweets" id="wpt_debug_tweets" value="1" <?php echo wpt_checkbox( 'wpt_debug_tweets' ); ?> /> <label for="wpt_debug_tweets"><?php _e( 'Enable WP to Twitter Debugging', 'wp-to-twitter' ); ?></label>
 								</li>
 							</ul>
 						</fieldset>
