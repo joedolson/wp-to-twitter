@@ -67,6 +67,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 3.5.6 =
 
 * Bug fix: Change in link to Twitter API error codes.
+* Bug fix: Restore sales page, accidentally removed in previous update.
 * Change: Option added to enable debugging from admin (in Advanced Settings.)
 
 = 3.5.5 =
