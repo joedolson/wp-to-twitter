@@ -363,6 +363,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			}
 		}
 		$api        = 'https://api.twitter.com/1.1/statuses/update.json';
+		$api2       = 'https://api.twitter.com/2/tweets'; // For testing.
 		$upload_api = 'https://upload.twitter.com/1.1/media/upload.json';
 		$status     = array(
 			'status'           => $twit,
@@ -505,6 +506,11 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					// schedule a one-time promotional box for 4 weeks after first successful Tweet.
 					if ( false === get_option( 'wpt_promotion_scheduled', false ) ) {
 						wp_schedule_single_event( time() + ( 60 * 60 * 24 * 7 * 4 ), 'wpt_schedule_promotion_action' );
+						update_option( 'wpt_promotion_scheduled', 1 );
+					}
+					if ( '3' === get_option( 'wpt_promotion_scheduled', '' ) ) {
+						// Schedule an additional promotion for 12 weeks after a successful Tweet following dismissal.
+						wp_schedule_single_event( time() + ( 60 * 60 * 24 * 7 * 12 ), 'wpt_schedule_promotion_action' );
 						update_option( 'wpt_promotion_scheduled', 1 );
 					}
 				}
