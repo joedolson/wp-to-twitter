@@ -292,7 +292,7 @@ function wpt_update_settings() {
 							</p>
 							<h3><?php _e( 'Support WP to Twitter', 'wp-to-twitter' ); ?></h3>
 							<p>
-								<?php _e( 'The core WP to Twitter plug-in is free, and has been since 2008. WP Tweets Pro sales help keep this going, but they don\'t cover everything.', 'wp-to-twitter' ); ?>
+								<?php _e( 'The core WP to Twitter plug-in is free, and has been since 2008. WP Tweets Pro sales help keep this going, but they don\'t cover all the costs of maintaining the plug-in. Purchasing a license helps ensure that I can continue to support this plug-in.', 'wp-to-twitter' ); ?>
 							</p>
 							<p>
 								<?php

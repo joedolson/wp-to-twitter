@@ -17,7 +17,7 @@
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
  * Domain Path: lang
- * Version:     3.5.5
+ * Version:     3.5.6
  */
 
 /*
@@ -65,7 +65,7 @@ require_once( plugin_dir_path( __FILE__ ) . 'wpt-widget.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php' );
 
 global $wpt_version;
-$wpt_version = '3.5.5';
+$wpt_version = '3.5.6';
 
 add_action( 'init', 'wpt_load_textdomain' );
 /**
@@ -1652,8 +1652,9 @@ add_action( 'admin_head', 'wpt_admin_style' );
  * Add stylesheets to WP to Twitter pages.
  */
 function wpt_admin_style() {
+	global $wpt_version;
 	if ( isset( $_GET['page'] ) && ( 'wp-to-twitter' === $_GET['page'] || 'wp-tweets-pro' === $_GET['page'] || 'wp-to-twitter-schedule' === $_GET['page'] || 'wp-to-twitter-tweets' === $_GET['page'] || 'wp-to-twitter-errors' === $_GET['page'] ) ) {
-		wp_enqueue_style( 'wpt-styles', plugins_url( 'css/styles.css', __FILE__ ) );
+		wp_enqueue_style( 'wpt-styles', plugins_url( 'css/styles.css', __FILE__ ), array(), $wpt_version );
 	}
 }
 

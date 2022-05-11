@@ -160,9 +160,6 @@ function wpt_settings_tabs() {
 		'support'    => __( 'Get Help', 'wp-to-twitter' ),
 		'pro'        => $pro_text,
 	);
-	if ( ! function_exists( 'wpt_pro_exists' ) ) {
-		unset( $pages['pro'] );
-	}
 
 	$pages     = apply_filters( 'wpt_settings_tabs_pages', $pages, $current );
 	$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
