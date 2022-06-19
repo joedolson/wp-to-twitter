@@ -150,7 +150,7 @@ function wpt_term_rate_limits() {
  */
 function wpt_save_term_rate_limit( $term_id, $tax_id ) {
 	$limits     = get_option( 'wpt_rate_limit' );
-	$option_set = isset( $_POST['wpt_rate_limit'] ) ? $_POST['wpt_rate_limit'] : wpt_default_rate_limit( $term_id );
+	$option_set = isset( $_POST['wpt_rate_limit'] ) ? sanitize_text_field( $_POST['wpt_rate_limit'] ) : wpt_default_rate_limit( $term_id );
 	if ( isset( $_POST['taxonomy'] ) ) {
 		if ( isset( $_POST['wpt_rate_limit'] ) ) {
 			$limits[ $term_id ] = $option_set;
