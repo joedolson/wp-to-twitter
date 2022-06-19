@@ -27,9 +27,9 @@ function wpt_updated_settings() {
 	if ( ! wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) {
 		die( 'Security check failed' );
 	}
-
 	if ( isset( $_POST['oauth_settings'] ) ) {
-		$oauth_message = wpt_update_oauth_settings( false, $_POST );
+		$post          = map_deep( $_POST, 'sanitize_text_field' );
+		$oauth_message = wpt_update_oauth_settings( false, $post );
 	} else {
 		$oauth_message = '';
 	}
@@ -110,7 +110,7 @@ function wpt_updated_settings() {
 		update_option( 'jd_date_format', sanitize_text_field( $_POST['jd_date_format'] ) );
 		update_option( 'jd_dynamic_analytics', sanitize_text_field( $_POST['jd-dynamic-analytics'] ) );
 
-		$twitter_analytics = ( isset( $_POST['twitter-analytics'] ) ) ? $_POST['twitter-analytics'] : 0;
+		$twitter_analytics = ( isset( $_POST['twitter-analytics'] ) ) ? absint( $_POST['twitter-analytics'] ) : 0;
 		if ( 1 === (int) $twitter_analytics ) {
 			update_option( 'use_dynamic_analytics', 0 );
 			update_option( 'use-twitter-analytics', 1 );
@@ -129,7 +129,7 @@ function wpt_updated_settings() {
 		update_option( 'jd_individual_twitter_users', ( isset( $_POST['jd_individual_twitter_users'] ) ? 1 : 0 ) );
 
 		if ( isset( $_POST['wpt_caps'] ) ) {
-			$perms = $_POST['wpt_caps'];
+			$perms = map_deep( $_POST['wpt_caps'], 'sanitize_text_field' );
 			$caps  = array( 'wpt_twitter_oauth', 'wpt_twitter_custom', 'wpt_twitter_switch', 'wpt_can_tweet', 'wpt_tweet_now' );
 			foreach ( $perms as $key => $value ) {
 				$role = get_role( $key );
@@ -148,8 +148,8 @@ function wpt_updated_settings() {
 		update_option( 'wpt_permit_feed_styles', ( isset( $_POST['wpt_permit_feed_styles'] ) ) ? 1 : 0 );
 		update_option( 'wp_debug_oauth', ( isset( $_POST['wp_debug_oauth'] ) ) ? 1 : 0 );
 		update_option( 'wpt_debug_tweets', ( isset( $_POST['wpt_debug_tweets'] ) ) ? 1 : 0 );
-		$wpt_truncation_order = $_POST['wpt_truncation_order'];
-		update_option( 'wpt_truncation_order', map_deep( $wpt_truncation_order, 'sanitize_text_field' ) );
+		$wpt_truncation_order = map_deep( $_POST['wpt_truncation_order'], 'sanitize_text_field' );
+		update_option( 'wpt_truncation_order', $wpt_truncation_order );
 		$message .= __( 'WP to Twitter Advanced Options Updated', 'wp-to-twitter' ) . '. ' . $extend;
 	}
 
@@ -181,13 +181,13 @@ function wpt_updated_settings() {
 		update_option( 'wpt_post_types', $wpt_settings );
 		update_option( 'newlink-published-text', sanitize_text_field( $_POST['newlink-published-text'] ) );
 		update_option( 'jd_twit_blogroll', ( isset( $_POST['jd_twit_blogroll'] ) ) ? 1 : '' );
-		$message  = wpt_select_shortener( $_POST );
+		$message  = wpt_select_shortener( map_deep( $_POST, 'sanitize_text_field' ) );
 		$message .= __( 'WP to Twitter Options Updated', 'wp-to-twitter' );
 		$message  = apply_filters( 'wpt_settings', $message, $_POST );
 	}
 
 	if ( isset( $_POST['wpt_shortener_update'] ) && 'true' === $_POST['wpt_shortener_update'] ) {
-		$message = wpt_shortener_update( $_POST );
+		$message = wpt_shortener_update( map_deep( $_POST, 'sanitize_text_field' );
 	}
 
 	// Check whether the server has supported for needed functions.
