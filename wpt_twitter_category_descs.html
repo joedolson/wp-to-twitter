@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_feed_stylesheet - WP to Twitter Hook Doumentation</title>
+    <title>Filter: wpt_twitter_category_descs - WP to Twitter Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_feed_stylesheet</h1></header>
+    <header><h1 class="page-title">Filter: wpt_twitter_category_descs</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_feed_stylesheet">apply_filters( 'wpt_feed_stylesheet', <span class="signature">$file )</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="wpt_twitter_category_descs">apply_filters( 'wpt_twitter_category_descs', <span class="signature">$cats )</span><span class="type-signature"> &rarr; {array}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Replace the WP to Twitter feeds stylesheet.</p>
+    <p>Filter the space separated list of category descriptions in #cat_descs#.</p>
 </div>
 
 
@@ -77,13 +77,13 @@
 
         <tr>
             
-                <td class="name"><code>$file</code></td>
+                <td class="name"><code>$cats</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">array</span>
 
 
             
@@ -93,7 +93,7 @@
 
             
 
-            <td class="description last"><p>URL to stylesheet.</p></td>
+            <td class="description last"><p>Array of category descriptions attached to this Tweet.</p></td>
         </tr>
 
     
@@ -134,7 +134,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line2063">line 2063</a>
+        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line662">line 662</a>
     </li></ul></dd>
     
 
@@ -168,7 +168,7 @@
     </dt>
     <dd>
         
-<span class="param-type">string</span>
+<span class="param-type">array</span>
 
 
     </dd>
