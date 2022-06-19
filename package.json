@@ -1,0 +1,35 @@
+{
+  "name": "wp-to-twitter",
+  "version": "3.3.0",
+  "private": true,
+  "description": "WP to Twitter WordPress plug-in.",
+  "author": "Joe Dolson",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "twitter",
+    "wordpress"
+  ],
+  "homepage": "https://www.joedolson.com/wp-to-twitter/",
+  "repository": "git+https://github.com/joedolson/wp-to-twitter.git",
+  "bugs": {
+    "url": "https://github.com/joedolson/wp-to-twitter/issues"
+  },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.9.0"
+  },
+  "devDependencies": {
+    "@wordpress/env": "^4.1",
+    "jsdoc": "~3.6.3",
+    "wp-hookdoc": "^0.2.0"
+  },
+  "scripts": {
+    "build:docs": "rm -rf docs/ && jsdoc -c hookdoc-conf.json",
+    "format-php": "wp-env run composer run-script format",
+    "prelint-php": "wp-env run composer 'install --no-interaction'",
+    "lint-php": "wp-env run composer run-script lint",
+    "pretest-php": "wp-env run composer 'install --no-interaction'",
+    "test-php": "wp-env run phpunit 'phpunit -c /var/www/html/wp-content/plugins/wp-to-twitter/phpunit.xml.dist --verbose'",
+    "wp-env": "wp-env"
+  }
+}

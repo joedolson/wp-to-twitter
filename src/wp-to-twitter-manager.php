@@ -187,7 +187,7 @@ function wpt_updated_settings() {
 	}
 
 	if ( isset( $_POST['wpt_shortener_update'] ) && 'true' === $_POST['wpt_shortener_update'] ) {
-		$message = wpt_shortener_update( map_deep( $_POST, 'sanitize_text_field' );
+		$message = wpt_shortener_update( map_deep( $_POST, 'sanitize_text_field' ) );
 	}
 
 	// Check whether the server has supported for needed functions.
