@@ -907,7 +907,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 								 *
 								 * @return {bool}
 								 */
-								$postpone_rendering  = apply_filters( 'wpt_postpone_rendering', get_option( 'wpt_postpone_rendering', 'false' ) );
+								$postpone_rendering = apply_filters( 'wpt_postpone_rendering', get_option( 'wpt_postpone_rendering', 'false' ) );
 								if ( 'false' !== $postpone_rendering ) {
 									$sentence = $template;
 								}
@@ -964,7 +964,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 										 *
 										 * @return {bool}
 										 */
-										$postpone_rendering  = apply_filters( 'wpt_postpone_rendering', get_option( 'wpt_postpone_rendering', 'false' ) );
+										$postpone_rendering = apply_filters( 'wpt_postpone_rendering', get_option( 'wpt_postpone_rendering', 'false' ) );
 										if ( 'false' !== $postpone_rendering ) {
 											$retweet = $retweet;
 										} else {
@@ -1053,6 +1053,7 @@ function wpt_twit_link( $link_id ) {
 		if ( mb_strlen( $sentence ) > 118 ) {
 			$sentence = mb_substr( $sentence, 0, 114 ) . '...';
 		}
+
 		$shrink = apply_filters( 'wptt_shorten_link', $thispostlink, $thislinkname, false, 'link' );
 		if ( false === stripos( $sentence, '#url#' ) ) {
 			$sentence = $sentence . ' ' . $shrink;
@@ -1095,6 +1096,15 @@ function wpt_generate_hash_tags( $post_ID ) {
 	}
 	$use_cats = ( '1' === get_option( 'wpt_use_cats' ) ) ? true : false;
 	$tags     = ( true === $use_cats ) ? wp_get_post_categories( $post_ID, array( 'fields' => 'all' ) ) : get_the_tags( $post_ID );
+	/**
+	 * Change the taxonomy used by default to generate post tags. Array of terms attached to post.
+	 *
+	 * @hook wpt_hash_source
+	 * @param {array} $tags Array of post terms.
+	 * @param {int}   $post_ID Post ID.
+	 *
+	 * @return {array}
+	 */
 	$tags     = apply_filters( 'wpt_hash_source', $tags, $post_ID );
 	if ( $tags && count( $tags ) > 0 ) {
 		$i = 1;
@@ -1146,6 +1156,16 @@ function wpt_generate_hash_tags( $post_ID ) {
 					$newtag = "@$tag";
 					break;
 				default:
+
+					/**
+					 * Change the default tag character. Default '#'.
+					 *
+					 * @hook wpt_tag_default
+					 * @param {string} $char Character used to convert tags into hashtags.
+					 * @param {int}    $t_id Term ID.
+					 *
+					 * @return {string}
+					 */
 					$newtag = apply_filters( 'wpt_tag_default', '#', $t_id ) . $tag;
 			}
 			if ( mb_strlen( $newtag ) > 2 && ( mb_strlen( $newtag ) <= $max_characters ) && ( $i <= $max_tags ) ) {
@@ -1664,7 +1684,7 @@ function wpt_save_post( $id, $post ) {
 		delete_post_meta( $id, '_wpt_short_url' );
 		delete_post_meta( $id, '_wp_jd_twitter' );
 	}
-	// WPT PRO.
+	// WPT PRO
 	$update = apply_filters( 'wpt_insert_post', $_POST, $id );
 	// WPT PRO.
 	// only send debug data if post meta is updated.
@@ -1805,6 +1825,15 @@ function wpt_allowed_post_types() {
 		}
 	}
 
+	/**
+	 * Return array of post types that can be sent as Tweets.
+	 *
+	 * @hook wpt_allowed_post_types
+	 * @param {array} $types Array of post type names enabled for Tweets either when editing or publishing.
+	 * @param {array} $post_type_settings Multidimensional array of post types and post type settings.
+	 *
+	 * @return {array}
+	 */
 	return apply_filters( 'wpt_allowed_post_types', $allowed_types, $post_type_settings );
 }
 
@@ -1834,6 +1863,15 @@ function wpt_auto_tweet_allowed( $post_id ) {
 	$state  = get_option( 'wpt_auto_tweet_allowed', '0' );
 	$return = ( '0' !== $state ) ? true : false;
 
+	/**
+	 * Return true if auto tweeting of old posts is enabled.
+	 *
+	 * @hook wpt_auto_tweet_allowed
+	 * @param {bool} $return true if enabled.
+	 * @param {int}  $post_id Post ID. 
+	 *
+	 * @return {bool}
+	 */
 	return apply_filters( 'wpt_auto_tweet_allowed', $return, $post_id );
 }
 
