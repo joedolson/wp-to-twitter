@@ -420,8 +420,18 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				$http_code  = 200;
 				$notice     = __( 'In Staging Mode:', 'wp-to-twitter' ) . ' ';
 			} else {
-				// Cancel this Tweet for your own custom reasons.
-				$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id );
+				/**
+				 * Filter the approval to send a Tweet.
+				 *
+				 * @hook wpt_do_tweet
+				 * @param {bool}     $do_tweet Return false to cancel this Tweet.
+				 * @param {int|bool} $auth Author.
+				 * @param {int}      $id Post ID.
+				 * @param {string}   $twit Tweet text.
+				 *
+				 * @return {bool}
+				 */
+				$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id, $twit );
 				if ( $do_tweet ) {
 					$connection->post( $api, $status );
 					$http_code = ( $connection ) ? (int) $connection->http_code : 'failed';
@@ -640,7 +650,23 @@ function wpt_post_info( $post_ID ) {
 			$cats[]         = $cat->cat_name;
 			$cat_descs[]    = $cat->description;
 		}
+		/**
+		 * Filter the space separated list of category names in #cats#.
+		 *
+		 * @hook wpt_twitter_category_names
+		 * @param {array} $cats Array of category names attached to this Tweet.
+		 *
+		 * @return {array}
+		 */
 		$cat_names = implode( ' ', apply_filters( 'wpt_twitter_category_names', $cats ) );
+		/**
+		 * Filter the space separated list of category descriptions in #cat_descs#.
+		 *
+		 * @hook wpt_twitter_category_descs
+		 * @param {array} $cats Array of category descriptions attached to this Tweet.
+		 *
+		 * @return {array}
+		 */
 		$cat_descs = implode( ' ', apply_filters( 'wpt_twitter_category_descs', $cat_descs ) );
 	} else {
 		$category     = '';
@@ -706,6 +732,7 @@ function wpt_short_url( $post_id ) {
  *
  * @param int   $post_ID Post ID.
  * @param array $post_info Array of post data.
+ *
  * @return boolean
  */
 function wpt_post_with_media( $post_ID, $post_info = array() ) {
@@ -725,7 +752,15 @@ function wpt_post_with_media( $post_ID, $post_info = array() ) {
 			$return = true;
 		}
 	}
-
+	/**
+	 * Filter whether this post should upload media.
+	 *
+	 * @hook wpt_upload_media
+	 * @param {bool} $upload True to allow this post to upload media.
+	 * @param {int}  $post_ID Post ID.
+	 *
+	 * @return {bool}
+	 */
 	return apply_filters( 'wpt_upload_media', $return, $post_ID );
 }
 
@@ -807,7 +842,15 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 				return false;
 			}
 		}
-		// Filter Tweet based on POST data -- allows custom filtering of unknown plug-ins, etc.
+		/**
+		 * Return true to ignore this post based on POST data. Default false.
+		 *
+		 * @hook wpt_filter_post_data
+		 * @param {bool} $filter True if this post should not be Tweeted.
+		 * @param {array} $post POST global.
+		 *
+		 * @return {bool}
+		 */
 		$filter = apply_filters( 'wpt_filter_post_data', false, $_POST );
 		if ( $filter ) {
 			return false;
