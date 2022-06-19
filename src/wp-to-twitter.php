@@ -346,7 +346,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		return false;
 	} elseif ( '' === $twit || ! $twit ) {
 		wpt_mail( 'Tweet check: empty sentence', "$twit, $auth, $id, $media", $id ); // DEBUG.
-		$error = __( 'This tweet was blank and could not be sent to Twitter.', 'wp-tweets-pro' );
+		$error = __( 'This tweet was blank and could not be sent to Twitter.', 'wp-to-twitter' );
 		wpt_saves_error( $id, $auth, $twit, $error, '403-2', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
 
@@ -934,6 +934,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 									$continue = apply_filters( 'wpt_allow_reposts', true, $i, $post_ID, $acct );
 									if ( $continue ) {
 										$retweet = apply_filters( 'wpt_set_retweet_text', $template, $i, $post_ID );
+
 										/*
 										 * Render the template of a scheduled Tweet only at the time it's sent.
 										 *
@@ -1544,7 +1545,7 @@ function wpt_ajax_tweet() {
 					break;
 			}
 			// Translators: Full text of Tweet, time scheduled for.
-			$return = ( 'tweet' === $action ) ? wpt_get_log( 'wpt_status_message', $post_ID ) : sprintf( __( 'Tweet scheduled: %1$s for %2$s', 'wp-tweets-pro' ), '"' . $sentence . '"', $print_schedule );
+			$return = ( 'tweet' === $action ) ? wpt_get_log( 'wpt_status_message', $post_ID ) : sprintf( __( 'Tweet scheduled: %1$s for %2$s', 'wp-to-twitter' ), '"' . $sentence . '"', $print_schedule );
 			echo $return;
 			if ( count( $authors ) > 1 ) {
 				echo '<br />';
