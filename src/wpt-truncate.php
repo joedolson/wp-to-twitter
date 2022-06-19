@@ -215,7 +215,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 							// If you want to add something like an ellipsis after truncation, use this filter.
 
 							/**
-							 * Filter a template tag value after truncation. If a value like an excerpt or post content has been truncated, you can modify the output using this filter. 
+							 * Filter a template tag value after truncation. If a value like an excerpt or post content has been truncated, you can modify the output using this filter.
 							 *
 							 * @hook wpt_filter_truncated_value
 							 * @param {string} $new_value Text truncated to maximum allowed length.

@@ -269,6 +269,14 @@ function wpt_check_recent_tweet( $id, $auth ) {
 		if ( $transient ) {
 			return true;
 		} else {
+			/**
+			 * Modify the expiration window for recent Tweets. This value does flood control, to prevent a runaway process from sending multiple Tweets. Default `30` seconds.
+			 *
+			 * @hook wpt_recent_tweet_threshold
+			 * @param {int} $expire Integer representing seconds. How long the transient will exist.
+			 *
+			 * @return {int}
+			 */
 			$expire = apply_filters( 'wpt_recent_tweet_threshold', 30 );
 			// if expiration is 0, don't set the transient. We don't want permanent transients.
 			if ( 0 !== $expire ) {
@@ -394,6 +402,17 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		if ( empty( $connection ) ) {
 			$connection = array( 'connection' => 'undefined' );
 		} else {
+
+			/**
+			 * Turn on staging mode. Staging mode is automatically turned on if WPT_STAGING_MODE constant is defined.
+			 *
+			 * @hook wpt_staging_mode
+			 * @param {bool}     $staging_mode True to enable staging mode.
+			 * @param {int|bool} $auth Current author.
+			 * @param {int}      $id Post ID.
+			 *
+			 * @return {bool}
+			 */
 			$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id );
 			if ( ( defined( 'WPT_STAGING_MODE' ) && true === WPT_STAGING_MODE ) || $staging_mode ) {
 				// if in staging mode, we'll behave as if the Tweet succeeded, but not send it.
@@ -879,6 +898,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 							$offset = ( $auth !== $acct ) ? apply_filters( 'wpt_random_delay', rand( 60, 480 ) ) : 0;
 							if ( wtt_oauth_test( $acct, 'verify' ) ) {
 								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
+
 								/**
 								 * Render the template of a scheduled Tweet only at the time it's sent.
 								 *
@@ -887,7 +907,8 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 								 *
 								 * @return {bool}
 								 */
-								if ( apply_filters( 'wpt_postpone_rendering', false ) ) {
+								$postpone_rendering  = apply_filters( 'wpt_postpone_rendering', get_option( 'wpt_postpone_rendering', 'false' ) );
+								if ( 'false' !== $postpone_rendering ) {
 									$sentence = $template;
 								}
 								wp_schedule_single_event(
@@ -935,7 +956,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 									if ( $continue ) {
 										$retweet = apply_filters( 'wpt_set_retweet_text', $template, $i, $post_ID );
 
-										/*
+										/**
 										 * Render the template of a scheduled Tweet only at the time it's sent.
 										 *
 										 * @hook wpt_postpone_rendering
@@ -943,7 +964,8 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 										 *
 										 * @return {bool}
 										 */
-										if ( apply_filters( 'wpt_postpone_rendering', false ) ) {
+										$postpone_rendering  = apply_filters( 'wpt_postpone_rendering', get_option( 'wpt_postpone_rendering', 'false' ) );
+										if ( 'false' !== $postpone_rendering ) {
 											$retweet = $retweet;
 										} else {
 											$retweet = jd_truncate_tweet( $retweet, $post_info, $post_ID, true, $acct );
@@ -1948,8 +1970,24 @@ add_action( 'wp_enqueue_scripts', 'wpt_stylesheet' );
  * Enqueue front-end styles for Twitter Feed widget if enabled.
  */
 function wpt_stylesheet() {
+	/**
+	 * Disable WP to Twitter feeds stylesheet. Styles the Twitter Feed widgets.
+	 *
+	 * @hook wpt_enqueue_feed_styles
+	 * @param {bool} $apply False to disable.
+	 *
+	 * @return {bool}
+	 */
 	$apply = apply_filters( 'wpt_enqueue_feed_styles', true );
 	if ( $apply ) {
+		/**
+		 * Replace the WP to Twitter feeds stylesheet.
+		 *
+		 * @hook wpt_feed_stylesheet
+		 * @param {string} $file URL to stylesheet.
+		 *
+		 * @return {string}
+		 */
 		$file = apply_filters( 'wpt_feed_stylesheet', plugins_url( 'css/twitter-feed.css', __FILE__ ) );
 		wp_register_style( 'wpt-twitter-feed', $file );
 		wp_enqueue_style( 'wpt-twitter-feed' );
