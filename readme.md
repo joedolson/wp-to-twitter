@@ -2,15 +2,15 @@
 
 Automatically send your posts as Tweets.
 
-![Code Linting](https://github.com/joedolson/wp-to-twitter/workflows/main.yml/badge.svg) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)](https://www.gnu.org/license/gpl-2.0.html)
+![Code Linting](https://github.com/joedolson/wp-to-twitter/actions/workflows/main.yml/badge.svg) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)](https://www.gnu.org/license/gpl-2.0.html)
 
 ## WP to Twitter Build Environment
 
 * Donate link: https://www.joedolson.com/donate/
 * Tags: accessibility, WordPress  
 * Requires at least: 4.4  
-* Tested up to: 5.9
-* Stable tag: `3.5.6`
+* Tested up to: 6.0
+* Stable tag: `3.6.0`
 * License: GPLv2 or later  
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 

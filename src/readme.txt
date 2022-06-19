@@ -3,11 +3,11 @@ Contributors: joedolson
 Donate link: http://www.joedolson.com/donate/
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
 Requires at least: 4.9.8
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 5.6
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.5.6
+Stable tag: 3.6.0
 
 Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -63,6 +63,13 @@ Translating my plug-ins is always appreciated. Work on WP to Twitter translation
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 3.6.0 =
+
+* Bug fix: Fix incorrect textdomains.
+* Security: Missing nonce verification in metabox.
+* Change: New filter `wpt_postpone_rendering` to allow Pro to delay template rendering.
+* Docs: Start adding hook docs - https://joedolson.github.io/wp-to-twitter/. Work in progress.
 
 = 3.5.6 =
 
