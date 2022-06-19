@@ -1105,7 +1105,7 @@ function wpt_generate_hash_tags( $post_ID ) {
 	 *
 	 * @return {array}
 	 */
-	$tags     = apply_filters( 'wpt_hash_source', $tags, $post_ID );
+	$tags = apply_filters( 'wpt_hash_source', $tags, $post_ID );
 	if ( $tags && count( $tags ) > 0 ) {
 		$i = 1;
 		foreach ( $tags as $value ) {
@@ -1156,7 +1156,6 @@ function wpt_generate_hash_tags( $post_ID ) {
 					$newtag = "@$tag";
 					break;
 				default:
-
 					/**
 					 * Change the default tag character. Default '#'.
 					 *
@@ -1684,7 +1683,7 @@ function wpt_save_post( $id, $post ) {
 		delete_post_meta( $id, '_wpt_short_url' );
 		delete_post_meta( $id, '_wp_jd_twitter' );
 	}
-	// WPT PRO
+	// WPT PRO.
 	$update = apply_filters( 'wpt_insert_post', $_POST, $id );
 	// WPT PRO.
 	// only send debug data if post meta is updated.
@@ -1868,7 +1867,7 @@ function wpt_auto_tweet_allowed( $post_id ) {
 	 *
 	 * @hook wpt_auto_tweet_allowed
 	 * @param {bool} $return true if enabled.
-	 * @param {int}  $post_id Post ID. 
+	 * @param {int}  $post_id Post ID.
 	 *
 	 * @return {bool}
 	 */
