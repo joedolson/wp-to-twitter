@@ -1180,8 +1180,13 @@ function wpt_add_twitter_debug_box() {
  * @param  object $post Post object.
  */
 function wpt_add_twitter_inner_box( $post ) {
+	$nonce = wp_create_nonce( 'wp-to-twitter-nonce' );
+	?>
+	<div><input type="hidden" name="wp_to_twitter_nonce" value="<?php echo $nonce; ?>"></div>
+	<?php
 	if ( current_user_can( 'wpt_can_tweet' ) ) {
-		$is_pro = ( function_exists( 'wpt_pro_exists' ) ) ? 'pro' : 'free'; ?>
+		$is_pro = ( function_exists( 'wpt_pro_exists' ) ) ? 'pro' : 'free';
+		?>
 		<div class='wp-to-twitter <?php echo $is_pro; ?>'>
 		<?php
 		$tweet_status = '';
@@ -1602,6 +1607,10 @@ function wpt_admin_script() {
 function wpt_save_post( $id, $post ) {
 	if ( empty( $_POST ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $id ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! wpt_in_post_type( $id ) ) {
 		return $id;
+	}
+	$nonce = ( isset( $_POST['wp_to_twitter_nonce'] ) ) ? $_POST['wp_to_twitter_nonce'] : false;
+	if ( ! ( $nonce && wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) ) {
+		die( 'Security check failed' );
 	}
 	if ( isset( $_POST['_yourls_keyword'] ) ) {
 		$yourls = sanitize_text_field( $_POST['_yourls_keyword'] );
