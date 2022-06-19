@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_enqueue_feed_styles - WP to Twitter Hook Doumentation</title>
+    <title>Filter: wpt_tag_default - WP to Twitter Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_enqueue_feed_styles</h1></header>
+    <header><h1 class="page-title">Filter: wpt_tag_default</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_enqueue_feed_styles">apply_filters( 'wpt_enqueue_feed_styles', <span class="signature">$apply )</span><span class="type-signature"> &rarr; {bool}</span></h4>
+    <h4 class="name" id="wpt_tag_default">apply_filters( 'wpt_tag_default', <span class="signature">$char, $t_id )</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Disable WP to Twitter feeds stylesheet. Styles the Twitter Feed widgets.</p>
+    <p>Change the default tag character. Default '#'.</p>
 </div>
 
 
@@ -77,13 +77,13 @@
 
         <tr>
             
-                <td class="name"><code>$apply</code></td>
+                <td class="name"><code>$char</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">bool</span>
+<span class="param-type">string</span>
 
 
             
@@ -93,7 +93,30 @@
 
             
 
-            <td class="description last"><p>False to disable.</p></td>
+            <td class="description last"><p>Character used to convert tags into hashtags.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$t_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Term ID.</p></td>
         </tr>
 
     
@@ -134,7 +157,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line2011">line 2011</a>
+        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line1160">line 1160</a>
     </li></ul></dd>
     
 
@@ -168,7 +191,7 @@
     </dt>
     <dd>
         
-<span class="param-type">bool</span>
+<span class="param-type">string</span>
 
 
     </dd>
