@@ -879,6 +879,17 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 							$offset = ( $auth !== $acct ) ? apply_filters( 'wpt_random_delay', rand( 60, 480 ) ) : 0;
 							if ( wtt_oauth_test( $acct, 'verify' ) ) {
 								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
+								/**
+								 * Render the template of a scheduled Tweet only at the time it's sent.
+								 *
+								 * @hook wpt_postpone_rendering
+								 * @param {bool} $postpone True to postpone rendering.
+								 *
+								 * @return {bool}
+								 */
+								if ( apply_filters( 'wpt_postpone_rendering', false ) ) {
+									$sentence = $template;
+								}
 								wp_schedule_single_event(
 									time() + $time + $offset,
 									'wpt_schedule_tweet_action',
@@ -923,7 +934,19 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 									$continue = apply_filters( 'wpt_allow_reposts', true, $i, $post_ID, $acct );
 									if ( $continue ) {
 										$retweet = apply_filters( 'wpt_set_retweet_text', $template, $i, $post_ID );
-										$retweet = jd_truncate_tweet( $retweet, $post_info, $post_ID, true, $acct );
+										/*
+										 * Render the template of a scheduled Tweet only at the time it's sent.
+										 *
+										 * @hook wpt_postpone_rendering
+										 * @param {bool} $postpone True to postpone rendering.
+										 *
+										 * @return {bool}
+										 */
+										if ( apply_filters( 'wpt_postpone_rendering', false ) ) {
+											$retweet = $retweet;
+										} else {
+											$retweet = jd_truncate_tweet( $retweet, $post_info, $post_ID, true, $acct );
+										}
 										if ( '' === $retweet ) {
 											// If a filter sets this value to empty, exit without scheduling.
 											return $post_ID;
