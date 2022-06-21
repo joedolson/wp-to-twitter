@@ -551,6 +551,8 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				 *
 				 * @hook wpt_tweet_failed
 				 *
+				 * @since 3.6.0
+				 *
 				 * @param {object} $connection The current OAuth connection.
 				 * @param {int}    $id Post ID for Tweeted post.
 				 * @param {string} $error Error message returned.
