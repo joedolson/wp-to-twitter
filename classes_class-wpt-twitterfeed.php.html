@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: classes/class-wpt-twitterfeed.php - WP to Twitter Hook Doumentation</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles-docs.css?v=0.1.1">
+</head>
+
+<body>
+
+<div id="main">
+
+    <header><h1 class="page-title">Source: classes/class-wpt-twitterfeed.php</h1></header>
+	<main>
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;?php
+/**
+ * WP to Twitter Twitter Feed Class
+ *
+ * @category Widgets
+ * @package  WP to Twitter
+ * @author   Joe Dolson
+ * @license  GPLv2 or later
+ * @link     https://www.joedolson.com/wp-to-twitter/
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+require_once( 'class-wpt-twitteroauth.php' );
+
+/**
+ * Based on Version 2.0.3, Twitter Feed for Developers by Storm Consultancy (Liam Gladdy)
+ * The base class for the storm twitter feed for developers.
+ */
+class WPT_TwitterFeed {
+
+	/**
+	 * Default feed settings.
+	 *
+	 * @var $defaults.
+	 */
+	private $defaults = array(
+		'directory'    => '',
+		'key'          => '',
+		'secret'       => '',
+		'token'        => '',
+		'token_secret' => '',
+		'screenname'   => false,
+		'cache_expire' => 1800,
+	);
+
+	/**
+	 * Last error, if any.
+	 *
+	 * @var $st_last_error
+	 */
+	public $st_last_error = false;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param array $args Arguments; merged with defaults.
+	 */
+	function __construct( $args = array() ) {
+		$this->defaults = array_merge( $this->defaults, $args );
+	}
+
+	/**
+	 * Convert arguments into a string.
+	 *
+	 * @return print_r of arguments.
+	 */
+	function __toString() {
+		return print_r( $this->defaults, true );
+	}
+
+	/**
+	 * Get Tweets for a given screen name.
+	 *
+	 * @param int    $count Number of Tweets to fetch.
+	 * @param string $screenname Twitter account feed to fetch.
+	 * @param array  $options Options to apply for display of feed.
+	 *
+	 * @return Tweets or error message.
+	 */
+	function get_tweets( $count = 20, $screenname = false, $options = false ) {
+		if ( $count > 20 ) {
+			/**
+			 * Filters the max feed count. Default is 20, but you can change it.
+			 *
+			 * @param integer 20 - Default value
+			 * @param integer $count - Widget variable
+			 * @return integer
+			 */
+			$count = apply_filters( 'wpt_feed_max_count', 20, $count );
+		}
+		if ( $count &lt; 1 ) {
+			$count = 1;
+		}
+
+		$default_options = array(
+			'trim_user'       => true,
+			'exclude_replies' => true,
+			'include_rts'     => false,
+		);
+
+		if ( false === $options || ! is_array( $options ) ) {
+			$options = $default_options;
+		} else {
+			$options = array_merge( $default_options, $options );
+		}
+
+		if ( false === $screenname ) {
+			$screenname = get_option( 'wtt_twitter_username' );
+		}
+
+		$result = $this->check_valid_cache( $screenname, $options );
+		if ( false !== $result ) {
+			return $this->crop_tweets( $result, $count );
+		}
+
+		// If we're here, we need to load.
+		$result = $this->oauth_get_tweets( $screenname, $options );
+
+		if ( is_object( $result ) &amp;&amp; isset( $result->error ) ) {
+			$last_error = $result->error;
+
+			return array( 'error' => 'Twitter said: ' . $last_error );
+		} else {
+			return $this->crop_tweets( $result, $count );
+		}
+
+	}
+
+	/**
+	 * Crop list of Tweets to display correct number of items.
+	 *
+	 * @param array $result Full query result.
+	 * @param int   $count Tweets to show.
+	 *
+	 * @return array
+	 */
+	private function crop_tweets( $result, $count ) {
+		if ( is_array( $result ) ) {
+			return array_slice( $result, 0, $count );
+		} else {
+			return array();
+		}
+	}
+
+	/**
+	 * Locate cache.
+	 */
+	private function get_cache_location() {
+		return $this->defaults['directory'] . '.tweetcache';
+	}
+
+	/**
+	 * Hash options so cache is unique.
+	 *
+	 * @param array $options Display options.
+	 *
+	 * @return md5 hash.
+	 */
+	private function get_options_hash( $options ) {
+		$hash = md5( serialize( $options ) );
+
+		return $hash;
+	}
+
+	/**
+	 * Save cache to file.
+	 *
+	 * @param string $file Cache file location.
+	 * @param string $cache Data to save.
+	 */
+	private function save_cache( $file, $cache ) {
+		$is_writable = wpt_is_writable( $file );
+		if ( $is_writable ) {
+			file_put_contents( $file, $cache );
+		} else {
+			set_transient( 'wpt_cache', $cache, $this->defaults['cache_expire'] );
+		}
+	}
+
+	/**
+	 * Delete cache.
+	 *
+	 * @param string $file File name.
+	 */
+	private function delete_cache( $file ) {
+		$is_writable = wpt_is_writable( $file );
+		if ( $is_writable ) {
+			unlink( $file );
+		} else {
+			delete_transient( 'wpt_cache' );
+		}
+	}
+
+	/**
+	 * Fetch and verify cache.
+	 *
+	 * @param string $screenname Name to get cache for.
+	 * @param array  $options Options for cache being fetched.
+	 *
+	 * @return boolean or cache contents.
+	 */
+	private function check_valid_cache( $screenname, $options ) {
+		$delete_cache = get_option( 'wpt_delete_cache' );
+		$file         = $this->get_cache_location();
+
+		if ( 'true' === $delete_cache ) {
+			update_option( 'wpt_delete_cache', 'false' );
+			$this->delete_cache( $file );
+		}
+
+		if ( is_file( $file ) ) {
+			$cache = file_get_contents( $file );
+			$cache = json_decode( $cache, true );
+			if ( ! isset( $cache ) ) {
+				unlink( $file );
+
+				return false;
+			}
+		} else {
+			$cache = get_transient( 'wpt_cache' );
+			$cache = json_decode( $cache, true );
+			if ( ! isset( $cache ) ) {
+				return false;
+			}
+		}
+		$cachename = $screenname . '-' . $this->get_options_hash( $options );
+
+		// Check if we have a cache for the user.
+		if ( ! isset( $cache[ $cachename ] ) ) {
+			return false;
+		}
+
+		if ( ! isset( $cache[ $cachename ]['time'] ) || ! isset( $cache[ $cachename ]['tweets'] ) ) {
+			unset( $cache[ $cachename ] );
+			$this->save_cache( $file, json_encode( $cache ) );
+
+			return false;
+		}
+
+		if ( $cache[ $cachename ]['time'] &lt; ( time() - $this->defaults['cache_expire'] ) ) {
+			$result = $this->oauth_get_tweets( $screenname, $options );
+			if ( ! isset( $result->error ) ) {
+				return $result;
+			}
+		}
+
+		return $cache[ $cachename ]['tweets'];
+	}
+
+	/**
+	 * Fetch Tweets from Twitter.
+	 *
+	 * @param string $screenname Username.
+	 * @param array  $options Array of display options.
+	 *
+	 * @return Tweets.
+	 */
+	private function oauth_get_tweets( $screenname, $options ) {
+		$key          = $this->defaults['key'];
+		$secret       = $this->defaults['secret'];
+		$token        = $this->defaults['token'];
+		$token_secret = $this->defaults['token_secret'];
+		$cachename    = $screenname . '-' . $this->get_options_hash( $options );
+		$options      = array_merge(
+			$options,
+			array(
+				'screen_name' => $screenname,
+				'count'       => 20,
+			)
+		);
+
+		if ( empty( $key ) ) {
+			return array( 'error' => __( 'Missing Consumer Key - Check settings', 'wp-to-twitter' ) );
+		}
+		if ( empty( $secret ) ) {
+			return array( 'error' => __( 'Missing Consumer Secret - Check settings', 'wp-to-twitter' ) );
+		}
+		if ( empty( $token ) ) {
+			return array( 'error' => __( 'Missing Access Token - Check settings', 'wp-to-twitter' ) );
+		}
+		if ( empty( $token_secret ) ) {
+			return array( 'error' => __( 'Missing Access Token Secret - Check settings', 'wp-to-twitter' ) );
+		}
+		if ( empty( $screenname ) ) {
+			return array( 'error' => __( 'Missing Twitter Feed Screen Name - Check settings', 'wp-to-twitter' ) );
+		}
+
+		$connection = new wpt_TwitterOAuth( $key, $secret, $token, $token_secret );
+
+		if ( isset( $options['search'] ) ) {
+			$args = array(
+				'q'           => urlencode( $options['search'] ),
+				'result_type' => urlencode( $options['result_type'] ),
+			);
+			if ( '' !== $options['geocode'] ) {
+				$args['geocode'] = urlencode( $options['geocode'] );
+			}
+			$url    = add_query_arg( $args, 'https://api.twitter.com/1.1/search/tweets.json' );
+			$result = $connection->get( $url, $options );
+		} else {
+			$result = $connection->get( 'https://api.twitter.com/1.1/statuses/user_timeline.json', $options );
+		}
+		$result = json_decode( $result );
+		if ( isset( $options['search'] ) ) {
+			if ( ! method_exists( $result, 'errors' ) ) {
+				$result = ( is_object( $result ) ) ? $result->statuses : '';
+			} else {
+				$errors = $result->errors;
+				$return = '';
+				foreach ( $errors as $error ) {
+					$return .= "&lt;li>$error->message&lt;/li>";
+				}
+				echo '&lt;ul>' . $return . '&lt;/ul>';
+				return;
+			}
+		}
+		if ( is_file( $this->get_cache_location() ) ) {
+			$cache = json_decode( file_get_contents( $this->get_cache_location() ), true );
+		}
+
+		if ( ! isset( $result->error ) ) {
+			$cache[ $cachename ]['time']   = time();
+			$cache[ $cachename ]['tweets'] = $result;
+			$file                          = $this->get_cache_location();
+			$this->save_cache( $file, json_encode( $cache ) );
+		} else {
+			if ( is_array( $result ) &amp;&amp; isset( $result['errors'][0] ) &amp;&amp; isset( $result['errors'][0]['message'] ) ) {
+				// Translators: Error message.
+				$last_error          = '[' . gmdate( 'r' ) . '] ' . sprintf( __( 'Twitter error: %s', 'wp-to-twitter' ), $result['errors'][0]['message'] );
+				$this->st_last_error = $last_error;
+			} else {
+				$last_error          = '[' . gmdate( 'r' ) . ']' . __( 'Twitter returned an invalid response. It is probably down.', 'wp-to-twitter' );
+				$this->st_last_error = $last_error;
+			}
+		}
+		/**
+		 * Run an action on the results output from the Twitter widget query.
+		 *
+		 * @hook wpt_process_tweets
+		 *
+		 * @param {array}  $result Array of data received from Twitter's API.
+		 * @param {string} $screenname Twitter user's screen name.
+		 * @param {array}  $options Array of options passed to this widget.
+		 */
+		do_action( 'wpt_process_tweets', $result, $screenname, $options );
+
+		return $result;
+	}
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+	</main>
+    <footer>
+		<a href="https://docs.joedolson.com/">WP to Twitter User Documentation</a> &bull;
+		<a href="https://github.com/joedolson/wp-to-twiter/">WP to Twitter on GitHub</a> &bull;
+		<a href="https://www.joedolson.com/wp-tweets-pro/">Buy WP Tweets Pro</a>
+	</footer>
+
+	
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_process_tweets.html">wpt_process_tweets</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_enqueue_feed_styles.html">wpt_enqueue_feed_styles</a></li><li><a href="wpt_feed_stylesheet.html">wpt_feed_stylesheet</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_postpone_rendering.html">wpt_postpone_rendering</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
