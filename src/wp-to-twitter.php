@@ -546,8 +546,26 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				}
 			}
 			if ( ! $return ) {
+				/**
+				 * Executes an action after posting a Tweet fails.
+				 *
+				 * @hook wpt_tweet_failed
+				 *
+				 * @param {object} $connection The current OAuth connection.
+				 * @param {int}    $id Post ID for Tweeted post.
+				 * @param {string} $error Error message returned.
+				 */
+				do_action( 'wpt_tweet_failed', $connection, $id, $error );
 				wpt_set_log( 'wpt_status_message', $id, $error );
 			} else {
+				/**
+				 * Executes an action after a Tweet is posted successfully.
+				 *
+				 * @hook wpt_tweet_posted
+				 *
+				 * @param {object} $connection The current OAuth connection.
+				 * @param {int}    $id Post ID for Tweeted post.
+				 */
 				do_action( 'wpt_tweet_posted', $connection, $id );
 				// Log the Tweet ID of the first Tweet for this post.
 				$has_tweet_id = get_post_meta( $id, '_wpt_tweet_id', true );
