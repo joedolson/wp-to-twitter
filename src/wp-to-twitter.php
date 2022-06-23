@@ -1718,7 +1718,7 @@ function wpt_save_post( $id, $post ) {
 	if ( isset( $_POST['wp_to_twitter_meta'] ) ) {
 		$nonce = ( isset( $_POST['wp_to_twitter_nonce'] ) ) ? $_POST['wp_to_twitter_nonce'] : false;
 		if ( ! ( $nonce && wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) ) {
-			die( 'WP to Twitter: Security check failed' );
+			wp_die( 'WP to Twitter: Security check failed' );
 		}
 		if ( isset( $_POST['_yourls_keyword'] ) ) {
 			$yourls = sanitize_text_field( $_POST['_yourls_keyword'] );

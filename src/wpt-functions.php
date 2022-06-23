@@ -674,7 +674,7 @@ $plugins_string
 	if ( isset( $_POST['wpt_support'] ) ) {
 		$nonce = $_REQUEST['_wpnonce'];
 		if ( ! wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) {
-			die( 'Security check failed' );
+			wp_die( 'WP to Twitter: Security check failed' );
 		}
 		$request      = ( ! empty( $_POST['support_request'] ) ) ? stripslashes( sanitize_textarea_field( $_POST['support_request'] ) ) : false;
 		$has_donated  = ( isset( $_POST['has_donated'] ) ) ? 'Donor' : 'No donation';
