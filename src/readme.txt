@@ -7,7 +7,7 @@ Tested up to: 6.0
 Requires PHP: 5.6
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.6.0
+Stable tag: 3.6.1
 
 Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -63,6 +63,10 @@ Translating my plug-ins is always appreciated. Work on WP to Twitter translation
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 3.6.1 =
+
+* Bug fix: Don't expect a nonce or attempt to handle post meta if post not submitted from WordPress admin.
 
 = 3.6.0 =
 
