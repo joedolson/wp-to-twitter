@@ -1287,7 +1287,10 @@ function wpt_add_twitter_debug_box() {
 function wpt_add_twitter_inner_box( $post ) {
 	$nonce = wp_create_nonce( 'wp-to-twitter-nonce' );
 	?>
-	<div><input type="hidden" name="wp_to_twitter_nonce" value="<?php echo $nonce; ?>"></div>
+	<div>
+		<input type="hidden" name="wp_to_twitter_nonce" value="<?php echo $nonce; ?>">
+		<input type="hidden" name="wp_to_twitter_meta" value="true">
+	</div>
 	<?php
 	if ( current_user_can( 'wpt_can_tweet' ) ) {
 		$is_pro = ( function_exists( 'wpt_pro_exists' ) ) ? 'pro' : 'free';
@@ -1713,52 +1716,53 @@ function wpt_save_post( $id, $post ) {
 	if ( empty( $_POST ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $id ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! wpt_in_post_type( $id ) ) {
 		return $id;
 	}
-	$nonce = ( isset( $_POST['wp_to_twitter_nonce'] ) ) ? $_POST['wp_to_twitter_nonce'] : false;
-	if ( ! ( $nonce && wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) ) {
-		die( 'Security check failed' );
-	}
-	if ( isset( $_POST['_yourls_keyword'] ) ) {
-		$yourls = sanitize_text_field( $_POST['_yourls_keyword'] );
-		$update = update_post_meta( $id, '_yourls_keyword', $yourls );
-	}
-	if ( isset( $_POST['_jd_twitter'] ) && '' !== $_POST['_jd_twitter'] ) {
-		$twitter = sanitize_textarea_field( $_POST['_jd_twitter'] );
-		$update  = update_post_meta( $id, '_jd_twitter', $twitter );
-	} elseif ( isset( $_POST['_jd_twitter'] ) && '' === $_POST['_jd_twitter'] ) {
-		delete_post_meta( $id, '_jd_twitter' );
-	}
-	if ( isset( $_POST['_jd_wp_twitter'] ) && '' !== $_POST['_jd_wp_twitter'] ) {
-		$wp_twitter = sanitize_textarea_field( $_POST['_jd_wp_twitter'] );
-		$update     = update_post_meta( $id, '_jd_wp_twitter', $wp_twitter );
-	}
-	if ( isset( $_POST['_jd_tweet_this'] ) ) {
-		$tweet_this = ( 'no' === $_POST['_jd_tweet_this'] ) ? 'no' : 'yes';
-		$update     = update_post_meta( $id, '_jd_tweet_this', $tweet_this );
-	} else {
-		if ( isset( $_POST['_wpnonce'] ) ) {
-			$tweet_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
-			$update        = update_post_meta( $id, '_jd_tweet_this', $tweet_default );
+	if ( isset( $_POST['wp_to_twitter_meta'] ) ) {
+		$nonce = ( isset( $_POST['wp_to_twitter_nonce'] ) ) ? $_POST['wp_to_twitter_nonce'] : false;
+		if ( ! ( $nonce && wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) ) {
+			die( 'WP to Twitter: Security check failed' );
+		}
+		if ( isset( $_POST['_yourls_keyword'] ) ) {
+			$yourls = sanitize_text_field( $_POST['_yourls_keyword'] );
+			$update = update_post_meta( $id, '_yourls_keyword', $yourls );
+		}
+		if ( isset( $_POST['_jd_twitter'] ) && '' !== $_POST['_jd_twitter'] ) {
+			$twitter = sanitize_textarea_field( $_POST['_jd_twitter'] );
+			$update  = update_post_meta( $id, '_jd_twitter', $twitter );
+		} elseif ( isset( $_POST['_jd_twitter'] ) && '' === $_POST['_jd_twitter'] ) {
+			delete_post_meta( $id, '_jd_twitter' );
+		}
+		if ( isset( $_POST['_jd_wp_twitter'] ) && '' !== $_POST['_jd_wp_twitter'] ) {
+			$wp_twitter = sanitize_textarea_field( $_POST['_jd_wp_twitter'] );
+			$update     = update_post_meta( $id, '_jd_wp_twitter', $wp_twitter );
+		}
+		if ( isset( $_POST['_jd_tweet_this'] ) ) {
+			$tweet_this = ( 'no' === $_POST['_jd_tweet_this'] ) ? 'no' : 'yes';
+			$update     = update_post_meta( $id, '_jd_tweet_this', $tweet_this );
+		} else {
+			if ( isset( $_POST['_wpnonce'] ) ) {
+				$tweet_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
+				$update        = update_post_meta( $id, '_jd_tweet_this', $tweet_default );
+			}
+		}
+		if ( isset( $_POST['wpt_clear_history'] ) && 'clear' === $_POST['wpt_clear_history'] ) {
+			delete_post_meta( $id, '_wpt_failed' );
+			delete_post_meta( $id, '_jd_wp_twitter' );
+			delete_post_meta( $id, '_wpt_short_url' );
+			delete_post_meta( $id, '_wp_jd_twitter' );
+		}
+		// WPT PRO.
+		$update = apply_filters( 'wpt_insert_post', $_POST, $id );
+		// WPT PRO.
+		// only send debug data if post meta is updated.
+		wpt_mail( 'Post Meta Processed', 'WP to Twitter post meta was updated' . "\n\n" . print_r( map_deep( $_POST, 'sanitize_textarea_field' ), 1 ), $id ); // DEBUG.
+
+		if ( isset( $_POST['wpt-delete-debug'] ) && 'true' === $_POST['wpt-delete-debug'] ) {
+			delete_post_meta( $id, '_wpt_debug_log' );
+		}
+		if ( isset( $_POST['wpt-delete-all-debug'] ) && 'true' === $_POST['wpt-delete-all-debug'] ) {
+			delete_post_meta_by_key( '_wpt_debug_log' );
 		}
 	}
-	if ( isset( $_POST['wpt_clear_history'] ) && 'clear' === $_POST['wpt_clear_history'] ) {
-		delete_post_meta( $id, '_wpt_failed' );
-		delete_post_meta( $id, '_jd_wp_twitter' );
-		delete_post_meta( $id, '_wpt_short_url' );
-		delete_post_meta( $id, '_wp_jd_twitter' );
-	}
-	// WPT PRO.
-	$update = apply_filters( 'wpt_insert_post', $_POST, $id );
-	// WPT PRO.
-	// only send debug data if post meta is updated.
-	wpt_mail( 'Post Meta Processed', 'WP to Twitter post meta was updated' . "\n\n" . print_r( map_deep( $_POST, 'sanitize_textarea_field' ), 1 ), $id ); // DEBUG.
-
-	if ( isset( $_POST['wpt-delete-debug'] ) && 'true' === $_POST['wpt-delete-debug'] ) {
-		delete_post_meta( $id, '_wpt_debug_log' );
-	}
-	if ( isset( $_POST['wpt-delete-all-debug'] ) && 'true' === $_POST['wpt-delete-all-debug'] ) {
-		delete_post_meta_by_key( '_wpt_debug_log' );
-	}
-
 	return $id;
 }
 
