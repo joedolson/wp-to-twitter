@@ -43,7 +43,7 @@
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
  * Domain Path: lang
- * Version:     3.6.0
+ * Version:     3.6.1
  */
 
 /*
@@ -91,7 +91,7 @@ require_once( plugin_dir_path( __FILE__ ) . 'wpt-widget.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php' );
 
 global $wpt_version;
-$wpt_version = '3.6.0';
+$wpt_version = '3.6.1';
 
 add_action( 'init', 'wpt_load_textdomain' );
 /**
@@ -1304,7 +1304,6 @@ function wpt_add_twitter_debug_box() {
 	}
 }
 
-
 /**
  * Print post meta box
  *
@@ -1765,10 +1764,8 @@ function wpt_save_post( $id, $post ) {
 			$tweet_this = ( 'no' === $_POST['_jd_tweet_this'] ) ? 'no' : 'yes';
 			$update     = update_post_meta( $id, '_jd_tweet_this', $tweet_this );
 		} else {
-			if ( isset( $_POST['_wpnonce'] ) ) {
-				$tweet_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
-				$update        = update_post_meta( $id, '_jd_tweet_this', $tweet_default );
-			}
+			$tweet_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
+			$update        = update_post_meta( $id, '_jd_tweet_this', $tweet_default );
 		}
 		if ( isset( $_POST['wpt_clear_history'] ) &amp;&amp; 'clear' === $_POST['wpt_clear_history'] ) {
 			delete_post_meta( $id, '_wpt_failed' );
