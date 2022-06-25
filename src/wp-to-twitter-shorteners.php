@@ -38,6 +38,16 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 
 			return $shrink;
 		}
+		/**
+		 * Make modifications to URLs prior to shortening.
+		 *
+		 * @hook wpt_shorten_link
+		 * @param {string} $url Full permalink URL to post.
+		 * @param {string} $shortener Shortener selected in settings.
+		 * @param {int}    $post_ID Post ID.
+		 *
+		 * @return {string}
+		 */
 		$url = apply_filters( 'wpt_shorten_link', $url, $shortener, $post_ID );
 		if ( false === $testmode ) {
 			if ( '1' === get_option( 'use-twitter-analytics' ) || '1' === get_option( 'use_dynamic_analytics' ) ) {
@@ -86,7 +96,19 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		// custom word setting.
 		$keyword_format = ( '1' === get_option( 'jd_keyword_format' ) ) ? $post_ID : '';
 		$keyword_format = ( '2' === get_option( 'jd_keyword_format' ) ) ? get_post_meta( $post_ID, '_yourls_keyword', true ) : $keyword_format;
-		// Generate and grab the short url.
+		/**
+		 * Apply a custom shortener to your Tweet. Return false to allow the settings to parse the URL or a URL to shortcircuit plugin settings.
+		 *
+		 * @hook wpt_do_shortening
+		 * @param {bool}   $shrink False prior to shortening.
+		 * @param {string} $shortener Shortener selected in settings.
+		 * @param {string} $url Full permalink URL to post.
+		 * @param {string} $post_title Title of source post.
+		 * @param {int}    $post_ID Post ID.
+		 * @param {bool}   $testmode True if running a test of WP to twitter.
+		 *
+		 * @return {string}
+		 */
 		$shrink = apply_filters( 'wpt_do_shortening', false, $shortener, $url, $post_title, $post_ID, $testmode );
 		// if an add-on has shortened the link, skip shortening.
 		$error = false;
