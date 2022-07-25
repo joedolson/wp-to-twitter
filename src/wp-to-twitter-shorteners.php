@@ -249,17 +249,24 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					break;
 				case 11:
 					// Hum URL shortener.
-					if ( class_exists( 'Hum' ) && method_exists( 'Hum', 'get_shortlink' ) ) {
-						$hum    = new Hum;
-						$shrink = $hum->get_shortlink( $url, $post_ID, 'post', true );
-					} else {
+					if ( $testmode ) {
+						// Hum does not support shortening links without IDs.
 						$shrink = $url;
+					} else {
+						if ( class_exists( 'Hum' ) && method_exists( 'Hum', 'get_shortlink' ) ) {
+							$hum    = new Hum;
+							$shrink = $hum->get_shortlink( $url, $post_ID, 'post', true );
+
+						} else {
+							$shrink = $url;
+						}
 					}
 					break;
 				default:
 					$shrink = $url;
 			}
 		}
+
 		if ( $error ) {
 			update_option( 'wpt_shortener_status', "$shrink : $error" );
 		}
