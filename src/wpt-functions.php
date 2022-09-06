@@ -217,6 +217,7 @@ function wpt_handle_errors() {
 				</p>
 			</form>
 		</div>';
+
 		echo $error;
 	}
 }
@@ -400,7 +401,7 @@ function wpt_is_valid_url( $url ) {
  * @param string $headers Headers to add.
  * @param string $return Array key from fetched object to return.
  *
- * @return value from query.
+ * @return string|false value from query.
  */
 function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $return = 'body' ) {
 	$request = new WP_Http;
@@ -422,7 +423,7 @@ function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $retur
 				return $result;
 			}
 		} else {
-			return $result['response']['code'];
+			return $result['body'];
 		}
 		// Failure (server problem...).
 	} else {

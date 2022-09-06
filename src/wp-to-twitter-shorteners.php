@@ -193,6 +193,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 
 						$api_url = add_query_arg( $args, $yourlsurl );
 						$json    = wpt_remote_json( $api_url, false );
+
 						if ( is_object( $json ) ) {
 							$shrink = $json->shorturl;
 						} else {
@@ -334,7 +335,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			$token     = get_option( 'yourlstoken' );
 			if ( $token ) {
 				$decoded = wpt_remote_json( $yourl_api . "?action=expand&shorturl=$short_url&format=json&signature=$token" );
-				if ( '404' === (string) $decoded ) {
+				if ( '404' === (string) $decoded['errorCode'] ) {
 					$short_url = urldecode( $short_url );
 					if ( false === stripos( $short_url, 'https://' ) ) {
 						// Yourls will throw an error for mismatched protocol.
