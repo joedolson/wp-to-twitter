@@ -31,7 +31,7 @@ WP to Twitter uses a customizable Tweet template for Tweets sent when updating o
 * Use alternate URLs in place of post permalinks
 * Support for Google Analytics
 * Support for XMLRPC remote clients
-* Use [YOURLS](https://yourls.org), [Bit.ly]you(https://wordpress.org/plugins/codehaveli-bitly-url-shortener/), [jotURL](https://joturl.com), or [Hum](https://wordpress.org/plugins/hum/) as external URL shorteners.
+* Use [YOURLS](https://yourls.org), [Bit.ly](https://wordpress.org/plugins/codehaveli-bitly-url-shortener/), [jotURL](https://joturl.com), or [Hum](https://wordpress.org/plugins/hum/) as external URL shorteners.
 * Rate limiting: make sure you don't exceed Twitter's API rate limits. 
 
 = Premium Features =
