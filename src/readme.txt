@@ -36,7 +36,7 @@ WP to Twitter uses a customizable Tweet template for Tweets sent when updating o
 
 = Premium Features =
 
-Upgrade to [WP Tweets Pro](https://www.joedolson.com/wp-tweets-pro/) for extra features, including:
+[Upgrade to WP Tweets Pro](https://www.joedolson.com/wp-tweets-pro/) for extra features, including:
 
 * Authors can set up their own Twitter accounts in their profiles
 * Time delayed Tweeting 
