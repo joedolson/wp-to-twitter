@@ -7,7 +7,7 @@ Tested up to: 6.0
 Requires PHP: 5.6
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.6.1
+Stable tag: 3.6.2
 
 Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -63,6 +63,14 @@ Translating my plug-ins is always appreciated. Work on WP to Twitter translation
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 3.6.2 =
+
+* Bug fix: YOURLS returns a 400 error if a URL is re-submitted, but WP to Twitter only handled JSON object if a 200 was returned.
+* Bug fix: Provide context labels for wp_die and die calls
+* Bug fix: Hum shortener threw errors if you attempted to shorten a link, since it only works for posts.
+* Bug fix: Missing sanitization in AJAX Tweet requests from admin.
+* Bug fix: Correctly handle YOURLS url shortening requests when there is already an existing shortened URL for that path.
 
 = 3.6.1 =
 
