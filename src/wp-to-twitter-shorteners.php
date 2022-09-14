@@ -118,7 +118,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					$shrink = $url;
 					break;
 				case 2: // updated to v3 3/31/2010.
-					// Bitly supported via https://wordpress.org/plugins/codehaveli-bitly-url-shortener/
+					// Bitly supported via https://wordpress.org/plugins/codehaveli-bitly-url-shortener/.
 					$bitlyurl = get_post_meta( $post_ID, '_wbitly_shorturl', true );
 					if ( ! empty( $bitlyurl ) ) {
 						$shrink = $bitlyurl;
