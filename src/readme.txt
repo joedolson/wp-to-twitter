@@ -1,6 +1,6 @@
 === WP to Twitter ===
 Contributors: joedolson
-Donate link: http://www.joedolson.com/donate/
+Donate link: https://www.joedolson.com/donate/
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
 Requires at least: 4.9.8
 Tested up to: 6.0
@@ -31,12 +31,12 @@ WP to Twitter uses a customizable Tweet template for Tweets sent when updating o
 * Use alternate URLs in place of post permalinks
 * Support for Google Analytics
 * Support for XMLRPC remote clients
-* Select from YOURLS, Goo.gl, Bit.ly, jotURL, or Su.pr as external URL shorteners.
+* Use [YOURLS](https://yourls.org), [Bit.ly]you(https://wordpress.org/plugins/codehaveli-bitly-url-shortener/), [jotURL](https://joturl.com), or [Hum](https://wordpress.org/plugins/hum/) as external URL shorteners.
 * Rate limiting: make sure you don't exceed Twitter's API rate limits. 
 
 = Premium Features =
 
-Upgrade to [WP Tweets Pro](http://www.joedolson.com/wp-tweets-pro/) for extra features, including:
+Upgrade to [WP Tweets Pro](https://www.joedolson.com/wp-tweets-pro/) for extra features, including:
 
 * Authors can set up their own Twitter accounts in their profiles
 * Time delayed Tweeting 
@@ -48,7 +48,7 @@ Upgrade to [WP Tweets Pro](http://www.joedolson.com/wp-tweets-pro/) for extra fe
 * Integrated Twitter Card support
 * Support for Player Cards with integrated captions
 * Automatically schedule Tweets of old posts
-* [Get a license for WP Tweets PRO!](http://www.joedolson.com/wp-tweets-pro/)
+* [Get a license for WP Tweets PRO!](https://www.joedolson.com/wp-tweets-pro/)
 
 Want to stay up to date on WP to Twitter? [Follow me on Twitter!](https://twitter.com/joedolson)
 
