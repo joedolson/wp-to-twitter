@@ -438,7 +438,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 							?>
 						&lt;p>
 							&lt;label for="yourlspath">&lt;?php _e( 'Path to your YOURLS config file', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
-							&lt;input type="text" id="yourlspath" name="yourlspath" size="60" value="&lt;?php echo esc_attr( get_option( 'yourlspath' ) ); ?>"/>&lt;br/>
+							&lt;input type="text" id="yourlspath" name="yourlspath" class="widefat" value="&lt;?php echo esc_attr( get_option( 'yourlspath' ) ); ?>"/>&lt;br/>
 							&lt;small>&lt;?php _e( 'Example:', 'wp-to-twitter' ); ?> &lt;code>/home/username/www/www/yourls/user/config.php&lt;/code>
 							&lt;/small>
 						&lt;/p>
@@ -448,7 +448,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 							?>
 						&lt;p>
 							&lt;label for="yourlsurl">&lt;?php _e( 'URI to the YOURLS API', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
-							&lt;input type="text" id="yourlsurl" name="yourlsurl" size="60" value="&lt;?php echo esc_attr( get_option( 'yourlsurl' ) ); ?>"/>&lt;br/>
+							&lt;input type="text" id="yourlsurl" name="yourlsurl" class="widefat" value="&lt;?php echo esc_attr( get_option( 'yourlsurl' ) ); ?>"/>&lt;br/>
 							&lt;small>&lt;?php _e( 'Example:', 'wp-to-twitter' ); ?> &lt;code>http://domain.com/yourls-api.php&lt;/code>
 							&lt;/small>
 						&lt;/p>
