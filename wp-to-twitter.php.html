@@ -1130,7 +1130,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
  */
 function wpt_twit_link( $link_id ) {
 	wpt_check_version();
-	$thislinkprivate = $_POST['link_visible'];
+	$thislinkprivate = sanitize_text_field( $_POST['link_visible'] );
 	if ( 'N' !== $thislinkprivate ) {
 		$thislinkname        = stripslashes( sanitize_text_field( $_POST['link_name'] ) );
 		$thispostlink        = sanitize_text_field( $_POST['link_url'] );
