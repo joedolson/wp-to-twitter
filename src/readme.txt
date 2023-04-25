@@ -562,9 +562,9 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Frequently Asked Questions ==
 
-= Where are your Frequently Asked Questions? Why aren't they here? =
+= Why is WP Tweets PRO no longer available for sale? =
 
-Right here: [WP to Twitter FAQ](http://www.joedolson.com/wp-to-twitter/support-2/). I don't maintain them here because I would prefer to only maintain one copy. This is better for everybody, since the responses are much more likely to be up to date!
+Twitter's current API policies have made maintaining this plugin exceptionally difficult. It has never been particularly profitable, and the increased support and development time required in order to keep it running is beyond what I can realistically provide. I will continue to update it as long as I reasonably can.
 
 = Twitter's Application creation process is very difficult. Why do I have to do this? =
 
@@ -572,7 +572,7 @@ WP to Twitter has always followed the principle that you are the owner of your o
 
 = How can I help you make WP to Twitter a better plug-in? =
 
-Writing and maintaining a plug-in is a lot of work. You can help me by providing detailed support requests (which saves me time), or by providing financial support, either via my [plug-in donations page](https://www.joedolson.com/donate/) or by [upgrading to WP Tweets Pro](http://www.wptweetspro.com/wp-tweets-pro). Believe me, your support really makes a difference!
+Writing and maintaining a plug-in is a lot of work. You can help me by providing detailed support requests (which saves me time), or by providing financial support via my [plug-in donations page](https://www.joedolson.com/donate/).  Believe me, your support really makes a difference!
 
 == Screenshots ==
 

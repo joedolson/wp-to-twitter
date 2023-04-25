@@ -719,43 +719,44 @@ $plugins_string
 	}
 	$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 	$admin_url = add_query_arg( 'tab', 'support', $admin_url );
-
-	echo "
-	<form method='post' action='$admin_url'>
-		<div><input type='hidden' name='_wpnonce' value='" . wp_create_nonce( 'wp-to-twitter-nonce' ) . "' /></div>
-		<div>
-		<p>" . __( "If you're having trouble with WP to Twitter, please try to answer these questions in your message:", 'wp-to-twitter' ) . '</p>
-		<ul>
-			<li>' . __( 'What were you doing when the problem occurred?', 'wp-to-twitter' ) . '</li>
-			<li>' . __( 'What did you expect to happen?', 'wp-to-twitter' ) . '</li>
-			<li>' . __( 'What happened instead?', 'wp-to-twitter' ) . "</li>
-		</ul>
-		<p>
-		<label for='response_email'>" . __( 'Your Email', 'wp-to-twitter' ) . "</label><br />
-		<input type='email' name='response_email' id='response_email' value='$response_email' class='widefat' required='required' aria-required='true' />
-		</p>
-		<p>
-		<input type='checkbox' name='has_read_faq' id='has_read_faq' value='on' required='required' aria-required='true' /> <label for='has_read_faq'>";
-	// Translators: Link to plugin FAQ.
-	echo sprintf( __( 'I have read <a href="%1$s">the FAQ for this plug-in</a> <span>(required)</span>', 'wp-to-twitter' ), 'http://www.joedolson.com/wp-to-twitter/support-2/' );
-	echo "</p>
-		<p>
-		<input type='hidden' name='has_donated' id='has_donated' value='$checked' />
-		</p>
-		<p>
-		<label for='support_request'>" . __( 'Support Request:', 'wp-to-twitter' ) . "</label><br /><textarea class='support-request' name='support_request' id='support_request' cols='80' rows='10' class='widefat'>" . stripslashes( esc_attr( $request ) ) . "</textarea>
-		</p>
-		<p>
-		<input type='submit' value='" . __( 'Send Support Request', 'wp-to-twitter' ) . "' name='wpt_support' class='button-primary' />
-		</p>
-		<p>" .
-		__( 'The following additional information will be sent with your support request:', 'wp-to-twitter' )
-		. "</p>
-		<div class='wpt_support'>
-		" . wpautop( $data ) . '
-		</div>
-		</div>
-	</form>';
+	if ( 'on' === $checked ) {
+		echo "
+		<form method='post' action='$admin_url'>
+			<div><input type='hidden' name='_wpnonce' value='" . wp_create_nonce( 'wp-to-twitter-nonce' ) . "' /></div>
+			<div>
+			<p>" . __( "If you're having trouble with WP to Twitter, please try to answer these questions in your message:", 'wp-to-twitter' ) . '</p>
+			<ul>
+				<li>' . __( 'What were you doing when the problem occurred?', 'wp-to-twitter' ) . '</li>
+				<li>' . __( 'What did you expect to happen?', 'wp-to-twitter' ) . '</li>
+				<li>' . __( 'What happened instead?', 'wp-to-twitter' ) . "</li>
+			</ul>
+			<p>
+			<label for='response_email'>" . __( 'Your Email', 'wp-to-twitter' ) . "</label><br />
+			<input type='email' name='response_email' id='response_email' value='$response_email' class='widefat' required='required' aria-required='true' />
+			</p>
+			<p>
+			<input type='checkbox' name='has_read_faq' id='has_read_faq' value='on' required='required' aria-required='true' /> <label for='has_read_faq'>";
+		// Translators: Link to plugin FAQ.
+		echo sprintf( __( 'I have read <a href="%1$s">the FAQ for this plug-in</a> <span>(required)</span>', 'wp-to-twitter' ), 'http://www.joedolson.com/wp-to-twitter/support-2/' );
+		echo "</p>
+			<input type='hidden' name='has_donated' id='has_donated' value='$checked' />
+			<p>
+			<label for='support_request'>" . __( 'Support Request:', 'wp-to-twitter' ) . "</label><br /><textarea class='support-request' name='support_request' id='support_request' cols='80' rows='10' class='widefat'>" . stripslashes( esc_attr( $request ) ) . "</textarea>
+			</p>
+			<p>
+			<input type='submit' value='" . __( 'Send Support Request', 'wp-to-twitter' ) . "' name='wpt_support' class='button-primary' />
+			</p>
+			<p>" .
+			__( 'The following additional information will be sent with your support request:', 'wp-to-twitter' )
+			. '</p>
+			</div>
+		</form>';
+	} else {
+		echo '<p>' . __( 'Support is only available for premium WP Tweets Pro subscribers.', 'wp-to-twitter' ) . '</p>';
+	}
+	echo "<div class='wpt_support'>
+	" . wpautop( $data ) . '
+	</div>';
 }
 
 /**
