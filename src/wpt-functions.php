@@ -685,15 +685,9 @@ $plugins_string
 		} else {
 			$pro = '';
 		}
-		$subject = "WP to Twitter$pro support request. $has_donated";
-		$message = $request . "\n\n" . $data;
-		// Get the site domain and get rid of www. from pluggable.php.
-		$sitename = strtolower( $_SERVER['SERVER_NAME'] );
-		if ( 'www.' === substr( $sitename, 0, 4 ) ) {
-			$sitename = substr( $sitename, 4 );
-		}
+		$subject        = "WP to Twitter$pro support request. $has_donated";
+		$message        = $request . "\n\n" . $data;
 		$response_email = ( isset( $_POST['response_email'] ) ) ? sanitize_email( $_POST['response_email'] ) : false;
-		$from_email     = 'wordpress@' . $sitename;
 		$from           = "From: $current_user->display_name <$response_email>\r\nReply-to: $current_user->display_name <$response_email>\r\n";
 
 		if ( ! $has_read_faq ) {
@@ -719,7 +713,7 @@ $plugins_string
 		}
 	}
 	if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
-		$checked = 'checked="checked"';
+		$checked = 'on';
 	} else {
 		$checked = '';
 	}
@@ -746,7 +740,7 @@ $plugins_string
 	echo sprintf( __( 'I have read <a href="%1$s">the FAQ for this plug-in</a> <span>(required)</span>', 'wp-to-twitter' ), 'http://www.joedolson.com/wp-to-twitter/support-2/' );
 	echo "</p>
 		<p>
-		<input type='checkbox' name='has_donated' id='has_donated' value='on' $checked /> <label for='has_donated'>" . __( 'I made a donation or purchase to help support this plug-in', 'wp-to-twitter' ) . "</label>
+		<input type='hidden' name='has_donated' id='has_donated' value='$checked' />
 		</p>
 		<p>
 		<label for='support_request'>" . __( 'Support Request:', 'wp-to-twitter' ) . "</label><br /><textarea class='support-request' name='support_request' id='support_request' cols='80' rows='10' class='widefat'>" . stripslashes( esc_attr( $request ) ) . "</textarea>
