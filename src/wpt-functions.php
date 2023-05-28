@@ -678,7 +678,7 @@ function wpt_get_support_form() {
 			if ( ! wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) {
 				wp_die( 'WP to Twitter: Security check failed' );
 			}
-			$request      = ( ! empty( $_POST['support_request'] ) ) ? stripslashes( sanitize_textarea_field( $_POST['support_request'] ) ) : false;
+			$request = ( ! empty( $_POST['support_request'] ) ) ? stripslashes( sanitize_textarea_field( $_POST['support_request'] ) ) : false;
 			if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 				$pro = ' PRO';
 			} else {
@@ -741,7 +741,7 @@ function wpt_get_support_form() {
 		" . wpautop( $data ) . '
 		</div>';
 	} else {
-		echo '<p>' . __( 'You need a valid WP Tweets Pro license to receive support.', 'wp-tweets-pro' ) . '</p>';
+		echo '<p>' . __( 'You need a valid WP Tweets Pro license to receive support.', 'wp-to-twitter' ) . '</p>';
 	}
 	wpt_faq();
 }
@@ -766,7 +766,7 @@ function wpt_faq() {
 		array(
 			'question' => __( 'Is WP to Twitter dead?', 'wp-to-twitter' ),
 			'answer'   => __( 'No, but it is on life support. I will ship security, WordPress compatibility, and PHP compatibility updates, but no new feature development.', 'wp-to-twitter' ),
-		)
+		),
 	);
 
 	echo '<h2>' . __( 'Frequently Asked Questions', 'wp-to-twitter' ) . '</h2>';
