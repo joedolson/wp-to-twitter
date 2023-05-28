@@ -4,7 +4,7 @@ Donate link: https://www.joedolson.com/donate/
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
 Requires at least: 4.9.8
 Tested up to: 6.2
-Requires PHP: 5.6
+Requires PHP: 7.2
 License: GPLv2 or later
 Text Domain: wp-to-twitter
 Stable tag: 3.6.2
@@ -21,8 +21,6 @@ Yep. That's the basic functionality. But it's not the only thing you can do:
 * Display Tweets based on a search: Display the Tweets resulting from a search and limit by Geolocation.
 * Shorten URLs in your Tweets with popular URL shorteners, or let Twitter to do it with [t.co](http://t.co). 
 
-[Upgrade to WP Tweets Pro](http://www.joedolson.com/wp-tweets-pro/) and schedule Tweets, set up automatic reposts, upload images and more!
-
 WP to Twitter uses a customizable Tweet template for Tweets sent when updating or editing posts and pages or custom post types. You can customize your Tweet for each post, using custom template tags to generate the Tweet. 
 
 = Free Features =
@@ -36,7 +34,7 @@ WP to Twitter uses a customizable Tweet template for Tweets sent when updating o
 
 = Premium Features =
 
-[Upgrade to WP Tweets Pro](https://www.joedolson.com/wp-tweets-pro/) for extra features, including:
+WP Tweets Pro is no longer available for sale.
 
 * Authors can set up their own Twitter accounts in their profiles
 * Time delayed Tweeting
@@ -48,7 +46,6 @@ WP to Twitter uses a customizable Tweet template for Tweets sent when updating o
 * Integrated Twitter Card support
 * Support for Player Cards with integrated captions
 * Automatically schedule Tweets of old posts
-* [Get a license for WP Tweets PRO!](https://www.joedolson.com/wp-tweets-pro/)
 
 Want to stay up to date on WP to Twitter? [Follow me on Twitter!](https://twitter.com/joedolson)
 
@@ -63,6 +60,13 @@ Translating my plug-ins is always appreciated. Work on WP to Twitter translation
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 3.7.0 =
+
+* Bug fix: text field responsiveness.
+* Bug fix: Sanitize link visibility parameters.
+* Remove sales and promotional elements.
+* Add FAQ and remove support form.
 
 = 3.6.2 =
 
