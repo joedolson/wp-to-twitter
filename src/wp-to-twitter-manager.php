@@ -234,11 +234,6 @@ function wpt_update_settings() {
 	}
 	if ( 'pro' === $current ) {
 		if ( function_exists( 'wpt_pro_functions' ) ) {
-			?>
-			<p>
-				<?php _e( 'WP Tweets Pro is no longer available for purchase as of April 2023. WP Tweets Pro will continue to be updated and maintained as long as possible, dependent on the whims of Twitter and its API.', 'wp-to-twitter' ); ?>
-			</p>
-			<?php
 			wpt_pro_functions();
 			if ( function_exists( 'wpt_notes' ) ) {
 				wpt_notes();
@@ -252,12 +247,6 @@ function wpt_update_settings() {
 							<h3><strong><?php _e( 'WP Tweets Pro End-of-life', 'wp-to-twitter' ); ?></strong></h3>
 							<p>
 								<?php _e( 'WP Tweets Pro is no longer available for purchase as of April 2023.', 'wp-to-twitter' ); ?>
-							</p>
-							<p>
-								<?php
-								// Translators: Donation link, review link.
-								sprintf( __( 'I know that not everybody has a use for the features supported by WP Tweets Pro. If you\'re happy with what you\'ve found in WP to Twitter, you can still support me - either by <a href="%1$s">making a donation</a> or by <a href="%2$s">writing a review</a>. If you have the time or money, I\'ll sincerely appreciate anything you can do!', 'wp-to-twitter' ), 'https://www.joedolson.com/donate/', 'https://wordpress.org/support/plugin/wp-to-twitter/reviews/#new-post' );
-								?>
 							</p>
 						</div>
 					</div>
