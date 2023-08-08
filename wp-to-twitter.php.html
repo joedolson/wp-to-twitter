@@ -80,6 +80,7 @@ if ( function_exists( 'wp_get_environment_type' ) ) {
 	}
 }
 
+require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-functions.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-users.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php' );
@@ -397,31 +398,34 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				$attachment = false;
 			}
 		}
-		$api        = 'https://api.twitter.com/1.1/statuses/update.json';
-		$api2       = 'https://api.twitter.com/2/tweets'; // For testing.
-		$upload_api = 'https://upload.twitter.com/1.1/media/upload.json';
-		$status     = array(
-			'status'           => $twit,
-			'source'           => 'wp-to-twitter',
-			'include_entities' => 'true',
+
+		$status = array(
+			'text' => $twit,
 		);
 
 		if ( wtt_oauth_test( $auth ) ) {
 			$connection = wpt_oauth_connection( $auth );
 			if ( $connection ) {
 				if ( $media &amp;&amp; $attachment &amp;&amp; ! $media_id ) {
+					$attachment_data = wpt_image_binary( $attachment );
+					$media_info      = $connection->uploadMedia()->upload( $attachment_data );
+					$status          = array(
+						'text'  => $twit,
+						'media' => array(
+							'media_ids' => array(
+								$media_info['media_id'],
+							),
+						),
+					);
+					// noweh/twitter-api-v2-php doesn't currently support metadata.
 					$media_id = $connection->media(
-						$upload_api,
+						'https://upload.twitter.com/1.1/media/metadata/create.json',
 						array(
 							'auth'  => $auth,
-							'media' => $attachment,
+							'media' => $media_info['media_id'],
 						)
 					);
 					wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment", $id );
-					if ( $media_id ) {
-						$status['media_ids'] = $media_id;
-
-					}
 				}
 			}
 		}
@@ -459,7 +463,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				 */
 				$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id, $twit );
 				if ( $do_tweet ) {
-					$connection->post( $api, $status );
+					$return    = $connection->tweet()->create()->performRequest( $status );
 					$http_code = ( $connection ) ? (int) $connection->http_code : 'failed';
 					$notice    = '';
 				} else {
@@ -598,6 +602,38 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			return false;
 		}
 	}
+}
+
+/**
+ * Get image binary.
+ *
+ * @param int $attachment Attachment ID.
+ */
+function wpt_image_binary( $attachment ) {
+	$image_sizes = get_intermediate_image_sizes();
+	if ( in_array( 'large', $image_sizes, true ) ) {
+		$size = 'large';
+	} else {
+		$size = array_pop( $image_sizes );
+	}
+	$upload    = wp_get_attachment_image_src( $attachment, apply_filters( 'wpt_upload_image_size', $size ) );
+	$parent    = get_post_ancestors( $attachment );
+	$parent    = ( is_array( $parent ) &amp;&amp; isset( $parent[0] ) ) ? $parent[0] : false;
+	$image_url = $upload[0];
+	$remote    = wp_remote_get( $image_url );
+	if ( is_wp_error( $remote ) ) {
+		$transport = 'curl';
+		$binary    = wp_get_curl( $image_url );
+	} else {
+		$transport = 'wp_http';
+		$binary    = wp_remote_retrieve_body( $remote );
+	}
+	wpt_mail( 'WP to Twitter: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . print_r( $remote, 1 ), $parent );
+	if ( ! $binary ) {
+		return false;
+	}
+
+	return base64_encode( $binary );
 }
 
 /**
