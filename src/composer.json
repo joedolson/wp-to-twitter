@@ -1,0 +1,5 @@
+{
+    "require": {
+        "noweh/twitter-api-v2-php": "^3.2"
+    }
+}

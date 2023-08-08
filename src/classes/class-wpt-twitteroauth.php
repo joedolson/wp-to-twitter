@@ -301,71 +301,19 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				$ot  = get_user_meta( $auth, 'oauth_token', true );
 				$ots = get_user_meta( $auth, 'oauth_token_secret', true );
 			}
-			// when performing as a scheduled action, need to include file.php.
-			if ( ! function_exists( 'get_home_path' ) ) {
-				require_once( ABSPATH . 'wp-admin/includes/file.php' );
-			}
-			$connect    = array(
+
+			$connect   = array(
 				'consumer_key'    => $ack,
 				'consumer_secret' => $acs,
 				'user_token'      => $ot,
 				'user_secret'     => $ots,
 			);
-			$tmh_oauth  = new TmhOAuth( $connect );
-			$attachment = $args['media'];
-
-			$image_sizes = get_intermediate_image_sizes();
-			if ( in_array( 'large', $image_sizes, true ) ) {
-				$size = 'large';
-			} else {
-				$size = array_pop( $image_sizes );
-			}
-			$upload    = wp_get_attachment_image_src( $attachment, apply_filters( 'wpt_upload_image_size', $size ) );
-			$parent    = get_post_ancestors( $attachment );
-			$parent    = ( is_array( $parent ) && isset( $parent[0] ) ) ? $parent[0] : false;
-			$image_url = $upload[0];
-			$remote    = wp_remote_get( $image_url );
-			if ( is_wp_error( $remote ) ) {
-				$transport = 'curl';
-				$binary    = wp_get_curl( $image_url );
-			} else {
-				$transport = 'wp_http';
-				$binary    = wp_remote_retrieve_body( $remote );
-			}
-			wpt_mail( 'WP to Twitter: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . print_r( $remote, 1 ), $parent );
-			if ( ! $binary ) {
-				return;
-			}
-
-			$mime_type = get_post_mime_type( $attachment );
-			if ( ! $mime_type ) {
-				$mime_type = 'image/jpeg';
-			}
-
-			$code     = $tmh_oauth->request( 'POST', $url, array( 'media' => "$binary" ), true, true );
-			$response = $tmh_oauth->response['response'];
-			$full     = $tmh_oauth->response;
-			wpt_mail(
-				'Media Posted',
-				"Media ID #$args[media] ($transport)" . "\n\n" . 'Twitter Response' . "\n" . print_r( $full, 1 ) . "\n\n" . 'Attachment Details' . "\n" . print_r( $upload, 1 ) . "\n\n" . 'Img Request Response' . "\n" . print_r( $remote, 1 ),
-				$parent
-			);
-
-			if ( is_wp_error( $response ) ) {
-				return '';
-			}
-
-			$this->http_code     = $code;
-			$this->last_api_call = $url;
-			$this->format        = 'json';
-			$this->http_header   = $response;
-			$response            = json_decode( $response );
-			$media_id            = $response->media_id_string;
+			$tmh_oauth = new TmhOAuth( $connect );
+			$media_id  = $args['media'];
 
 			/**
 			 * Add alt attributes to uploaded Twitter images.
 			 */
-			$metadata_api = 'https://upload.twitter.com/1.1/media/metadata/create.json';
 			$alt_text     = get_post_meta( $attachment, '_wp_attachment_image_alt', true );
 			$alt_text     = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
 			if ( '' !== $alt_text ) {
@@ -377,9 +325,9 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 						),
 					)
 				);
-				$post_alt  = $tmh_oauth->request(
+				$tmh_oauth->request(
 					'POST',
-					$metadata_api,
+					$url,
 					$image_alt,
 					true,
 					true,
