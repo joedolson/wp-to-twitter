@@ -314,8 +314,8 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			/**
 			 * Add alt attributes to uploaded Twitter images.
 			 */
-			$alt_text     = get_post_meta( $attachment, '_wp_attachment_image_alt', true );
-			$alt_text     = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
+			$alt_text = get_post_meta( $attachment, '_wp_attachment_image_alt', true );
+			$alt_text = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
 			if ( '' !== $alt_text ) {
 				$image_alt = json_encode(
 					array(

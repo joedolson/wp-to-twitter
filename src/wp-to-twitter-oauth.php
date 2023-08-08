@@ -87,14 +87,14 @@ function wpt_oauth_connection( $auth = false, $api = '2' ) {
 				'consumer_secret'     => $acs,
 				'bearer_token'        => $bt,
 			);
-			$client = new Client( $settings );
+			$client   = new Client( $settings );
 		} else {
 			require_once( plugin_dir_path( __FILE__ ) . 'classes/class-wpt-twitteroauth.php' );
 			$connection            = new Wpt_TwitterOAuth( $ack, $acs, $ot, $ots );
 			$connection->useragent = get_option( 'blogname' ) . ' ' . home_url();
 			$client                = $connection;
 		}
-	
+
 		return $client;
 	} else {
 		return false;
@@ -391,7 +391,6 @@ function wtt_connect_oauth( $auth = false ) {
 		$bt    = ( ! $auth ) ? get_option( 'bearer_token' ) : get_user_meta( $auth, 'bearer_token', true );
 		$uname = ( ! $auth ) ? get_option( 'wtt_twitter_username' ) : get_user_meta( $auth, 'wtt_twitter_username', true );
 		$nonce = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
-	
 
 		if ( ! $bt ) {
 			$bt_form = sprintf( $bt_form, '' ) . '<input type="hidden" name="oauth_settings" value="wtt_oauth_test" class="hidden" />';
