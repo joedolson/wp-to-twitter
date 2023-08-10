@@ -662,7 +662,7 @@ function wpt_post_info( $post_ID ) {
 		$encoding = 'UTF-8';
 	}
 	$post         = get_post( $post_ID );
-	$category_ids = false;
+	$category_ids = array();
 	$values       = array();
 	$values['id'] = $post_ID;
 	// get post author.
