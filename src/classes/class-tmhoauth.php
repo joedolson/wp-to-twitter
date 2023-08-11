@@ -584,8 +584,11 @@ class TmhOAuth {
 
 		list( $key, $value ) = array_pad( explode( ':', $header, 2 ), 2, null );
 
-		$key   = trim( $key );
-		$value = trim( $value );
+		$key   = ( is_string( $key ) ) ? trim( $key ) : '';
+		$value = ( is_string( $value ) ) ? trim( $value ) : '';
+		if ( '' === $key . $value ) {
+			return 0;
+		}
 
 		if ( ! isset( $this->response['headers'][ $key ] ) ) {
 			$this->response['headers'][ $key ] = $value;
