@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_shorten_link - XPoster Hook Doumentation</title>
+    <title>Filter: wpt_exclude_post_types - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_shorten_link</h1></header>
+    <header><h1 class="page-title">Filter: wpt_exclude_post_types</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_shorten_link">apply_filters( 'wpt_shorten_link', <span class="signature">$url, $shortener, $post_ID )</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="wpt_exclude_post_types">apply_filters( 'wpt_exclude_post_types', <span class="signature">$exclusions )</span><span class="type-signature"> &rarr; {array}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Make modifications to URLs prior to shortening.</p>
+    <p>Exclude post types from the list of available types to post to X.com.</p>
 </div>
 
 
@@ -77,13 +77,13 @@
 
         <tr>
             
-                <td class="name"><code>$url</code></td>
+                <td class="name"><code>$exclusions</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">array</span>
 
 
             
@@ -93,53 +93,7 @@
 
             
 
-            <td class="description last"><p>Full permalink URL to post.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$shortener</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Shortener selected in settings.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$post_ID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Post ID.</p></td>
+            <td class="description last"><p>Array of post type name slugs to exclude.</p></td>
         </tr>
 
     
@@ -180,7 +134,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wp-to-twitter-shorteners.php.html">wp-to-twitter-shorteners.php</a>, <a href="wp-to-twitter-shorteners.php.html#line41">line 41</a>
+        <a href="wp-to-twitter-manager.php.html">wp-to-twitter-manager.php</a>, <a href="wp-to-twitter-manager.php.html#line279">line 279</a>
     </li></ul></dd>
     
 
@@ -214,7 +168,7 @@
     </dt>
     <dd>
         
-<span class="param-type">string</span>
+<span class="param-type">array</span>
 
 
     </dd>
