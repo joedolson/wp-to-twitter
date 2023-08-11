@@ -399,10 +399,12 @@ function wtt_connect_oauth( $auth = false ) {
 		} else {
 			$bt_form = '';
 			if ( ! $auth ) {
-				$submit = '<input type="submit" name="submit" class="button-primary" value="' . __( 'Disconnect WordPress from X.com', 'wp-to-twitter' ) . '" />
+				$site = get_bloginfo( 'name' );
+				// Translators: Name of the current site.
+				$submit = '<input type="submit" name="submit" class="button-primary" value="' . sprintf( __( 'Disconnect %s from X.com', 'wp-to-twitter' ), $site ) . '" />
 						<input type="hidden" name="oauth_settings" value="wtt_twitter_disconnect" class="hidden" />';
 			} else {
-				$submit = '<input type="checkbox" name="oauth_settings" value="wtt_twitter_disconnect" id="disconnect" /> <label for="disconnect">' . __( 'Disconnect WordPress from X.com', 'wp-to-twitter' ) . '</label>';
+				$submit = '<input type="checkbox" name="oauth_settings" value="wtt_twitter_disconnect" id="disconnect" /> <label for="disconnect">' . __( 'Disconnect Your Account from X.com', 'wp-to-twitter' ) . '</label>';
 			}
 		}
 
