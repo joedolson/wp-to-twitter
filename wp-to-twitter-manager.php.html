@@ -341,7 +341,7 @@ function wpt_update_settings() {
 								?>
 								&lt;div class='wptab wpt_types wpt_&lt;?php echo esc_attr( $slug ); ?>' aria-labelledby='tab_wpt_&lt;?php echo esc_attr( $slug ); ?>' role="tabpanel" id='wpt_&lt;?php echo esc_attr( $slug ); ?>'>
 								&lt;fieldset>
-									&lt;legend>&lt;?php _e( 'Tweet Templates', 'wp-to-twitter' ); ?>&lt;/legend>
+									&lt;legend class="screen-reader-text">&lt;?php _e( 'Tweet Templates', 'wp-to-twitter' ); ?>&lt;/legend>
 									&lt;p>
 										&lt;input type="checkbox" name="wpt_post_types[&lt;?php echo esc_attr( $slug ); ?>][post-published-update]" id="&lt;?php echo esc_attr( $slug ); ?>-post-published-update" value="1" &lt;?php echo wpt_checkbox( 'wpt_post_types', $slug, 'post-published-update' ); ?> />
 										&lt;label for="&lt;?php echo esc_attr( $slug ); ?>-post-published-update">&lt;strong>
@@ -387,7 +387,7 @@ function wpt_update_settings() {
 							?>
 						&lt;div class='wptab wpt_types wpt_links' id="wpt_links">
 							&lt;fieldset>
-								&lt;legend>&lt;span>&lt;?php _e( 'Links', 'wp-to-twitter' ); ?>&lt;/span>&lt;/legend>
+								&lt;legend class="screen-reader-text">&lt;span>&lt;?php _e( 'Links', 'wp-to-twitter' ); ?>&lt;/span>&lt;/legend>
 								&lt;p>
 									&lt;input type="checkbox" name="jd_twit_blogroll" id="jd_twit_blogroll" value="1" &lt;?php echo wpt_checkbox( 'jd_twit_blogroll' ); ?> />
 									&lt;label for="jd_twit_blogroll">&lt;strong>&lt;?php _e( 'Update X.com when you post a Blogroll link', 'wp-to-twitter' ); ?>&lt;/strong>&lt;/label>&lt;br/>
