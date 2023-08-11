@@ -302,7 +302,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				$ots = get_user_meta( $auth, 'oauth_token_secret', true );
 			}
 
-			$connect   = array(
+			$connect    = array(
 				'consumer_key'    => $ack,
 				'consumer_secret' => $acs,
 				'user_token'      => $ot,

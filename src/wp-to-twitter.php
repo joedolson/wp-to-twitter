@@ -446,9 +446,9 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 						$tweet_id  = $return->data->id;
 					} catch ( Exception $e ) {
 						// Get Guzzle exception response.
-						$response      = $e->getResponse();
-						$headers       = $response->getHeaders();
-						$rate_limit    = array(
+						$response   = $e->getResponse();
+						$headers    = $response->getHeaders();
+						$rate_limit = array(
 							'rate-limit'    => $headers['x-rate-limit-remaining'],
 							'rate-reset'    => $headers['x-rate-limit-reset'],
 							'rate-24'       => $headers['x-app-limit-24hour-limit'],
@@ -457,7 +457,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 						update_option( 'wpt_app_limit', $rate_limit );
 						$http_code = $response->getStatusCode();
 					}
-					$notice    = '';
+					$notice = '';
 				} else {
 					$http_code = '000';
 					$notice    = __( 'Tweet Canceled by custom filter.', 'wp-to-twitter' );
