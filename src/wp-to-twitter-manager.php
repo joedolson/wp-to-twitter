@@ -275,9 +275,20 @@ function wpt_update_settings() {
 						$post_types   = get_post_types( array(), 'objects' );
 						$wpt_settings = get_option( 'wpt_post_types' );
 						$tabs         = "<ul class='tabs' role='tablist'>";
+						$exclusions   = array( 'wp_navigation', 'wp_block' );
+						/**
+						 * Exclude post types from the list of available types to post to X.com.
+						 *
+						 * @hook wpt_exclude_post_types
+						 *
+						 * @param {array} $exclusions Array of post type name slugs to exclude.
+						 *
+						 * @return {array}
+						 */
+						$excluded = apply_filters( 'wpt_exclude_post_types', $exclusions );
 						foreach ( $post_types as $type ) {
 							// If post type is both private & has no UI, don't show.
-							if ( false === $type->public && false === $type->show_ui ) {
+							if ( false === $type->public && false === $type->show_ui || in_array( $type->name, $excluded, true ) ) {
 								continue;
 							}
 							$name = $type->labels->name;
@@ -287,7 +298,10 @@ function wpt_update_settings() {
 								$tabs .= "<li><a href='#wpt_$slug' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name</a></li>";
 							}
 						}
-						$tabs .= "<li><a href='#wpt_links' id='tab_wpt_links' aria-controls='wpt_links'>" . __( 'Links', 'wp-to-twitter' ) . '</a></li></ul>';
+						if ( '1' === get_option( 'link_manager_enabled' ) || true === apply_filters( 'pre_option_link_manager_enabled', false ) ) {
+							$tabs .= "<li><a href='#wpt_links' id='tab_wpt_links' aria-controls='wpt_links'>" . __( 'Links', 'wp-to-twitter' ) . '</a></li>';
+						}
+						$tabs .= '</ul>';
 						echo $tabs;
 						foreach ( $post_types as $type ) {
 							if ( false === $type->public && false === $type->show_ui ) {
@@ -343,6 +357,7 @@ function wpt_update_settings() {
 								<?php
 							}
 						}
+						if ( '1' === get_option( 'link_manager_enabled' ) || true === apply_filters( 'pre_option_link_manager_enabled', false ) ) {
 						?>
 						<div class='wptab wpt_types wpt_links' id="wpt_links">
 							<fieldset>
@@ -355,6 +370,9 @@ function wpt_update_settings() {
 								</p>
 							</fieldset>
 						</div>
+						<?php
+						}
+						?>
 						<div>
 							<input type="hidden" name="submit-type" value="options" />
 						</div>
