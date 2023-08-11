@@ -40,7 +40,7 @@ function wpt_twitter_profile() {
 		?>
 		<table class="form-table">
 			<tr>
-				<th scope="row"><?php _e( 'Use My Twitter Username', 'wp-to-twitter' ); ?></th>
+				<th scope="row"><?php _e( 'Use My X.com Username', 'wp-to-twitter' ); ?></th>
 				<td>
 					<input type="radio" name="wpt-enable-user" id="wpt-enable-user-3" value="mainAtTwitter"<?php checked( $is_enabled, 'mainAtTwitter' ); ?> /> <label for="wpt-enable-user-3"><?php _e( 'Tweet my posts with an @ reference to my username.', 'wp-to-twitter' ); ?></label><br/>
 					<input type="radio" name="wpt-enable-user" id="wpt-enable-user-4" value="mainAtTwitterPlus"<?php checked( $is_enabled, 'mainAtTwitterPlus' ); ?> /> <label for="wpt-enable-user-4"><?php _e( 'Tweet my posts with an @ reference to both my username and to the main site username.', 'wp-to-twitter' ); ?></label>
@@ -48,7 +48,7 @@ function wpt_twitter_profile() {
 			</tr>
 			<tr>
 				<th scope="row">
-					<label for="wpt-username"><?php _e( 'Your Twitter Username', 'wp-to-twitter' ); ?></label>
+					<label for="wpt-username"><?php _e( 'Your X.com Username', 'wp-to-twitter' ); ?></label>
 				</th>
 				<td>
 					<input type="text" name="wpt-username" id="wpt-username" value="<?php echo esc_attr( $twitter_username ); ?>"/>

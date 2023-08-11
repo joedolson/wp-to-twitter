@@ -151,12 +151,12 @@ function wpt_get_user( $twitter_id = false ) {
 
 add_shortcode( 'get_tweets', 'wpt_get_twitter_feed' );
 /**
- * Get a Twitter Feed.
+ * Get an X.com Feed.
  *
  * @param array  $atts Display attributes.
  * @param string $content Fallback content.
  *
- * @return Twitter feed.
+ * @return X.com feed.
  */
 function wpt_get_twitter_feed( $atts, $content ) {
 	$atts     = shortcode_atts(

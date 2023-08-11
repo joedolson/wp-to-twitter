@@ -61,7 +61,7 @@ function wpt_updated_settings() {
 		} elseif ( 'nosync' === $oauth_message ) {
 			print( '
 				<div id="message" class="error fade">
-					<p>' . __( 'OAuth Authentication Failed. Your server time is not in sync with the Twitter servers. Talk to your hosting service to see what can be done.', 'wp-to-twitter' ) . '</p>
+					<p>' . __( 'OAuth Authentication Failed. Your server time is not in sync with the X.com servers. Talk to your hosting service to see what can be done.', 'wp-to-twitter' ) . '</p>
 				</div>
 			' );
 		} elseif ( 'noconnection' === $oauth_message ) {
@@ -166,7 +166,7 @@ function wpt_updated_settings() {
 			$value = map_deep( $value, 'sanitize_textarea_field' );
 			// using wp_encode_emoji allows me to save emoji in templates.
 			// ...but I haven't found a way to convert the saved emoji *back* to unicode.
-			// sending the HTML entity just yields a broken character on Twitter.
+			// sending the HTML entity just yields a broken character on X.com.
 			$array = array(
 				'post-published-update' => ( isset( $value['post-published-update'] ) ) ? $value['post-published-update'] : '',
 				'post-published-text'   => $value['post-published-text'],
@@ -208,7 +208,7 @@ function wpt_update_settings() {
 	<div class="wrap" id="wp-to-twitter">
 	<?php
 	if ( defined( 'WPT_STAGING_MODE' ) && true === WPT_STAGING_MODE ) {
-		echo "<div class='updated notice'><p>" . __( 'XPoster is in staging mode. Tweets will be reported as if successfully sent to Twitter but will not be sent.', 'wp-to-twitter' ) . '</p></div>';
+		echo "<div class='updated notice'><p>" . __( 'XPoster is in staging mode. Tweets will be reported as if successfully sent to X.com but will not be sent.', 'wp-to-twitter' ) . '</p></div>';
 	}
 	wpt_updated_settings();
 	wpt_show_last_tweet();
@@ -244,9 +244,9 @@ function wpt_update_settings() {
 				<div class="ui-sortable meta-box-sortables">
 					<div class="postbox">
 						<div class="inside purchase">
-							<h3><strong><?php _e( 'WP Tweets Pro End-of-life', 'wp-to-twitter' ); ?></strong></h3>
+							<h3><strong><?php _e( 'XPoster Pro', 'wp-to-twitter' ); ?></strong></h3>
 							<p>
-								<?php _e( 'WP Tweets Pro is no longer available for purchase as of April 2023.', 'wp-to-twitter' ); ?>
+								PROMO HERE
 							</p>
 						</div>
 					</div>
@@ -349,7 +349,7 @@ function wpt_update_settings() {
 								<legend><span><?php _e( 'Links', 'wp-to-twitter' ); ?></span></legend>
 								<p>
 									<input type="checkbox" name="jd_twit_blogroll" id="jd_twit_blogroll" value="1" <?php echo wpt_checkbox( 'jd_twit_blogroll' ); ?> />
-									<label for="jd_twit_blogroll"><strong><?php _e( 'Update Twitter when you post a Blogroll link', 'wp-to-twitter' ); ?></strong></label><br/>
+									<label for="jd_twit_blogroll"><strong><?php _e( 'Update X.com when you post a Blogroll link', 'wp-to-twitter' ); ?></strong></label><br/>
 									<label for="newlink-published-text"><?php _e( 'Text for new link updates:', 'wp-to-twitter' ); ?></label>
 									<input aria-describedby="newlink-published-text-label" type="text" class="wpt-template" name="newlink-published-text" id="newlink-published-text" class="widefat" maxlength="120" value="<?php echo esc_attr( stripslashes( get_option( 'newlink-published-text' ) ) ); ?>"/><br/><span id="newlink-published-text-label"><?php _e( 'Available shortcodes: <code>#url#</code>, <code>#title#</code>, and <code>#description#</code>.', 'wp-to-twitter' ); ?></span>
 								</p>
@@ -592,7 +592,7 @@ function wpt_update_settings() {
 									'wpt_twitter_custom' => __( 'See Custom Tweet Field when creating a Post', 'wp-to-twitter' ),
 									'wpt_twitter_switch' => __( 'Toggle the Tweet/Don\'t Tweet option', 'wp-to-twitter' ),
 									'wpt_tweet_now'      => __( 'Can see Tweet Now button', 'wp-to-twitter' ),
-									'wpt_twitter_oauth'  => __( 'Allow user to authenticate with Twitter', 'wp-to-twitter' ),
+									'wpt_twitter_oauth'  => __( 'Allow user to authenticate with X.com', 'wp-to-twitter' ),
 								);
 								$role_tabs      = '';
 								$role_container = '';
@@ -663,7 +663,7 @@ function wpt_update_settings() {
 							<legend class='screen-reader-text'><?php _e( 'Template tag priority order', 'wp-to-twitter' ); ?></legend>
 							<p>
 							<?php
-							_e( 'The order in which items will be abbreviated or removed from your Tweet if the Tweet is too long to send to Twitter.', 'wp-to-twitter' );
+							_e( 'The order in which items will be abbreviated or removed from your Tweet if the Tweet is too long to send to X.com.', 'wp-to-twitter' );
 							_e( 'Tags with lower values will be modified first.', 'wp-to-twitter' );
 							?>
 							</p>
@@ -683,7 +683,7 @@ function wpt_update_settings() {
 							<ul>
 								<li>
 									<input type="checkbox" name="wpt_permit_feed_styles" id="wpt_permit_feed_styles" value="1" <?php echo wpt_checkbox( 'wpt_permit_feed_styles' ); ?> />
-									<label for="wpt_permit_feed_styles"><?php _e( 'Disable Twitter Feed Stylesheet', 'wp-to-twitter' ); ?></label>
+									<label for="wpt_permit_feed_styles"><?php _e( 'Disable X.com Feed Stylesheet', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
 									<input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" <?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> <label for="wp_debug_oauth"><?php _e( 'Get Debugging Data for OAuth Connection', 'wp-to-twitter' ); ?></label>
@@ -793,7 +793,7 @@ function wpt_sidebar() {
 
 				<div class="inside test">
 				<p>
-				<?php _e( 'Check whether XPoster is set up for Twitter and your URL Shortener. The test sends a status update to Twitter and shortens a URL.', 'wp-to-twitter' ); ?>
+				<?php _e( 'Check whether XPoster is set up for X.com and your URL Shortener. The test sends a status update to X.com and shortens a URL.', 'wp-to-twitter' ); ?>
 				</p>
 				<form method="post" action="">
 					<input type="hidden" name="submit-type" value="check-support"/>
@@ -829,7 +829,7 @@ function wpt_sidebar() {
 }
 
 /**
- * Compare your server time to Twitter's time.
+ * Compare your server time to X.com's time.
  *
  * @param boolean $test Doing a test.
  */
@@ -886,7 +886,7 @@ function wpt_do_server_check( $test = false ) {
 		$wpt_server_string =
 			'<ul>
 				<li>' . __( 'Your server time:', 'wp-to-twitter' ) . '<br /><code>' . $server_time . '</code>' . '</li>' .
-				'<li>' . __( 'Twitter\'s server time: ', 'wp-to-twitter' ) . '<br /><code>' . $date . '</code>' . "</li>
+				'<li>' . __( 'X.com\'s server time: ', 'wp-to-twitter' ) . '<br /><code>' . $date . '</code>' . "</li>
 				$timezone
 				$diff
 				$errors

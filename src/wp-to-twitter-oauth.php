@@ -54,7 +54,7 @@ function wpt_get_user_verification( $auth ) {
 }
 
 /**
- * Establish an OAuth client to Twitter.
+ * Establish an OAuth client to X.com.
  *
  * @param mixed int/boolean $auth Current author.
  * @param mixed string      $api API version.
@@ -227,8 +227,8 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 								'http_code' => $connection->http_code,
 								'status'    => $status,
 							);
-							// Translators: HTTP code & status message from Twitter.
-							$error_code = sprintf( __( 'Twitter response: http_code %s', 'wp-to-twitter' ), "$error_information[http_code] - $error_information[status]" );
+							// Translators: HTTP code & status message from X.com.
+							$error_code = sprintf( __( 'X.com response: http_code %s', 'wp-to-twitter' ), "$error_information[http_code] - $error_information[status]" );
 							update_option( 'wpt_curl_error', $error_code );
 						}
 						if ( '1' === get_option( 'wp_debug_oauth' ) ) {
@@ -323,16 +323,16 @@ function wtt_connect_oauth( $auth = false ) {
 
 		$bt_form = sprintf( $bt_form, esc_attr( wpt_mask_attr( $bt ) ) );
 
-		$submit = ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . __( 'Connect to Twitter', 'wp-to-twitter' ) . '" /></p>' : '';
+		$submit = ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . __( 'Connect to X.com', 'wp-to-twitter' ) . '" /></p>' : '';
 		print( '
-			<h3><span>' . __( 'Connect to Twitter', 'wp-to-twitter' ) . '</span></h3>
+			<h3><span>' . __( 'Connect to X.com', 'wp-to-twitter' ) . '</span></h3>
 			<div class="inside ' . $class . '">
 				<ol class="wpt-oauth-settings">
-					<li>' . __( 'Apply for a <a href="https://developer.twitter.com/en/apply-for-access">Developer Account with Twitter</a>', 'wp-to-twitter' ) . '<ul>
-						<li><a href="https://developer.twitter.com/en/developer-terms/policy">' . __( 'Review the Terms of Service for use of the Twitter API', 'wp-to-twitter' ) . '</a></li>
-						<li>' . __( 'If your app is suspended by Twitter, contact <a href="https://help.twitter.com/forms/platform">their API Policy Support</a>.', 'wp-to-twitter' ) . '</li>
+					<li>' . __( 'Apply for a <a href="https://developer.twitter.com/en/apply-for-access">Developer Account with X.com</a>', 'wp-to-twitter' ) . '<ul>
+						<li><a href="https://developer.twitter.com/en/developer-terms/policy">' . __( 'Review the Terms of Service for use of the X.com API', 'wp-to-twitter' ) . '</a></li>
+						<li>' . __( 'If your app is suspended by X.com, contact <a href="https://help.twitter.com/forms/platform">their API Policy Support</a>.', 'wp-to-twitter' ) . '</li>
 					</ul></li>
-					<li>' . __( 'Add a new application in <a href="https://developer.twitter.com/en/portal/apps/new">Twitter\'s project and app portal</a>', 'wp-to-twitter' ) . '
+					<li>' . __( 'Add a new application in <a href="https://developer.twitter.com/en/portal/apps/new">X.com\'s project and app portal</a>', 'wp-to-twitter' ) . '
 						<ul>
 							<li>' . __( 'Name your application.', 'wp-to-twitter' ) . '(' . __( 'Your app name cannot include the word "Twitter."', 'wp-to-twitter' ) . ')</li>
 							<li>' . __( 'Click "Next" to move to the Keys & Tokens step.', 'wp-to-twitter' ) . '</li>
@@ -400,15 +400,15 @@ function wtt_connect_oauth( $auth = false ) {
 		} else {
 			$bt_form = '';
 			if ( ! $auth ) {
-				$submit = '<input type="submit" name="submit" class="button-primary" value="' . __( 'Disconnect your WordPress and Twitter Account', 'wp-to-twitter' ) . '" />
+				$submit = '<input type="submit" name="submit" class="button-primary" value="' . __( 'Disconnect WordPress from X.com', 'wp-to-twitter' ) . '" />
 						<input type="hidden" name="oauth_settings" value="wtt_twitter_disconnect" class="hidden" />';
 			} else {
-				$submit = '<input type="checkbox" name="oauth_settings" value="wtt_twitter_disconnect" id="disconnect" /> <label for="disconnect">' . __( 'Disconnect your WordPress and Twitter Account', 'wp-to-twitter' ) . '</label>';
+				$submit = '<input type="checkbox" name="oauth_settings" value="wtt_twitter_disconnect" id="disconnect" /> <label for="disconnect">' . __( 'Disconnect WordPress from X.com', 'wp-to-twitter' ) . '</label>';
 			}
 		}
 
 		print( '
-			<h3><span>' . __( 'Disconnect from Twitter', 'wp-to-twitter' ) . '</span></h3>
+			<h3><span>' . __( 'Disconnect from X.com', 'wp-to-twitter' ) . '</span></h3>
 			<div class="inside ' . $class . '">
 			' . $form . '
 				<div id="wtt_authentication_display">

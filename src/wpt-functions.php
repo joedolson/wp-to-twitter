@@ -122,10 +122,10 @@ function wpt_check_functions() {
 		$rand     = rand( 1000000, 9999999 );
 		$testpost = wpt_post_to_twitter( "This is a test of XPoster. $shrink ($rand)" );
 		if ( $testpost ) {
-			$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to Twitter.', 'wp-to-twitter' ) . '</strong></li>';
+			$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to X.com.', 'wp-to-twitter' ) . '</strong></li>';
 		} else {
 			$error    = wpt_get_log( 'wpt_status_message', 'test' );
-			$message .= '<li class="error"><strong>' . __( 'XPoster failed to submit an update to Twitter.', 'wp-to-twitter' ) . '</strong></li>';
+			$message .= '<li class="error"><strong>' . __( 'XPoster failed to submit an update to X.com.', 'wp-to-twitter' ) . '</strong></li>';
 			$message .= "<li class='error'>$error</li>";
 		}
 	} else {
@@ -151,9 +151,9 @@ function wpt_settings_tabs() {
 	$username = get_option( 'wtt_twitter_username' );
 	$default  = ( '' === $username || false === $username ) ? 'connection' : 'basic';
 	$current  = ( isset( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : $default;
-	$pro_text = ( function_exists( 'wpt_pro_exists' ) ) ? __( 'Pro Settings', 'wp-to-twitter' ) : __( 'WP Tweets PRO', 'wp-to-twitter' );
+	$pro_text = ( function_exists( 'wpt_pro_exists' ) ) ? __( 'Pro Settings', 'wp-to-twitter' ) : __( 'XPoster PRO', 'wp-to-twitter' );
 	$pages    = array(
-		'connection' => __( 'Twitter Connection', 'wp-to-twitter' ),
+		'connection' => __( 'X Connection', 'wp-to-twitter' ),
 		'basic'      => __( 'Basic Settings', 'wp-to-twitter' ),
 		'shortener'  => __( 'URL Shortener', 'wp-to-twitter' ),
 		'advanced'   => __( 'Advanced Settings', 'wp-to-twitter' ),
@@ -510,7 +510,7 @@ if ( ! function_exists( 'mb_strrpos' ) ) {
 }
 
 /**
- * This function is obsolete; only exists for people using out of date versions of WP Tweets PRO.
+ * This function is obsolete; only exists for people using out of date versions of XPoster Pro.
  *
  * @param string $field Field to check.
  * @param string $value Value to check.
@@ -647,7 +647,7 @@ function wpt_get_support_form() {
 	================ Installation Data ====================
 	==XPoster==
 	Version: $version
-	Twitter username: http://twitter.com/$wtt_twitter_username
+	X.com username: http://twitter.com/$wtt_twitter_username
 	$license
 
 	==WordPress:==
@@ -710,7 +710,7 @@ function wpt_get_support_form() {
 		<form method='post' action='$admin_url'>
 			<div><input type='hidden' name='_wpnonce' value='" . wp_create_nonce( 'wp-to-twitter-nonce' ) . "' /></div>
 			<div>
-			<p>" . __( "If you're having trouble with WP Tweets Pro, please try to answer these questions in your message:", 'wp-to-twitter' ) . '</p>
+			<p>" . __( "If you're having trouble with XPoster Pro, please try to answer these questions in your message:", 'wp-to-twitter' ) . '</p>
 			<ul>
 				<li>' . __( 'What were you doing when the problem occurred?', 'wp-to-twitter' ) . '</li>
 				<li>' . __( 'What did you expect to happen?', 'wp-to-twitter' ) . '</li>
@@ -741,7 +741,7 @@ function wpt_get_support_form() {
 		" . wpautop( $data ) . '
 		</div>';
 	} else {
-		echo '<p>' . __( 'You need a valid WP Tweets Pro license to receive support.', 'wp-to-twitter' ) . '</p>';
+		echo '<p>' . __( 'You need a valid XPoster Pro license to receive support.', 'wp-to-twitter' ) . '</p>';
 	}
 	wpt_faq();
 }
@@ -752,16 +752,16 @@ function wpt_get_support_form() {
 function wpt_faq() {
 	$qs = array(
 		array(
-			'question' => __( 'My app has been suspended by Twitter. What do I do now?', 'wp-to-twitter' ),
-			'answer'   => __( 'Some users have been successful by removing their existing app and creating a new one, following the setup instructions in the Twitter Connection tab. It is unlikely you will make any progress by contesting the suspension.', 'wp-to-twitter' ),
+			'question' => __( 'My app has been suspended by X.com. What do I do now?', 'wp-to-twitter' ),
+			'answer'   => __( 'Some users have been successful by removing their existing app and creating a new one, following the setup instructions in the X.com Connection tab. It is unlikely you will make any progress by contesting the suspension.', 'wp-to-twitter' ),
 		),
 		array(
-			'question' => __( "I'm receiving a '401 Unauthorized' error from Twitter, but my credentials haven't changed. What should I do?", 'wp-to-twitter' ),
-			'answer'   => __( 'First, check and see whether your app has been suspended in your Twitter developer account. If it has, see above. If not, this is most likely a temporary problem in the Twitter API; but you can try generating new keys and secrets in your developer account and re-connect your app. Some users have also been successful by changing their account status to the free account. (Older accounts may have a legacy status that is not handled well by Twitter.)', 'wp-to-twitter' ),
+			'question' => __( "I'm receiving a '401 Unauthorized' error from X.com, but my credentials haven't changed. What should I do?", 'wp-to-twitter' ),
+			'answer'   => __( 'First, check and see whether your app has been suspended in your X.com developer account. If it has, see above. If not, this is most likely a temporary problem in the X.com API; but you can try generating new keys and secrets in your developer account and re-connect your app. Some users have also been successful by changing their account status to the free account. (Older accounts may have a legacy status that is not handled well by X.com.)', 'wp-to-twitter' ),
 		),
 		array(
-			'question' => __( 'Error code 453: You currently have access to Twitter API v2 endpoints and limited v1.1 endpoints only.', 'wp-to-twitter' ),
-			'answer'   => __( 'This is most likely caused by use of an API endpoint that is not included in the new free API tier. According to Twitter documentation, the Twitter Feed is not an allowed endpoint, although I have not personally had any problems with it yet. Enforcement of API rules appears to be inconsistent, so this is only a guess. You can try removing the Twitter Feed widget from your site.', 'wp-to-twitter' ),
+			'question' => __( 'Error code 453: You currently have access to X.com API v2 endpoints and limited v1.1 endpoints only.', 'wp-to-twitter' ),
+			'answer'   => __( 'This is most likely caused by use of an API endpoint that is not included in the new free API tier. According to X.com documentation, the X.com Feed is not an allowed endpoint, although I have not personally had any problems with it yet. Enforcement of API rules appears to be inconsistent, so this is only a guess. You can try removing the X.com Feed widget from your site.', 'wp-to-twitter' ),
 		),
 	);
 

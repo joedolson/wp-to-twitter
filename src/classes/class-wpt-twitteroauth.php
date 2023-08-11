@@ -8,7 +8,7 @@
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/
  *
- * The first PHP Library to support WPOAuth for Twitter's REST API.
+ * The first PHP Library to support WPOAuth for X.com's REST API.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +20,7 @@ require_once( 'class-wp-oauth.php' );
 if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 	/**
-	 * Twitter WPOAuth class
+	 * X.com WPOAuth class
 	 */
 	class Wpt_TwitterOAuth {
 		/**
@@ -146,7 +146,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 
 
 		/**
-		 * Get a request_token from Twitter
+		 * Get a request_token from Xcom
 		 *
 		 * @returns a key/value array containing WPOAuth_token and WPOAuth_token_secret
 		 */

@@ -124,7 +124,7 @@ class WPT_Latest_Tweets_Widget extends WP_Widget {
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'twitter_id' ); ?>"><?php _e( 'Twitter Username', 'wp-to-twitter' ); ?> :</label>
+			<label for="<?php echo $this->get_field_id( 'twitter_id' ); ?>"><?php _e( 'X.com Username', 'wp-to-twitter' ); ?> :</label>
 			<input type="text" id="<?php echo $this->get_field_id( 'twitter_id' ); ?>" name="<?php echo $this->get_field_name( 'twitter_id' ); ?>" value="<?php echo esc_attr( $instance['twitter_id'] ); ?>" class="widefat"/>
 		</p>
 

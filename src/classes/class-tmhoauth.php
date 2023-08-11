@@ -29,7 +29,7 @@ class TmhOAuth {
 	const VERSION = '0.7.5';
 
 	/**
-	 * The response from Twitter.
+	 * The response from X.com.
 	 *
 	 * @var $response
 	 */

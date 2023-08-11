@@ -19,13 +19,13 @@ Yep. That's the basic functionality. But it's not the only thing you can do:
 
 * Display your Recent Tweets: Widget for your recent Tweets. Fetch Tweets from your own or any other account.
 * Display Tweets based on a search: Display the Tweets resulting from a search and limit by Geolocation.
-* Shorten URLs in your Tweets with popular URL shorteners, or let Twitter to do it with [t.co](http://t.co). 
+* Shorten URLs in your Tweets with popular URL shorteners, or let X.com to do it with [t.co](http://t.co). 
 
 XPoster uses a customizable Tweet template for Tweets sent when updating or editing posts and pages or custom post types. You can customize your Tweet for each post, using custom template tags to generate the Tweet. 
 
 = Free Features =
 
-* Use post tags as Twitter hashtags
+* Use post tags as X.com hashtags
 * Use alternate URLs in place of post permalinks
 * Support for Google Analytics
 * Support for XMLRPC remote clients
@@ -45,7 +45,7 @@ XPoster uses a customizable Tweet template for Tweets sent when updating or edit
 * Support for Player Cards with integrated captions
 * Automatically schedule Tweets of old posts
 
-Want to stay up to date on XPoster? [Follow me on Twitter!](https://twitter.com/joedolson)
+Want to stay up to date on XPoster? [Follow me on X.com!](https://twitter.com/joedolson)
 
 = Translations =
 
@@ -62,7 +62,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 4.0.0 =
 
 * Start rebranding to XPoster.
-* Update to use Twitter API v2.
+* Update to use X.com API v2.
 * Those two things encompass a huge amount of change and ambiguity.
 
 = 3.7.0 =

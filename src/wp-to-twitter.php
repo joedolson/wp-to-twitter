@@ -164,7 +164,7 @@ function wptotwitter_activate() {
 		}
 
 		update_option( 'jd_post_excerpt', 30 );
-		// Use Google Analytics with Twitter.
+		// Use Google Analytics with X.com.
 		update_option( 'twitter-analytics-campaign', 'twitter' );
 		update_option( 'use-twitter-analytics', '0' );
 		update_option( 'jd_dynamic_analytics', '0' );
@@ -223,8 +223,8 @@ function wpt_link( $post_ID ) {
  * @param int    $id Post ID.
  * @param int    $auth Current author.
  * @param string $twit Tweet text.
- * @param string $error Error string from Twitter.
- * @param int    $http_code Http code from Tiwtter.
+ * @param string $error Error string from X.com.
+ * @param int    $http_code Http code from X.com.
  * @param string $ts Current timestamp.
  */
 function wpt_saves_error( $id, $auth, $twit, $error, $http_code, $ts ) {
@@ -295,9 +295,9 @@ function wpt_check_recent_tweet( $id, $auth ) {
 }
 
 /**
- * Performs the API post to Twitter
+ * Performs the API post to X.com
  *
- * @param string  $twit Text of Tweet to be sent to Twitter.
+ * @param string  $twit Text of Tweet to be sent to X.com.
  * @param int     $auth Author ID.
  * @param int     $id Post ID.
  * @param boolean $media Whether to upload media attached to the post specified in $id.
@@ -336,10 +336,10 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 	}
 
 	if ( ! wpt_check_oauth( $auth ) ) {
-		$error = __( 'This account is not authorized to post to Twitter.', 'wp-to-twitter' );
+		$error = __( 'This account is not authorized to post to X.com.', 'wp-to-twitter' );
 		wpt_saves_error( $id, $auth, $twit, $error, '401', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
-		wpt_mail( 'Account not authorized with Twitter', 'Post ID: ' . $id );
+		wpt_mail( 'Account not authorized with X.com', 'Post ID: ' . $id );
 
 		return false;
 	} // exit silently if not authorized.
@@ -348,14 +348,14 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 	// prevent duplicate Tweets.
 	if ( $check === $twit && '' !== $twit ) {
 		wpt_mail( 'Matched: tweet identical', "This Tweet: $twit; Check Tweet: $check; $auth, $id, $media", $id ); // DEBUG.
-		$error = __( 'This tweet is identical to another Tweet recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'Twitter requires all Tweets to be unique.', 'wp-to-twitter' );
+		$error = __( 'This tweet is identical to another Tweet recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'X.com requires all Tweets to be unique.', 'wp-to-twitter' );
 		wpt_saves_error( $id, $auth, $twit, $error, '403-1', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
 
 		return false;
 	} elseif ( '' === $twit || ! $twit ) {
 		wpt_mail( 'Tweet check: empty sentence', "$twit, $auth, $id, $media", $id ); // DEBUG.
-		$error = __( 'This tweet was blank and could not be sent to Twitter.', 'wp-to-twitter' );
+		$error = __( 'This tweet was blank and could not be sent to X.com.', 'wp-to-twitter' );
 		wpt_saves_error( $id, $auth, $twit, $error, '403-2', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
 
@@ -490,7 +490,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					update_option( 'wpt_authentication_missing', "$auth" );
 					break;
 				case 403:
-					$error = __( '403 Forbidden: The request is understood, but has been refused by Twitter.', 'wp-to-twitter' );
+					$error = __( '403 Forbidden: The request is understood, but has been refused by X.com.', 'wp-to-twitter' );
 					break;
 				case 404:
 					$error = __( '404 Not Found: The URI requested is invalid or the resource requested does not exist.', 'wp-to-twitter' );
@@ -505,23 +505,23 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					$error = __( '429 Too Many Requests: You have exceeded your rate limits.', 'wp-to-twitter' );
 					break;
 				case 500:
-					$error = __( '500 Internal Server Error: Something is broken at Twitter.', 'wp-to-twitter' );
+					$error = __( '500 Internal Server Error: Something is broken at X.com.', 'wp-to-twitter' );
 					break;
 				case 502:
-					$error = __( '502 Bad Gateway: Twitter is down or being upgraded.', 'wp-to-twitter' );
+					$error = __( '502 Bad Gateway: X.com is down or being upgraded.', 'wp-to-twitter' );
 					break;
 				case 503:
-					$error = __( '503 Service Unavailable: The Twitter servers are up, but overloaded with requests - Please try again later.', 'wp-to-twitter' );
+					$error = __( '503 Service Unavailable: The X.com servers are up, but overloaded with requests - Please try again later.', 'wp-to-twitter' );
 					break;
 				case 504:
-					$error = __( "504 Gateway Timeout: The Twitter servers are up, but the request couldn't be serviced due to some failure within our stack. Try again later.", 'wp-to-twitter' );
+					$error = __( "504 Gateway Timeout: The X.com servers are up, but the request couldn't be serviced due to some failure within our stack. Try again later.", 'wp-to-twitter' );
 					break;
 				default:
 					// Translators: http code.
-					$error = sprintf( __( '<strong>Code %s</strong>: Twitter did not return a recognized response code.', 'wp-to-twitter' ), $http_code );
+					$error = sprintf( __( '<strong>Code %s</strong>: X.com did not return a recognized response code.', 'wp-to-twitter' ), $http_code );
 					break;
 			}
-			wpt_mail( "Twitter Response: $http_code", $error, $id ); // DEBUG.
+			wpt_mail( "X.com Response: $http_code", $error, $id ); // DEBUG.
 			// only save last Tweet if successful.
 			if ( 200 === $http_code ) {
 				if ( ! $auth ) {
@@ -577,7 +577,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 
 			return $return;
 		} else {
-			wpt_set_log( 'wpt_status_message', $id, __( 'No Twitter OAuth connection found.', 'wp-to-twitter' ) );
+			wpt_set_log( 'wpt_status_message', $id, __( 'No X.com OAuth connection found.', 'wp-to-twitter' ) );
 
 			return false;
 		}
@@ -887,7 +887,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 		if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() && function_exists( 'wpt_filter_post_info' ) ) {
 			$filter = wpt_filter_post_info( $post_info );
 			if ( true === $filter ) {
-				wpt_mail( '3: Post blocked by WP Tweets Pro custom filters', 'No additional data available', $post_ID );
+				wpt_mail( '3: Post blocked by XPoster Pro custom filters', 'No additional data available', $post_ID );
 
 				return false;
 			}
@@ -927,7 +927,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 			// identify whether limited by category/taxonomy.
 			$continue = wpt_category_limit( $post_type, $post_info, $post_ID );
 			if ( false === $continue ) {
-				wpt_mail( '4b: WP Tweets Pro: Limited by term filters', 'This post was rejected by a taxonomy/term filter', $post_ID );
+				wpt_mail( '4b: XPoster Pro: Limited by term filters', 'This post was rejected by a taxonomy/term filter', $post_ID );
 				return false;
 			}
 			// create Tweet and ID whether current action is edit or new.
@@ -1280,7 +1280,7 @@ add_action( 'admin_menu', 'wpt_add_twitter_outer_box' );
  */
 function wpt_add_twitter_outer_box() {
 	wpt_check_version();
-	// add Twitter panel to post types where it's enabled.
+	// add X.com panel to post types where it's enabled.
 	$wpt_post_types = get_option( 'wpt_post_types' );
 	if ( is_array( $wpt_post_types ) ) {
 		foreach ( $wpt_post_types as $key => $value ) {
@@ -1300,7 +1300,7 @@ add_action( 'admin_menu', 'wpt_add_twitter_debug_box' );
 function wpt_add_twitter_debug_box() {
 	if ( WPT_DEBUG && current_user_can( 'manage_options' ) ) {
 		wpt_check_version();
-		// add Twitter panel to post types where it's enabled.
+		// add X.com panel to post types where it's enabled.
 		$wpt_post_types = wpt_allowed_post_types();
 		foreach ( $wpt_post_types as $type ) {
 			add_meta_box( 'wp2t-debug', 'XPoster Debugging', 'wpt_show_debug', $type, 'advanced' );
@@ -1394,7 +1394,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			?>
 			<p class='jtw'>
-				<label for="wpt_custom_tweet"><?php _e( 'Custom Twitter Post', 'wp-to-twitter' ); ?></label><br/>
+				<label for="wpt_custom_tweet"><?php _e( 'Custom Tweet', 'wp-to-twitter' ); ?></label><br/>
 				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
 				<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
 			</p>
@@ -1686,7 +1686,7 @@ function wpt_ajax_tweet() {
 
 add_action( 'admin_head', 'wpt_admin_script' );
 /**
- * Print scripts to WP Tweets PRO pages.
+ * Print scripts to XPoster Pro pages.
  */
 function wpt_admin_script() {
 	global $current_screen;
@@ -2042,7 +2042,7 @@ function wpt_twit_xmlrpc( $id ) {
 
 add_action( 'admin_notices', 'wpt_debugging_enabled', 10 );
 /**
- * Show notice is Twitter debugging is enabled.
+ * Show notice if X.com debugging is enabled.
  */
 function wpt_debugging_enabled() {
 	if ( current_user_can( 'manage_options' ) && WPT_DEBUG ) {
@@ -2052,11 +2052,11 @@ function wpt_debugging_enabled() {
 
 add_action( 'wp_enqueue_scripts', 'wpt_stylesheet' );
 /**
- * Enqueue front-end styles for Twitter Feed widget if enabled.
+ * Enqueue front-end styles for X.com Feed widget if enabled.
  */
 function wpt_stylesheet() {
 	/**
-	 * Disable XPoster feeds stylesheet. Styles the Twitter Feed widgets.
+	 * Disable XPoster feeds stylesheet. Styles the X.com Feed widgets.
 	 *
 	 * @hook wpt_enqueue_feed_styles
 	 * @param {bool} $apply False to disable.
@@ -2081,7 +2081,7 @@ function wpt_stylesheet() {
 
 add_filter( 'wpt_enqueue_feed_styles', 'wpt_permit_feed_styles' );
 /**
- * Check whether Twitter Feed styles are enabled.
+ * Check whether X.com Feed styles are enabled.
  *
  * @param boolean $value true if permitted.
  *

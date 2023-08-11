@@ -1,6 +1,6 @@
 <?php
 /**
- * XPoster Twitter Feed Class
+ * XPoster Feed Class
  *
  * @category Widgets
  * @package  XPoster
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once( 'class-wpt-twitteroauth.php' );
 
 /**
- * Based on Version 2.0.3, Twitter Feed for Developers by Storm Consultancy (Liam Gladdy)
+ * Based on Version 2.0.3, X.com Feed for Developers by Storm Consultancy (Liam Gladdy)
  * The base class for the storm twitter feed for developers.
  */
 class WPT_TwitterFeed {
@@ -65,7 +65,7 @@ class WPT_TwitterFeed {
 	 * Get Tweets for a given screen name.
 	 *
 	 * @param int    $count Number of Tweets to fetch.
-	 * @param string $screenname Twitter account feed to fetch.
+	 * @param string $screenname X.com account feed to fetch.
 	 * @param array  $options Options to apply for display of feed.
 	 *
 	 * @return Tweets or error message.
@@ -112,7 +112,7 @@ class WPT_TwitterFeed {
 		if ( is_object( $result ) && isset( $result->error ) ) {
 			$last_error = $result->error;
 
-			return array( 'error' => 'Twitter said: ' . $last_error );
+			return array( 'error' => 'X.com said: ' . $last_error );
 		} else {
 			return $this->crop_tweets( $result, $count );
 		}
@@ -241,7 +241,7 @@ class WPT_TwitterFeed {
 	}
 
 	/**
-	 * Fetch Tweets from Twitter.
+	 * Fetch Tweets from X.com.
 	 *
 	 * @param string $screenname Username.
 	 * @param array  $options Array of display options.
@@ -275,7 +275,7 @@ class WPT_TwitterFeed {
 			return array( 'error' => __( 'Missing Access Token Secret - Check settings', 'wp-to-twitter' ) );
 		}
 		if ( empty( $screenname ) ) {
-			return array( 'error' => __( 'Missing Twitter Feed Screen Name - Check settings', 'wp-to-twitter' ) );
+			return array( 'error' => __( 'Missing X.com Feed Screen Name - Check settings', 'wp-to-twitter' ) );
 		}
 
 		$connection = new wpt_TwitterOAuth( $key, $secret, $token, $token_secret );
@@ -319,20 +319,20 @@ class WPT_TwitterFeed {
 		} else {
 			if ( is_array( $result ) && isset( $result['errors'][0] ) && isset( $result['errors'][0]['message'] ) ) {
 				// Translators: Error message.
-				$last_error          = '[' . gmdate( 'r' ) . '] ' . sprintf( __( 'Twitter error: %s', 'wp-to-twitter' ), $result['errors'][0]['message'] );
+				$last_error          = '[' . gmdate( 'r' ) . '] ' . sprintf( __( 'X.com error: %s', 'wp-to-twitter' ), $result['errors'][0]['message'] );
 				$this->st_last_error = $last_error;
 			} else {
-				$last_error          = '[' . gmdate( 'r' ) . ']' . __( 'Twitter returned an invalid response. It is probably down.', 'wp-to-twitter' );
+				$last_error          = '[' . gmdate( 'r' ) . ']' . __( 'X.com returned an invalid response. It is probably down.', 'wp-to-twitter' );
 				$this->st_last_error = $last_error;
 			}
 		}
 		/**
-		 * Run an action on the results output from the Twitter widget query.
+		 * Run an action on the results output from the X.com widget query.
 		 *
 		 * @hook wpt_process_tweets
 		 *
-		 * @param {array}  $result Array of data received from Twitter's API.
-		 * @param {string} $screenname Twitter user's screen name.
+		 * @param {array}  $result Array of data received from X.com's API.
+		 * @param {string} $screenname X.com user's screen name.
 		 * @param {array}  $options Array of options passed to this widget.
 		 */
 		do_action( 'wpt_process_tweets', $result, $screenname, $options );
