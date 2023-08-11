@@ -358,7 +358,7 @@ function wpt_update_settings() {
 							}
 						}
 						if ( '1' === get_option( 'link_manager_enabled' ) || true === apply_filters( 'pre_option_link_manager_enabled', false ) ) {
-						?>
+							?>
 						<div class='wptab wpt_types wpt_links' id="wpt_links">
 							<fieldset>
 								<legend><span><?php _e( 'Links', 'wp-to-twitter' ); ?></span></legend>
@@ -370,7 +370,7 @@ function wpt_update_settings() {
 								</p>
 							</fieldset>
 						</div>
-						<?php
+							<?php
 						}
 						?>
 						<div>
