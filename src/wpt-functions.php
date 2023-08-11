@@ -213,7 +213,7 @@ function wpt_handle_errors() {
 					' . $nonce . '
 				</div>
 				<p>
-					<input type="submit" name="submit" value="' . __( "Clear Error Messages", 'wp-to-twitter' ) . '" class="button-primary" />
+					<input type="submit" name="submit" value="' . __( 'Clear Error Messages', 'wp-to-twitter' ) . '" class="button-primary" />
 				</p>
 			</form>
 		</div>';
@@ -762,7 +762,7 @@ function wpt_faq() {
 		array(
 			'question' => __( 'Error code 453: You currently have access to Twitter API v2 endpoints and limited v1.1 endpoints only.', 'wp-to-twitter' ),
 			'answer'   => __( 'This is most likely caused by use of an API endpoint that is not included in the new free API tier. According to Twitter documentation, the Twitter Feed is not an allowed endpoint, although I have not personally had any problems with it yet. Enforcement of API rules appears to be inconsistent, so this is only a guess. You can try removing the Twitter Feed widget from your site.', 'wp-to-twitter' ),
-		)
+		),
 	);
 
 	echo '<h2>' . __( 'Frequently Asked Questions', 'wp-to-twitter' ) . '</h2>';
