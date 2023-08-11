@@ -8,11 +8,9 @@
 }
 
 #wp-to-twitter legend, #wpt_settings_page legend {
-	padding: 6px 1%;
-	background: #f3f4f5;
-	width: 98%;
-	color: #000;
+	font-weight: 700;
 	margin-top: 4px;
+	margin-bottom: .5rem;
 }
 
 #wp-to-twitter .resources {

@@ -315,7 +315,7 @@ function wpt_update_settings() {
 								?>
 								<div class='wptab wpt_types wpt_<?php echo esc_attr( $slug ); ?>' aria-labelledby='tab_wpt_<?php echo esc_attr( $slug ); ?>' role="tabpanel" id='wpt_<?php echo esc_attr( $slug ); ?>'>
 								<fieldset>
-									<legend><?php _e( 'Tweet Templates', 'wp-to-twitter' ); ?></legend>
+									<legend class="screen-reader-text"><?php _e( 'Tweet Templates', 'wp-to-twitter' ); ?></legend>
 									<p>
 										<input type="checkbox" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-published-update]" id="<?php echo esc_attr( $slug ); ?>-post-published-update" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'post-published-update' ); ?> />
 										<label for="<?php echo esc_attr( $slug ); ?>-post-published-update"><strong>
@@ -361,7 +361,7 @@ function wpt_update_settings() {
 							?>
 						<div class='wptab wpt_types wpt_links' id="wpt_links">
 							<fieldset>
-								<legend><span><?php _e( 'Links', 'wp-to-twitter' ); ?></span></legend>
+								<legend class="screen-reader-text"><span><?php _e( 'Links', 'wp-to-twitter' ); ?></span></legend>
 								<p>
 									<input type="checkbox" name="jd_twit_blogroll" id="jd_twit_blogroll" value="1" <?php echo wpt_checkbox( 'jd_twit_blogroll' ); ?> />
 									<label for="jd_twit_blogroll"><strong><?php _e( 'Update X.com when you post a Blogroll link', 'wp-to-twitter' ); ?></strong></label><br/>
