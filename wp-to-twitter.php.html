@@ -413,16 +413,18 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 						'text'  => $twit,
 						'media' => array(
 							'media_ids' => array(
-								$media_info['media_id'],
+								$media_info['media_id_string'],
 							),
 						),
 					);
 					// noweh/twitter-api-v2-php doesn't currently support metadata.
-					$media_id = $connection->media(
+					$ct       = wpt_oauth_connection( $auth, '1.1' );
+					$media_id = $ct->media(
 						'https://upload.twitter.com/1.1/media/metadata/create.json',
 						array(
-							'auth'  => $auth,
-							'media' => $media_info['media_id'],
+							'auth'       => $auth,
+							'media'      => $media_info['media_id_string'],
+							'attachment' => $attachment,
 						)
 					);
 					wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment", $id );
@@ -462,9 +464,25 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				 * @return {bool}
 				 */
 				$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id, $twit );
+				$tweet_id = false;
 				if ( $do_tweet ) {
-					$return    = $connection->tweet()->create()->performRequest( $status );
-					$http_code = ( $connection ) ? (int) $connection->http_code : 'failed';
+					try {
+						$return    = $connection->tweet()->create()->performRequest( $status );
+						$http_code = 200;
+						$tweet_id  = $return->data->id;
+					} catch ( Exception $e ) {
+						// Get Guzzle exception response.
+						$response      = $e->getResponse();
+						$headers       = $response->getHeaders();
+						$rate_limit    = array(
+							'rate-limit'    => $headers['x-rate-limit-remaining'],
+							'rate-reset'    => $headers['x-rate-limit-reset'],
+							'rate-24'       => $headers['x-app-limit-24hour-limit'],
+							'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
+						);
+						update_option( 'wpt_app_limit', $rate_limit );
+						$http_code = $response->getStatusCode();
+					}
 					$notice    = '';
 				} else {
 					$http_code = '000';
@@ -472,14 +490,8 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				}
 			}
 		}
-		wpt_mail( 'Twitter Connection', print_r( $connection, 1 ) . " - $twit, $auth, $id, $media", $id );
+		wpt_mail( 'Twitter Connection', "$twit, $auth, $id, $media", $id );
 		if ( $connection ) {
-			if ( isset( $connection->http_header['x-access-level'] ) &amp;&amp; 'read' === $connection->http_header['x-access-level'] ) {
-				// Translators: Twitter App editing URL.
-				$supplement = sprintf( __( 'Your Twitter application does not have read and write permissions. Go to &lt;a href="%s">your Twitter apps&lt;/a> to modify these settings.', 'wp-to-twitter' ), 'https://developer.twitter.com/en/portal/projects-and-apps' );
-			} else {
-				$supplement = '';
-			}
 			$return = false;
 			switch ( $http_code ) {
 				case '000':
@@ -535,13 +547,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					$error = sprintf( __( '&lt;strong>Code %s&lt;/strong>: Twitter did not return a recognized response code.', 'wp-to-twitter' ), $http_code );
 					break;
 			}
-			$body             = $connection->body;
-			$error_code       = ( 200 !== $http_code ) ? $body->errors[0]->code : '';
-			$error_message    = ( 200 !== $http_code ) ? $body->errors[0]->message : '';
-			$error_supplement = ( '' !== (string) $error_code ) ? ' (Error Code: ' . $error_code . ': ' . $error_message . ')' : '';
-			$error           .= ( '' !== $supplement ) ? " $supplement" : '';
-			$error           .= $error_supplement;
-			wpt_mail( "Twitter Response: $http_code", "$error", $id ); // DEBUG.
+			wpt_mail( "Twitter Response: $http_code", $error, $id ); // DEBUG.
 			// only save last Tweet if successful.
 			if ( 200 === $http_code ) {
 				if ( ! $auth ) {
@@ -589,8 +595,8 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				do_action( 'wpt_tweet_posted', $connection, $id );
 				// Log the Tweet ID of the first Tweet for this post.
 				$has_tweet_id = get_post_meta( $id, '_wpt_tweet_id', true );
-				if ( ! $has_tweet_id ) {
-					update_post_meta( $id, '_wpt_tweet_id', $connection->body->id );
+				if ( ! $has_tweet_id &amp;&amp; $tweet_id ) {
+					update_post_meta( $id, '_wpt_tweet_id', $tweet_id );
 				}
 				wpt_set_log( 'wpt_status_message', $id, $notice . __( 'Tweet sent successfully.', 'wp-to-twitter' ) );
 			}
