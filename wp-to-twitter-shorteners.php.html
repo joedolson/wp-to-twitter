@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: wp-to-twitter-shorteners.php - WP to Twitter Hook Doumentation</title>
+    <title>Source: wp-to-twitter-shorteners.php - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -26,10 +26,10 @@
         <article>
             <pre class="prettyprint source linenums"><code>&lt;?php
 /**
- * URL Shorteners WP to Twitter
+ * URL Shorteners XPoster
  *
  * @category Core
- * @package  WP to Twitter
+ * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/
@@ -131,7 +131,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		 * @param {string} $url Full permalink URL to post.
 		 * @param {string} $post_title Title of source post.
 		 * @param {int}    $post_ID Post ID.
-		 * @param {bool}   $testmode True if running a test of WP to twitter.
+		 * @param {bool}   $testmode True if running a test of XPoster.
 		 *
 		 * @return {string}
 		 */
@@ -428,9 +428,9 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						echo '&lt;p>' . esc_html__( 'The Su.pr URL shortener was shut down when Stumbleupon closed doors in June 2018.', 'wp-to-twitter' ) . '&lt;/p>';
 					} elseif ( 2 === (int) $shortener ) {
 						if ( function_exists( 'wbitly_shorten_url' ) ) {
-							echo '&lt;p>' . __( 'WP to Twitter supports Bit.ly shortened links via &lt;a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener&lt;/a>. If you are having issues with Bit.ly URLs, please request support from &lt;a href="https://wordpress.org/support/plugin/codehaveli-bitly-url-shortener/">the plugin support forums&lt;/a>.', 'wp-to-twitter' ) . '&lt;/p>';
+							echo '&lt;p>' . __( 'XPoster supports Bit.ly shortened links via &lt;a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener&lt;/a>. If you are having issues with Bit.ly URLs, please request support from &lt;a href="https://wordpress.org/support/plugin/codehaveli-bitly-url-shortener/">the plugin support forums&lt;/a>.', 'wp-to-twitter' ) . '&lt;/p>';
 						} else {
-							echo '&lt;p>' . __( 'WP to Twitter supports Bit.ly shortened links via &lt;a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener&lt;/a>. Install that plug-in to use Bit.ly', 'wp-to-twitter' ) . '&lt;/p>';
+							echo '&lt;p>' . __( 'XPoster supports Bit.ly shortened links via &lt;a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener&lt;/a>. Install that plug-in to use Bit.ly', 'wp-to-twitter' ) . '&lt;/p>';
 						}
 					} elseif ( 5 === (int) $shortener || 6 === (int) $shortener ) {
 						echo $form_start;
@@ -719,9 +719,9 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 
 	</main>
     <footer>
-		<a href="https://docs.joedolson.com/">WP to Twitter User Documentation</a> &bull;
-		<a href="https://github.com/joedolson/wp-to-twiter/">WP to Twitter on GitHub</a> &bull;
-		<a href="https://www.joedolson.com/wp-tweets-pro/">Buy WP Tweets Pro</a>
+		<a href="https://docs.joedolson.com/">XPoster User Documentation</a> &bull;
+		<a href="https://github.com/joedolson/wp-to-twiter/">XPoster on GitHub</a> &bull;
+		<a href="https://www.xposterpro.com/">Buy XPoster Pro</a>
 	</footer>
 
 	

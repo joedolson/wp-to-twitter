@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: wpt-truncate.php - WP to Twitter Hook Doumentation</title>
+    <title>Source: wpt-truncate.php - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -26,10 +26,10 @@
         <article>
             <pre class="prettyprint source linenums"><code>&lt;?php
 /**
- * Construct and check lengths of Tweets - WP to Twitter
+ * Construct and check lengths of Tweets - XPoster
  *
  * @category Core
- * @package  WP to Twitter
+ * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/
@@ -126,7 +126,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 	if ( ! wpt_has_tags( $tweet ) ) {
 		$post_tweet = mb_substr( $tweet, 0, $length, $encoding );
 		/**
-		 * Filter a Tweet template that does not contain any WP to Twitter template tags.
+		 * Filter a Tweet template that does not contain any XPoster template tags.
 		 *
 		 * @hook wpt_custom_truncate
 		 * @param {string} $post_tweet Text to Tweet truncated to maximum allowed length.
@@ -551,9 +551,9 @@ function wpt_user_meta_shortcodes( $sentence, $auth_id ) {
 
 	</main>
     <footer>
-		<a href="https://docs.joedolson.com/">WP to Twitter User Documentation</a> &bull;
-		<a href="https://github.com/joedolson/wp-to-twiter/">WP to Twitter on GitHub</a> &bull;
-		<a href="https://www.joedolson.com/wp-tweets-pro/">Buy WP Tweets Pro</a>
+		<a href="https://docs.joedolson.com/">XPoster User Documentation</a> &bull;
+		<a href="https://github.com/joedolson/wp-to-twiter/">XPoster on GitHub</a> &bull;
+		<a href="https://www.xposterpro.com/">Buy XPoster Pro</a>
 	</footer>
 
 	
