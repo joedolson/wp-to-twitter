@@ -1696,6 +1696,8 @@ function wpt_admin_script() {
 	if ( 'post' === $current_screen->base || 'wp-tweets-pro_page_wp-to-twitter-schedule' === $current_screen->id ) {
 		wp_register_style( 'wpt-post-styles', plugins_url( 'css/post-styles.css', __FILE__ ) );
 		wp_enqueue_style( 'wpt-post-styles' );
+		$css = '#wp2t h3, #wp2t h2 { background: url("' . plugins_url( 'wp-to-twitter/images/logo-black.png' ) . '") 4px 50% no-repeat; }';
+		wp_add_inline_style( 'wpt-post-styles', $css );
 		$config = wpt_max_length();
 		// add one; character count starts from 1.
 		if ( 'post' === $current_screen->base ) {
@@ -1720,10 +1722,6 @@ function wpt_admin_script() {
 				'text'    => __( 'Characters left: ', 'wp-to-twitter' ),
 			)
 		);
-		echo "
-<style type='text/css'>
-#wp2t h3 span, #wp2t h2 span { padding-left: 30px; background: url(" . plugins_url( 'wp-to-twitter/images/twitter-bird-light-bgs.png' ) . ') left 50% no-repeat; }
-</style>';
 	}
 }
 
@@ -1804,7 +1802,8 @@ add_action( 'admin_menu', 'wpt_admin_page' );
  */
 function wpt_admin_page() {
 	if ( function_exists( 'add_menu_page' ) && ! function_exists( 'wpt_pro_functions' ) ) {
-		add_menu_page( 'XPoster', 'XPoster', 'manage_options', 'wp-tweets-pro', 'wpt_update_settings', 'dashicons-twitter' );
+		$icon_path = plugins_url( 'images/logo-white.png', __FILE__ );
+		add_menu_page( 'XPoster', 'XPoster', 'manage_options', 'wp-tweets-pro', 'wpt_update_settings', $icon_path );
 	}
 }
 
