@@ -918,8 +918,9 @@ function wpt_tweet_length() {
 	$tweet_length = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : $default );
 	$control      = "<p class='tweet_length_control'>
 					<label for='wpt_tweet_length'>" . __( 'Maximum Tweet Length', 'wp-to-twitter' ) . "</label>
-					<input type='number' min='0' max='280' step='1' value='$tweet_length' id='wpt_tweet_length' name='wpt_tweet_length' />
-				</p>";
+					<input type='number' min='0' max='25000' step='1' value='$tweet_length' id='wpt_tweet_length' aria-describedby='maxlengthwarning' name='wpt_tweet_length' />
+					<span id='maxlengthwarning'>" . __( 'Tweets longer than 280 characters require an <a href="https://help.twitter.com/en/using-twitter/twitter-blue">X Premium</a> subscription.', 'wp-to-twitter' ) . '</span>
+				</p>';
 
 	return $control;
 }

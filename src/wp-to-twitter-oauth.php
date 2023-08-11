@@ -306,7 +306,6 @@ function wtt_connect_oauth( $auth = false ) {
 	</p>';
 
 	if ( ! wtt_oauth_test( $auth, 'verify' ) ) {
-
 		// show notification to authenticate with OAuth. No longer global; settings only.
 		if ( ! wpt_check_oauth() && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );

@@ -1578,6 +1578,9 @@ add_action( 'admin_enqueue_scripts', 'wpt_admin_scripts', 10, 1 );
  */
 function wpt_admin_scripts() {
 	global $current_screen, $wpt_version;
+	if ( SCRIPT_DEBUG ) {
+		$wpt_version .= '-' . rand( 10000, 99999 );
+	}
 	if ( 'post' === $current_screen->base || 'wp-tweets-pro_page_wp-to-twitter-schedule' === $current_screen->id ) {
 		wp_enqueue_script( 'charCount', plugins_url( 'wp-to-twitter/js/jquery.charcount.js' ), array( 'jquery' ), $wpt_version );
 	}
@@ -1801,7 +1804,7 @@ add_action( 'admin_menu', 'wpt_admin_page' );
  */
 function wpt_admin_page() {
 	if ( function_exists( 'add_menu_page' ) && ! function_exists( 'wpt_pro_functions' ) ) {
-		add_menu_page( __( 'XPoster', 'wp-to-twitter' ), __( 'XPoster', 'wp-to-twitter' ), 'manage_options', 'wp-tweets-pro', 'wpt_update_settings', 'dashicons-twitter' );
+		add_menu_page( 'XPoster', 'XPoster', 'manage_options', 'wp-tweets-pro', 'wpt_update_settings', 'dashicons-twitter' );
 	}
 }
 
@@ -1811,6 +1814,9 @@ add_action( 'admin_head', 'wpt_admin_style' );
  */
 function wpt_admin_style() {
 	global $wpt_version;
+	if ( SCRIPT_DEBUG ) {
+		$wpt_version .= '-' . rand( 10000, 99999 );
+	}
 	if ( isset( $_GET['page'] ) && ( 'wp-to-twitter' === $_GET['page'] || 'wp-tweets-pro' === $_GET['page'] || 'wp-to-twitter-schedule' === $_GET['page'] || 'wp-to-twitter-tweets' === $_GET['page'] || 'wp-to-twitter-errors' === $_GET['page'] ) ) {
 		wp_enqueue_style( 'wpt-styles', plugins_url( 'css/styles.css', __FILE__ ), array(), $wpt_version );
 	}

@@ -195,6 +195,24 @@ label[for="wpt_license_key"] {
 	padding: 0;
 }
 
+#wtt_authentication_display .auth_label {
+	display: block;
+}
+
+.tweet_length_control {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 5px;
+}
+
+#maxlengthwarning {
+	background: #f5e6ab;
+	padding: 5px;
+	color: #000;
+	border-radius: 5px;
+}
+
 .inside.purchase {
 	max-width: 45em;
 	font-size: 1.1em;
