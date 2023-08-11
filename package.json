@@ -2,14 +2,14 @@
   "name": "wp-to-twitter",
   "version": "3.3.0",
   "private": true,
-  "description": "WP to Twitter WordPress plug-in.",
+  "description": "X.com WordPress plug-in.",
   "author": "Joe Dolson",
   "license": "GPL-2.0-or-later",
   "keywords": [
     "twitter",
     "wordpress"
   ],
-  "homepage": "https://www.joedolson.com/wp-to-twitter/",
+  "homepage": "https://www.xposterpro.com/",
   "repository": "git+https://github.com/joedolson/wp-to-twitter.git",
   "bugs": {
     "url": "https://github.com/joedolson/wp-to-twitter/issues"

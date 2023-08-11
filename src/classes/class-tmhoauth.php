@@ -3,7 +3,7 @@
  * TmhOAuth
  *
  * @category OAuth
- * @package  WP to Twitter
+ * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/

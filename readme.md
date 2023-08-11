@@ -1,20 +1,20 @@
-# WP to Twitter
+# XPoster
 
 Automatically send your posts as Tweets.
 
 ![Code Linting](https://github.com/joedolson/wp-to-twitter/actions/workflows/main.yml/badge.svg) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)](https://www.gnu.org/license/gpl-2.0.html)
 
-## WP to Twitter Build Environment
+## XPoster Build Environment
 
 * Donate link: https://www.joedolson.com/donate/
 * Tags: accessibility, WordPress
-* Requires at least: 4.4
+* Requires at least: 6.0
 * Tested up to: 6.2
-* Stable tag: `3.7.0`
+* Stable tag: `4.0.0`
 * License: GPLv2 or later  
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
-This is the development environment for WP to Twitter.
+This is the development environment for XPoster (formerly WP to Twitter).
 
 ## Contact
 

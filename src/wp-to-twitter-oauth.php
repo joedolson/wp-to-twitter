@@ -1,9 +1,9 @@
 <?php
 /**
- * Connect OAuth for WP to Twitter
+ * Connect OAuth for XPoster
  *
  * @category OAuth
- * @package  WP to Twitter
+ * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/
@@ -219,7 +219,7 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 							$message = 'success';
 							delete_option( 'wpt_curl_error' );
 						} elseif ( '0' === (string) $connection->http_code ) {
-							$error_information = __( 'WP to Twitter was unable to establish a connection to Twitter.', 'wp-to-twitter' );
+							$error_information = __( 'XPoster was unable to establish a connection to X.com.', 'wp-to-twitter' );
 							update_option( 'wpt_curl_error', "$error_information" );
 						} else {
 							$status            = ( isset( $connection->http_header['status'] ) ) ? $connection->http_header['status'] : '404';
@@ -311,7 +311,7 @@ function wtt_connect_oauth( $auth = false ) {
 		if ( ! wpt_check_oauth() && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 			// Translators: Settings page to authenticate via OAuth.
-			$message = sprintf( __( "Twitter requires authentication by OAuth. You will need to <a href='%s'>update your settings</a> to complete installation of WP to Twitter.", 'wp-to-twitter' ), $admin_url );
+			$message = sprintf( __( "X.com requires authentication by OAuth. You will need to <a href='%s'>update your settings</a> to complete installation of XPoster.", 'wp-to-twitter' ), $admin_url );
 			echo "<div class='error'><p>$message</p></div>";
 		}
 

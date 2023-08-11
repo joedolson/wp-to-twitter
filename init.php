@@ -1,15 +1,15 @@
 <?php
 /**
- * WP to Twitter
+ * XPoster
  *
- * @package     WP to Twitter
+ * @package     XPoster
  * @author      Joe Dolson
  * @copyright   2008-2023 Joe Dolson
  * @license     GPL-2.0+
  *
  * @wordpress-plugin
- * Plugin Name: WP to Twitter
- * Plugin URI:  http://www.joedolson.com/wp-to-twitter/
+ * Plugin Name: XPoster
+ * Plugin URI:  http://www.xposterpro.com
  * Description: Posts a Tweet when you update your WordPress blog or post a link, using your URL shortener. Many options to customize and promote your Tweets.
  * Author:      Joseph C Dolson
  * Author URI:  http://www.joedolson.com
@@ -17,7 +17,7 @@
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
  * Domain Path: lang
- * Version:     3.7.0
+ * Version:     4.0.0
  */
 
 /*

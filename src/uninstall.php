@@ -1,12 +1,12 @@
 <?php
 /**
- * Uninstall WP to Twitter
+ * Uninstall XPoster
  *
  * @category Core
- * @package  WP to Twitter
+ * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
- * @link     https://www.joedolson.com/wp-to-twitter/
+ * @link     https://xposterpro.com
  */
 
 if ( ! defined( 'ABSPATH' ) && ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {

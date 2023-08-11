@@ -1,9 +1,9 @@
 <?php
 /**
- * Construct and check lengths of Tweets - WP to Twitter
+ * Construct and check lengths of Tweets - XPoster
  *
  * @category Core
- * @package  WP to Twitter
+ * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/
@@ -100,7 +100,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 	if ( ! wpt_has_tags( $tweet ) ) {
 		$post_tweet = mb_substr( $tweet, 0, $length, $encoding );
 		/**
-		 * Filter a Tweet template that does not contain any WP to Twitter template tags.
+		 * Filter a Tweet template that does not contain any XPoster template tags.
 		 *
 		 * @hook wpt_custom_truncate
 		 * @param {string} $post_tweet Text to Tweet truncated to maximum allowed length.

@@ -1,9 +1,9 @@
 <?php
 /**
- * WP to Twitter Settings page
+ * XPoster Settings page
  *
  * @category Settings
- * @package  WP to Twitter
+ * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Update WP to Twitter settings.
+ * Update XPoster settings.
  */
 function wpt_updated_settings() {
 	wpt_check_version();
@@ -25,7 +25,7 @@ function wpt_updated_settings() {
 
 	$nonce = $_REQUEST['_wpnonce'];
 	if ( ! wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) {
-		wp_die( 'WP to Twitter: Security check failed' );
+		wp_die( 'XPoster: Security check failed' );
 	}
 	if ( isset( $_POST['oauth_settings'] ) ) {
 		$post          = map_deep( $_POST, 'sanitize_text_field' );
@@ -43,13 +43,13 @@ function wpt_updated_settings() {
 
 			print( '
 				<div id="message" class="updated fade">
-					<p>' . __( 'WP to Twitter is now connected with Twitter.', 'wp-to-twitter' ) . " <a href='$admin_url'>" . __( 'Configure your Tweet templates', 'wp-to-twitter' ) . '</a></p>
+					<p>' . __( 'XPoster is now connected with X.com.', 'wp-to-twitter' ) . " <a href='$admin_url'>" . __( 'Configure your Tweet templates', 'wp-to-twitter' ) . '</a></p>
 				</div>
 			' );
 		} elseif ( 'failed' === $oauth_message ) {
 			print( '
 				<div id="message" class="error fade">
-					<p>' . __( 'WP to Twitter failed to connect with Twitter.', 'wp-to-twitter' ) . ' <strong>' . __( 'Error:', 'wp-to-twitter' ) . '</strong> ' . get_option( 'wpt_error' ) . '</p>
+					<p>' . __( 'XPoster failed to connect with X.com.', 'wp-to-twitter' ) . ' <strong>' . __( 'Error:', 'wp-to-twitter' ) . '</strong> ' . get_option( 'wpt_error' ) . '</p>
 				</div>
 			' );
 		} elseif ( 'cleared' === $oauth_message ) {
@@ -67,7 +67,7 @@ function wpt_updated_settings() {
 		} elseif ( 'noconnection' === $oauth_message ) {
 			print( '
 				<div id="message" class="error fade">
-					<p>' . __( 'OAuth Authentication Failed. WP to Twitter was unable to complete a connection with those credentials.', 'wp-to-twitter' ) . '</p>
+					<p>' . __( 'OAuth Authentication Failed. XPoster was unable to complete a connection with those credentials.', 'wp-to-twitter' ) . '</p>
 				</div>
 			' );
 		} else {
@@ -150,7 +150,7 @@ function wpt_updated_settings() {
 		update_option( 'wpt_debug_tweets', ( isset( $_POST['wpt_debug_tweets'] ) ) ? 1 : 0 );
 		$wpt_truncation_order = map_deep( $_POST['wpt_truncation_order'], 'sanitize_text_field' );
 		update_option( 'wpt_truncation_order', $wpt_truncation_order );
-		$message .= __( 'WP to Twitter Advanced Options Updated', 'wp-to-twitter' ) . '. ' . $extend;
+		$message .= __( 'XPoster Advanced Options Updated', 'wp-to-twitter' ) . '. ' . $extend;
 	}
 
 	if ( isset( $_POST['submit-type'] ) && 'options' === $_POST['submit-type'] ) {
@@ -182,7 +182,7 @@ function wpt_updated_settings() {
 		update_option( 'newlink-published-text', sanitize_text_field( $_POST['newlink-published-text'] ) );
 		update_option( 'jd_twit_blogroll', ( isset( $_POST['jd_twit_blogroll'] ) ) ? 1 : '' );
 		$message  = wpt_select_shortener( map_deep( $_POST, 'sanitize_text_field' ) );
-		$message .= __( 'WP to Twitter Options Updated', 'wp-to-twitter' );
+		$message .= __( 'XPoster Options Updated', 'wp-to-twitter' );
 		$message  = apply_filters( 'wpt_settings', $message, $_POST );
 	}
 
@@ -201,20 +201,20 @@ function wpt_updated_settings() {
 }
 
 /**
- * Show WP to Twitter settings form.
+ * Show XPoster settings form.
  */
 function wpt_update_settings() {
 	?>
 	<div class="wrap" id="wp-to-twitter">
 	<?php
 	if ( defined( 'WPT_STAGING_MODE' ) && true === WPT_STAGING_MODE ) {
-		echo "<div class='updated notice'><p>" . __( 'WP to Twitter is in staging mode. Tweets will be reported as if successfully sent to Twitter but will not be sent.', 'wp-to-twitter' ) . '</p></div>';
+		echo "<div class='updated notice'><p>" . __( 'XPoster is in staging mode. Tweets will be reported as if successfully sent to Twitter but will not be sent.', 'wp-to-twitter' ) . '</p></div>';
 	}
 	wpt_updated_settings();
 	wpt_show_last_tweet();
 	wpt_handle_errors();
 	?>
-	<h1><?php _e( 'WP to Twitter Options', 'wp-to-twitter' ); ?></h1>
+	<h1><?php _e( 'XPoster Options', 'wp-to-twitter' ); ?></h1>
 
 	<?php wpt_max_length(); ?>
 
@@ -358,7 +358,7 @@ function wpt_update_settings() {
 						<div>
 							<input type="hidden" name="submit-type" value="options" />
 						</div>
-						<input type="submit" name="submit" value="<?php esc_attr_e( 'Save WP to Twitter Options', 'wp-to-twitter' ); ?>" class="button-primary" />
+						<input type="submit" name="submit" value="<?php esc_attr_e( 'Save XPoster Options', 'wp-to-twitter' ); ?>" class="button-primary" />
 					</div>
 				</form>
 			</div>
@@ -689,14 +689,14 @@ function wpt_update_settings() {
 									<input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" <?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> <label for="wp_debug_oauth"><?php _e( 'Get Debugging Data for OAuth Connection', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
-									<input type="checkbox" name="wpt_debug_tweets" id="wpt_debug_tweets" value="1" <?php echo wpt_checkbox( 'wpt_debug_tweets' ); ?> /> <label for="wpt_debug_tweets"><?php _e( 'Enable WP to Twitter Debugging', 'wp-to-twitter' ); ?></label>
+									<input type="checkbox" name="wpt_debug_tweets" id="wpt_debug_tweets" value="1" <?php echo wpt_checkbox( 'wpt_debug_tweets' ); ?> /> <label for="wpt_debug_tweets"><?php _e( 'Enable XPoster Debugging', 'wp-to-twitter' ); ?></label>
 								</li>
 							</ul>
 						</fieldset>
 						<div>
 							<input type="hidden" name="submit-type" value="advanced"/>
 						</div>
-						<input type="submit" name="submit" value="<?php _e( 'Save Advanced WP to Twitter Options', 'wp-to-twitter' ); ?>" class="button-primary"/>
+						<input type="submit" name="submit" value="<?php _e( 'Save Advanced XPoster Options', 'wp-to-twitter' ); ?>" class="button-primary"/>
 					</div>
 				</form>
 			</div>
@@ -725,7 +725,7 @@ function wpt_update_settings() {
 }
 
 /**
- * Show WP to Twitter sidebar content.
+ * Show XPoster sidebar content.
  */
 function wpt_sidebar() {
 	$context = ( ! function_exists( 'wpt_pro_exists' ) ) ? 'free' : 'premium';
@@ -737,11 +737,11 @@ function wpt_sidebar() {
 				<?php
 				if ( 'free' === $context ) {
 					?>
-					<h3><span><strong><?php _e( 'Support WP to Twitter', 'wp-to-twitter' ); ?></strong></span></h3>
+					<h3><span><strong><?php _e( 'Buy XPosterPro', 'wp-to-twitter' ); ?></strong></span></h3>
 					<?php
 				} else {
 					?>
-					<h3><span><strong><?php _e( 'WP to Twitter Support', 'wp-to-twitter' ); ?></strong></span></h3>
+					<h3><span><strong><?php _e( 'XPoster Support', 'wp-to-twitter' ); ?></strong></span></h3>
 					<?php
 				}
 				?>
@@ -779,7 +779,7 @@ function wpt_sidebar() {
 				$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&amp;refresh_wpt_server_string=true' );
 				$link      = "<a href='" . $admin_url . "'>" . __( 'Test again', 'wp-to-twitter' ) . '</a>';
 				?>
-				<h3><?php _e( 'Twitter Time Check', 'wp-to-twitter' ); ?> &bull; <?php echo $link; ?></h3>
+				<h3><?php _e( 'X.com Time Check', 'wp-to-twitter' ); ?> &bull; <?php echo $link; ?></h3>
 
 				<div class="inside server">
 				<?php wpt_do_server_check(); ?>
@@ -789,11 +789,11 @@ function wpt_sidebar() {
 
 		<div class="ui-sortable meta-box-sortables">
 			<div class="postbox">
-				<h3><?php _e( 'Test WP to Twitter', 'wp-to-twitter' ); ?></h3>
+				<h3><?php _e( 'Test XPoster', 'wp-to-twitter' ); ?></h3>
 
 				<div class="inside test">
 				<p>
-				<?php _e( 'Check whether WP to Twitter is set up for Twitter and your URL Shortener. The test sends a status update to Twitter and shortens a URL.', 'wp-to-twitter' ); ?>
+				<?php _e( 'Check whether XPoster is set up for Twitter and your URL Shortener. The test sends a status update to Twitter and shortens a URL.', 'wp-to-twitter' ); ?>
 				</p>
 				<form method="post" action="">
 					<input type="hidden" name="submit-type" value="check-support"/>
@@ -802,7 +802,7 @@ function wpt_sidebar() {
 					echo "<div>$nonce</div>";
 					?>
 					<p>
-						<input type="submit" name="submit" value="<?php esc_attr_e( 'Test WP to Twitter', 'wp-to-twitter' ); ?>" class="button-secondary" />
+						<input type="submit" name="submit" value="<?php esc_attr_e( 'Test XPoster', 'wp-to-twitter' ); ?>" class="button-secondary" />
 					</p>
 				</form>
 				</div>
@@ -866,13 +866,13 @@ function wpt_do_server_check( $test = false ) {
 
 		if ( ! is_wp_error( $response ) ) {
 			if ( abs( strtotime( $server_time ) - strtotime( $response['headers']['date'] ) ) > 300 ) {
-				$diff = __( 'Your time stamps are more than 5 minutes apart. Your server could lose its connection with Twitter.', 'wp-to-twitter' );
+				$diff = __( 'Your time stamps are more than 5 minutes apart. Your server could lose its connection with X.com.', 'wp-to-twitter' );
 			} else {
-				$diff = __( 'Your time stamp matches the Twitter server time', 'wp-to-twitter' );
+				$diff = __( 'Your time stamp matches the X.com server time', 'wp-to-twitter' );
 			}
 			$diff = "<li>$diff</li>";
 		} else {
-			$diff = '<li>' . __( 'WP to Twitter could not contact Twitter\'s remote server.', 'wp-to-twitter' ) . '</li>';
+			$diff = '<li>' . __( 'XPoster could not contact X.com.', 'wp-to-twitter' ) . '</li>';
 		}
 
 		$timezone = '<li>' . __( 'Your server timezone:', 'wp-to-twitter' ) . ' ' . date_default_timezone_get() . '</li>';
@@ -943,7 +943,7 @@ add_filter( 'wpt_auto_tweet', 'wpt_auto_tweet' );
  */
 function wpt_auto_tweet() {
 	$allow   = ( '0' === get_option( 'wpt_auto_tweet_allowed', '0' ) ) ? false : true;
-	$note    = ( $allow ) ? '<strong id="auto_tweet_note">(' . __( 'When publishing manually, you will need to save drafts prior to publishing to support WP to Twitter metabox options.', 'wp-to-twitter' ) . ')</strong>' : '';
+	$note    = ( $allow ) ? '<strong id="auto_tweet_note">(' . __( 'When publishing manually, you will need to save drafts prior to publishing to support XPoster metabox options.', 'wp-to-twitter' ) . ')</strong>' : '';
 	$control = "<p class='wpt_auto_tweet_allowed'>
 					<input type='checkbox' value='1' " . checked( $allow, true, false ) . "id='wpt_auto_tweet_allowed' name='wpt_auto_tweet_allowed' aria-describedby='auto_tweet_note' /> <label for='wpt_auto_tweet_allowed'>" . __( 'Allow Tweets from Post Importers', 'wp-to-twitter' ) . "</label> $note
 				</p>";

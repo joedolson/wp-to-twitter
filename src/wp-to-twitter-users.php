@@ -1,9 +1,9 @@
 <?php
 /**
- * User settings WP to Twitter
+ * User settings XPoster
  *
  * @category Users
- * @package  WP to Twitter
+ * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/
@@ -32,7 +32,7 @@ function wpt_twitter_profile() {
 	$wpt_remove       = get_user_meta( $user_edit, 'wpt-remove', true );
 	if ( $current_user->ID === $user_ID || current_user_can( 'manage_options' ) ) {
 		?>
-		<h3><?php _e( 'WP Tweets User Settings', 'wp-to-twitter' ); ?></h3>
+		<h3><?php _e( 'XPoster User Settings', 'wp-to-twitter' ); ?></h3>
 		<?php
 		if ( function_exists( 'wpt_connect_oauth_message' ) ) {
 			wpt_connect_oauth_message( $user_edit );

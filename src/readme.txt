@@ -1,19 +1,19 @@
-=== WP to Twitter ===
+=== XPoster ===
 Contributors: joedolson
-Donate link: https://www.joedolson.com/donate/
+Donate link: https://xposterpro.com
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
-Requires at least: 4.9.8
+Requires at least: 6.0
 Tested up to: 6.2
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 3.7.0
+Stable tag: 4.0.0
 
-Posts a Twitter update when you update your WordPress blog or add a link, with your chosen URL shortening service.
+Posts an X.com update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
 == Description ==
 
-= Post Tweets from WordPress to Twitter. =
+= Post Tweets from WordPress to X.com. =
 
 Yep. That's the basic functionality. But it's not the only thing you can do:
 
@@ -21,7 +21,7 @@ Yep. That's the basic functionality. But it's not the only thing you can do:
 * Display Tweets based on a search: Display the Tweets resulting from a search and limit by Geolocation.
 * Shorten URLs in your Tweets with popular URL shorteners, or let Twitter to do it with [t.co](http://t.co). 
 
-WP to Twitter uses a customizable Tweet template for Tweets sent when updating or editing posts and pages or custom post types. You can customize your Tweet for each post, using custom template tags to generate the Tweet. 
+XPoster uses a customizable Tweet template for Tweets sent when updating or editing posts and pages or custom post types. You can customize your Tweet for each post, using custom template tags to generate the Tweet. 
 
 = Free Features =
 
@@ -30,36 +30,40 @@ WP to Twitter uses a customizable Tweet template for Tweets sent when updating o
 * Support for Google Analytics
 * Support for XMLRPC remote clients
 * Use [YOURLS](https://yourls.org), [Bit.ly](https://wordpress.org/plugins/codehaveli-bitly-url-shortener/), [jotURL](https://joturl.com), or [Hum](https://wordpress.org/plugins/hum/) as external URL shorteners.
-* Rate limiting: make sure you don't exceed Twitter's API rate limits. 
+* Rate limiting: make sure you don't exceed X.com's API rate limits. 
 
 = Premium Features =
 
-WP Tweets Pro is no longer available for sale.
-
-* Authors can set up their own Twitter accounts in their profiles
+* Authors can set up their own X.com accounts in their profiles
 * Time delayed Tweeting
 * Scheduled Tweet management
-* Simultaneously Tweet to site and author Twitter accounts
+* Simultaneously Tweet to site and author X.com accounts
 * Preview and Tweet comments
 * Filter Tweets by taxonomy (categories, tags, or custom taxonomies)
-* Upload images to Twitter with alt attributes
-* Integrated Twitter Card support
+* Upload images to X.com with alt attributes
+* Integrated X.com Card support
 * Support for Player Cards with integrated captions
 * Automatically schedule Tweets of old posts
 
-Want to stay up to date on WP to Twitter? [Follow me on Twitter!](https://twitter.com/joedolson)
+Want to stay up to date on XPoster? [Follow me on Twitter!](https://twitter.com/joedolson)
 
 = Translations =
 
-Visit the [WP to Twitter translation site](https://translate.wordpress.org/projects/wp-plugins/wp-to-twitter/stable) to see how complete the current translations are.
+Visit the [XPoster translation site](https://translate.wordpress.org/projects/wp-plugins/wp-to-twitter/stable) to see how complete the current translations are.
 
-Translating my plug-ins is always appreciated. Work on WP to Twitter translations at <a href="https://translate.wordpress.org/projects/wp-plugins/wp-to-twitter">the WordPress translation site</a>! You'll need a WordPress.org account to contribute!
+Translating my plug-ins is always appreciated. Work on XPoster translations at <a href="https://translate.wordpress.org/projects/wp-plugins/wp-to-twitter">the WordPress translation site</a>! You'll need a WordPress.org account to contribute!
 
-= Extending WP to Twitter =
+= Extending XPoster =
 
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 4.0.0 =
+
+* Start rebranding to XPoster.
+* Update to use Twitter API v2.
+* Those two things encompass a huge amount of change and ambiguity.
 
 = 3.7.0 =
 
@@ -560,31 +564,31 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 1. Upload the `wp-to-twitter` folder to your `/wp-content/plugins/` directory
 2. Activate the plugin using the `Plugins` menu in WordPress
-3. Go to Settings > WP to Twitter
-4. Adjust the WP to Twitter Options as you prefer them. 
-5. Create a Twitter application at Twitter and Configure your OAuth keys
+3. Go to Settings > XPoster
+4. Adjust the XPoster Options as you prefer them. 
+5. Create an X.com application at X.com and Configure your OAuth keys
 
 == Frequently Asked Questions ==
 
-= Why is WP Tweets PRO no longer available for sale? =
+= Why are you still calling things Tweets? =
 
-Twitter's current API policies have made maintaining this plugin exceptionally difficult. It has never been particularly profitable, and the increased support and development time required in order to keep it running is beyond what I can realistically provide. I will continue to update it as long as I reasonably can.
+X.com is still slowly re-branding, and I'm not clear what Tweets will ultimately be called. Currently, they're called "Posts" in some contexts, but that's extremely ambiguous in WordPress, so I'm avoiding that terminology for now.
 
-= Twitter's Application creation process is very difficult. Why do I have to do this? =
+= Do I need to pay for an API plan at X.com? =
 
-WP to Twitter has always followed the principle that you are the owner of your own application. Many other applications require you to pass your data through a 3rd party that you authenticate to post to Twitter. Twitter has gradually made the process to create a new application more and more difficult. There is nothing I can do about that. 
+If you're publishing more than about 50 Tweets a day, you'll need to pay for a premium API plan. This is out of my control.
 
-= How can I help you make WP to Twitter a better plug-in? =
+= X.com's Application creation process is very difficult. Why do I have to do this? =
 
-Writing and maintaining a plug-in is a lot of work. You can help me by providing detailed support requests (which saves me time), or by providing financial support via my [plug-in donations page](https://www.joedolson.com/donate/).  Believe me, your support really makes a difference!
+XPoster has always followed the principle that you are the owner of your own application. Many other applications require you to pass your data through a 3rd party that you authenticate to post to Twitter. With the new API policies at X.com, this is a significant benefit to most users. X.com allows up to 1500 Tweets per month on their free API plan, which is practical for most independent sites. 
 
 == Screenshots ==
 
-1. WP to Twitter Set up.
-2. WP to Twitter Post Meta box.
-3. WP to Twitter post meta box with WP Tweets PRO active.
-4. WP Tweets PRO settings.
-5. Example Twitter Feed (Twenty Nineteen)
-6. Basic WP to Twitter Settings
+1. XPoster Set up.
+2. XPoster Post Meta box.
+3. XPoster post meta box with WP Tweets PRO active.
+4. XPosterPro settings.
+5. Example X.com Feed (Twenty Nineteen)
+6. Basic XPoster Settings
 
 == Upgrade Notice ==

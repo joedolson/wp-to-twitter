@@ -3,7 +3,7 @@
  * Widget to show searched Tweets.
  *
  * @category Core
- * @package  WP to Twitter
+ * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WP to Twitter Latest Tweets widget class.
+ * XPoster Latest Tweets widget class.
  */
 class WPT_Search_Tweets_Widget extends WP_Widget {
 
@@ -57,7 +57,7 @@ class WPT_Search_Tweets_Widget extends WP_Widget {
 			'width'   => 200,
 			'height'  => 250,
 		);
-		parent::__construct( 'wpt-search-tweets', __( 'WP to Twitter - Searched Tweets', 'wp-to-twitter' ), $widget_ops, $control_ops );
+		parent::__construct( 'wpt-search-tweets', __( 'XPoster - Searched Tweets', 'wp-to-twitter' ), $widget_ops, $control_ops );
 	}
 
 	/**

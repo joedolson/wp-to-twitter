@@ -3,7 +3,7 @@
  * Widget to show latest Tweets.
  *
  * @category Core
- * @package  WP to Twitter
+ * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WP to Twitter Latest Tweets widget class.
+ * XPoster Latest Tweets widget class.
  */
 class WPT_Latest_Tweets_Widget extends WP_Widget {
 
@@ -59,7 +59,7 @@ class WPT_Latest_Tweets_Widget extends WP_Widget {
 			'width'   => 200,
 			'height'  => 250,
 		);
-		parent::__construct( 'wpt-latest-tweets', __( 'WP to Twitter - Latest Tweets', 'wp-to-twitter' ), $widget_ops, $control_ops );
+		parent::__construct( 'wpt-latest-tweets', __( 'XPoster - Latest Tweets', 'wp-to-twitter' ), $widget_ops, $control_ops );
 	}
 
 	/**

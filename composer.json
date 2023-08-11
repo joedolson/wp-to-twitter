@@ -1,7 +1,7 @@
 {
     "name": "joedolson/wp-to-twitter",
-    "description": "WP to Twitter WordPress Plugin",
-    "keywords": ["wordpress", "plugin", "twitter", "posts", "social"],
+    "description": "XPoster WordPress Plugin",
+    "keywords": ["wordpress", "plugin", "twitter", "x", "posts", "social"],
     "homepage": "https://joedolson.com",
     "license": "GPL-3.0-or-later",
     "authors": [{

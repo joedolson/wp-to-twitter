@@ -1,14 +1,14 @@
 <?php
 /**
- * WP to Twitter
+ * XPoster
  *
- * @package     WP to Twitter
+ * @package     XPoster
  * @author      Joe Dolson
  * @copyright   2008-2023 Joe Dolson
  * @license     GPL-2.0+
  *
  * @wordpress-plugin
- * Plugin Name: WP to Twitter
+ * Plugin Name: XPoster
  * Plugin URI:  http://www.joedolson.com/wp-to-twitter/
  * Description: Posts a Tweet when you update your WordPress blog or post a link, using your URL shortener. Many options to customize and promote your Tweets.
  * Author:      Joseph C Dolson
@@ -70,7 +70,7 @@ $wpt_version = '3.7.0';
 
 add_action( 'init', 'wpt_load_textdomain' );
 /**
- * Set up text domain for WP to Twitter.
+ * Set up text domain for XPoster.
  */
 function wpt_load_textdomain() {
 	load_plugin_textdomain( 'wp-to-twitter' );
@@ -78,7 +78,7 @@ function wpt_load_textdomain() {
 
 add_action( 'widgets_init', 'wpt_register_widgets' );
 /**
- * Register WP to Twitter Widgets
+ * Register XPoster Widgets
  */
 function wpt_register_widgets() {
 	register_widget( 'WPT_Latest_Tweets_Widget' );
@@ -114,7 +114,7 @@ function wpt_check_version() {
 }
 
 /**
- * Activate WP to Twitter.
+ * Activate XPoster.
  */
 function wptotwitter_activate() {
 	// If this has never run before, do the initial setup.
@@ -250,7 +250,7 @@ function wpt_saves_error( $id, $auth, $twit, $error, $http_code, $ts ) {
 
 
 /**
- * Checks whether WP to Twitter has sent a tweet on this post to this author within the last 30 seconds and blocks duplicates.
+ * Checks whether XPoster has sent a tweet on this post to this author within the last 30 seconds and blocks duplicates.
  *
  * @param int $id Post ID.
  * @param int $auth Author.
@@ -322,7 +322,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		// check whether this post needs to be rate limited.
 		$continue = wpt_test_rate_limit( $id, $auth );
 		if ( ! $continue ) {
-			wpt_mail( 'This post was blocked by WP to Twitter rate limiting.', 'Post ID: ' . $id . '; Account: ' . $auth );
+			wpt_mail( 'This post was blocked by XPoster rate limiting.', 'Post ID: ' . $id . '; Account: ' . $auth );
 
 			return false;
 		}
@@ -460,11 +460,11 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					$notice = '';
 				} else {
 					$http_code = '000';
-					$notice    = __( 'Tweet Canceled by custom filter.', 'wp-to-twitter' );
+					$notice    = __( 'XPost Canceled by custom filter.', 'wp-to-twitter' );
 				}
 			}
 		}
-		wpt_mail( 'Twitter Connection', "$twit, $auth, $id, $media", $id );
+		wpt_mail( 'X Connection', "$twit, $auth, $id, $media", $id );
 		if ( $connection ) {
 			$return = false;
 			switch ( $http_code ) {
@@ -472,7 +472,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					$error = '';
 					break;
 				case 100:
-					$error = __( '100 Continue: Twitter received the header of your submission, but your server did not follow through by sending the body of the data.', 'wp-to-twitter' );
+					$error = __( '100 Continue: X received the header of your submission, but your server did not follow through by sending the body of the data.', 'wp-to-twitter' );
 					break;
 				case 200:
 					$return = true;
@@ -608,7 +608,7 @@ function wpt_image_binary( $attachment ) {
 		$transport = 'wp_http';
 		$binary    = wp_remote_retrieve_body( $remote );
 	}
-	wpt_mail( 'WP to Twitter: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . print_r( $remote, 1 ), $parent );
+	wpt_mail( 'XPoster: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . print_r( $remote, 1 ), $parent );
 	if ( ! $binary ) {
 		return false;
 	}
@@ -883,7 +883,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 		$debug_post_info = $post_info;
 		unset( $debug_post_info['post_content'] );
 		unset( $debug_post_info['postContent'] );
-		wpt_mail( '2: WP to Twitter Post Info (post content omitted)', print_r( $debug_post_info, 1 ), $post_ID ); // DEBUG.
+		wpt_mail( '2: XPoster Post Info (post content omitted)', print_r( $debug_post_info, 1 ), $post_ID ); // DEBUG.
 		if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() && function_exists( 'wpt_filter_post_info' ) ) {
 			$filter = wpt_filter_post_info( $post_info );
 			if ( true === $filter ) {
@@ -1286,7 +1286,7 @@ function wpt_add_twitter_outer_box() {
 		foreach ( $wpt_post_types as $key => $value ) {
 			if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] ) {
 				if ( current_user_can( 'wpt_can_tweet' ) ) {
-					add_meta_box( 'wp2t', 'WP to Twitter', 'wpt_add_twitter_inner_box', $key, 'side' );
+					add_meta_box( 'wp2t', 'XPoster', 'wpt_add_twitter_inner_box', $key, 'side' );
 				}
 			}
 		}
@@ -1303,7 +1303,7 @@ function wpt_add_twitter_debug_box() {
 		// add Twitter panel to post types where it's enabled.
 		$wpt_post_types = wpt_allowed_post_types();
 		foreach ( $wpt_post_types as $type ) {
-			add_meta_box( 'wp2t-debug', 'WP to Twitter Debugging', 'wpt_show_debug', $type, 'advanced' );
+			add_meta_box( 'wp2t-debug', 'XPoster Debugging', 'wpt_show_debug', $type, 'advanced' );
 		}
 	}
 }
@@ -1466,7 +1466,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			// WPT PRO.
 			if ( ! current_user_can( 'wpt_twitter_custom' ) && ! current_user_can( 'manage_options' ) ) {
 				?>
-				<p><?php _e( 'Customizing WP to Twitter options is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
+				<p><?php _e( 'Customizing XPoster options is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
 				<?php
 				if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() === true ) {
 					wpt_schedule_values( $post_id, 'hidden' );
@@ -1574,7 +1574,7 @@ function wpt_show_tweets( $post_id ) {
 
 add_action( 'admin_enqueue_scripts', 'wpt_admin_scripts', 10, 1 );
 /**
- * Enqueue admin scripts for WP to Twitter and WP Tweets PRO.
+ * Enqueue admin scripts for XPoster and XPoster PRO.
  */
 function wpt_admin_scripts() {
 	global $current_screen, $wpt_version;
@@ -1739,7 +1739,7 @@ function wpt_save_post( $id, $post ) {
 	if ( isset( $_POST['wp_to_twitter_meta'] ) ) {
 		$nonce = ( isset( $_POST['wp_to_twitter_nonce'] ) ) ? $_POST['wp_to_twitter_nonce'] : false;
 		if ( ! ( $nonce && wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) ) {
-			wp_die( 'WP to Twitter: Security check failed' );
+			wp_die( 'XPoster: Security check failed' );
 		}
 		if ( isset( $_POST['_yourls_keyword'] ) ) {
 			$yourls = sanitize_text_field( $_POST['_yourls_keyword'] );
@@ -1772,7 +1772,7 @@ function wpt_save_post( $id, $post ) {
 		$update = apply_filters( 'wpt_insert_post', $_POST, $id );
 		// WPT PRO.
 		// only send debug data if post meta is updated.
-		wpt_mail( 'Post Meta Processed', 'WP to Twitter post meta was updated' . "\n\n" . print_r( map_deep( $_POST, 'sanitize_textarea_field' ), 1 ), $id ); // DEBUG.
+		wpt_mail( 'Post Meta Processed', 'XPoster post meta was updated' . "\n\n" . print_r( map_deep( $_POST, 'sanitize_textarea_field' ), 1 ), $id ); // DEBUG.
 
 		if ( isset( $_POST['wpt-delete-debug'] ) && 'true' === $_POST['wpt-delete-debug'] ) {
 			delete_post_meta( $id, '_wpt_debug_log' );
@@ -1801,14 +1801,13 @@ add_action( 'admin_menu', 'wpt_admin_page' );
  */
 function wpt_admin_page() {
 	if ( function_exists( 'add_menu_page' ) && ! function_exists( 'wpt_pro_functions' ) ) {
-		$icon_path = plugins_url( 'images/icon.png', __FILE__ );
-		$page      = add_menu_page( __( 'WP to Twitter', 'wp-to-twitter' ), __( 'WP to Twitter', 'wp-to-twitter' ), 'manage_options', 'wp-tweets-pro', 'wpt_update_settings', $icon_path );
+		add_menu_page( __( 'XPoster', 'wp-to-twitter' ), __( 'XPoster', 'wp-to-twitter' ), 'manage_options', 'wp-tweets-pro', 'wpt_update_settings', 'dashicons-twitter' );
 	}
 }
 
 add_action( 'admin_head', 'wpt_admin_style' );
 /**
- * Add stylesheets to WP to Twitter pages.
+ * Add stylesheets to XPoster pages.
  */
 function wpt_admin_style() {
 	global $wpt_version;
@@ -1818,7 +1817,7 @@ function wpt_admin_style() {
 }
 
 /**
- * Add WP to Twitter links to plug-in information.
+ * Add XPoster links to plug-in information.
  *
  * @param array  $links Array of links.
  * @param string $file Current file name.
@@ -1828,7 +1827,7 @@ function wpt_admin_style() {
 function wpt_plugin_action( $links, $file ) {
 	if ( plugin_basename( dirname( __FILE__ ) . '/wp-to-twitter.php' ) === $file ) {
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
-		$links[]   = "<a href='$admin_url'>" . __( 'WP to Twitter Settings', 'wp-to-twitter' ) . '</a>';
+		$links[]   = "<a href='$admin_url'>" . __( 'XPoster Settings', 'wp-to-twitter' ) . '</a>';
 	}
 
 	return $links;
@@ -1844,7 +1843,7 @@ function wpt_plugin_update_message() {
 	global $wpt_version;
 	$note = '';
 	define( 'WPT_PLUGIN_README_URL', 'http://svn.wp-plugins.org/wp-to-twitter/trunk/readme.txt' );
-	$response = wp_remote_get( WPT_PLUGIN_README_URL, array( 'user-agent' => 'WordPress/WP to Twitter' . $wpt_version . '; ' . get_bloginfo( 'url' ) ) );
+	$response = wp_remote_get( WPT_PLUGIN_README_URL, array( 'user-agent' => 'WordPress/XPoster' . $wpt_version . '; ' . get_bloginfo( 'url' ) ) );
 	if ( ! is_wp_error( $response ) || is_array( $response ) ) {
 		$data = $response['body'];
 		$bits = explode( '== Upgrade Notice ==', $data );
@@ -2047,7 +2046,7 @@ add_action( 'admin_notices', 'wpt_debugging_enabled', 10 );
  */
 function wpt_debugging_enabled() {
 	if ( current_user_can( 'manage_options' ) && WPT_DEBUG ) {
-		echo "<div class='notice error important'><p>" . __( '<strong>WP to Twitter</strong> debugging is enabled. Remember to disable debugging when you are finished.', 'wp-to-twitter' ) . '</p></div>';
+		echo "<div class='notice error important'><p>" . __( '<strong>XPoster</strong> debugging is enabled. Remember to disable debugging when you are finished.', 'wp-to-twitter' ) . '</p></div>';
 	}
 }
 
@@ -2057,7 +2056,7 @@ add_action( 'wp_enqueue_scripts', 'wpt_stylesheet' );
  */
 function wpt_stylesheet() {
 	/**
-	 * Disable WP to Twitter feeds stylesheet. Styles the Twitter Feed widgets.
+	 * Disable XPoster feeds stylesheet. Styles the Twitter Feed widgets.
 	 *
 	 * @hook wpt_enqueue_feed_styles
 	 * @param {bool} $apply False to disable.
@@ -2067,7 +2066,7 @@ function wpt_stylesheet() {
 	$apply = apply_filters( 'wpt_enqueue_feed_styles', true );
 	if ( $apply ) {
 		/**
-		 * Replace the WP to Twitter feeds stylesheet.
+		 * Replace the XPoster feeds stylesheet.
 		 *
 		 * @hook wpt_feed_stylesheet
 		 * @param {string} $file URL to stylesheet.

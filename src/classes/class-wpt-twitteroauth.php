@@ -3,7 +3,7 @@
  * Abraham Williams (abraham@abrah.am) http://abrah.am
  *
  * @category Core
- * @package  WP to Twitter
+ * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
  * @link     https://www.joedolson.com/wp-to-twitter/

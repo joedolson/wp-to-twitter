@@ -2,7 +2,7 @@
 /**
  * Class Tests_WP_to_Twitter_General
  *
- * @package WP to Twitter
+ * @package XPoster
  */
 
 /**
