@@ -308,8 +308,9 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 				'user_token'      => $ot,
 				'user_secret'     => $ots,
 			);
-			$tmh_oauth = new TmhOAuth( $connect );
-			$media_id  = $args['media'];
+			$tmh_oauth  = new TmhOAuth( $connect );
+			$media_id   = $args['media'];
+			$attachment = $args['attachment'];
 
 			/**
 			 * Add alt attributes to uploaded Twitter images.
