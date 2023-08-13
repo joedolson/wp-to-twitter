@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '278589dccbd30efa093df420059c162d4a46a0c2',
+        'reference' => '95d0310f7b694c35721944e681a74a241d3969ed',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '278589dccbd30efa093df420059c162d4a46a0c2',
+            'reference' => '95d0310f7b694c35721944e681a74a241d3969ed',
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(
@@ -56,12 +56,12 @@
             'dev_requirement' => false,
         ),
         'noweh/twitter-api-v2-php' => array(
-            'pretty_version' => '3.2.0',
-            'version' => '3.2.0.0',
+            'pretty_version' => '3.4.0',
+            'version' => '3.4.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../noweh/twitter-api-v2-php',
             'aliases' => array(),
-            'reference' => 'cb2f6ac2f74cfdf13e6b815564a1e6a369b6a884',
+            'reference' => '0831051dbfae16e6083180c69ad42673e9139d21',
             'dev_requirement' => false,
         ),
         'psr/http-client' => array(

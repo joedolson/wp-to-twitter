@@ -398,17 +398,17 @@
         },
         {
             "name": "noweh/twitter-api-v2-php",
-            "version": "3.2.0",
-            "version_normalized": "3.2.0.0",
+            "version": "3.4.0",
+            "version_normalized": "3.4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/noweh/twitter-api-v2-php.git",
-                "reference": "cb2f6ac2f74cfdf13e6b815564a1e6a369b6a884"
+                "reference": "0831051dbfae16e6083180c69ad42673e9139d21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/noweh/twitter-api-v2-php/zipball/cb2f6ac2f74cfdf13e6b815564a1e6a369b6a884",
-                "reference": "cb2f6ac2f74cfdf13e6b815564a1e6a369b6a884",
+                "url": "https://api.github.com/repos/noweh/twitter-api-v2-php/zipball/0831051dbfae16e6083180c69ad42673e9139d21",
+                "reference": "0831051dbfae16e6083180c69ad42673e9139d21",
                 "shasum": ""
             },
             "require": {
@@ -424,7 +424,7 @@
                 "phpunit/phpunit": "^9.6.3",
                 "vlucas/phpdotenv": "^v5.5.0"
             },
-            "time": "2023-08-07T07:39:49+00:00",
+            "time": "2023-08-12T14:37:26+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -454,7 +454,7 @@
             ],
             "support": {
                 "issues": "https://github.com/noweh/twitter-api-v2-php/issues",
-                "source": "https://github.com/noweh/twitter-api-v2-php/tree/3.2.0"
+                "source": "https://github.com/noweh/twitter-api-v2-php/tree/3.4.0"
             },
             "install-path": "../noweh/twitter-api-v2-php"
         },
