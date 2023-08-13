@@ -126,7 +126,6 @@ function wpt_updated_settings() {
 		}
 
 		update_option( 'twitter-analytics-campaign', sanitize_text_field( $_POST['twitter-analytics-campaign'] ) );
-		update_option( 'jd_individual_twitter_users', ( isset( $_POST['jd_individual_twitter_users'] ) ? 1 : 0 ) );
 
 		if ( isset( $_POST['wpt_caps'] ) ) {
 			$perms = map_deep( $_POST['wpt_caps'], 'sanitize_text_field' );
@@ -591,17 +590,12 @@ function wpt_update_settings() {
 			</div>
 			<div class="ui-sortable meta-box-sortables">
 				<div class="postbox">
-					<h3><span><?php _e( 'Author Settings', 'wp-to-twitter' ); ?></span></h3>
+					<h3><span><?php _e( 'Permissions', 'wp-to-twitter' ); ?></span></h3>
 					<div class="inside">
-
-						<p>
-							<input type="checkbox" name="jd_individual_twitter_users" id="jd_individual_twitter_users" value="1" <?php echo wpt_checkbox( 'jd_individual_twitter_users' ); ?> />
-							<label for="jd_individual_twitter_users"><?php _e( 'Enable User Account Settings', 'wp-to-twitter' ); ?></label>
-						</p>
 
 						<div class='wpt-permissions'>
 							<fieldset>
-								<legend><?php _e( 'Permissions', 'wp-to-twitter' ); ?></legend>
+								<legend class="screen-reader-text"><?php _e( 'Permissions', 'wp-to-twitter' ); ?></legend>
 								<?php
 								global $wp_roles;
 								$roles          = $wp_roles->get_names();
