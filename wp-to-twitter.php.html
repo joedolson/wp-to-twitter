@@ -82,7 +82,6 @@ if ( function_exists( 'wp_get_environment_type' ) ) {
 
 require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-functions.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-users.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php' );
@@ -2078,6 +2077,31 @@ add_action( 'admin_notices', 'wpt_debugging_enabled', 10 );
 function wpt_debugging_enabled() {
 	if ( current_user_can( 'manage_options' ) &amp;&amp; WPT_DEBUG ) {
 		echo "&lt;div class='notice error important'>&lt;p>" . __( '&lt;strong>XPoster&lt;/strong> debugging is enabled. Remember to disable debugging when you are finished.', 'wp-to-twitter' ) . '&lt;/p>&lt;/div>';
+	}
+}
+
+add_action( 'admin_notices', 'wpt_needs_bearer_token', 10 );
+/**
+ * Notify users if they need to add a bearer token for XPoster.
+ */
+function wpt_needs_bearer_token() {
+	if ( current_user_can( 'manage_options' ) || current_user_can( 'wpt_twitter_oauth' ) ) {
+		$screen = get_current_screen();
+		if ( 'profile' === $screen->id ) {
+			$auth = wp_get_current_user()->ID;
+			$bt   = get_user_meta( $auth, 'bearer_token', true );
+		} else {
+			$auth = false;
+			$bt   = get_option( 'bearer_token', '' );
+		}
+		if ( ! $bt ) {
+			if ( $auth &amp;&amp; get_option( 'jd_individual_twitter_users' ) ) {
+				echo "&lt;div class='notice error important'>&lt;p>" . __( '&lt;strong>XPoster (formerly WP to Twitter)&lt;/strong> needs a Bearer Token added to your profile settings to support the X.com API.', 'wp-to-twitter' ) . '&lt;/p>&lt;/div>';
+			} else if ( current_user_can( 'manage_options' ) ) {
+				// Translators: URL to connection settings.
+				echo "&lt;div class='notice error important'>&lt;p>" . sprintf( __( '&lt;strong>XPoster (formerly WP to Twitter)&lt;/strong> needs a Bearer Token added to the &lt;a href="%s">connection settings&lt;/a> to support the X.com API.', 'wp-to-twitter' ), admin_url( 'admin.php?page=wp-tweets-pro&amp;tab=connection' ) ) . '&lt;/p>&lt;/div>';
+			}
+		}
 	}
 }
 
