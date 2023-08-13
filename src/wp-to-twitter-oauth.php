@@ -423,7 +423,7 @@ function wtt_connect_oauth( $auth = false ) {
 				$submit = '<input type="checkbox" name="oauth_settings" value="wtt_twitter_disconnect" id="disconnect" /> <label for="disconnect">' . __( 'Disconnect Your Account from X.com', 'wp-to-twitter' ) . '</label>';
 			}
 		}
-		
+
 		$bearer_token = ( $bt ) ? '<li><strong class="auth_label">' . __( 'Bearer Token ', 'wp-to-twitter' ) . '</strong> <code class="auth_code">' . esc_attr( wpt_mask_attr( $bt ) ) . '</code></li>' : '';
 
 		print( '

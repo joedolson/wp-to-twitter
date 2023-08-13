@@ -2071,7 +2071,7 @@ function wpt_needs_bearer_token() {
 		if ( ! $bt ) {
 			if ( $auth && get_option( 'jd_individual_twitter_users' ) ) {
 				echo "<div class='notice error important'><p>" . __( '<strong>XPoster (formerly WP to Twitter)</strong> needs a Bearer Token added to your profile settings to support the X.com API.', 'wp-to-twitter' ) . '</p></div>';
-			} else if ( current_user_can( 'manage_options' ) ) {
+			} elseif ( current_user_can( 'manage_options' ) ) {
 				// Translators: URL to connection settings.
 				echo "<div class='notice error important'><p>" . sprintf( __( '<strong>XPoster (formerly WP to Twitter)</strong> needs a Bearer Token added to the <a href="%s">connection settings</a> to support the X.com API.', 'wp-to-twitter' ), admin_url( 'admin.php?page=wp-tweets-pro&tab=connection' ) ) . '</p></div>';
 			}
