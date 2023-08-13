@@ -291,13 +291,14 @@ function wtt_connect_oauth( $auth = false ) {
 		echo '<div class="ui-sortable meta-box-sortables">';
 		echo '<div class="postbox">';
 	}
+	$information = '';
 
 	if ( $auth ) {
 		wpt_update_authenticated_users();
 	}
 
 	$class = ( $auth ) ? 'wpt-profile' : 'wpt-settings';
-	$form  = ( ! $auth ) ? '<form action="" method="post">' : '';
+	$form  = ( ! $auth ) ? '<form action="" method="post" class="wpt-connection-form">' : '';
 	$nonce = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
 
 	$bt_form = '<p>
@@ -360,7 +361,7 @@ function wtt_connect_oauth( $auth = false ) {
 					<li>' . __( 'Click "Edit" at top of Settings screen to edit your App', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Change to the "Keys and Tokens" tab', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Generate your Access Token and Secret from the "Authentication Tokens" section.', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Paste your Access Token and Secret into the fields below', 'wp-to-twitter' ) . ' (' . __( 'If the Access Level for your Access Token is not "<em>Read and write</em>", return to step 7, change your permissions, and generate new Tokens.', 'wp-to-twitter' ) . ')
+					<li>' . __( 'Add your Access Token, Secret, and Bearer Token:', 'wp-to-twitter' ) . ' (' . __( 'If the Access Level for your Access Token is not "<em>Read and write</em>", return to step 7, change your permissions, and generate new Tokens.', 'wp-to-twitter' ) . ')
 					<div class="tokens">
 					<p>
 						<label for="wtt_oauth_token">' . __( 'Access Token', 'wp-to-twitter' ) . '</label>
@@ -372,16 +373,15 @@ function wtt_connect_oauth( $auth = false ) {
 					</p>
 					' . $bt_form . '
 					</div>
+					</li>
+					<li>
+						<p>' . __( 'Create a Project and add your App to the project.', 'wp-to-twitter' ) . '</p>
+					</li>
+				</ol>
 				' . $submit . '
 				<input type="hidden" name="oauth_settings" value="wtt_oauth_test" class="hidden" />
 				' . $nonce . '
-			</div>
-			</li>
-			<li>
-				<p>' . __( 'Create a Project and add your App to the project.', 'wp-to-twitter' ) . '</p>
-			</li>
-			</ol>
-				' );
+			</div>' );
 	} elseif ( wtt_oauth_test( $auth ) ) {
 		$ack   = ( ! $auth ) ? get_option( 'app_consumer_key' ) : get_user_meta( $auth, 'app_consumer_key', true );
 		$acs   = ( ! $auth ) ? get_option( 'app_consumer_secret' ) : get_user_meta( $auth, 'app_consumer_secret', true );
@@ -392,6 +392,22 @@ function wtt_connect_oauth( $auth = false ) {
 		$nonce = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
 
 		if ( ! $bt ) {
+			$information = '
+			<p>' . __( 'The X.com version 2 API requires an additional API setting in your connection settings.', 'wp-to-twitter' ) . '</p>
+			<ol>
+				<li>' . __( 'Go to <a href="https://developer.twitter.com/en/portal/dashboard">the X.com Developer Dashboard</a>', 'wp-to-twitter' ) . '</li>
+				<li>' . __( 'Open your existing App.', 'wp-to-twitter' ) . '</li>
+				<li>' . __( 'Choose the Keys and Tokens tab', 'wp-to-twitter' ) . '</li>
+				<li>' . __( 'Generate the Bearer Token', 'wp-to-twitter' ) . '</li>
+				<li>' . __( 'Copy and Save your Bearer Token', 'wp-to-twitter' ) . '</li>
+			</ol>
+			<p>' . __( 'The version 2 API also requires that all applications are associated with a Project.', 'wp-to-twitter' ) . '</p>
+			<ol>
+				<li>' . __( 'Choose "Projects and Apps" from the dashboard menu.', 'wp-to-twitter' ) . '</li>
+				<li>' . __( "Create a Project if you don't have one.", 'wp-to-twitter' ) . '</li>
+				<li>' . __( 'Add your App to your new Project.', 'wp-to-twitter' ) . '</li>
+			</ol>';
+
 			$bt_form = sprintf( $bt_form, '' ) . '<input type="hidden" name="oauth_settings" value="wtt_oauth_test" class="hidden" />';
 			if ( ! $auth ) {
 				$submit = '<input type="submit" name="submit" class="button-primary" value="' . __( 'Add your Bearer Token', 'wp-to-twitter' ) . '" />';
@@ -407,23 +423,22 @@ function wtt_connect_oauth( $auth = false ) {
 				$submit = '<input type="checkbox" name="oauth_settings" value="wtt_twitter_disconnect" id="disconnect" /> <label for="disconnect">' . __( 'Disconnect Your Account from X.com', 'wp-to-twitter' ) . '</label>';
 			}
 		}
+		
+		$bearer_token = ( $bt ) ? '<li><strong class="auth_label">' . __( 'Bearer Token ', 'wp-to-twitter' ) . '</strong> <code class="auth_code">' . esc_attr( wpt_mask_attr( $bt ) ) . '</code></li>' : '';
 
 		print( '
-			<h3><span>' . __( 'Disconnect from X.com', 'wp-to-twitter' ) . '</span></h3>
+			<h3>' . __( 'X.com Connection', 'wp-to-twitter' ) . '</h3>
 			<div class="inside ' . $class . '">
-			' . $form . '
+			' . $information . $form . $bt_form . '
 				<div id="wtt_authentication_display">
-					<fieldset class="options">
 					<ul>
 						<li><strong class="auth_label">' . __( 'Username ', 'wp-to-twitter' ) . '</strong> <code class="auth_code"><a href="http://twitter.com/' . esc_attr( $uname ) . '">' . esc_attr( $uname ) . '</a></code></li>
 						<li><strong class="auth_label">' . __( 'API Key ', 'wp-to-twitter' ) . '</strong> <code class="auth_code">' . esc_attr( wpt_mask_attr( $ack ) ) . '</code></li>
 						<li><strong class="auth_label">' . __( 'API Secret ', 'wp-to-twitter' ) . '</strong> <code class="auth_code">' . esc_attr( wpt_mask_attr( $acs ) ) . '</code></li>
 						<li><strong class="auth_label">' . __( 'Access Token ', 'wp-to-twitter' ) . '</strong> <code class="auth_code">' . esc_attr( wpt_mask_attr( $ot ) ) . '</code></li>
 						<li><strong class="auth_label">' . __( 'Access Token Secret ', 'wp-to-twitter' ) . '</strong> <code class="auth_code">' . esc_attr( wpt_mask_attr( $ots ) ) . '</code></li>
-						<li><strong class="auth_label">' . __( 'Bearer Token ', 'wp-to-twitter' ) . '</strong> <code class="auth_code">' . esc_attr( wpt_mask_attr( $bt ) ) . '</code></li>
+						' . $bearer_token . '
 					</ul>
-					' . $bt_form . '
-					</fieldset>
 					<div>
 					' . $submit . '
 					</div>

@@ -13,6 +13,11 @@
 	margin-bottom: .5rem;
 }
 
+.wpt-connection-form label {
+	font-weight: 600;
+	display: block;
+}
+
 #wp-to-twitter .resources {
 	text-align: center;
 }
