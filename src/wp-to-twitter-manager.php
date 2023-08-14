@@ -212,6 +212,11 @@ function wpt_update_settings() {
 	wpt_updated_settings();
 	wpt_show_last_tweet();
 	wpt_handle_errors();
+	if ( ! function_exists( 'wpt_pro_exists' ) ) {
+		?>
+	<aside class="xposter-sales"><p class="link-highlight"><?php printf( __( 'Why not try a license for Xposter Pro? <a href="%s">Buy Now</a>', 'wp-to-twitter' ), 'https://xposterpro.com/awesome/xposter-pro/' ); ?></p></aside>
+		<?php
+	}
 	?>
 	<h1><?php _e( 'XPoster Options', 'wp-to-twitter' ); ?></h1>
 
@@ -244,8 +249,16 @@ function wpt_update_settings() {
 					<div class="postbox">
 						<div class="inside purchase">
 							<h3><strong><?php _e( 'XPoster Pro', 'wp-to-twitter' ); ?></strong></h3>
+							<p class="xposter-highlight">WP to Twitter is now Xposter</p>
 							<p>
-								PROMO HERE
+								Are you wasting time switching between X.com and WordPress to promote your posts? Do you have to delete Tweets because you accidentally published a post? Do you want to be able to schedule your post to Tweet next week, directly from your post editor? Xposter Pro will help you out!
+							</p>
+							<h3>What will Xposter PRO do for you?</h3>
+							<p>
+								It takes the great Tweeting automation from Xposter and turns it up to eleven: publish to unique X accounts for each site author; schedule up to 3 re-posts of Tweets at an interval of your choice; and, with a delay between publishing and Tweeting, check your tweets before they’re shared with your followers.
+							</p>
+							<p class="link-highlight">
+								<a href="https://xposterpro.com/awesome/xposter-pro/">Upgrade to Xposter Pro</a>
 							</p>
 						</div>
 					</div>
@@ -749,15 +762,19 @@ function wpt_sidebar() {
 				<?php
 				if ( 'free' === $context ) {
 					?>
-					<h3><span><strong><?php _e( 'Buy XPosterPro', 'wp-to-twitter' ); ?></strong></span></h3>
+					<h3><span><strong><?php _e( 'Buy Xposter Pro', 'wp-to-twitter' ); ?></strong></span></h3>
 					<?php
 				} else {
 					?>
-					<h3><span><strong><?php _e( 'XPoster Support', 'wp-to-twitter' ); ?></strong></span></h3>
+					<h3><span><strong><?php _e( 'Xposter Support', 'wp-to-twitter' ); ?></strong></span></h3>
 					<?php
 				}
 				?>
 				<div class="inside resources">
+					<p class="link-highlight">
+						<a href="https://xposterpro.com/awesome/xposter-pro/">Buy Xposter Pro</a>
+					</p>
+					<div>
 					<p>
 						<a href="https://twitter.com/intent/follow?screen_name=joedolson" class="twitter-follow-button" data-size="small" data-related="joedolson">Follow @joedolson</a>
 						<script>!function (d, s, id) {
@@ -773,14 +790,14 @@ function wpt_sidebar() {
 					<?php
 					if ( 'premium' === $context ) {
 						$support_url = admin_url( 'admin.php?page=wp-tweets-pro' );
-						$support     = '<a href="' . esc_url( add_query_arg( 'tab', 'support', $support_url ) ) . '#get-support">' . __( 'Get Support', 'wp-to-twitter' ) . '</a> &bull;';
+						$support     = '<a href="' . esc_url( add_query_arg( 'tab', 'support', $support_url ) ) . '#get-support">' . __( 'Get Support', 'wp-to-twitter' ) . '</a> &bull; ';
 					} else {
 						$support_url = false;
 						$support     = '';
 					}
-					echo $support;
 					?>
-					<a href="<?php echo plugins_url( 'wp-tweets-pro-2.0.0.pdf', __FILE__ ); ?>"><?php _e( 'Read the Manual', 'wp-to-twitter' ); ?></a>
+					<p><?php echo $support; ?><a href="<?php echo plugins_url( 'wp-tweets-pro-2.0.0.pdf', __FILE__ ); ?>"><?php _e( 'Read the Manual', 'wp-to-twitter' ); ?></a></p>
+					</div>
 				</div>
 			</div>
 		</div>
