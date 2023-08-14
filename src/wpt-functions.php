@@ -684,7 +684,7 @@ function wpt_get_support_form() {
 			} else {
 				$pro = '';
 			}
-			$subject        = "WP Tweets $pro support request.";
+			$subject        = "XPoster $pro support request.";
 			$message        = $request . "\n\n" . $data;
 			$response_email = ( isset( $_POST['response_email'] ) ) ? sanitize_email( $_POST['response_email'] ) : false;
 			$from           = "From: $current_user->display_name <$response_email>\r\nReply-to: $current_user->display_name <$response_email>\r\n";
@@ -694,7 +694,7 @@ function wpt_get_support_form() {
 			} elseif ( ! $request ) {
 				echo "<div class='notice error'><p>" . __( 'Please describe your problem. I\'m not psychic.', 'wp-to-twitter' ) . '</p></div>';
 			} else {
-				$sent = wp_mail( 'plugins@joedolson.com', $subject, $message, $from );
+				$sent = wp_mail( 'plugins@xposterpro.com', $subject, $message, $from );
 				if ( $sent ) {
 					// Translators: Email address.
 					echo "<div class='notice updated'><p>" . sprintf( __( 'Thank you for supporting XPoster! I\'ll get back to you as soon as I can. Please make sure you can receive email at <code>%s</code>.', 'wp-to-twitter' ), $response_email ) . '</p></div>';
