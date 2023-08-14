@@ -214,7 +214,12 @@ function wpt_update_settings() {
 	wpt_handle_errors();
 	if ( ! function_exists( 'wpt_pro_exists' ) ) {
 		?>
-	<aside class="xposter-sales"><p class="link-highlight"><?php printf( __( 'Why not try a license for Xposter Pro? <a href="%s">Buy Now</a>', 'wp-to-twitter' ), 'https://xposterpro.com/awesome/xposter-pro/' ); ?></p></aside>
+	<aside class="xposter-sales"><p class="link-highlight">
+		<?php
+			// Translators: URL to purchase.
+			printf( __( 'Why not try a license for XPoster Pro? <a href="%s">Buy Now</a>', 'wp-to-twitter' ), 'https://xposterpro.com/awesome/xposter-pro/' );
+		?>
+		</p></aside>
 		<?php
 	}
 	?>
@@ -249,16 +254,16 @@ function wpt_update_settings() {
 					<div class="postbox">
 						<div class="inside purchase">
 							<h3><strong><?php _e( 'XPoster Pro', 'wp-to-twitter' ); ?></strong></h3>
-							<p class="xposter-highlight">WP to Twitter is now Xposter</p>
+							<p class="xposter-highlight">WP to Twitter is now XPoster</p>
 							<p>
-								Are you wasting time switching between X.com and WordPress to promote your posts? Do you have to delete Tweets because you accidentally published a post? Do you want to be able to schedule your post to Tweet next week, directly from your post editor? Xposter Pro will help you out!
+								Are you wasting time switching between X.com and WordPress to promote your posts? Do you have to delete Tweets because you accidentally published a post? Do you want to be able to schedule your post to Tweet next week, directly from your post editor? XPoster Pro will help you out!
 							</p>
-							<h3>What will Xposter PRO do for you?</h3>
+							<h3>What will XPoster PRO do for you?</h3>
 							<p>
-								It takes the great Tweeting automation from Xposter and turns it up to eleven: publish to unique X accounts for each site author; schedule up to 3 re-posts of Tweets at an interval of your choice; and, with a delay between publishing and Tweeting, check your tweets before they’re shared with your followers.
+								It takes the great Tweeting automation from XPoster and turns it up to eleven: publish to unique X accounts for each site author; schedule up to 3 re-posts of Tweets at an interval of your choice; and, with a delay between publishing and Tweeting, check your tweets before they’re shared with your followers.
 							</p>
 							<p class="link-highlight">
-								<a href="https://xposterpro.com/awesome/xposter-pro/">Upgrade to Xposter Pro</a>
+								<a href="https://xposterpro.com/awesome/xposter-pro/">Upgrade to XPoster Pro</a>
 							</p>
 						</div>
 					</div>
@@ -762,17 +767,17 @@ function wpt_sidebar() {
 				<?php
 				if ( 'free' === $context ) {
 					?>
-					<h3><span><strong><?php _e( 'Buy Xposter Pro', 'wp-to-twitter' ); ?></strong></span></h3>
+					<h3><span><strong><?php _e( 'Buy XPoster Pro', 'wp-to-twitter' ); ?></strong></span></h3>
 					<?php
 				} else {
 					?>
-					<h3><span><strong><?php _e( 'Xposter Support', 'wp-to-twitter' ); ?></strong></span></h3>
+					<h3><span><strong><?php _e( 'XPoster Support', 'wp-to-twitter' ); ?></strong></span></h3>
 					<?php
 				}
 				?>
 				<div class="inside resources">
 					<p class="link-highlight">
-						<a href="https://xposterpro.com/awesome/xposter-pro/">Buy Xposter Pro</a>
+						<a href="https://xposterpro.com/awesome/xposter-pro/">Buy XPoster Pro</a>
 					</p>
 					<div>
 					<p>
