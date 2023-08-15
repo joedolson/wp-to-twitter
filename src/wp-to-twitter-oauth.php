@@ -396,16 +396,12 @@ function wtt_connect_oauth( $auth = false ) {
 			<p>' . __( 'The X.com version 2 API requires an additional API setting in your connection settings.', 'wp-to-twitter' ) . '</p>
 			<ol>
 				<li>' . __( 'Go to <a href="https://developer.twitter.com/en/portal/dashboard">the X.com Developer Dashboard</a>', 'wp-to-twitter' ) . '</li>
+				<li>' . __( 'If prompted, create a project to use v2 endpoints. Follow the prompts to use your app.', 'wp-to-twitter' ) . '</li>
 				<li>' . __( 'Open your existing App.', 'wp-to-twitter' ) . '</li>
 				<li>' . __( 'Choose the Keys and Tokens tab', 'wp-to-twitter' ) . '</li>
 				<li>' . __( 'Generate the Bearer Token', 'wp-to-twitter' ) . '</li>
 				<li>' . __( 'Copy and Save your Bearer Token', 'wp-to-twitter' ) . '</li>
-			</ol>
-			<p>' . __( 'The version 2 API also requires that all applications are associated with a Project.', 'wp-to-twitter' ) . '</p>
-			<ol>
-				<li>' . __( 'Choose "Projects and Apps" from the dashboard menu.', 'wp-to-twitter' ) . '</li>
-				<li>' . __( "Create a Project if you don't have one.", 'wp-to-twitter' ) . '</li>
-				<li>' . __( 'Add your App to your new Project.', 'wp-to-twitter' ) . '</li>
+				<li>' . __( 'If you already had a project, assign your app to the project.', 'wp-to-twitter' ) . '</li>
 			</ol>';
 
 			$bt_form = sprintf( $bt_form, '' ) . '<input type="hidden" name="oauth_settings" value="wtt_oauth_test" class="hidden" />';
