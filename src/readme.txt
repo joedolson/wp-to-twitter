@@ -62,7 +62,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 4.0.0 =
 
 * Rebranding to XPoster.
-* Update to use X.com API v2.
+* Update to use X.com API v2. (https://github.com/noweh/twitter-api-v2-php)
 * Those two things encompass a huge amount of change.
 
 = 3.7.0 =
