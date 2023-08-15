@@ -1,5 +1,6 @@
 {
     "require": {
-        "noweh/twitter-api-v2-php": "^3.2"
+        "noweh/twitter-api-v2-php": "^3.2",
+        "symfony/deprecation-contracts": "2.5.2"
     }
 }
