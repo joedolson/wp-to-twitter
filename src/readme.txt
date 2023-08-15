@@ -3,7 +3,7 @@ Contributors: joedolson
 Donate link: https://xposterpro.com
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
 Requires at least: 6.0
-Tested up to: 6.2
+Tested up to: 6.3
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
@@ -61,9 +61,9 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 = 4.0.0 =
 
-* Start rebranding to XPoster.
+* Rebranding to XPoster.
 * Update to use X.com API v2.
-* Those two things encompass a huge amount of change and ambiguity.
+* Those two things encompass a huge amount of change.
 
 = 3.7.0 =
 
