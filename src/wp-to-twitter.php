@@ -451,18 +451,23 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 							'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
 						);
 						update_option( 'wpt_app_limit', $rate_limit );
-					} catch ( Exception $e ) {
+					} catch ( \GuzzleHttp\Exception\RequestException $e ) {
 						// Get Guzzle exception response.
-						$response   = $e->getResponse();
-						$headers    = $response->getHeaders();
-						$rate_limit = array(
-							'rate-limit'    => $headers['x-rate-limit-remaining'],
-							'rate-reset'    => $headers['x-rate-limit-reset'],
-							'rate-24'       => $headers['x-app-limit-24hour-limit'],
-							'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
-						);
-						update_option( 'wpt_app_limit', $rate_limit );
-						$http_code = $response->getStatusCode();
+						if ( method_exists( $e, 'getResponse' ) ) {
+							$response   = $e->getResponse();
+							$headers    = $response->getHeaders();
+							$rate_limit = array(
+								'rate-limit'    => $headers['x-rate-limit-remaining'],
+								'rate-reset'    => $headers['x-rate-limit-reset'],
+								'rate-24'       => $headers['x-app-limit-24hour-limit'],
+								'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
+							);
+							update_option( 'wpt_app_limit', $rate_limit );
+							$http_code = $response->getStatusCode();
+						}
+					} catch ( Exception $e ) {
+						$http_code = 400;
+						$notice    = __( 'Unhandled response', 'wp-to-twitter' );
 					}
 					$notice = '';
 				} else {
