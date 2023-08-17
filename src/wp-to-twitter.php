@@ -57,7 +57,7 @@ if ( function_exists( 'wp_get_environment_type' ) ) {
 	}
 }
 
-require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'vendor_prefixed/vendor/scoper-autoload.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-functions.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php' );
