@@ -1,6 +1,12 @@
 {
     "require": {
-        "noweh/twitter-api-v2-php": "^3.2",
-        "symfony/deprecation-contracts": "2.5.2"
+        "php": ">=7.4",
+        "noweh/twitter-api-v2-php": "^3.2"
+    },
+    "config": {
+        "process-timeout": 1800,
+        "platform": {
+            "php": "7.4.30"
+        }
     }
 }
