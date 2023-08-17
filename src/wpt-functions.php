@@ -81,7 +81,7 @@ function wpt_set_log( $data, $id, $message ) {
  * @param string $data Option key.
  * @param int    $id Post ID.
  *
- * @return stored message.
+ * @return string message.
  */
 function wpt_get_log( $data, $id ) {
 	if ( 'test' === $id ) {
@@ -806,7 +806,6 @@ function wp_get_curl( $url ) {
 	curl_setopt( $curl, CURLOPT_USERAGENT, '' );
 	curl_setopt( $curl, CURLOPT_TIMEOUT, 10 );
 	curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true );
-	curl_setopt( $curl, CURLOPT_BINARYTRANSFER, true );
 
 	$response = curl_exec( $curl );
 	if ( 0 !== curl_errno( $curl ) || 200 !== curl_getinfo( $curl, CURLINFO_HTTP_CODE ) ) {
