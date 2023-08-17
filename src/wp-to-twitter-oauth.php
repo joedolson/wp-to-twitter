@@ -9,11 +9,11 @@
  * @link     https://www.joedolson.com/wp-to-twitter/
  */
 
+use WpToTwitter_Vendor\Noweh\TwitterApi\Client;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-use Noweh\TwitterApi\Client;
 
 /**
  * Function to test validity of credentials
