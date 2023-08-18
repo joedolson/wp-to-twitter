@@ -24,7 +24,7 @@ return array(
 	// The prefix configuration. If a non null value is be used, a random prefix
 	// will be generated instead.
 	//
-	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#prefix
+	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#prefix.
 	'prefix' => 'WpToTwitter_Vendor',
 
 	// By default when running php-scoper add-prefix, it will prefix all relevant code found in the current working
@@ -33,7 +33,7 @@ return array(
 	//
 	// This configuration entry is completely ignored when using Box.
 	//
-	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#finders-and-paths
+	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#finders-and-paths.
 	'finders' => array(
 		Finder::create()
 			->files()
@@ -59,7 +59,7 @@ return array(
 	// List of excluded files, i.e. files for which the content will be left untouched.
 	// Paths are relative to the configuration file unless if they are already absolute
 	//
-	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#patchers
+	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#patchers.
 	'exclude-files' => array(),
 
 	// When scoping PHP files, there will be scenarios where some of the code being scoped indirectly references the
@@ -67,9 +67,9 @@ return array(
 	// support for prefixing such strings. To circumvent that, you can define patchers to manipulate the file to your
 	// heart contents.
 	//
-	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#patchers
+	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#patchers.
 	'patchers' => array(
-		static function ( string $filePath, string $prefix, string $contents ): string {
+		static function ( string $filePath, string $prefix, string $contents ): string { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 			// Change the contents here.
 
 			return $contents;
@@ -78,7 +78,7 @@ return array(
 
 	// List of symbols to consider internal i.e. to leave untouched.
 	//
-	// For more information see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#excluded-symbols
+	// For more information see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#excluded-symbols.
 	'exclude-namespaces' => array(),
 	'exclude-classes'    => array(),
 	'exclude-functions'  => array(),
