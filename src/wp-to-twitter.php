@@ -2075,13 +2075,15 @@ function wpt_needs_bearer_token() {
 	if ( current_user_can( 'manage_options' ) || current_user_can( 'wpt_twitter_oauth' ) ) {
 		$screen = get_current_screen();
 		if ( 'profile' === $screen->id ) {
-			$auth = wp_get_current_user()->ID;
-			$bt   = get_user_meta( $auth, 'bearer_token', true );
+			$auth       = wp_get_current_user()->ID;
+			$authorized = wtt_oauth_test( $auth );
+			$bt         = get_user_meta( $auth, 'bearer_token', true );
 		} else {
-			$auth = false;
-			$bt   = get_option( 'bearer_token', '' );
+			$auth       = false;
+			$authorized = wtt_oauth_test();
+			$bt         = get_option( 'bearer_token', '' );
 		}
-		if ( ! $bt ) {
+		if ( ! $bt && $authorized ) {
 			if ( $auth && get_option( 'jd_individual_twitter_users' ) ) {
 				echo "<div class='notice error important'><p>" . __( '<strong>XPoster (formerly WP to Twitter)</strong> needs a Bearer Token added to your profile settings to support the X.com API.', 'wp-to-twitter' ) . '</p></div>';
 			} elseif ( current_user_can( 'manage_options' ) ) {
