@@ -25,3 +25,9 @@ Bugs or feature development contributions should be made through the [GitHub rep
 ## Authors 
 
 * [Joe Dolson](https://www.joedolson.com)
+
+## Contributors
+
+Contributors listed only since moving development to GitHub. [Github Contributors](https://github.com/joedolson/wp-to-twitter/graphs/contributors)
+
+* [Robert Korulczyk](https://github.com/rob006)
