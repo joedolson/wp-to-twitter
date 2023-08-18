@@ -59,6 +59,13 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 4.0.1 =
+
+* Prefix vendor classes for better cross compatibility. Props [Robert Korulczyk](https://github.com/rob006)
+* Improved catching of Exceptions.
+* Remove deprecated CURL arg.
+* Only show bearer token admin notice if user already authenticated.
+
 = 4.0.0 =
 
 * Rebranding to XPoster.
