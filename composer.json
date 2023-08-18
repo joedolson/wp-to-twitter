@@ -17,7 +17,8 @@
         "squizlabs/php_codesniffer": "^3.5",
         "wp-coding-standards/wpcs": "^2.2",
         "wp-phpunit/wp-phpunit": "^5.8",
-        "yoast/phpunit-polyfills": "^1.0"
+        "yoast/phpunit-polyfills": "^1.0",
+        "humbug/php-scoper": "^0.17.5"
     },
     "require": {
         "composer/installers": "~1.0"
@@ -25,7 +26,11 @@
     "scripts": {
         "format": "phpcbf --standard=phpcs.xml.dist --report-summary --report-source",
         "lint": "phpcs --standard=phpcs.xml.dist",
-        "test": "phpunit -c phpunit.xml.dist --verbose"
+        "test": "phpunit -c phpunit.xml.dist --verbose",
+        "scope": [
+            "@php ./vendor/bin/php-scoper add-prefix -d src/vendor -o ../vendor_prefixed -c ../../scoper.inc.php --force",
+            "composer dump-autoload --working-dir src/vendor_prefixed --classmap-authoritative"
+        ]
     },
     "config": {
         "allow-plugins": {

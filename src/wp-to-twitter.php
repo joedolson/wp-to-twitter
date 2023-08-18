@@ -37,6 +37,9 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+use WpToTwitter_Vendor\GuzzleHttp\Exception\RequestException;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -54,7 +57,7 @@ if ( function_exists( 'wp_get_environment_type' ) ) {
 	}
 }
 
-require_once( plugin_dir_path( __FILE__ ) . 'vendor/autoload.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'vendor_prefixed/vendor/scoper-autoload.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-functions.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php' );
@@ -451,7 +454,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 							'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
 						);
 						update_option( 'wpt_app_limit', $rate_limit );
-					} catch ( \GuzzleHttp\Exception\RequestException $e ) {
+					} catch ( RequestException $e ) {
 						// Get Guzzle exception response.
 						if ( method_exists( $e, 'getResponse' ) ) {
 							$response   = $e->getResponse();
