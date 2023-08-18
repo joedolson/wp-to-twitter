@@ -7,7 +7,7 @@ Tested up to: 6.3
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.0.0
+Stable tag: 4.0.1
 
 Posts an X.com update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
