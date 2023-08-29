@@ -406,6 +406,7 @@ function wtt_connect_oauth( $auth = false ) {
 
 			$bt_form = sprintf( $bt_form, '' ) . '<input type="hidden" name="oauth_settings" value="wtt_oauth_test" class="hidden" />';
 			if ( ! $auth ) {
+				// Translators: Name of the current site.
 				$submit = '<input type="submit" name="submit" class="button-primary" value="' . __( 'Add your Bearer Token', 'wp-to-twitter' ) . '" /> <button type="submit" name="oauth_settings" value="wtt_twitter_disconnect" class="button-secondary">' . sprintf( __( 'Disconnect %s from X.com', 'wp-to-twitter' ), $site ) . '</button>';
 			}
 		} else {
