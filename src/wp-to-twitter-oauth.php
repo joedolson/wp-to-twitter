@@ -305,7 +305,6 @@ function wtt_connect_oauth( $auth = false ) {
 		<label for="wtt_bearer_token">' . __( 'Bearer Token', 'wp-to-twitter' ) . '</label>
 		<input type="text" size="45" name="wtt_bearer_token" id="wtt_bearer_token" value="%s" />
 	</p>';
-
 	if ( ! wtt_oauth_test( $auth, 'verify' ) ) {
 		// show notification to authenticate with OAuth. No longer global; settings only.
 		if ( ! wpt_check_oauth() && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
@@ -390,6 +389,7 @@ function wtt_connect_oauth( $auth = false ) {
 		$bt    = ( ! $auth ) ? get_option( 'bearer_token' ) : get_user_meta( $auth, 'bearer_token', true );
 		$uname = ( ! $auth ) ? get_option( 'wtt_twitter_username' ) : get_user_meta( $auth, 'wtt_twitter_username', true );
 		$nonce = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
+		$site  = get_bloginfo( 'name' );
 
 		if ( ! $bt ) {
 			$information = '
@@ -406,12 +406,11 @@ function wtt_connect_oauth( $auth = false ) {
 
 			$bt_form = sprintf( $bt_form, '' ) . '<input type="hidden" name="oauth_settings" value="wtt_oauth_test" class="hidden" />';
 			if ( ! $auth ) {
-				$submit = '<input type="submit" name="submit" class="button-primary" value="' . __( 'Add your Bearer Token', 'wp-to-twitter' ) . '" />';
+				$submit = '<input type="submit" name="submit" class="button-primary" value="' . __( 'Add your Bearer Token', 'wp-to-twitter' ) . '" /> <button type="submit" name="oauth_settings" value="wtt_twitter_disconnect" class="button-secondary">' . sprintf( __( 'Disconnect %s from X.com', 'wp-to-twitter' ), $site ) . '</button>';
 			}
 		} else {
 			$bt_form = '';
 			if ( ! $auth ) {
-				$site = get_bloginfo( 'name' );
 				// Translators: Name of the current site.
 				$submit = '<input type="submit" name="submit" class="button-primary" value="' . sprintf( __( 'Disconnect %s from X.com', 'wp-to-twitter' ), $site ) . '" />
 						<input type="hidden" name="oauth_settings" value="wtt_twitter_disconnect" class="hidden" />';
