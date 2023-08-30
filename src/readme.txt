@@ -7,7 +7,7 @@ Tested up to: 6.3
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 
 Posts an X.com update when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -58,6 +58,10 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 4.0.2 =
+
+* Bug fix: Need to offer users the option to either disconnect or add a bearer token.
 
 = 4.0.1 =
 
