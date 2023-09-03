@@ -17,7 +17,7 @@
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
  * Domain Path: lang
- * Version:     4.0.2
+ * Version:     4.0.3
  */
 
 /*
@@ -66,7 +66,7 @@ require_once( plugin_dir_path( __FILE__ ) . 'wpt-truncate.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php' );
 
 global $wpt_version;
-$wpt_version = '4.0.2';
+$wpt_version = '4.0.3';
 
 add_action( 'init', 'wpt_load_textdomain' );
 /**
@@ -2097,49 +2097,4 @@ function wpt_needs_bearer_token() {
 			}
 		}
 	}
-}
-
-add_action( 'wp_enqueue_scripts', 'wpt_stylesheet' );
-/**
- * Enqueue front-end styles for X.com Feed widget if enabled.
- */
-function wpt_stylesheet() {
-	/**
-	 * Disable XPoster feeds stylesheet. Styles the X.com Feed widgets.
-	 *
-	 * @hook wpt_enqueue_feed_styles
-	 * @param {bool} $apply False to disable.
-	 *
-	 * @return {bool}
-	 */
-	$apply = apply_filters( 'wpt_enqueue_feed_styles', true );
-	if ( $apply ) {
-		/**
-		 * Replace the XPoster feeds stylesheet.
-		 *
-		 * @hook wpt_feed_stylesheet
-		 * @param {string} $file URL to stylesheet.
-		 *
-		 * @return {string}
-		 */
-		$file = apply_filters( 'wpt_feed_stylesheet', plugins_url( 'css/twitter-feed.css', __FILE__ ) );
-		wp_register_style( 'wpt-twitter-feed', $file );
-		wp_enqueue_style( 'wpt-twitter-feed' );
-	}
-}
-
-add_filter( 'wpt_enqueue_feed_styles', 'wpt_permit_feed_styles' );
-/**
- * Check whether X.com Feed styles are enabled.
- *
- * @param boolean $value true if permitted.
- *
- * @return boolean $value False if settings disable styles.
- */
-function wpt_permit_feed_styles( $value ) {
-	if ( '1' === get_option( 'wpt_permit_feed_styles' ) ) {
-		$value = false;
-	}
-
-	return $value;
 }

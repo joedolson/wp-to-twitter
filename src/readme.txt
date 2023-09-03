@@ -7,19 +7,15 @@ Tested up to: 6.3
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.0.2
+Stable tag: 4.0.3
 
-Posts an X.com update when you update your WordPress blog or add a link, with your chosen URL shortening service.
+Posts to X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
 == Description ==
 
 = Post Tweets from WordPress to X.com. =
 
-Yep. That's the basic functionality. But it's not the only thing you can do:
-
-* Display your Recent Tweets: Widget for your recent Tweets. Fetch Tweets from your own or any other account.
-* Display Tweets based on a search: Display the Tweets resulting from a search and limit by Geolocation.
-* Shorten URLs in your Tweets with popular URL shorteners, or let X.com to do it with [t.co](http://t.co). 
+XPoster, formerly known as WP to Twitter, is a time-saving tool for keeping your X.com accounts up to date with news and posts from your site.
 
 XPoster uses a customizable Tweet template for Tweets sent when updating or editing posts and pages or custom post types. You can customize your Tweet for each post, using custom template tags to generate the Tweet. 
 
@@ -32,8 +28,7 @@ XPoster uses a customizable Tweet template for Tweets sent when updating or edit
 * Use [YOURLS](https://yourls.org), [Bit.ly](https://wordpress.org/plugins/codehaveli-bitly-url-shortener/), [jotURL](https://joturl.com), or [Hum](https://wordpress.org/plugins/hum/) as external URL shorteners.
 * Rate limiting: make sure you don't exceed X.com's API rate limits. 
 
-= Premium Features =
-
+= Premium Features in [XPoster Pro](https://xposterpro.com) =
 * Authors can set up their own X.com accounts in their profiles
 * Time delayed Tweeting
 * Scheduled Tweet management
@@ -58,6 +53,11 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 4.0.3 =
+
+* Remove X.com feed and search widgets.
+* Improve error message reporting.
 
 = 4.0.2 =
 
