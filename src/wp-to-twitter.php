@@ -63,8 +63,6 @@ require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-truncate.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'classes/class-wpt-twitterfeed.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'wpt-widget.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php' );
 
 global $wpt_version;
@@ -76,15 +74,6 @@ add_action( 'init', 'wpt_load_textdomain' );
  */
 function wpt_load_textdomain() {
 	load_plugin_textdomain( 'wp-to-twitter' );
-}
-
-add_action( 'widgets_init', 'wpt_register_widgets' );
-/**
- * Register XPoster Widgets
- */
-function wpt_register_widgets() {
-	register_widget( 'WPT_Latest_Tweets_Widget' );
-	register_widget( 'WPT_Search_Tweets_Widget' );
 }
 
 /**

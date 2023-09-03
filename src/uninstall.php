@@ -72,6 +72,7 @@ if ( ! defined( 'ABSPATH' ) && ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	delete_option( 'jd_strip_nonan' );
 	delete_option( 'wpt_auto_tweet_allowed' );
 	delete_option( 'wpt_tweet_length' );
+	delete_option( 'wpt_permit_feed_styles' );
 
 	delete_option( 'jd_individual_twitter_users' );
 	delete_option( 'use_tags_as_hashtags' );

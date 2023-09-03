@@ -144,7 +144,6 @@ function wpt_updated_settings() {
 			}
 		}
 
-		update_option( 'wpt_permit_feed_styles', ( isset( $_POST['wpt_permit_feed_styles'] ) ) ? 1 : 0 );
 		update_option( 'wp_debug_oauth', ( isset( $_POST['wp_debug_oauth'] ) ) ? 1 : 0 );
 		update_option( 'wpt_debug_tweets', ( isset( $_POST['wpt_debug_tweets'] ) ) ? 1 : 0 );
 		$wpt_truncation_order = map_deep( $_POST['wpt_truncation_order'], 'sanitize_text_field' );
@@ -711,10 +710,6 @@ function wpt_update_settings() {
 						<fieldset>
 							<legend class='screen-reader-text'><?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?></legend>
 							<ul>
-								<li>
-									<input type="checkbox" name="wpt_permit_feed_styles" id="wpt_permit_feed_styles" value="1" <?php echo wpt_checkbox( 'wpt_permit_feed_styles' ); ?> />
-									<label for="wpt_permit_feed_styles"><?php _e( 'Disable X.com Feed Stylesheet', 'wp-to-twitter' ); ?></label>
-								</li>
 								<li>
 									<input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" <?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> <label for="wp_debug_oauth"><?php _e( 'Get Debugging Data for OAuth Connection', 'wp-to-twitter' ); ?></label>
 								</li>
