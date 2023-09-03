@@ -482,7 +482,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 						);
 						update_option( 'wpt_app_limit', $rate_limit );
 					} catch ( RequestException $e ) {
-						// Get Guzzle exception response.	
+						// Get Guzzle exception response.
 						if ( method_exists( $e, 'getResponse' ) ) {
 							$response   = $e->getResponse();
 							$headers    = $response->getHeaders();
@@ -530,25 +530,32 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					$error = __( '304 Not Modified: There was no new data to return', 'wp-to-twitter' );
 					break;
 				case 400:
+					// Translators: Error description from X.com.
 					$error = sprintf( __( '400: %s', 'wp-to-twitter' ), $notice );
 					break;
 				case 401:
+					// Translators: Error description from X.com.
 					$error = sprintf( __( '401: %s', 'wp-to-twitter' ), $notice );
 					update_option( 'wpt_authentication_missing', "$auth" );
 					break;
 				case 403:
+					// Translators: Error description from X.com.
 					$error = sprintf( __( '403: %s', 'wp-to-twitter' ), $notice );
 					break;
 				case 404:
+					// Translators: Error description from X.com.
 					$error = sprintf( __( '404: %s', 'wp-to-twitter' ), $notice );
 					break;
 				case 406:
+					// Translators: Error description from X.com.
 					$error = sprintf( __( '406: %s', 'wp-to-twitter' ), $notice );
 					break;
 				case 422:
+					// Translators: Error description from X.com.
 					$error = sprintf( __( '422: %s', 'wp-to-twitter' ), $notice );
 					break;
 				case 429:
+					// Translators: Error description from X.com.
 					$error = sprintf( __( '429: %s', 'wp-to-twitter' ), $notice );
 					break;
 				case 500:
