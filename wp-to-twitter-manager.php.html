@@ -170,7 +170,6 @@ function wpt_updated_settings() {
 			}
 		}
 
-		update_option( 'wpt_permit_feed_styles', ( isset( $_POST['wpt_permit_feed_styles'] ) ) ? 1 : 0 );
 		update_option( 'wp_debug_oauth', ( isset( $_POST['wp_debug_oauth'] ) ) ? 1 : 0 );
 		update_option( 'wpt_debug_tweets', ( isset( $_POST['wpt_debug_tweets'] ) ) ? 1 : 0 );
 		$wpt_truncation_order = map_deep( $_POST['wpt_truncation_order'], 'sanitize_text_field' );
@@ -738,10 +737,6 @@ function wpt_update_settings() {
 							&lt;legend class='screen-reader-text'>&lt;?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?>&lt;/legend>
 							&lt;ul>
 								&lt;li>
-									&lt;input type="checkbox" name="wpt_permit_feed_styles" id="wpt_permit_feed_styles" value="1" &lt;?php echo wpt_checkbox( 'wpt_permit_feed_styles' ); ?> />
-									&lt;label for="wpt_permit_feed_styles">&lt;?php _e( 'Disable X.com Feed Stylesheet', 'wp-to-twitter' ); ?>&lt;/label>
-								&lt;/li>
-								&lt;li>
 									&lt;input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" &lt;?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> &lt;label for="wp_debug_oauth">&lt;?php _e( 'Get Debugging Data for OAuth Connection', 'wp-to-twitter' ); ?>&lt;/label>
 								&lt;/li>
 								&lt;li>
@@ -1041,7 +1036,7 @@ function wpt_set_auto_tweet_allowed() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_process_tweets.html">wpt_process_tweets</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_enqueue_feed_styles.html">wpt_enqueue_feed_styles</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_feed_stylesheet.html">wpt_feed_stylesheet</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_postpone_rendering.html">wpt_postpone_rendering</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_enqueue_feed_styles.html">wpt_enqueue_feed_styles</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_feed_stylesheet.html">wpt_feed_stylesheet</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_postpone_rendering.html">wpt_postpone_rendering</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li></ul>
 </nav>
 
 <br class="clear">
