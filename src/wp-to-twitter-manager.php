@@ -796,7 +796,7 @@ function wpt_sidebar() {
 						$support     = '';
 					}
 					?>
-					<p><?php echo $support; ?><a href="<?php echo plugins_url( 'wp-tweets-pro-2.0.0.pdf', __FILE__ ); ?>"><?php _e( 'Read the Manual', 'wp-to-twitter' ); ?></a></p>
+					<p><?php echo $support; ?><a href="https://docs.xposterpro.com/"><?php _e( 'Documentation', 'wp-to-twitter' ); ?></a></p>
 					</div>
 				</div>
 			</div>
@@ -943,6 +943,10 @@ function wpt_tweet_length() {
 			break;
 		default:
 			$default = 280;
+	}
+	if ( ! get_option( 'wpt_tweet_length' ) ) {
+		// If not set, save as option so character counter works correctly.
+		update_option( 'wpt_tweet_length', $default );
 	}
 	$tweet_length = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : $default );
 	$control      = "<p class='tweet_length_control'>
