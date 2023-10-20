@@ -745,7 +745,7 @@ function wpt_get_support_form() {
 		" . wpautop( $data ) . '
 		</div>';
 	} else {
-		echo '<p>' . __( 'You need a valid XPoster Pro license to receive support.', 'wp-to-twitter' ) . '</p>';
+		echo '<p>' . __( 'You need a valid XPoster Pro license to receive support. Return to this screen to use the premium support form after <a href="https://xposterpro.com/awesome/xposter-pro/">getting your Pro license</a>.', 'wp-to-twitter' ) . '</p>';
 	}
 	wpt_faq();
 }
@@ -762,10 +762,6 @@ function wpt_faq() {
 		array(
 			'question' => __( "I'm receiving a '401 Unauthorized' error from X.com, but my credentials haven't changed. What should I do?", 'wp-to-twitter' ),
 			'answer'   => __( 'First, check and see whether your app has been suspended in your X.com developer account. If it has, see above. If not, this is most likely a temporary problem in the X.com API; but you can try generating new keys and secrets in your developer account and re-connect your app. Some users have also been successful by changing their account status to the free account. (Older accounts may have a legacy status that is not handled well by X.com.)', 'wp-to-twitter' ),
-		),
-		array(
-			'question' => __( 'Error code 453: You currently have access to X.com API v2 endpoints and limited v1.1 endpoints only.', 'wp-to-twitter' ),
-			'answer'   => __( 'This is most likely caused by use of an API endpoint that is not included in the new free API tier. According to X.com documentation, the X.com Feed is not an allowed endpoint, although I have not personally had any problems with it yet. Enforcement of API rules appears to be inconsistent, so this is only a guess. You can try removing the X.com Feed widget from your site.', 'wp-to-twitter' ),
 		),
 	);
 
