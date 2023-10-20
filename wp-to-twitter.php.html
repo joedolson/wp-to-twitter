@@ -1477,20 +1477,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		?>
 		&lt;div class='wpt-options'>
-			&lt;?php
-			if ( 'pro' === $is_pro ) {
-				$pro_active  = " class='active'";
-				$free_active = '';
-			} else {
-				$free_active = " class='active'";
-				$pro_active  = '';
-			}
-			?>
-			&lt;ul class='tabs' role="tablist">
-				&lt;li>&lt;a href='#custom' aria-controls="custom" role="tab" id="tab_custom">&lt;?php _e( 'Options', 'wp-to-twitter' ); ?>&lt;/a>&lt;/li>
-				&lt;li>&lt;a href='#notes'&lt;?php echo $free_active; ?> aria-controls="notes" role="tab" id="tab_notes">&lt;?php _e( 'Help', 'wp-to-twitter' ); ?>&lt;/a>&lt;/li>
-			&lt;/ul>
-			&lt;div class='wptab' id='custom' aria-labelledby='tab_custom' role='tabpanel'>
+			&lt;div class='wptab' id='custom'>
 			&lt;?php
 			if ( function_exists( 'wpt_pro_exists' ) &amp;&amp; true === wpt_pro_exists() &amp;&amp; ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
 				wpt_schedule_values( $post_id );
@@ -1518,13 +1505,17 @@ function wpt_add_twitter_inner_box( $post ) {
 			}
 			?>
 			&lt;/div>
-			&lt;div class='wptab' id='notes' aria-labelledby='tab_notes' role='tabpanel'>
-				&lt;p>
+			&lt;div class='wptab' id='notes'>
+				&lt;h3>&lt;?php _e( 'Template Tags', 'wp-to-twitter' ); ?>&lt;/h3>
+				&lt;ul class="inline-list">
 				&lt;?php
-				_e( 'Template Tags:&lt;br />&lt;code>#url#&lt;/code>, &lt;code>#title#&lt;/code>, &lt;code>#post#&lt;/code>, &lt;code>#category#&lt;/code>, &lt;code>#categories#&lt;/code>, &lt;code>#date#&lt;/code>, &lt;code>#modified#&lt;/code>, &lt;code>#author#&lt;/code>, &lt;code>#account#&lt;/code>, &lt;code>#tags#&lt;/code>, &lt;code>#blog#&lt;/code>, &lt;code>#longurl#&lt;/code>.', 'wp-to-twitter' );
+				$tags = wpt_tags();
+				foreach ( $tags as $tag ) {
+					echo '&lt;li>&lt;code>#' . $tag . '#&lt;/code>&lt;/li>';
+				}
 				do_action( 'wpt_notes_tab', $post_id );
 				?>
-				&lt;/p>
+				&lt;/ul>
 			&lt;/div>
 		&lt;/div>
 		&lt;?php wpt_show_tweets( $post_id ); ?>
