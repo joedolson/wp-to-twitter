@@ -33,6 +33,9 @@
 	height: auto;
 }
 
+.edit-post-meta-boxes-area #wp2t.postbox > .inside {
+	padding: 0 12px 12px;
+}
 
 .wp-to-twitter .panel-toggle {
 	margin-bottom: 0;
