@@ -1595,7 +1595,7 @@ function wpt_admin_scripts() {
 	if ( SCRIPT_DEBUG ) {
 		$wpt_version .= '-' . rand( 10000, 99999 );
 	}
-	if ( 'post' === $current_screen->base || 'wp-tweets-pro_page_wp-to-twitter-schedule' === $current_screen->id ) {
+	if ( 'post' === $current_screen->base || 'xposter-pro_page_wp-to-twitter-schedule' === $current_screen->id ) {
 		wp_enqueue_script( 'wpt.charcount', plugins_url( 'js/jquery.charcount.js', __FILE__ ), array( 'jquery' ), $wpt_version );
 		wp_register_style( 'wpt-post-styles', plugins_url( 'css/post-styles.css', __FILE__ ), array(), $wpt_version );
 		wp_enqueue_style( 'wpt-post-styles' );
@@ -1662,8 +1662,7 @@ add_action( 'wp_ajax_wpt_tweet', 'wpt_ajax_tweet' );
  */
 function wpt_ajax_tweet() {
 	if ( ! check_ajax_referer( 'wpt-tweet-nonce', 'security', false ) ) {
-		echo 'Invalid Security Check';
-		die;
+		wp_die( __( 'XPoster: Invalid Security Check', 'wp-to-twitter' ) );
 	}
 	$action       = ( 'tweet' === $_REQUEST['tweet_action'] ) ? 'tweet' : 'schedule';
 	$authors      = ( isset( $_REQUEST['tweet_auth'] ) && null !== $_REQUEST['tweet_auth'] ) ? map_deep( $_REQUEST['tweet_auth'], 'sanitize_text_field' ) : false;
