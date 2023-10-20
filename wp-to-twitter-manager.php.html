@@ -822,7 +822,7 @@ function wpt_sidebar() {
 						$support     = '';
 					}
 					?>
-					&lt;p>&lt;?php echo $support; ?>&lt;a href="&lt;?php echo plugins_url( 'wp-tweets-pro-2.0.0.pdf', __FILE__ ); ?>">&lt;?php _e( 'Read the Manual', 'wp-to-twitter' ); ?>&lt;/a>&lt;/p>
+					&lt;p>&lt;?php echo $support; ?>&lt;a href="https://docs.xposterpro.com/">&lt;?php _e( 'Documentation', 'wp-to-twitter' ); ?>&lt;/a>&lt;/p>
 					&lt;/div>
 				&lt;/div>
 			&lt;/div>
@@ -969,6 +969,10 @@ function wpt_tweet_length() {
 			break;
 		default:
 			$default = 280;
+	}
+	if ( ! get_option( 'wpt_tweet_length' ) ) {
+		// If not set, save as option so character counter works correctly.
+		update_option( 'wpt_tweet_length', $default );
 	}
 	$tweet_length = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : $default );
 	$control      = "&lt;p class='tweet_length_control'>
