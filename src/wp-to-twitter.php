@@ -1412,7 +1412,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			?>
 			<p class='jtw'>
 				<label for="wpt_custom_tweet"><?php _e( 'Custom Tweet', 'wp-to-twitter' ); ?></label><br/>
-				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php esc_attr_e( $expanded ); ?>" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
+				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php esc_attr( $expanded ); ?>" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
 				<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
 			</p>
 			<p class='wpt-template'>
@@ -1498,6 +1498,12 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( function_exists( 'wpt_pro_exists' ) ) {
 			?>
 			<a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php _e( 'Get Support', 'wp-to-twitter' ); ?></a> &raquo;
+			<?php
+		} else {
+			?>
+			<p class="link-highlight">
+				<a href="https://xposterpro.com/awesome/xposter-pro/"><?php _e( 'Buy XPoster Pro', 'wp-to-twitter' ); ?></a>
+			</p>
 			<?php
 		}
 		?>
@@ -1593,7 +1599,10 @@ function wpt_admin_scripts() {
 		wp_enqueue_script( 'wpt.charcount', plugins_url( 'js/jquery.charcount.js', __FILE__ ), array( 'jquery' ), $wpt_version );
 		wp_register_style( 'wpt-post-styles', plugins_url( 'css/post-styles.css', __FILE__ ), array(), $wpt_version );
 		wp_enqueue_style( 'wpt-post-styles' );
-		$css = '#wp2t h3, #wp2t h2 { background: url("' . plugins_url( 'wp-to-twitter/images/logo-black.png' ) . '") 4px 50% no-repeat; }';
+		$css = '#wp2t h2 {
+			background: url("' . plugins_url( 'images/logo-black.png', __FILE__ ) . '") 12px 50% no-repeat;
+			padding-left: 32px !important;
+		}';
 		wp_add_inline_style( 'wpt-post-styles', $css );
 		$config = wpt_max_length();
 		// add one; character count starts from 1.

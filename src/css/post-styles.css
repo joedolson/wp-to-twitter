@@ -294,3 +294,23 @@ button.time div {
     clip: rect(1px, 1px, 1px, 1px);
     overflow: hidden;
 }
+
+.link-highlight {
+	text-align: center;
+	margin: 1rem;
+}
+
+.link-highlight a {
+	padding: .5rem 1rem;
+	font-size: 1.2rem;
+	background: #555;
+	font-weight: 700;
+	text-decoration: none;
+	color: #fff;
+	box-shadow: 3px 3px 0 #fcb000;
+}
+
+.link-highlight a:hover,
+.link-highlight a:focus {
+	box-shadow: 3px 3px 0 #000;
+}
