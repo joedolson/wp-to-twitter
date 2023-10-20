@@ -1412,7 +1412,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			?>
 			<p class='jtw'>
 				<label for="wpt_custom_tweet"><?php _e( 'Custom Tweet', 'wp-to-twitter' ); ?></label><br/>
-				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
+				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php esc_attr_e( $expanded ); ?>" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
 				<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
 			</p>
 			<p class='wpt-template'>
