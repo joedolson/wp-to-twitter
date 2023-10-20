@@ -3,11 +3,11 @@ Contributors: joedolson
 Donate link: https://xposterpro.com
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
 Requires at least: 6.0
-Tested up to: 6.3
+Tested up to: 6.4
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.0.3
+Stable tag: 4.1.0
 
 Posts to X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -53,6 +53,20 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 4.1.0 =
+
+* Bug fix: X.com upload endpoint doesn't support gif; disable upload if gif.
+* Bug fix: Fix screen name comparisons so Pro scripts load correctly.
+* Bug fix: Save default Tweet length option so character count uses correct value.
+* Update: override block editor sidebar padding.
+* Update: Combine separate admin script registrations into one function.
+* Update: Add versions to registered scripts and styles.
+* Update: Remove tab interface in post sidebar.
+* Update: Add default template to tweet text box as placeholder.
+* Update: Change default excerpt length to 60.
+* Update: Add missing sales link & update docs link.
+* Update: Remove obsolete FAQ question.
 
 = 4.0.3 =
 
