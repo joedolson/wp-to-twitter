@@ -1599,8 +1599,8 @@ function wpt_admin_scripts() {
 		$wpt_version .= '-' . rand( 10000, 99999 );
 	}
 	if ( 'post' === $current_screen->base || 'wp-tweets-pro_page_wp-to-twitter-schedule' === $current_screen->id ) {
-		wp_enqueue_script( 'charCount', plugins_url( 'wp-to-twitter/js/jquery.charcount.js' ), array( 'jquery' ), $wpt_version );
-		wp_register_style( 'wpt-post-styles', plugins_url( 'css/post-styles.css', __FILE__ ) );
+		wp_enqueue_script( 'wpt.charcount', plugins_url( 'wp-to-twitter/js/jquery.charcount.js' ), array( 'jquery' ), $wpt_version );
+		wp_register_style( 'wpt-post-styles', plugins_url( 'css/post-styles.css', __FILE__ ), array(), $wpt_version );
 		wp_enqueue_style( 'wpt-post-styles' );
 		$css = '#wp2t h3, #wp2t h2 { background: url("' . plugins_url( 'wp-to-twitter/images/logo-black.png' ) . '") 4px 50% no-repeat; }';
 		wp_add_inline_style( 'wpt-post-styles', $css );
@@ -1616,7 +1616,7 @@ function wpt_admin_scripts() {
 		} else {
 			$first = '#notes';
 		}
-		wp_register_script( 'wpt-base-js', plugins_url( 'js/base.js', __FILE__ ), array( 'jquery', 'charCount' ) );
+		wp_register_script( 'wpt-base-js', plugins_url( 'js/base.js', __FILE__ ), array( 'jquery', 'wpt.charcount' ), $wpt_version );
 		wp_enqueue_script( 'wpt-base-js' );
 		wp_localize_script(
 			'wpt-base-js',
