@@ -1438,7 +1438,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			?>
 			&lt;p class='jtw'>
 				&lt;label for="wpt_custom_tweet">&lt;?php _e( 'Custom Tweet', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
-				&lt;textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" rows="2" cols="60">&lt;?php echo esc_attr( $tweet ); ?>&lt;/textarea>
+				&lt;textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="&lt;?php esc_attr_e( $expanded ); ?>" rows="2" cols="60">&lt;?php echo esc_attr( $tweet ); ?>&lt;/textarea>
 				&lt;?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
 			&lt;/p>
 			&lt;p class='wpt-template'>
