@@ -571,6 +571,10 @@ function wpt_post_attachment( $post_ID ) {
 	$use_featured_image = apply_filters( 'wpt_use_featured_image', true, $post_ID );
 	if ( has_post_thumbnail( $post_ID ) && $use_featured_image ) {
 		$attachment = get_post_thumbnail_id( $post_ID );
+		// X.com API endpoint does not accept GIFs.
+		if ( wp_attachment_is( 'gif', $attachment ) ) {
+			return false;
+		}
 
 		$return = $attachment;
 	} else {
