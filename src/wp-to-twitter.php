@@ -1451,20 +1451,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		?>
 		<div class='wpt-options'>
-			<?php
-			if ( 'pro' === $is_pro ) {
-				$pro_active  = " class='active'";
-				$free_active = '';
-			} else {
-				$free_active = " class='active'";
-				$pro_active  = '';
-			}
-			?>
-			<ul class='tabs' role="tablist">
-				<li><a href='#custom' aria-controls="custom" role="tab" id="tab_custom"><?php _e( 'Options', 'wp-to-twitter' ); ?></a></li>
-				<li><a href='#notes'<?php echo $free_active; ?> aria-controls="notes" role="tab" id="tab_notes"><?php _e( 'Help', 'wp-to-twitter' ); ?></a></li>
-			</ul>
-			<div class='wptab' id='custom' aria-labelledby='tab_custom' role='tabpanel'>
+			<div class='wptab' id='custom'>
 			<?php
 			if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() && ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
 				wpt_schedule_values( $post_id );
@@ -1492,13 +1479,17 @@ function wpt_add_twitter_inner_box( $post ) {
 			}
 			?>
 			</div>
-			<div class='wptab' id='notes' aria-labelledby='tab_notes' role='tabpanel'>
-				<p>
+			<div class='wptab' id='notes'>
+				<h3><?php _e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
+				<ul class="inline-list">
 				<?php
-				_e( 'Template Tags:<br /><code>#url#</code>, <code>#title#</code>, <code>#post#</code>, <code>#category#</code>, <code>#categories#</code>, <code>#date#</code>, <code>#modified#</code>, <code>#author#</code>, <code>#account#</code>, <code>#tags#</code>, <code>#blog#</code>, <code>#longurl#</code>.', 'wp-to-twitter' );
+				$tags = wpt_tags();
+				foreach ( $tags as $tag ) {
+					echo '<li><code>#' . $tag . '#</code></li>';
+				}
 				do_action( 'wpt_notes_tab', $post_id );
 				?>
-				</p>
+				</ul>
 			</div>
 		</div>
 		<?php wpt_show_tweets( $post_id ); ?>
