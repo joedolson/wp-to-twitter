@@ -1,4 +1,4 @@
-jQuery(document).ready(function ($) {
+(function ($) {
 	$('#wpt_custom_tweet, #wpt_retweet_0, #wpt_retweet_1, #wpt_retweet_3').charCount({
 		allowed: wptSettings.allowed,
 		counterText: wptSettings.text
@@ -39,4 +39,4 @@ jQuery(document).ready(function ($) {
 		}
 		$('.wp-to-twitter .history').toggle('slow');
 	});
-});
+}(jQuery));
