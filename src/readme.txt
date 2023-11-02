@@ -57,6 +57,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 4.1.1 =
 
 * Debugging improvements.
+* Show update to Miscellaneous settings checkboxes immediately. Props @mt8.
 
 = 4.1.0 =
 

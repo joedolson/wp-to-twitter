@@ -31,3 +31,4 @@ Bugs or feature development contributions should be made through the [GitHub rep
 Contributors listed only since moving development to GitHub. [Github Contributors](https://github.com/joedolson/wp-to-twitter/graphs/contributors)
 
 * [Robert Korulczyk](https://github.com/rob006)
+* [mt8.biz](https://github.com/mt8)
