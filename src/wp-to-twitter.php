@@ -457,12 +457,14 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 							);
 							update_option( 'wpt_app_limit', $rate_limit );
 							$http_code = $response->getStatusCode();
+							wpt_mail( 'X RequestException', print_r( $response, 1 ), $id );
 						}
 					} catch ( Exception $e ) {
 						if ( method_exists( $e, 'getMessage' ) ) {
 							$error     = json_decode( $e->getMessage() );
 							$http_code = $e->getCode();
 							$notice    = $error->title . ': ' . $error->detail;
+							wpt_mail( 'X Exception', print_r( $error, 1 ), $id );
 						} else {
 							$http_code = 405;
 							$notice    = __( 'Unhandled response', 'wp-to-twitter' );
