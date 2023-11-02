@@ -36,7 +36,7 @@ function wpt_checkbox( $field, $sub1 = false, $sub2 = '' ) {
 			return 'checked="checked"';
 		}
 	}
-	if ( '1' === get_option( $field ) ) {
+	if ( 1 === (int) get_option( $field ) ) {
 		return 'checked="checked"';
 	}
 
