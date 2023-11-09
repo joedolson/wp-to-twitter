@@ -1007,7 +1007,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 					} else {
 						foreach ( $wpt_selected_users as $acct ) {
 							$acct   = ( 'main' === $acct ) ? false : $acct;
-							$offset = ( $auth !== $acct ) ? apply_filters( 'wpt_random_delay', rand( 60, 480 ) ) : 0;
+							$offset = ( $auth !== $acct ) ? apply_filters( 'wpt_random_delay', wp_rand( 60, 480 ) ) : 0;
 							if ( wtt_oauth_test( $acct, 'verify' ) ) {
 								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
 
@@ -1089,7 +1089,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 										// add original delay to schedule.
 										$delay = ( isset( $post_info['wpt_delay_tweet'] ) ) ? ( (int) $post_info['wpt_delay_tweet'] ) * 60 : 0;
 										// Don't delay the first Tweet of the group.
-										$offset = ( true === $first ) ? 0 : rand( 60, 240 ); // delay each co-tweet by 1-4 minutes.
+										$offset = ( true === $first ) ? 0 : wp_rand( 60, 240 ); // delay each co-tweet by 1-4 minutes.
 										$time   = apply_filters( 'wpt_schedule_retweet', ( $post_info['wpt_retweet_after'] ) * ( 60 * 60 ) * $i, $acct, $i, $post_info );
 										wp_schedule_single_event(
 											time() + $time + $offset + $delay,
@@ -1595,7 +1595,7 @@ add_action( 'admin_enqueue_scripts', 'wpt_admin_scripts', 10, 1 );
 function wpt_admin_scripts() {
 	global $current_screen, $wpt_version;
 	if ( SCRIPT_DEBUG ) {
-		$wpt_version .= '-' . rand( 10000, 99999 );
+		$wpt_version .= '-' . wp_rand( 10000, 99999 );
 	}
 	if ( 'post' === $current_screen->base || 'xposter-pro_page_wp-to-twitter-schedule' === $current_screen->id ) {
 		wp_enqueue_script( 'wpt.charcount', plugins_url( 'js/jquery.charcount.js', __FILE__ ), array( 'jquery' ), $wpt_version );
@@ -1694,7 +1694,7 @@ function wpt_ajax_tweet() {
 		$sentence       = stripcslashes( trim( $sentence ) );
 		$post_info      = wpt_post_info( $post_ID );
 		$sentence       = jd_truncate_tweet( $sentence, $post_info, $post_ID, false, $user_ID );
-		$schedule       = ( isset( $_REQUEST['tweet_schedule'] ) ) ? strtotime( $_REQUEST['tweet_schedule'] ) : rand( 60, 240 );
+		$schedule       = ( isset( $_REQUEST['tweet_schedule'] ) ) ? strtotime( $_REQUEST['tweet_schedule'] ) : wp_rand( 60, 240 );
 		$print_schedule = date_i18n( get_option( 'date_format' ) . ' @ ' . get_option( 'time_format' ), $schedule );
 		$offset         = ( 60 * 60 * get_option( 'gmt_offset' ) );
 		$schedule       = $schedule - $offset;
@@ -1823,7 +1823,7 @@ add_action( 'admin_head', 'wpt_admin_style' );
 function wpt_admin_style() {
 	global $wpt_version;
 	if ( SCRIPT_DEBUG ) {
-		$wpt_version .= '-' . rand( 10000, 99999 );
+		$wpt_version .= '-' . wp_rand( 10000, 99999 );
 	}
 	if ( isset( $_GET['page'] ) && ( 'wp-to-twitter' === $_GET['page'] || 'wp-tweets-pro' === $_GET['page'] || 'wp-to-twitter-schedule' === $_GET['page'] || 'wp-to-twitter-tweets' === $_GET['page'] || 'wp-to-twitter-errors' === $_GET['page'] ) ) {
 		wp_enqueue_style( 'wpt-styles', plugins_url( 'css/styles.css', __FILE__ ), array(), $wpt_version );

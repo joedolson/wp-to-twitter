@@ -119,7 +119,7 @@ function wpt_check_functions() {
 	}
 	// check twitter credentials.
 	if ( wtt_oauth_test() ) {
-		$rand     = rand( 1000000, 9999999 );
+		$rand     = wp_rand( 1000000, 9999999 );
 		$testpost = wpt_post_to_twitter( "This is a test of XPoster. $shrink ($rand)" );
 		if ( $testpost ) {
 			$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to X.com.', 'wp-to-twitter' ) . '</strong></li>';
