@@ -32,8 +32,10 @@ function wpt_checkbox( $field, $sub1 = false, $sub2 = '' ) {
 		} else {
 			$value = 0;
 		}
-		if ( 1 === (int) $value ) {
+		if ( $value && 1 === (int) $value ) {
 			return 'checked="checked"';
+		} else {
+			return '';
 		}
 	}
 	if ( 1 === (int) get_option( $field ) ) {
