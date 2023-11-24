@@ -177,7 +177,8 @@ function wpt_updated_settings() {
 
 		$wpt_settings = array_combine( $keys, $values );
 		update_option( 'wpt_post_types', $wpt_settings );
-		update_option( 'newlink-published-text', sanitize_text_field( $_POST['newlink-published-text'] ) );
+		$newlink_published_text = ( isset( $_POST['newlink-published-text'] ) ) ? sanitize_text_field( $_POST['newlink-published-text'] ) : '';
+		update_option( 'newlink-published-text', $newlink_published_text );
 		update_option( 'jd_twit_blogroll', ( isset( $_POST['jd_twit_blogroll'] ) ) ? 1 : '' );
 		$message  = wpt_select_shortener( map_deep( $_POST, 'sanitize_text_field' ) );
 		$message .= __( 'XPoster Options Updated', 'wp-to-twitter' );
