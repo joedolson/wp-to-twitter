@@ -54,6 +54,12 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 4.1.2 =
+
+* Bug fix: Checkbox marked as checked in plugin settings if parent array exists.
+* Bug fix: Fix PHP notice when link manager not enabled.
+* Change: Use wp_rand to generate random integer instead of mt_rand.
+
 = 4.1.1 =
 
 * Debugging improvements.
