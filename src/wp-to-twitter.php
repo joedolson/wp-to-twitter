@@ -2071,7 +2071,7 @@ add_action( 'admin_notices', 'wpt_needs_bearer_token', 10 );
 function wpt_needs_bearer_token() {
 	if ( current_user_can( 'manage_options' ) || current_user_can( 'wpt_twitter_oauth' ) ) {
 		$screen = get_current_screen();
-		if ( 'profile' === $screen->id ) {
+		if ( 'profile' === $screen->id && get_option( 'jd_individual_twitter_users' ) ) {
 			$auth       = wp_get_current_user()->ID;
 			$authorized = wtt_oauth_test( $auth );
 			$bt         = get_user_meta( $auth, 'bearer_token', true );
