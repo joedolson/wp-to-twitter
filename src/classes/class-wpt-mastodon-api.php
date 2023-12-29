@@ -9,7 +9,7 @@
  * @link     https://www.joedolson.com/wp-to-twitter/
  */
 
- if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -23,9 +23,26 @@
  * @link https://github.com/Eleirbag89/MastodonBotPHP
  */
 class Wpt_Mastodon_Api {
+	/**
+	 * Access token for Mastodon instance.
+	 *
+	 * @var string
+	 */
 	private $token;
+
+	/**
+	 * URL for instance root.
+	 *
+	 * @var string
+	 */
 	private $instance_url;
 
+	/**
+	 * Construct.
+	 *
+	 * @param string $token Access token for Mastodon instance.
+	 * @param string $instance_url URL to instance root.
+	 */
 	public function __construct( $token, $instance_url ) {
 		$this->token        = $token;
 		$this->instance_url = $instance_url;
@@ -34,23 +51,23 @@ class Wpt_Mastodon_Api {
 	/**
 	 * Post a status to the mastodon status endpoint.
 	 *
-	 * @param array $status Array posted to Mastodon. [status,visibility,language,media_ids="[]"]
+	 * @param array $status Array posted to Mastodon. [status,visibility,language,media_ids="[]"].
 	 *
 	 * @return array Mastodon response.
 	 */
-	public function postStatus( $status ) {
-		return $this->callAPI( '/api/v1/statuses', 'POST', $status );
+	public function post_status( $status ) {
+		return $this->call_api( '/api/v1/statuses', 'POST', $status );
 	}
 
 	/**
 	 * Post a media attachment to the mastodon status endpoint.
 	 *
-	 * @param array $media Array of media data posted to Mastodon. [file,description]
+	 * @param array $media Array of media data posted to Mastodon. [file,description].
 	 *
 	 * @return array Mastodon response.
 	 */
-	public function uploadMedia( $media ) {
-		return $this->callAPI( '/api/v1/media', 'POST', $media );
+	public function upload_media( $media ) {
+		return $this->call_api( '/api/v1/media', 'POST', $media );
 	}
 
 	/**
@@ -62,7 +79,7 @@ class Wpt_Mastodon_Api {
 	 *
 	 * @return array Mastodon response or error.
 	 */
-	public function callAPI( $endpoint, $method, $data ) {
+	public function call_api( $endpoint, $method, $data ) {
 		$headers = array(
 			'Authorization: Bearer ' . $this->token,
 			'Content-Type: multipart/form-data',

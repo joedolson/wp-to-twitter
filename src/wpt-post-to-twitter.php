@@ -9,7 +9,7 @@
  * @link     https://www.xposter.com
  */
 
- if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
 
@@ -33,8 +33,8 @@ function wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id
 			if ( ! $attachment_data ) {
 				return $status;
 			}
-			$media_info      = $connection->uploadMedia()->upload( $attachment_data );
-			$status          = array(
+			$media_info = $connection->uploadMedia()->upload( $attachment_data );
+			$status     = array(
 				'text'  => $text,
 				'media' => array(
 					'media_ids' => array(

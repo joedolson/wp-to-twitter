@@ -9,9 +9,11 @@
  * @link     https://www.xposter.com
  */
 
- if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
+
+require_once( plugin_dir_path( __FILE__ ) . 'classes/class-wpt-mastodon-api.php' );
 
 /**
  * Upload media to Mastodon API.
@@ -44,7 +46,7 @@ function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $i
 			if ( ! $attachment_data ) {
 				return $status;
 			}
-			$request         = array(
+			$request = array(
 				'file'        => $attachment_data,
 				'description' => $alt_text,
 			);
@@ -86,7 +88,7 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		$connection = true;
 		$http_code  = 200;
 		$notice     = __( 'In Staging Mode:', 'wp-to-twitter' ) . ' ';
-		$status_id = false;
+		$status_id  = false;
 	} else {
 		/**
 		 * Filter the approval to send a Mastodon Toot.
@@ -99,7 +101,7 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		 *
 		 * @return {bool}
 		 */
-		$do_post  = apply_filters( 'wpt_do_toot', true, $auth, $id, $status['text'] );
+		$do_post   = apply_filters( 'wpt_do_toot', true, $auth, $id, $status['text'] );
 		$status_id = false;
 		// Change status array to Mastodon expectation.
 		$status['status'] = $status['text'];
@@ -117,9 +119,9 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		 */
 		$status = apply_filters( 'wpt_filter_mastodon_status', $status, $id, $auth );
 		if ( $do_post ) {
-			$return     = $connection->postStatus( $status );
-			$http_code  = 200;
-			$status_id  = $return->data->id;
+			$return    = $connection->postStatus( $status );
+			$http_code = 200;
+			$status_id = $return->data->id;
 		} else {
 			$http_code = '000';
 			$notice    = __( 'Status Update cancelled by custom filter.', 'wp-to-twitter' );
