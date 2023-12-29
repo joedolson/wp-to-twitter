@@ -59,6 +59,8 @@ if ( function_exists( 'wp_get_environment_type' ) ) {
 
 require_once( plugin_dir_path( __FILE__ ) . 'vendor_prefixed/vendor/scoper-autoload.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-functions.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'wpt-post-to-twitter.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'wpt-post-to-mastodon.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php' );
@@ -375,7 +377,6 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 
 		return false;
 	} else {
-		$media_id = false;
 		// must be designated as media and have a valid attachment.
 		$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
 		if ( $attachment ) {
@@ -400,9 +401,17 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$notice     = $response['notice'];
 			$tweet_id   = $response['tweet_id'];
 		}
+		if ( wtt_mastodon_test( $auth ) ) {
+			$connection = wpt_mastodon_connection( $auth );
+			$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
+			$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
+			$http_code  = $response['http'];
+			$notice     = $response['notice'];
+			$tweet_id   = $response['tweet_id'];
+		}
 		wpt_mail( 'X Connection', "$twit, $auth, $id, $media", $id );
 		if ( $connection ) {
-			$response = wpt_get_twitter_response_message( $http_code, $notice, $auth );
+			$response = wpt_get_response_message( $http_code, $notice, $auth );
 			$error    = $response['error'];
 			$return   = $response['return'];
 			wpt_mail( "X.com Response: $http_code", $error, $id ); // DEBUG.
@@ -457,8 +466,9 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 	}
 }
 
+
 /**
- * Get text error message from HTTP code for Twitter API.
+ * Get text error message from HTTP code.
  *
  * @param int      $http_code HTTP returned.
  * @param string   $notice Any already generated notification message.
@@ -466,7 +476,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
  *
  * @return array
  */
-function wpt_get_twitter_response_message( $http_code, $notice, $auth ) {
+function wpt_get_response_message( $http_code, $notice, $auth ) {
 	$return = false;
 	switch ( $http_code ) {
 		case '000':
@@ -536,170 +546,93 @@ function wpt_get_twitter_response_message( $http_code, $notice, $auth ) {
 }
 
 /**
- * Upload media to Twitter API.
+ * Get image binary for passing to API.
  *
- * @param object   $connection Twitter connection.
- * @param int|bool $auth Connection context.
- * @param int      $attachment Attachment ID.
- * @param array    $status Array of posting information.
- * @param int      $id Post ID.
+ * @param int    $attachment Attachment ID.
+ * @param string $service Which service needs the binary.
  *
- * @return array
+ * @return string|object;
  */
-function wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id ) {
-	$text = $status['text'];
-	if ( $connection ) {
-		if ( $attachment ) {
-			$attachment_data = wpt_image_binary( $attachment );
-			$media_info      = $connection->uploadMedia()->upload( $attachment_data );
-			$status          = array(
-				'text'  => $text,
-				'media' => array(
-					'media_ids' => array(
-						$media_info['media_id_string'],
-					),
-				),
-			);
-			// noweh/twitter-api-v2-php doesn't currently support metadata.
-			$ct       = wpt_oauth_connection( $auth, '1.1' );
-			$media_id = $ct->media(
-				'https://upload.twitter.com/1.1/media/metadata/create.json',
-				array(
-					'auth'       => $auth,
-					'media'      => $media_info['media_id_string'],
-					'attachment' => $attachment,
-				)
-			);
-			wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment", $id );
-		}
-	}
-	return $status;
-}
-
-/**
- * Post status to Twitter.
- *
- * @param object $connection Connection to Twitter.
- * @param mixed  $auth Main site or specific author ID.
- * @param int    $id Post ID.
- * @param array  $status Array of information sent to Twitter.
- *
- * @return array
- */
-function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
-	/**
-	 * Turn on staging mode. Staging mode is automatically turned on if WPT_STAGING_MODE constant is defined.
-	 *
-	 * @hook wpt_staging_mode
-	 * @param {bool}     $staging_mode True to enable staging mode.
-	 * @param {int|bool} $auth Current author.
-	 * @param {int}      $id Post ID.
-	 *
-	 * @return {bool}
-	 */
-	$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id );
-	if ( ( defined( 'WPT_STAGING_MODE' ) && true === WPT_STAGING_MODE ) || $staging_mode ) {
-		// if in staging mode, we'll behave as if the Tweet succeeded, but not send it.
-		$connection = true;
-		$http_code  = 200;
-		$notice     = __( 'In Staging Mode:', 'wp-to-twitter' ) . ' ';
-		$tweet_id   = false;
-	} else {
-		/**
-		 * Filter the approval to send a Tweet.
-		 *
-		 * @hook wpt_do_tweet
-		 * @param {bool}     $do_tweet Return false to cancel this Tweet.
-		 * @param {int|bool} $auth Author.
-		 * @param {int}      $id Post ID.
-		 * @param {string}   $twit Tweet text.
-		 *
-		 * @return {bool}
-		 */
-		$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id, $status['text'] );
-		$tweet_id = false;
-		if ( $do_tweet ) {
-			try {
-				$return     = $connection->tweet()->create()->performRequest( $status, true );
-				$http_code  = 200;
-				$tweet_id   = $return->data->id;
-				$headers    = $return->headers;
-				$rate_limit = array(
-					'rate-limit'    => $headers['x-rate-limit-remaining'],
-					'rate-reset'    => $headers['x-rate-limit-reset'],
-					'rate-24'       => $headers['x-app-limit-24hour-limit'],
-					'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
-				);
-				update_option( 'wpt_app_limit', $rate_limit );
-			} catch ( RequestException $e ) {
-				// Get Guzzle exception response.
-				if ( method_exists( $e, 'getResponse' ) ) {
-					$response   = $e->getResponse();
-					$headers    = $response->getHeaders();
-					$rate_limit = array(
-						'rate-limit'    => $headers['x-rate-limit-remaining'],
-						'rate-reset'    => $headers['x-rate-limit-reset'],
-						'rate-24'       => $headers['x-app-limit-24hour-limit'],
-						'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
-					);
-					update_option( 'wpt_app_limit', $rate_limit );
-					$http_code = $response->getStatusCode();
-					wpt_mail( 'X RequestException', print_r( $response, 1 ), $id );
-				}
-			} catch ( Exception $e ) {
-				if ( method_exists( $e, 'getMessage' ) ) {
-					$error     = json_decode( $e->getMessage() );
-					$http_code = $e->getCode();
-					$notice    = $error->title . ': ' . $error->detail;
-					wpt_mail( 'X Exception', print_r( $error, 1 ), $id );
-				} else {
-					$http_code = 405;
-					$notice    = __( 'Unhandled response', 'wp-to-twitter' );
-				}
-			}
-		} else {
-			$http_code = '000';
-			$notice    = __( 'XPost Canceled by custom filter.', 'wp-to-twitter' );
-		}
-	}
-
-	return array(
-		'http'     => $http_code,
-		'notice'   => $notice,
-		'tweet_id' => $tweet_id,
-	);
-}
-
-/**
- * Get image binary.
- *
- * @param int $attachment Attachment ID.
- */
-function wpt_image_binary( $attachment ) {
+function wpt_image_binary( $attachment, $service = 'twitter' ) {
 	$image_sizes = get_intermediate_image_sizes();
 	if ( in_array( 'large', $image_sizes, true ) ) {
 		$size = 'large';
 	} else {
 		$size = array_pop( $image_sizes );
 	}
-	$upload    = wp_get_attachment_image_src( $attachment, apply_filters( 'wpt_upload_image_size', $size ) );
-	$parent    = get_post_ancestors( $attachment );
-	$parent    = ( is_array( $parent ) && isset( $parent[0] ) ) ? $parent[0] : false;
-	$image_url = $upload[0];
-	$remote    = wp_remote_get( $image_url );
-	if ( is_wp_error( $remote ) ) {
+	/**
+	 * Filter the uploaded image size.
+	 *
+	 * @hook wpt_upload_image_size
+	 *
+	 * @param string $size Name of size targeted for upload. Default 'large' if exists.
+	 *
+	 * @return string
+	 */
+	$size   = apply_filters( 'wpt_upload_image_size', $size );
+	$parent = get_post_ancestors( $attachment );
+	$parent = ( is_array( $parent ) && isset( $parent[0] ) ) ? $parent[0] : false;
+	if ( 'mastodon' === $service ) {
+		$path      = wpt_attachment_path( $attachment, $size );
+		$mime      = wp_get_image_mime( $path );
+		$name      = basename( $path );
+		$file      = curl_file_create( $path, $mime, $name );
 		$transport = 'curl';
-		$binary    = wp_get_curl( $image_url );
-	} else {
-		$transport = 'wp_http';
-		$binary    = wp_remote_retrieve_body( $remote );
-	}
-	wpt_mail( 'XPoster: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . print_r( $remote, 1 ), $parent );
-	if ( ! $binary ) {
-		return false;
-	}
+		wpt_mail( 'XPoster: media binary fetched', 'Path: ' . $path . 'Transport: ' . $transport . PHP_EOL . $attachment, $parent );
+		if ( ! $file ) {
+			return false;
+		}
 
-	return base64_encode( $binary );
+		return $file;
+	} else {
+		$upload    = wp_get_attachment_image_src( $attachment, $size );
+		$image_url = $upload[0];
+		$remote    = wp_remote_get( $image_url );
+		if ( is_wp_error( $remote ) ) {
+			$transport = 'curl';
+			$binary    = wp_get_curl( $image_url );
+		} else {
+			$transport = 'wp_http';
+			$binary    = wp_remote_retrieve_body( $remote );
+		}
+		wpt_mail( 'XPoster: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . print_r( $remote, 1 ), $parent );
+		if ( ! $binary ) {
+			return false;
+		}
+
+		return base64_encode( $binary );
+	}
+}
+
+/**
+ * Fetch an attachment's file path. Recurses to fetch full sized path if an invalid size is passed.
+ *
+ * @param int    $attachment_id Attachment ID.
+ * @param string $size Requested size.
+ *
+ * @return string|false 
+ */
+function wpt_attachment_path( $attachment_id, $size = '' ) {
+    $file = get_attached_file( $attachment_id, true );
+    if ( empty( $size ) || $size === 'full' ) {
+        // for the original size get_attached_file is fine.
+        return realpath( $file );
+    }
+    if ( ! wp_attachment_is_image( $attachment_id ) ) {
+        return false; // the id is not referring to a media.
+    }
+    $info = image_get_intermediate_size( $attachment_id, $size );
+    if ( ! is_array( $info ) || ! isset( $info['file'] ) ) {
+		// If this is invalid due to an invalid size, recurse to fetch full size.
+		if ( '' !== $size ) {
+			$path = wpt_attachment_path( $attachment_id );
+
+			return $path;
+		}
+        return false; // probably a bad size argument.
+    }
+
+    return realpath( str_replace( wp_basename( $file ), $info['file'], $file ) );
 }
 
 /**
