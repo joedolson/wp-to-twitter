@@ -394,7 +394,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		$connection = false;
 		if ( wtt_oauth_test( $auth ) ) {
 			$connection = wpt_oauth_connection( $auth );
-			$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status );
+			$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
 			$http_code  = $response['http'];
 			$notice     = $response['notice'];
@@ -402,7 +402,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		}
 		wpt_mail( 'X Connection', "$twit, $auth, $id, $media", $id );
 		if ( $connection ) {
-			$response = wpt_get_twitter_response_message( $http_code );
+			$response = wpt_get_twitter_response_message( $http_code, $notice, $auth );
 			$error    = $response['error'];
 			$return   = $response['return'];
 			wpt_mail( "X.com Response: $http_code", $error, $id ); // DEBUG.
@@ -460,11 +460,13 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 /**
  * Get text error message from HTTP code for Twitter API.
  *
- * @param int $http_code HTTP returned.
+ * @param int      $http_code HTTP returned.
+ * @param string   $notice Any already generated notification message.
+ * @param int|bool $auth Current authentication context.
  *
  * @return array
  */
-function wpt_get_twitter_response_message( $http_code ) {
+function wpt_get_twitter_response_message( $http_code, $notice, $auth ) {
 	$return = false;
 	switch ( $http_code ) {
 		case '000':
@@ -530,15 +532,21 @@ function wpt_get_twitter_response_message( $http_code ) {
 	return array(
 		'error'  => $error,
 		'return' => $return,
-	)
+	);
 }
 
 /**
  * Upload media to Twitter API.
  *
- * @param 
+ * @param object   $connection Twitter connection.
+ * @param int|bool $auth Connection context.
+ * @param int      $attachment Attachment ID.
+ * @param array    $status Array of posting information.
+ * @param int      $id Post ID.
+ *
+ * @return array
  */
-function wpt_upload_twitter_media( $connection, $auth, $attachment, $status ) {
+function wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id ) {
 	$text = $status['text'];
 	if ( $connection ) {
 		if ( $attachment ) {
@@ -608,7 +616,7 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 		 *
 		 * @return {bool}
 		 */
-		$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id, $twit );
+		$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id, $status['text'] );
 		$tweet_id = false;
 		if ( $do_tweet ) {
 			try {
