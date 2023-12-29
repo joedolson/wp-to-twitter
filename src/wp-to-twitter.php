@@ -239,6 +239,28 @@ function wpt_save_error( $id, $auth, $twit, $error, $http_code, $ts ) {
 	}
 }
 
+/**
+ * Save a record of a successful Tweet.
+ *
+ * @param int    $id Post ID.
+ * @param string $twit Tweet text.
+ * @param int    $http_code HTTP Code returned by query.
+ */
+function wpt_save_success( $id, $twit, $http_code ) {
+	if ( 200 === $http_code ) {
+		$jwt = get_post_meta( $id, '_jd_wp_twitter', true );
+		if ( ! is_array( $jwt ) ) {
+			$jwt = array();
+		}
+		$jwt[] = urldecode( $twit );
+		if ( empty( $_POST ) ) {
+			$_POST = array();
+		}
+		$_POST['_jd_wp_twitter'] = $jwt;
+		update_post_meta( $id, '_jd_wp_twitter', $jwt );
+	}	
+}
+
 
 /**
  * Checks whether XPoster has sent a tweet on this post to this author within the last 30 seconds and blocks duplicates.
@@ -380,68 +402,9 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		}
 		wpt_mail( 'X Connection', "$twit, $auth, $id, $media", $id );
 		if ( $connection ) {
-			$return = false;
-			switch ( $http_code ) {
-				case '000':
-					$error = '';
-					break;
-				case 100:
-					$error = __( '100 Continue: X received the header of your submission, but your server did not follow through by sending the body of the data.', 'wp-to-twitter' );
-					break;
-				case 200:
-					$return = true;
-					$error  = __( '200 OK: Success!', 'wp-to-twitter' );
-					update_option( 'wpt_authentication_missing', false );
-					break;
-				case 304:
-					$error = __( '304 Not Modified: There was no new data to return', 'wp-to-twitter' );
-					break;
-				case 400:
-					// Translators: Error description from X.com.
-					$error = sprintf( __( '400: %s', 'wp-to-twitter' ), $notice );
-					break;
-				case 401:
-					// Translators: Error description from X.com.
-					$error = sprintf( __( '401: %s', 'wp-to-twitter' ), $notice );
-					update_option( 'wpt_authentication_missing', "$auth" );
-					break;
-				case 403:
-					// Translators: Error description from X.com.
-					$error = sprintf( __( '403: %s', 'wp-to-twitter' ), $notice );
-					break;
-				case 404:
-					// Translators: Error description from X.com.
-					$error = sprintf( __( '404: %s', 'wp-to-twitter' ), $notice );
-					break;
-				case 406:
-					// Translators: Error description from X.com.
-					$error = sprintf( __( '406: %s', 'wp-to-twitter' ), $notice );
-					break;
-				case 422:
-					// Translators: Error description from X.com.
-					$error = sprintf( __( '422: %s', 'wp-to-twitter' ), $notice );
-					break;
-				case 429:
-					// Translators: Error description from X.com.
-					$error = sprintf( __( '429: %s', 'wp-to-twitter' ), $notice );
-					break;
-				case 500:
-					$error = __( '500 Internal Server Error: Something is broken at X.com.', 'wp-to-twitter' );
-					break;
-				case 502:
-					$error = __( '502 Bad Gateway: X.com is down or being upgraded.', 'wp-to-twitter' );
-					break;
-				case 503:
-					$error = __( '503 Service Unavailable: The X.com servers are up, but overloaded with requests - Please try again later.', 'wp-to-twitter' );
-					break;
-				case 504:
-					$error = __( "504 Gateway Timeout: The X.com servers are up, but the request couldn't be serviced due to some failure within our stack. Try again later.", 'wp-to-twitter' );
-					break;
-				default:
-					// Translators: http code.
-					$error = sprintf( __( '<strong>Code %s</strong>: X.com did not return a recognized response code.', 'wp-to-twitter' ), $http_code );
-					break;
-			}
+			$response = wpt_get_twitter_response_message( $http_code );
+			$error    = $response['error'];
+			$return   = $response['return'];
 			wpt_mail( "X.com Response: $http_code", $error, $id ); // DEBUG.
 			// only save last Tweet if successful.
 			if ( 200 === $http_code ) {
@@ -452,18 +415,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 				}
 			}
 			wpt_save_error( $id, $auth, $twit, $error, $http_code, time() );
-			if ( 200 === $http_code ) {
-				$jwt = get_post_meta( $id, '_jd_wp_twitter', true );
-				if ( ! is_array( $jwt ) ) {
-					$jwt = array();
-				}
-				$jwt[] = urldecode( $twit );
-				if ( empty( $_POST ) ) {
-					$_POST = array();
-				}
-				$_POST['_jd_wp_twitter'] = $jwt;
-				update_post_meta( $id, '_jd_wp_twitter', $jwt );
-			}
+			wpt_save_success( $id, $twit, $http_code );
 			if ( ! $return ) {
 				/**
 				 * Executes an action after posting a Tweet fails.
@@ -503,6 +455,82 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			return false;
 		}
 	}
+}
+
+/**
+ * Get text error message from HTTP code for Twitter API.
+ *
+ * @param int $http_code HTTP returned.
+ *
+ * @return array
+ */
+function wpt_get_twitter_response_message( $http_code ) {
+	$return = false;
+	switch ( $http_code ) {
+		case '000':
+			$error = '';
+			break;
+		case 100:
+			$error = __( '100 Continue: X received the header of your submission, but your server did not follow through by sending the body of the data.', 'wp-to-twitter' );
+			break;
+		case 200:
+			$return = true;
+			$error  = __( '200 OK: Success!', 'wp-to-twitter' );
+			update_option( 'wpt_authentication_missing', false );
+			break;
+		case 304:
+			$error = __( '304 Not Modified: There was no new data to return', 'wp-to-twitter' );
+			break;
+		case 400:
+			// Translators: Error description from X.com.
+			$error = sprintf( __( '400: %s', 'wp-to-twitter' ), $notice );
+			break;
+		case 401:
+			// Translators: Error description from X.com.
+			$error = sprintf( __( '401: %s', 'wp-to-twitter' ), $notice );
+			update_option( 'wpt_authentication_missing', "$auth" );
+			break;
+		case 403:
+			// Translators: Error description from X.com.
+			$error = sprintf( __( '403: %s', 'wp-to-twitter' ), $notice );
+			break;
+		case 404:
+			// Translators: Error description from X.com.
+			$error = sprintf( __( '404: %s', 'wp-to-twitter' ), $notice );
+			break;
+		case 406:
+			// Translators: Error description from X.com.
+			$error = sprintf( __( '406: %s', 'wp-to-twitter' ), $notice );
+			break;
+		case 422:
+			// Translators: Error description from X.com.
+			$error = sprintf( __( '422: %s', 'wp-to-twitter' ), $notice );
+			break;
+		case 429:
+			// Translators: Error description from X.com.
+			$error = sprintf( __( '429: %s', 'wp-to-twitter' ), $notice );
+			break;
+		case 500:
+			$error = __( '500 Internal Server Error: Something is broken at X.com.', 'wp-to-twitter' );
+			break;
+		case 502:
+			$error = __( '502 Bad Gateway: X.com is down or being upgraded.', 'wp-to-twitter' );
+			break;
+		case 503:
+			$error = __( '503 Service Unavailable: The X.com servers are up, but overloaded with requests - Please try again later.', 'wp-to-twitter' );
+			break;
+		case 504:
+			$error = __( "504 Gateway Timeout: The X.com servers are up, but the request couldn't be serviced due to some failure within our stack. Try again later.", 'wp-to-twitter' );
+			break;
+		default:
+			// Translators: http code.
+			$error = sprintf( __( '<strong>Code %s</strong>: X.com did not return a recognized response code.', 'wp-to-twitter' ), $http_code );
+			break;
+	}
+	return array(
+		'error'  => $error,
+		'return' => $return,
+	)
 }
 
 /**
