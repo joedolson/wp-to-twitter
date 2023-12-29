@@ -218,7 +218,7 @@ function wpt_link( $post_ID ) {
  * @param int    $http_code Http code from X.com.
  * @param string $ts Current timestamp.
  */
-function wpt_saves_error( $id, $auth, $twit, $error, $http_code, $ts ) {
+function wpt_save_error( $id, $auth, $twit, $error, $http_code, $ts ) {
 	$http_code = (int) $http_code;
 	if ( 200 !== $http_code ) {
 		add_post_meta(
@@ -303,7 +303,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		$status = get_post_status( $id );
 		if ( ! $status || 'publish' !== $status ) {
 			$error = __( 'This post is no longer published or has been deleted', 'wp-to-twitter' );
-			wpt_saves_error( $id, $auth, $twit, $error, '404', time() );
+			wpt_save_error( $id, $auth, $twit, $error, '404', time() );
 			wpt_set_log( 'wpt_status_message', $id, $error );
 
 			return false;
@@ -329,7 +329,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 
 	if ( ! wpt_check_oauth( $auth ) ) {
 		$error = __( 'This account is not authorized to post to X.com.', 'wp-to-twitter' );
-		wpt_saves_error( $id, $auth, $twit, $error, '401', time() );
+		wpt_save_error( $id, $auth, $twit, $error, '401', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
 		wpt_mail( 'Account not authorized with X.com', 'Post ID: ' . $id );
 
@@ -341,14 +341,14 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 	if ( $check === $twit && '' !== $twit ) {
 		wpt_mail( 'Matched: tweet identical', "This Tweet: $twit; Check Tweet: $check; $auth, $id, $media", $id ); // DEBUG.
 		$error = __( 'This tweet is identical to another Tweet recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'X.com requires all Tweets to be unique.', 'wp-to-twitter' );
-		wpt_saves_error( $id, $auth, $twit, $error, '403-1', time() );
+		wpt_save_error( $id, $auth, $twit, $error, '403-1', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
 
 		return false;
 	} elseif ( '' === $twit || ! $twit ) {
 		wpt_mail( 'Tweet check: empty sentence', "$twit, $auth, $id, $media", $id ); // DEBUG.
 		$error = __( 'This tweet was blank and could not be sent to X.com.', 'wp-to-twitter' );
-		wpt_saves_error( $id, $auth, $twit, $error, '403-2', time() );
+		wpt_save_error( $id, $auth, $twit, $error, '403-2', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
 
 		return false;
@@ -451,7 +451,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 					update_user_meta( $auth, 'wpt_last_tweet', $twit );
 				}
 			}
-			wpt_saves_error( $id, $auth, $twit, $error, $http_code, time() );
+			wpt_save_error( $id, $auth, $twit, $error, $http_code, time() );
 			if ( 200 === $http_code ) {
 				$jwt = get_post_meta( $id, '_jd_wp_twitter', true );
 				if ( ! is_array( $jwt ) ) {
