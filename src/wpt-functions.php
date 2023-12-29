@@ -795,9 +795,7 @@ function wpt_is_writable( $file ) {
  * @return Curl response.
  */
 function wp_get_curl( $url ) {
-
 	$curl = curl_init( $url );
-
 	curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
 	curl_setopt( $curl, CURLOPT_HEADER, 0 );
 	curl_setopt( $curl, CURLOPT_USERAGENT, '' );
