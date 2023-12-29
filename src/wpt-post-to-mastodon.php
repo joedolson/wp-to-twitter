@@ -101,6 +101,21 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		 */
 		$do_post  = apply_filters( 'wpt_do_toot', true, $auth, $id, $status['text'] );
 		$status_id = false;
+		// Change status array to Mastodon expectation.
+		$status['status'] = $status['text'];
+		unset( $status['text'] );
+		/**
+		 * Filter status array for Mastodon.
+		 *
+		 * @hook wpt_filter_mastodon_status
+		 *
+		 * @param {array}    $status Array of parameters sent to Mastodon.
+		 * @param {int}      $post Post ID being tweeted.
+		 * @param {int|bool} $auth Authoring context.
+		 *
+		 * @return {array}
+		 */
+		$status = apply_filters( 'wpt_filter_mastodon_status', $status, $id, $auth );
 		if ( $do_post ) {
 			$return     = $connection->postStatus( $status );
 			$http_code  = 200;
