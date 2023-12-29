@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_tags - XPoster Hook Doumentation</title>
+    <title>Filter: wpt_uploaded_image_alt - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_tags</h1></header>
+    <header><h1 class="page-title">Filter: wpt_uploaded_image_alt</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_tags">apply_filters( 'wpt_tags', <span class="signature">$tags )</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="wpt_uploaded_image_alt">apply_filters( 'wpt_uploaded_image_alt', <span class="signature">$alt_text, $attachment )</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Add a new template tag placeholder.</p>
+    <p>Add alt attributes to uploaded images.</p>
 </div>
 
 
@@ -77,13 +77,13 @@
 
         <tr>
             
-                <td class="name"><code>$tags</code></td>
+                <td class="name"><code>$alt_text</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">string</span>
 
 
             
@@ -93,7 +93,30 @@
 
             
 
-            <td class="description last"><p>Array of strings for each tag, e.g. 'blog' for #blog#.</p></td>
+            <td class="description last"><p>Text stored in media library as alt.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$attachment</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Attachment ID.</p></td>
         </tr>
 
     
@@ -134,7 +157,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wpt-truncate.php.html">wpt-truncate.php</a>, <a href="wpt-truncate.php.html#line352">line 352</a>
+        <a href="wpt-post-to-mastodon.php.html">wpt-post-to-mastodon.php</a>, <a href="wpt-post-to-mastodon.php.html#line31">line 31</a>
     </li></ul></dd>
     
 
@@ -168,7 +191,200 @@
     </dt>
     <dd>
         
-<span class="param-type">array</span>
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+    
+    </div>
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    <h2></h2>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    <h4 class="name" id="wpt_uploaded_image_alt">apply_filters( 'wpt_uploaded_image_alt', <span class="signature">$alt_text, $attachment )</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Add alt attributes to uploaded images.</p>
+</div>
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>$alt_text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Text stored in media library as alt.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$attachment</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Attachment ID.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="classes_class-wpt-twitteroauth.php.html">classes/class-wpt-twitteroauth.php</a>, <a href="classes_class-wpt-twitteroauth.php.html#line316">line 316</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
 
 
     </dd>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_tags - XPoster Hook Doumentation</title>
+    <title>Filter: wpt_upload_image_size - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_tags</h1></header>
+    <header><h1 class="page-title">Filter: wpt_upload_image_size</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_tags">apply_filters( 'wpt_tags', <span class="signature">$tags )</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="wpt_upload_image_size">apply_filters( 'wpt_upload_image_size', <span class="signature">string )</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Add a new template tag placeholder.</p>
+    <p>Filter the uploaded image size.</p>
 </div>
 
 
@@ -77,15 +77,10 @@
 
         <tr>
             
-                <td class="name"><code>$tags</code></td>
+                <td class="name"><code>string</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
             
             </td>
 
@@ -93,7 +88,7 @@
 
             
 
-            <td class="description last"><p>Array of strings for each tag, e.g. 'blog' for #blog#.</p></td>
+            <td class="description last"><p>$size Name of size targeted for upload. Default 'large' if exists.</p></td>
         </tr>
 
     
@@ -134,7 +129,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wpt-truncate.php.html">wpt-truncate.php</a>, <a href="wpt-truncate.php.html#line352">line 352</a>
+        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line572">line 572</a>
     </li></ul></dd>
     
 
@@ -160,19 +155,11 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <p>string</p>
+</div>
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
 
     
 
