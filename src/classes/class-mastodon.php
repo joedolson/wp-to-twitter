@@ -14,15 +14,15 @@
 }
 
 /**
- * OAuth / MastodonAPI
+ * OAuth / Wpt_Mastodon_Api
  *
- * A library to send status updates to Mastodon instances.
+ * A simple library to send status updates to Mastodon instances.
  *
  * @author eleirbag89
  * @version 0.1
  * @link https://github.com/Eleirbag89/MastodonBotPHP
  */
-class MastodonAPI {
+class Wpt_Mastodon_Api {
 	private $token;
 	private $instance_url;
 
@@ -64,7 +64,7 @@ class MastodonAPI {
 	 */
 	public function callAPI( $endpoint, $method, $data ) {
 		$headers = array(
-			'Authorization: Bearer '.$this->token,
+			'Authorization: Bearer ' . $this->token,
 			'Content-Type: multipart/form-data',
 		);
 
