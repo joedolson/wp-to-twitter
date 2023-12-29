@@ -260,7 +260,7 @@ function wpt_save_success( $id, $twit, $http_code ) {
 		}
 		$_POST['_jd_wp_twitter'] = $jwt;
 		update_post_meta( $id, '_jd_wp_twitter', $jwt );
-	}	
+	}
 }
 
 
@@ -397,13 +397,13 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$connection = wpt_oauth_connection( $auth );
 			$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
-			wpt_post_submit_handler(  $connection, $response, $id, $auth, $twit );
+			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
 		}
-		if ( wpt_mastodon_connection( $auth = false ) ) {
+		if ( wpt_mastodon_connection( $auth ) ) {
 			$connection = wpt_mastodon_connection( $auth );
 			$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
-			wpt_post_submit_handler(  $connection, $response, $id, $auth, $twit );
+			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
 		}
 		wpt_mail( 'X Connection', "$twit, $auth, $id, $media", $id );
 		if ( $connection ) {
@@ -619,29 +619,29 @@ function wpt_image_binary( $attachment, $service = 'twitter' ) {
  * @param int    $attachment_id Attachment ID.
  * @param string $size Requested size.
  *
- * @return string|false 
+ * @return string|false
  */
 function wpt_attachment_path( $attachment_id, $size = '' ) {
-    $file = get_attached_file( $attachment_id, true );
-    if ( empty( $size ) || $size === 'full' ) {
-        // for the original size get_attached_file is fine.
-        return realpath( $file );
-    }
-    if ( ! wp_attachment_is_image( $attachment_id ) ) {
-        return false; // the id is not referring to a media.
-    }
-    $info = image_get_intermediate_size( $attachment_id, $size );
-    if ( ! is_array( $info ) || ! isset( $info['file'] ) ) {
+	$file = get_attached_file( $attachment_id, true );
+	if ( empty( $size ) || 'full' === $size ) {
+		// for the original size get_attached_file is fine.
+		return realpath( $file );
+	}
+	if ( ! wp_attachment_is_image( $attachment_id ) ) {
+		return false; // the id is not referring to a media.
+	}
+	$info = image_get_intermediate_size( $attachment_id, $size );
+	if ( ! is_array( $info ) || ! isset( $info['file'] ) ) {
 		// If this is invalid due to an invalid size, recurse to fetch full size.
 		if ( '' !== $size ) {
 			$path = wpt_attachment_path( $attachment_id );
 
 			return $path;
 		}
-        return false; // probably a bad size argument.
-    }
+		return false; // probably a bad size argument.
+	}
 
-    return realpath( str_replace( wp_basename( $file ), $info['file'], $file ) );
+	return realpath( str_replace( wp_basename( $file ), $info['file'], $file ) );
 }
 
 /**
