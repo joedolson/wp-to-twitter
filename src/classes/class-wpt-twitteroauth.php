@@ -312,10 +312,17 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			$media_id   = $args['media'];
 			$attachment = $args['attachment'];
 
-			/**
-			 * Add alt attributes to uploaded Twitter images.
-			 */
 			$alt_text = get_post_meta( $attachment, '_wp_attachment_image_alt', true );
+			/**
+			 * Add alt attributes to uploaded images.
+			 *
+			 * @hook wpt_uploaded_image_alt
+			 *
+			 * @param {string} $alt_text Text stored in media library as alt.
+			 * @param {int}    $attachment Attachment ID.
+			 *
+			 * @return {string}
+			 */
 			$alt_text = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
 			if ( '' !== $alt_text ) {
 				$image_alt = json_encode(
