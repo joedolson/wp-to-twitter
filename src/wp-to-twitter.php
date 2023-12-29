@@ -310,9 +310,9 @@ function wpt_check_recent_tweet( $id, $auth ) {
 }
 
 /**
- * Performs the API post to X.com
+ * Performs the API post to target services.
  *
- * @param string  $twit Text of Tweet to be sent to X.com.
+ * @param string  $twit Text of post to be sent to service.
  * @param int     $auth Author ID.
  * @param int     $id Post ID.
  * @param boolean $media Whether to upload media attached to the post specified in $id.
@@ -397,75 +397,84 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$connection = wpt_oauth_connection( $auth );
 			$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
-			$http_code  = $response['http'];
-			$notice     = $response['notice'];
-			$tweet_id   = $response['tweet_id'];
+			wpt_post_submit_handler(  $connection, $response, $id, $auth, $twit );
 		}
-		if ( wtt_mastodon_test( $auth ) ) {
+		if ( wpt_mastodon_connection( $auth = false ) ) {
 			$connection = wpt_mastodon_connection( $auth );
 			$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
-			$http_code  = $response['http'];
-			$notice     = $response['notice'];
-			$tweet_id   = $response['tweet_id'];
+			wpt_post_submit_handler(  $connection, $response, $id, $auth, $twit );
 		}
 		wpt_mail( 'X Connection', "$twit, $auth, $id, $media", $id );
 		if ( $connection ) {
-			$response = wpt_get_response_message( $http_code, $notice, $auth );
-			$error    = $response['error'];
-			$return   = $response['return'];
-			wpt_mail( "X.com Response: $http_code", $error, $id ); // DEBUG.
-			// only save last Tweet if successful.
-			if ( 200 === $http_code ) {
-				if ( ! $auth ) {
-					update_option( 'jd_last_tweet', $twit );
-				} else {
-					update_user_meta( $auth, 'wpt_last_tweet', $twit );
-				}
-			}
-			wpt_save_error( $id, $auth, $twit, $error, $http_code, time() );
-			wpt_save_success( $id, $twit, $http_code );
-			if ( ! $return ) {
-				/**
-				 * Executes an action after posting a Tweet fails.
-				 *
-				 * @hook wpt_tweet_failed
-				 *
-				 * @since 3.6.0
-				 *
-				 * @param {object} $connection The current OAuth connection.
-				 * @param {int}    $id Post ID for Tweeted post.
-				 * @param {string} $error Error message returned.
-				 */
-				do_action( 'wpt_tweet_failed', $connection, $id, $error );
-				wpt_set_log( 'wpt_status_message', $id, $error );
-			} else {
-				/**
-				 * Executes an action after a Tweet is posted successfully.
-				 *
-				 * @hook wpt_tweet_posted
-				 *
-				 * @param {object} $connection The current OAuth connection.
-				 * @param {int}    $id Post ID for Tweeted post.
-				 */
-				do_action( 'wpt_tweet_posted', $connection, $id );
-				// Log the Tweet ID of the first Tweet for this post.
-				$has_tweet_id = get_post_meta( $id, '_wpt_tweet_id', true );
-				if ( ! $has_tweet_id && $tweet_id ) {
-					update_post_meta( $id, '_wpt_tweet_id', $tweet_id );
-				}
-				wpt_set_log( 'wpt_status_message', $id, $notice . __( 'Tweet sent successfully.', 'wp-to-twitter' ) );
-			}
 
-			return $return;
+			return $response['return'];
 		} else {
-			wpt_set_log( 'wpt_status_message', $id, __( 'No X.com OAuth connection found.', 'wp-to-twitter' ) );
+			wpt_set_log( 'wpt_status_message', $id, __( 'No API connection found.', 'wp-to-twitter' ) );
 
 			return false;
 		}
 	}
 }
 
+/**
+ * Handle post-sending responses for APIs.
+ *
+ * @param object   $connection API connection.
+ * @param array    $response Array of response data from API.
+ * @param int      $id Post ID.
+ * @param int|bool $auth Author context.
+ * @param string   $twit Posted status text.
+ */
+function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
+	$error     = $response['error'];
+	$return    = $response['return'];
+	$http_code = $response['http'];
+	$notice    = $response['notice'];
+	$tweet_id  = $response['tweet_id'];
+	wpt_mail( "X.com Response: $http_code", $error, $id ); // DEBUG.
+	// only save last Tweet if successful.
+	if ( 200 === $http_code ) {
+		if ( ! $auth ) {
+			update_option( 'jd_last_tweet', $twit );
+		} else {
+			update_user_meta( $auth, 'wpt_last_tweet', $twit );
+		}
+	}
+	wpt_save_error( $id, $auth, $twit, $error, $http_code, time() );
+	wpt_save_success( $id, $twit, $http_code );
+	if ( ! $return ) {
+		/**
+		 * Executes an action after posting a Tweet fails.
+		 *
+		 * @hook wpt_tweet_failed
+		 *
+		 * @since 3.6.0
+		 *
+		 * @param {object} $connection The current OAuth connection.
+		 * @param {int}    $id Post ID for Tweeted post.
+		 * @param {string} $error Error message returned.
+		 */
+		do_action( 'wpt_tweet_failed', $connection, $id, $error );
+		wpt_set_log( 'wpt_status_message', $id, $error );
+	} else {
+		/**
+		 * Executes an action after a Tweet is posted successfully.
+		 *
+		 * @hook wpt_tweet_posted
+		 *
+		 * @param {object} $connection The current OAuth connection.
+		 * @param {int}    $id Post ID for Tweeted post.
+		 */
+		do_action( 'wpt_tweet_posted', $connection, $id );
+		// Log the Tweet ID of the first Tweet for this post.
+		$has_tweet_id = get_post_meta( $id, '_wpt_tweet_id', true );
+		if ( ! $has_tweet_id && $tweet_id ) {
+			update_post_meta( $id, '_wpt_tweet_id', $tweet_id );
+		}
+		wpt_set_log( 'wpt_status_message', $id, $notice . __( 'Status sent successfully.', 'wp-to-twitter' ) );
+	}
+}
 
 /**
  * Get text error message from HTTP code.
