@@ -320,7 +320,7 @@ function wpt_check_recent_tweet( $id, $auth ) {
  * @param int     $id Post ID.
  * @param boolean $media Whether to upload media attached to the post specified in $id.
  *
- * @return boolean Success of query.
+ * @return boolean|array False if blocked, array of statuses if attempted.
  */
 function wpt_post_to_service( $text, $auth = false, $id = false, $media = false ) {
 	$return = wpt_post_to_twitter( $text, $auth, $id, $media );
@@ -336,10 +336,11 @@ function wpt_post_to_service( $text, $auth = false, $id = false, $media = false 
  * @param int     $id Post ID.
  * @param boolean $media Whether to upload media attached to the post specified in $id.
  *
- * @return boolean Success of query.
+ * @return boolean|array False if blocked, array of statuses if attempted.
  */
 function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false ) {
 	// If an ID is set but the post is not currently present or published, ignore.
+	$return = array();
 	if ( $id ) {
 		$status = get_post_status( $id );
 		if ( ! $status || 'publish' !== $status ) {
@@ -422,17 +423,19 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
 			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
+			$return['xcom'] = $response;
 		}
 		if ( wpt_mastodon_connection( $auth ) ) {
 			$connection = wpt_mastodon_connection( $auth );
 			$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
 			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
+			$return['mastodon'] = $response;
 		}
 		wpt_mail( 'X Connection', "$twit, $auth, $id, $media", $id );
-		if ( $connection ) {
+		if ( ! empty( $return ) ) {
 
-			return $response['return'];
+			return $return;
 		} else {
 			wpt_set_log( 'wpt_status_message', $id, __( 'No API connection found.', 'wp-to-twitter' ) );
 
@@ -501,7 +504,7 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 		if ( ! $has_status_id && $status_id ) {
 			update_post_meta( $id, '_wpt_status_id', $status_id );
 		}
-		wpt_set_log( 'wpt_status_message', $id, $notice . __( 'Status sent successfully.', 'wp-to-twitter' ) );
+		wpt_set_log( 'wpt_status_message', $id, $notice . ' ' . __( 'Status sent successfully.', 'wp-to-twitter' ) );
 	}
 }
 

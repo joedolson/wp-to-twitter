@@ -123,11 +123,18 @@ function wpt_check_functions() {
 	if ( wtt_oauth_test() || wpt_mastodon_connection() ) {
 		$rand     = wp_rand( 1000000, 9999999 );
 		$testpost = wpt_post_to_service( "This is a test of XPoster. $shrink ($rand)" );
-		if ( $testpost ) {
-			$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to X.com.', 'wp-to-twitter' ) . '</strong></li>';
+		if ( $testpost && ! empty( $testpost ) ) {
+			foreach ( $testpost as $key => $test ) {
+				if ( 'xcom' === $key ) {
+					$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to X.com.', 'wp-to-twitter' ) . '</strong></li>';
+				}
+				if ( 'mastodon' === $key ) {
+					$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to your Mastodon instance.', 'wp-to-twitter' ) . '</strong></li>';
+				}
+			}
 		} else {
 			$error    = wpt_get_log( 'wpt_status_message', 'test' );
-			$message .= '<li class="error"><strong>' . __( 'XPoster failed to submit an update to X.com.', 'wp-to-twitter' ) . '</strong></li>';
+			$message .= '<li class="error"><strong>' . __( 'XPoster failed to submit status updates.', 'wp-to-twitter' ) . '</strong></li>';
 			$message .= "<li class='error'>$error</li>";
 		}
 	} else {
