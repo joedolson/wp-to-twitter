@@ -23,7 +23,7 @@ function wpt_update_mastodon_settings( $auth = false, $post = false ) {
 					wp_die( 'Oops, please try again.' );
 				}
 
-				if ( ! empty( $post['wpt_mastodon_token'] )	&& ! empty( $post['wpt_mastodon_instance'] ) ) {
+				if ( ! empty( $post['wpt_mastodon_token'] ) && ! empty( $post['wpt_mastodon_instance'] ) ) {
 					$ack = sanitize_text_field( trim( $post['wpt_mastodon_token'] ) );
 					$acs = sanitize_text_field( trim( $post['wpt_mastodon_instance'] ) );
 
@@ -48,9 +48,9 @@ function wpt_update_mastodon_settings( $auth = false, $post = false ) {
 						'token'    => $ack,
 						'instance' => $acs,
 					);
-					$verify  = wpt_mastodon_connection( $auth, $validate );
+					$verify   = wpt_mastodon_connection( $auth, $validate );
 					if ( isset( $verify['username'] ) ) {
-						$username          = sanitize_text_field( stripslashes( $verify['username'] ) );
+						$username = sanitize_text_field( stripslashes( $verify['username'] ) );
 						if ( ! $auth ) {
 							update_option( 'wpt_mastodon_username', $username );
 						} else {

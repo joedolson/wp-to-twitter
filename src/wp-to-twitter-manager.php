@@ -27,7 +27,7 @@ function wpt_updated_settings() {
 	if ( ! wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) {
 		wp_die( 'XPoster: Security check failed' );
 	}
-	// Connect to Twitter
+	// Connect to Twitter.
 	if ( isset( $_POST['oauth_settings'] ) ) {
 		$post          = map_deep( $_POST, 'sanitize_text_field' );
 		$oauth_message = wpt_update_oauth_settings( false, $post );
