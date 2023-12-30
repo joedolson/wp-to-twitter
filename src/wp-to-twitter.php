@@ -63,6 +63,7 @@ require_once( plugin_dir_path( __FILE__ ) . 'wpt-post-to-twitter.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-post-to-mastodon.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-mastodon.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-truncate.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php' );
