@@ -1659,11 +1659,6 @@ function wpt_admin_scripts() {
 		wp_enqueue_script( 'wpt.charcount', plugins_url( 'js/jquery.charcount.js', __FILE__ ), array( 'jquery' ), $wpt_version );
 		wp_register_style( 'wpt-post-styles', plugins_url( 'css/post-styles.css', __FILE__ ), array(), $wpt_version );
 		wp_enqueue_style( 'wpt-post-styles' );
-		$css = '#wp2t h2 {
-			background: url("' . plugins_url( 'images/logo-black.png', __FILE__ ) . '") 12px 50% no-repeat;
-			padding-left: 32px !important;
-		}';
-		wp_add_inline_style( 'wpt-post-styles', $css );
 		$config = wpt_max_length();
 		// add one; character count starts from 1.
 		if ( 'post' === $current_screen->base ) {
