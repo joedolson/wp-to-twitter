@@ -252,7 +252,7 @@ function wpt_update_settings() {
 	<div class="wrap" id="wp-to-twitter">
 	<?php
 	if ( defined( 'WPT_STAGING_MODE' ) && true === WPT_STAGING_MODE ) {
-		echo "<div class='updated notice'><p>" . __( 'XPoster is in staging mode. Tweets will be reported as if successfully sent to X.com but will not be sent.', 'wp-to-twitter' ) . '</p></div>';
+		echo "<div class='updated notice'><p>" . __( 'XPoster is in staging mode. Status updates will be reported as if successfully sent, but will not be posted.', 'wp-to-twitter' ) . '</p></div>';
 	}
 	wpt_updated_settings();
 	wpt_show_last_tweet();
@@ -306,11 +306,11 @@ function wpt_update_settings() {
 							<h3><strong><?php _e( 'XPoster Pro', 'wp-to-twitter' ); ?></strong></h3>
 							<p class="xposter-highlight">WP to Twitter is now XPoster</p>
 							<p>
-								Are you wasting time switching between X.com and WordPress to promote your posts? Do you have to delete Tweets because you accidentally published a post? Do you want to be able to schedule your post to Tweet next week, directly from your post editor? XPoster Pro will help you out!
+								Are you wasting time switching between social media and WordPress to promote your posts? Do you have to delete updates because you accidentally published a post? Do you want to be able to schedule your post to send next week, directly from your post editor? XPoster Pro will help you out!
 							</p>
 							<h3>What will XPoster PRO do for you?</h3>
 							<p>
-								It takes the great Tweeting automation from XPoster and turns it up to eleven: publish to unique X accounts for each site author; schedule up to 3 re-posts of Tweets at an interval of your choice; and, with a delay between publishing and Tweeting, check your tweets before they’re shared with your followers.
+								It takes the great automation from XPoster and turns it up to eleven: publish to unique accounts for each site author; schedule up to 3 re-posts at an interval of your choice; and, with a delay between publishing and your status updates, check your status before it's shared with your followers.
 							</p>
 							<p class="link-highlight">
 								<a href="https://xposterpro.com/awesome/xposter-pro/">Upgrade to XPoster Pro</a>
@@ -382,7 +382,7 @@ function wpt_update_settings() {
 								?>
 								<div class='wptab wpt_types wpt_<?php echo esc_attr( $slug ); ?>' aria-labelledby='tab_wpt_<?php echo esc_attr( $slug ); ?>' role="tabpanel" id='wpt_<?php echo esc_attr( $slug ); ?>'>
 								<fieldset>
-									<legend class="screen-reader-text"><?php _e( 'Tweet Templates', 'wp-to-twitter' ); ?></legend>
+									<legend class="screen-reader-text"><?php _e( 'Status Templates', 'wp-to-twitter' ); ?></legend>
 									<p>
 										<input type="checkbox" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-published-update]" id="<?php echo esc_attr( $slug ); ?>-post-published-update" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'post-published-update' ); ?> />
 										<label for="<?php echo esc_attr( $slug ); ?>-post-published-update"><strong>
@@ -452,7 +452,7 @@ function wpt_update_settings() {
 
 	<div class="ui-sortable meta-box-sortables">
 			<div class="postbox">
-				<h3><span><?php _e( 'Tweet Template Tags', 'wp-to-twitter' ); ?></span></h3>
+				<h3><span><?php _e( 'Status Template Tags', 'wp-to-twitter' ); ?></span></h3>
 				<div class="inside">
 					<ul>
 						<li><?php _e( '<code>#title#</code>: the title of your blog post', 'wp-to-twitter' ); ?></li>
@@ -575,11 +575,11 @@ function wpt_update_settings() {
 							</p>
 
 							<p>
-								<label for="jd_twit_prepend"><?php _e( 'Custom text before Tweets:', 'wp-to-twitter' ); ?></label>
+								<label for="jd_twit_prepend"><?php _e( 'Custom text before status:', 'wp-to-twitter' ); ?></label>
 								<input type="text" name="jd_twit_prepend" id="jd_twit_prepend" size="20" value="<?php echo esc_attr( stripslashes( get_option( 'jd_twit_prepend' ) ) ); ?>"/>
 							</p>
 							<p>
-								<label for="jd_twit_append"><?php _e( 'Custom text after Tweets:', 'wp-to-twitter' ); ?></label>
+								<label for="jd_twit_append"><?php _e( 'Custom text after status:', 'wp-to-twitter' ); ?></label>
 								<input type="text" name="jd_twit_append" id="jd_twit_append" size="20" value="<?php echo esc_attr( stripslashes( get_option( 'jd_twit_append' ) ) ); ?>"/>
 							</p>
 							<p>
@@ -599,11 +599,11 @@ function wpt_update_settings() {
 							<ul>
 								<li>
 									<input type="checkbox" name="jd_tweet_default" id="jd_tweet_default" value="1" <?php echo wpt_checkbox( 'jd_tweet_default' ); ?> />
-									<label for="jd_tweet_default"><?php _e( 'Do not post Tweets by default', 'wp-to-twitter' ); ?></label>
+									<label for="jd_tweet_default"><?php _e( 'Do not post statuses by default', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
 									<input type="checkbox" name="jd_tweet_default_edit" id="jd_tweet_default_edit" value="1" <?php echo wpt_checkbox( 'jd_tweet_default_edit' ); ?> />
-									<label for="jd_tweet_default_edit"><?php _e( 'Do not post Tweets by default (editing only)', 'wp-to-twitter' ); ?></label>
+									<label for="jd_tweet_default_edit"><?php _e( 'Do not post statuses by default (editing only)', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
 									<input type="checkbox" name="wpt_inline_edits" id="wpt_inline_edits" value="1" <?php echo wpt_checkbox( 'wpt_inline_edits' ); ?> />
@@ -743,7 +743,7 @@ function wpt_update_settings() {
 							<legend class='screen-reader-text'><?php _e( 'Template tag priority order', 'wp-to-twitter' ); ?></legend>
 							<p>
 							<?php
-							_e( 'The order in which items will be abbreviated or removed from your Tweet if the Tweet is too long to send to X.com.', 'wp-to-twitter' );
+							_e( 'The order in which items will be abbreviated or removed from your status if the status is too long to send.', 'wp-to-twitter' );
 							_e( 'Tags with lower values will be modified first.', 'wp-to-twitter' );
 							?>
 							</p>
@@ -978,7 +978,7 @@ function wpt_do_server_check( $test = false ) {
 
 add_filter( 'wpt_tweet_length', 'wpt_tweet_length' );
 /**
- * Add control to set maximum length for a Tweet.
+ * Add control to set maximum length for a status update.
  *
  * @return string HTML control.
  */
@@ -1001,9 +1001,9 @@ function wpt_tweet_length() {
 	}
 	$tweet_length = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : $default );
 	$control      = "<p class='tweet_length_control'>
-					<label for='wpt_tweet_length'>" . __( 'Maximum Tweet Length', 'wp-to-twitter' ) . "</label>
+					<label for='wpt_tweet_length'>" . __( 'Maximum Status Length', 'wp-to-twitter' ) . "</label>
 					<input type='number' min='0' max='25000' step='1' value='$tweet_length' id='wpt_tweet_length' aria-describedby='maxlengthwarning' name='wpt_tweet_length' />
-					<span id='maxlengthwarning'>" . __( 'Tweets longer than 280 characters require an <a href="https://help.twitter.com/en/using-twitter/twitter-blue">X Premium</a> subscription.', 'wp-to-twitter' ) . '</span>
+					<span id='maxlengthwarning'>" . __( 'X.com Statuses longer than 280 characters require an <a href="https://help.twitter.com/en/using-x/x-premium">X Premium</a> subscription.', 'wp-to-twitter' ) . ' ' . __( 'Most Mastodon servers have a 500 character limit.', 'wp-to-twitter' ) . '</span>
 				</p>';
 
 	return $control;
@@ -1011,7 +1011,7 @@ function wpt_tweet_length() {
 
 add_filter( 'wpt_settings', 'wpt_set_tweet_length' );
 /**
- * Set the maximum length for a Tweet.
+ * Set the maximum length for a status update.
  */
 function wpt_set_tweet_length() {
 	if ( isset( $_POST['wpt_tweet_length'] ) ) {
@@ -1022,7 +1022,7 @@ function wpt_set_tweet_length() {
 
 add_filter( 'wpt_auto_tweet', 'wpt_auto_tweet' );
 /**
- * Add control to set maximum length for a Tweet.
+ * Add control to allow auto status updates on imported posts.
  *
  * @return string HTML control.
  */
@@ -1030,7 +1030,7 @@ function wpt_auto_tweet() {
 	$allow   = ( '0' === get_option( 'wpt_auto_tweet_allowed', '0' ) ) ? false : true;
 	$note    = ( $allow ) ? '<strong id="auto_tweet_note">(' . __( 'When publishing manually, you will need to save drafts prior to publishing to support XPoster metabox options.', 'wp-to-twitter' ) . ')</strong>' : '';
 	$control = "<p class='wpt_auto_tweet_allowed'>
-					<input type='checkbox' value='1' " . checked( $allow, true, false ) . "id='wpt_auto_tweet_allowed' name='wpt_auto_tweet_allowed' aria-describedby='auto_tweet_note' /> <label for='wpt_auto_tweet_allowed'>" . __( 'Allow Tweets from Post Importers', 'wp-to-twitter' ) . "</label> $note
+					<input type='checkbox' value='1' " . checked( $allow, true, false ) . "id='wpt_auto_tweet_allowed' name='wpt_auto_tweet_allowed' aria-describedby='auto_tweet_note' /> <label for='wpt_auto_tweet_allowed'>" . __( 'Allow status updates from Post Importers', 'wp-to-twitter' ) . "</label> $note
 				</p>";
 
 	return $control;
@@ -1038,7 +1038,7 @@ function wpt_auto_tweet() {
 
 add_filter( 'wpt_settings', 'wpt_set_auto_tweet_allowed' );
 /**
- * Set the automatic Tweet allowed parameter..
+ * Set the automatic status update allowed parameter..
  */
 function wpt_set_auto_tweet_allowed() {
 	if ( isset( $_POST['wpt_auto_tweet_allowed'] ) ) {
