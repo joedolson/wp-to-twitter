@@ -50,8 +50,8 @@ function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $i
 				'file'        => $attachment_data,
 				'description' => $alt_text,
 			);
-
-			$media_id              = $request['id'];
+			$response              = $connection->upload_media( $request );
+			$media_id              = $response['id'];
 			$status['media_ids[]'] = $media_id;
 
 			wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment", $id );
@@ -119,7 +119,7 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		 */
 		$status = apply_filters( 'wpt_filter_mastodon_status', $status, $id, $auth );
 		if ( $do_post ) {
-			$return    = $connection->postStatus( $status );
+			$return    = $connection->post_status( $status );
 			$http_code = 200;
 			$status_id = $return->data->id;
 		} else {
@@ -139,20 +139,31 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
  * Establish an OAuth client to Mastodon.
  *
  * @param mixed int|boolean $auth Current author context.
+ * @param array             $verify Array of credentials to validate.
  *
  * @return mixed $mastodon or false
  */
-function wpt_mastodon_connection( $auth = false ) {
-	if ( ! $auth ) {
-		$token    = get_option( 'wpt_mastodon_token' );
-		$instance = get_option( 'wpt_mastodon_instance' );
+function wpt_mastodon_connection( $auth = false, $verify = false ) {
+	if ( ! empty( $verify ) ) {
+		$token    = $verify['token'];
+		$instance = $verify['instance'];
 	} else {
-		$token    = get_user_meta( $auth, 'wpt_mastodon_token', true );
-		$instance = get_user_meta( $auth, 'wpt_mastodon_instance', true );
+		if ( ! $auth ) {
+			$token    = get_option( 'wpt_mastodon_token' );
+			$instance = get_option( 'wpt_mastodon_instance' );
+		} else {
+			$token    = get_user_meta( $auth, 'wpt_mastodon_token', true );
+			$instance = get_user_meta( $auth, 'wpt_mastodon_instance', true );
+		}
 	}
 	$mastodon = false;
-	if ( ! empty( $token ) && ! empty( $instance ) ) {
+	if ( '' !== $token && '' !== $instance ) {
 		$mastodon = new Wpt_Mastodon_Api( $token, $instance );
+		if ( $verify ) {
+			$verify = $mastodon->verify();
+
+			return $verify;
+		}
 	}
 
 	return $mastodon;
