@@ -130,6 +130,7 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		 */
 		$do_post   = apply_filters( 'wpt_do_toot', true, $auth, $id, $status['text'] );
 		$status_id = false;
+		$success   = false;
 		// Change status array to Mastodon expectation.
 		$status['status'] = $status['text'];
 		unset( $status['text'] );
@@ -147,8 +148,14 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		$status = apply_filters( 'wpt_filter_mastodon_status', $status, $id, $auth );
 		if ( $do_post ) {
 			$return    = $connection->post_status( $status );
-			$http_code = 200;
-			$status_id = $return['id'];
+			if ( isset( $return['id'] ) ) {
+				$success   = true;
+				$http_code = 200;
+				$status_id = $return['id'];
+			} else {
+				$http_code = 401;
+				$notice    = __( 'Status update failed.', 'wp-to-twitter' );
+			}
 		} else {
 			$http_code = '000';
 			$notice    = __( 'Status Update cancelled by custom filter.', 'wp-to-twitter' );
@@ -156,6 +163,7 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 	}
 
 	return array(
+		'return'    => $success,
 		'http'      => $http_code,
 		'notice'    => $notice,
 		'status_id' => $status_id,
