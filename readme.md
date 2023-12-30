@@ -1,6 +1,6 @@
 # XPoster
 
-Automatically send your posts as Tweets.
+Automatically send your posts as X.com or Mastodon status updates.
 
 ![Code Linting](https://github.com/joedolson/wp-to-twitter/actions/workflows/main.yml/badge.svg) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)](https://www.gnu.org/license/gpl-2.0.html)
 

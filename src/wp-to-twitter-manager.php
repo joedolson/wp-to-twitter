@@ -37,9 +37,9 @@ function wpt_updated_settings() {
 	// Connect to Mastodon.
 	if ( isset( $_POST['mastodon_settings'] ) ) {
 		$post          = map_deep( $_POST, 'sanitize_text_field' );
-		$oauth_message = wpt_update_mastodon_settings( false, $post );
+		$mastodon_message = wpt_update_mastodon_settings( false, $post );
 	} else {
-		$oauth_message = '';
+		$mastodon_message = '';
 	}
 	$message = '';
 
@@ -50,7 +50,7 @@ function wpt_updated_settings() {
 
 			print( '
 				<div id="message" class="updated fade">
-					<p>' . __( 'XPoster is now connected with X.com.', 'wp-to-twitter' ) . " <a href='$admin_url'>" . __( 'Configure your Tweet templates', 'wp-to-twitter' ) . '</a></p>
+					<p>' . __( 'XPoster is now connected with X.com.', 'wp-to-twitter' ) . " <a href='$admin_url'>" . __( 'Configure your status update templates', 'wp-to-twitter' ) . '</a></p>
 				</div>
 			' );
 		} elseif ( 'failed' === $oauth_message ) {
@@ -81,6 +81,43 @@ function wpt_updated_settings() {
 			print( '
 				<div id="message" class="error fade">
 					<p>' . __( 'OAuth Authentication response not understood.', 'wp-to-twitter' ) . '</p>
+				</div>
+			' );
+		}
+	}
+
+	// notifications from Mastodon connection.
+	if ( isset( $_POST['mastodon_settings'] ) ) {
+		if ( 'success' === $mastodon_message ) {
+			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro?tab=basic' );
+
+			print( '
+				<div id="message" class="updated fade">
+					<p>' . __( 'XPoster is now connected to your Mastodon instance.', 'wp-to-twitter' ) . " <a href='$admin_url'>" . __( 'Configure your status update templates', 'wp-to-twitter' ) . '</a></p>
+				</div>
+			' );
+		} elseif ( 'failed' === $mastodon_message ) {
+			print( '
+				<div id="message" class="error fade">
+					<p>' . __( 'XPoster failed to connect with your Mastodon instance.', 'wp-to-twitter' ) . ' <strong>' . __( 'Error:', 'wp-to-twitter' ) . '</strong> ' . get_option( 'wpt_error' ) . '</p>
+				</div>
+			' );
+		} elseif ( 'cleared' === $mastodon_message ) {
+			print( '
+				<div id="message" class="updated fade">
+					<p>' . __( 'Mastodon authentication data cleared.', 'wp-to-twitter' ) . '</p>
+				</div>
+			' );
+		} elseif ( 'noconnection' === $oauth_message ) {
+			print( '
+				<div id="message" class="error fade">
+					<p>' . __( 'Mastodon authentication Failed. XPoster was unable to complete a connection with those credentials.', 'wp-to-twitter' ) . '</p>
+				</div>
+			' );
+		} else {
+			print( '
+				<div id="message" class="error fade">
+					<p>' . __( 'Mastodon authentication response not understood.', 'wp-to-twitter' ) . '</p>
 				</div>
 			' );
 		}
