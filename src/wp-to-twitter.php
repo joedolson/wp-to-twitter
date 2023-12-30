@@ -1457,7 +1457,7 @@ function wpt_add_twitter_inner_box( $post ) {
 				<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
 			</p>
 			<p class='wpt-template'>
-				<?php _e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo stripcslashes( $expanded ); ?></code>
+				<?php _e( 'Template:', 'wp-to-twitter' ); ?><br /><code><?php echo stripcslashes( $expanded ); ?></code>
 				<?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
 			</p>
 			<?php
