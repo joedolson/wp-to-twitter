@@ -255,6 +255,7 @@ function wpt_save_success( $id, $twit, $http_code ) {
 			$jwt = array();
 		}
 		$jwt[] = urldecode( $twit );
+		// Why do I pass this into the POST array? Is this something from a past version? Todo.
 		if ( empty( $_POST ) ) {
 			$_POST = array();
 		}
@@ -262,7 +263,6 @@ function wpt_save_success( $id, $twit, $http_code ) {
 		update_post_meta( $id, '_jd_wp_twitter', $jwt );
 	}
 }
-
 
 /**
  * Checks whether XPoster has sent a tweet on this post to this author within the last 30 seconds and blocks duplicates.
@@ -320,8 +320,6 @@ function wpt_check_recent_tweet( $id, $auth ) {
  * @return boolean Success of query.
  */
 function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false ) {
-	$http_code = 0;
-	$notice    = '';
 	// If an ID is set but the post is not currently present or published, ignore.
 	if ( $id ) {
 		$status = get_post_status( $id );
