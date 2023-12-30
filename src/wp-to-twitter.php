@@ -1424,7 +1424,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( 'publish' === $status && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 			?>
 			<div class='tweet-buttons'>
-				<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-twitter' aria-hidden='true'></span><?php _e( 'Send Update Now', 'wp-to-twitter' ); ?></button>
+				<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-share' aria-hidden='true'></span><?php _e( 'Share Now', 'wp-to-twitter' ); ?></button>
 			<?php
 			if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
 				?>
