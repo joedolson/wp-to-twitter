@@ -616,6 +616,26 @@ function wpt_post_attachment( $post_ID ) {
 }
 
 /**
+ * Check for a valid license key.
+ *
+ * @return bool|string
+ */
+function wpt_pro_is_valid() {
+	$license  = ( get_option( 'wpt_license_key' ) ) ? get_option( 'wpt_license_key' ) : 'none';
+	$validity = get_option( 'wpt_license_valid' );
+	$valid    = false;
+	if ( function_exists( 'wpt_pro_functions' ) ) {
+		if ( 'none' !== $license ) {
+			$valid = ( ( 'true' === $validity ) || ( 'active' === $validity ) || ( 'valid' === $validity ) ) ? $license : false;
+		} else {
+			$valid = false;
+		}
+	}
+
+	return $valid;
+}
+
+/**
  * Show support form. Note: text in the message body should not be translatable.
  */
 function wpt_get_support_form() {
@@ -624,15 +644,9 @@ function wpt_get_support_form() {
 	$request        = '';
 	$response_email = $current_user->user_email;
 	// send fields for XPoster.
-	$license = ( get_option( 'wpt_license_key' ) ) ? get_option( 'wpt_license_key' ) : 'none';
-	if ( 'none' !== $license ) {
-		$valid = ( ( 'true' === get_option( 'wpt_license_valid' ) ) || ( 'active' === get_option( 'wpt_license_valid' ) ) || ( 'valid' === get_option( 'wpt_license_valid' ) ) ) ? ' (active)' : ' (inactive)';
-	} else {
-		$valid = '';
-	}
-	if ( $valid && function_exists( 'wpt_pro_functions' ) ) {
-		$license = 'License Key: ' . $license . $valid;
-
+	$license = wpt_pro_is_valid();
+	if ( $license ) {
+		$license_key          = 'License Key: ' . $license;
 		$version              = $wpt_version;
 		$wtt_twitter_username = get_option( 'wtt_twitter_username' );
 		// send fields for all plugins.
@@ -670,7 +684,7 @@ function wpt_get_support_form() {
 	==XPoster==
 	Version: $version
 	X.com username: http://twitter.com/$wtt_twitter_username
-	$license
+	$license_key
 
 	==WordPress:==
 	Version: $wp_version
