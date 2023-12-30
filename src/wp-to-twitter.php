@@ -8,9 +8,9 @@
  * @license     GPL-2.0+
  *
  * @wordpress-plugin
- * Plugin Name: XPoster - Share to Twitter/X from WordPress
+ * Plugin Name: XPoster - Share to X.com and Mastodon from WordPress
  * Plugin URI:  http://www.joedolson.com/wp-to-twitter/
- * Description: Posts a Tweet when you update your WordPress blog or post a link, using your URL shortener. Many options to customize and promote your Tweets.
+ * Description: Posts a status update when you update your WordPress blog or post a link, using your URL shortener. Many options to customize and promote your statuses.
  * Author:      Joseph C Dolson
  * Author URI:  http://www.joedolson.com
  * Text Domain: wp-to-twitter
@@ -194,7 +194,7 @@ function wptotwitter_activate() {
 }
 
 /**
- * Function checks for an alternate URL to be Tweeted. Contribution by Bill Berry.
+ * Function checks for an alternate URL to be updated. Contribution by Bill Berry.
  *
  * @param int $post_ID Post ID.
  *
@@ -212,13 +212,13 @@ function wpt_link( $post_ID ) {
 }
 
 /**
- * Save error messages for Tweets.
+ * Save error messages for status updates.
  *
  * @param int    $id Post ID.
  * @param int    $auth Current author.
- * @param string $twit Tweet text.
- * @param string $error Error string from X.com.
- * @param int    $http_code Http code from X.com.
+ * @param string $twit Update text.
+ * @param string $error Error string from service.
+ * @param int    $http_code Http code from service.
  * @param string $ts Current timestamp.
  */
 function wpt_save_error( $id, $auth, $twit, $error, $http_code, $ts ) {
@@ -243,10 +243,10 @@ function wpt_save_error( $id, $auth, $twit, $error, $http_code, $ts ) {
 }
 
 /**
- * Save a record of a successful Tweet.
+ * Save a record of a successful status update.
  *
  * @param int    $id Post ID.
- * @param string $twit Tweet text.
+ * @param string $twit Status update text.
  * @param int    $http_code HTTP Code returned by query.
  */
 function wpt_save_success( $id, $twit, $http_code ) {
@@ -272,7 +272,7 @@ function wpt_save_success( $id, $twit, $http_code ) {
  * @param int $auth Author.
  *
  * @uses filter wpt_recent_tweet_threshold
- * @return boolean true to send Tweet, false to block.
+ * @return boolean true to send status update, false to block.
  */
 function wpt_check_recent_tweet( $id, $auth ) {
 	if ( ! $id ) {
@@ -287,7 +287,8 @@ function wpt_check_recent_tweet( $id, $auth ) {
 			return true;
 		} else {
 			/**
-			 * Modify the expiration window for recent Tweets. This value does flood control, to prevent a runaway process from sending multiple Tweets. Default `30` seconds.
+			 * Modify the expiration window for recent status updates. 
+			 * This value does flood control, to prevent a runaway process from sending multiple status updates. Default `30` seconds.
 			 *
 			 * @hook wpt_recent_tweet_threshold
 			 * @param {int} $expire Integer representing seconds. How long the transient will exist.
@@ -297,7 +298,7 @@ function wpt_check_recent_tweet( $id, $auth ) {
 			$expire = apply_filters( 'wpt_recent_tweet_threshold', 30 );
 			// if expiration is 0, don't set the transient. We don't want permanent transients.
 			if ( 0 !== $expire ) {
-				wpt_mail( 'Tweet transient set', "$expire / $auth / $id", $id );
+				wpt_mail( 'Update transient set', "$expire / $auth / $id", $id );
 				if ( false === $auth ) {
 					set_transient( "_wpt_most_recent_tweet_$id", true, $expire );
 				} else {
@@ -362,7 +363,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 
 	$recent = wpt_check_recent_tweet( $id, $auth );
 	if ( $recent ) {
-		wpt_mail( 'This post was just Tweeted, and this is a duplicate.', 'Post ID: ' . $id . '; Account: ' . $auth );
+		wpt_mail( 'This post was just sent, and this is a duplicate.', 'Post ID: ' . $id . '; Account: ' . $auth );
 
 		return false;
 	}
@@ -384,10 +385,10 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 	} // exit silently if not authorized.
 
 	$check = ( ! $auth ) ? get_option( 'jd_last_tweet', '' ) : get_user_meta( $auth, 'wpt_last_tweet', true ); // get user's last tweet.
-	// prevent duplicate Tweets. Checks whether this text has already been sent.
+	// prevent duplicate status updates. Checks whether this text has already been sent.
 	if ( $check === $twit && '' !== $twit ) {
 		wpt_mail( 'Matched: status update identical', "This Update: $twit; Check Update: $check; $auth, $id, $media", $id ); // DEBUG.
-		$error = __( 'This status update is identical to another update recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'X.com requires all Tweets to be unique.', 'wp-to-twitter' );
+		$error = __( 'This status update is identical to another update recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'All status updates are expected to be unique.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '403-1', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
 
@@ -454,9 +455,10 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 	$return    = $response['return'];
 	$http_code = $response['http'];
 	$notice    = $response['notice'];
-	$tweet_id  = $response['tweet_id'];
+	$tweet_id  = isset( $response['tweet_id'] ) ? $response['tweet_id'] : false;
+	$status_id = isset( $response['status_id'] ) ? $response['status_id'] : false;
 	wpt_mail( "X.com Response: $http_code", $error, $id ); // DEBUG.
-	// only save last Tweet if successful.
+	// only save last status if successful.
 	if ( 200 === $http_code ) {
 		if ( ! $auth ) {
 			update_option( 'jd_last_tweet', $twit );
@@ -468,32 +470,37 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 	wpt_save_success( $id, $twit, $http_code );
 	if ( ! $return ) {
 		/**
-		 * Executes an action after posting a Tweet fails.
+		 * Executes an action after posting a status fails.
 		 *
 		 * @hook wpt_tweet_failed
 		 *
 		 * @since 3.6.0
 		 *
 		 * @param {object} $connection The current OAuth connection.
-		 * @param {int}    $id Post ID for Tweeted post.
+		 * @param {int}    $id Post ID for status update.
 		 * @param {string} $error Error message returned.
 		 */
 		do_action( 'wpt_tweet_failed', $connection, $id, $error );
 		wpt_set_log( 'wpt_status_message', $id, $error );
 	} else {
 		/**
-		 * Executes an action after a Tweet is posted successfully.
+		 * Executes an action after a status is posted successfully.
 		 *
 		 * @hook wpt_tweet_posted
 		 *
 		 * @param {object} $connection The current OAuth connection.
-		 * @param {int}    $id Post ID for Tweeted post.
+		 * @param {int}    $id Post ID for status update.
 		 */
 		do_action( 'wpt_tweet_posted', $connection, $id );
-		// Log the Tweet ID of the first Tweet for this post.
+		// Log the Status ID of the first Tweet on this post.
 		$has_tweet_id = get_post_meta( $id, '_wpt_tweet_id', true );
 		if ( ! $has_tweet_id && $tweet_id ) {
 			update_post_meta( $id, '_wpt_tweet_id', $tweet_id );
+		}
+		// Log the Status ID of the first non-Tweet update on this post.
+		$has_status_id = get_post_meta( $id, '_wpt_status_id', true );
+		if ( ! $has_status_id && $status_id ) {
+			update_post_meta( $id, '_wpt_status_id', $status_id );
 		}
 		wpt_set_log( 'wpt_status_message', $id, $notice . __( 'Status sent successfully.', 'wp-to-twitter' ) );
 	}
@@ -707,11 +714,11 @@ function wpt_is_ssl( $url ) {
 }
 
 /**
- * Builds array of post info for use in Tweet functions.
+ * Builds array of post info for use in status update functions.
  *
  * @param integer $post_ID Post ID.
  *
- * @return array Post data used in Tweet functions.
+ * @return array Post data used in status update functions.
  */
 function wpt_post_info( $post_ID ) {
 	$encoding = get_option( 'blog_charset', '' );
@@ -755,7 +762,7 @@ function wpt_post_info( $post_ID ) {
 		 * Filter the space separated list of category names in #cats#.
 		 *
 		 * @hook wpt_twitter_category_names
-		 * @param {array} $cats Array of category names attached to this Tweet.
+		 * @param {array} $cats Array of category names attached to this status update.
 		 *
 		 * @return {array}
 		 */
@@ -764,7 +771,7 @@ function wpt_post_info( $post_ID ) {
 		 * Filter the space separated list of category descriptions in #cat_descs#.
 		 *
 		 * @hook wpt_twitter_category_descs
-		 * @param {array} $cats Array of category descriptions attached to this Tweet.
+		 * @param {array} $cats Array of category descriptions attached to this status update.
 		 *
 		 * @return {array}
 		 */
@@ -798,7 +805,7 @@ function wpt_post_info( $post_ID ) {
 	$values['postStatus'] = $post->post_status;
 	$values['postType']   = $post->post_type;
 	/**
-	 * Filters post array to insert custom data that can be used in Tweet process.
+	 * Filters post array to insert custom data that can be used in status update process.
 	 *
 	 * @param array   $values Existing values.
 	 * @param integer $post_ID Post ID.
@@ -884,7 +891,7 @@ function wpt_category_limit( $post_type, $post_info, $post_ID ) {
 }
 
 /**
- * Set up a Tweet to be sent.
+ * Set up a status update to be sent.
  *
  * @param int     $post_ID Post ID.
  * @param string  $type Publishing context: instant, future, xmlrpc.
@@ -922,7 +929,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 		$default      = ( 'yes' === $tweet_this ) ? true : false;
 		$text_default = 'yes';
 	}
-	wpt_mail( '1: Tweet Status', "Should tweet: $tweet_this; Setting: $text_default; Publication method: $type", $post_ID ); // DEBUG.
+	wpt_mail( '1: Status Update', "Should send: $tweet_this; Setting: $text_default; Publication method: $type", $post_ID ); // DEBUG.
 	if ( $default ) { // default switch: depend on default settings.
 		$post_info = wpt_post_info( $post_ID );
 		$media     = wpt_post_with_media( $post_ID, $post_info );
@@ -947,7 +954,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 		 * Return true to ignore this post based on POST data. Default false.
 		 *
 		 * @hook wpt_filter_post_data
-		 * @param {bool} $filter True if this post should not be Tweeted.
+		 * @param {bool} $filter True if this post should not have a status update sent.
 		 * @param {array} $post POST global.
 		 *
 		 * @return {bool}
@@ -981,7 +988,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 				wpt_mail( '4b: XPoster Pro: Limited by term filters', 'This post was rejected by a taxonomy/term filter', $post_ID );
 				return false;
 			}
-			// create Tweet and ID whether current action is edit or new.
+			// create status update and ID whether current action is edit or new.
 			$ct = get_post_meta( $post_ID, '_jd_twitter', true );
 			if ( isset( $_POST['_jd_twitter'] ) && '' !== trim( $_POST['_jd_twitter'] ) ) {
 				$ct = sanitize_textarea_field( $_POST['_jd_twitter'] );
@@ -1011,7 +1018,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 			if ( $newpost || $oldpost ) {
 				$template = ( '' !== $custom_tweet ) ? $custom_tweet : $nptext;
 				$sentence = jd_truncate_tweet( $template, $post_info, $post_ID );
-				wpt_mail( '5: Tweet Template Processed', "Template: $template; Tweet: $sentence", $post_ID ); // DEBUG.
+				wpt_mail( '5: Status Update Template Processed', "Template: $template; Status: $sentence", $post_ID ); // DEBUG.
 				if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 					$sentence2 = jd_truncate_tweet( $template, $post_info, $post_ID, false, $auth );
 				}
@@ -1044,7 +1051,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
 
 								/**
-								 * Render the template of a scheduled Tweet only at the time it's sent.
+								 * Render the template of a scheduled status update only at the time it's sent.
 								 *
 								 * @hook wpt_postpone_rendering
 								 * @param {bool} $postpone True to postpone rendering.
@@ -1068,7 +1075,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 								if ( WPT_DEBUG ) {
 									$author_id = ( $acct ) ? "#$acct" : 'Main';
 									wpt_mail(
-										"7a: Tweet Scheduled for author: $author_id",
+										"7a: Status update Scheduled for author: $author_id",
 										print_r(
 											array(
 												'id'       => $acct,
@@ -1101,7 +1108,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 										$retweet = apply_filters( 'wpt_set_retweet_text', $template, $i, $post_ID );
 
 										/**
-										 * Render the template of a scheduled Tweet only at the time it's sent.
+										 * Render the template of a scheduled status only at the time it's sent.
 										 *
 										 * @hook wpt_postpone_rendering
 										 * @param {bool} $postpone True to postpone rendering.
@@ -1120,7 +1127,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 										}
 										// add original delay to schedule.
 										$delay = ( isset( $post_info['wpt_delay_tweet'] ) ) ? ( (int) $post_info['wpt_delay_tweet'] ) * 60 : 0;
-										// Don't delay the first Tweet of the group.
+										// Don't delay the first stats update of the group.
 										$offset = ( true === $first ) ? 0 : wp_rand( 60, 240 ); // delay each co-tweet by 1-4 minutes.
 										$time   = apply_filters( 'wpt_schedule_retweet', ( $post_info['wpt_retweet_after'] ) * ( 60 * 60 ) * $i, $acct, $i, $post_info );
 										wp_schedule_single_event(
@@ -1177,7 +1184,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 }
 
 /**
- *  Send Tweets on links in link manager. Only active if Link plug-in is installed.
+ *  Send updates on links in link manager. Only active if Link plug-in is installed.
  *
  * @param integer $link_id Database ID for link.
  *
@@ -1226,7 +1233,7 @@ function wpt_twit_link( $link_id ) {
  *
  * @param int $post_ID Post ID.
  *
- * @return string $hashtags Hashtags in format needed for Tweet.
+ * @return string $hashtags Hashtags in format needed for status updates.
  */
 function wpt_generate_hash_tags( $post_ID ) {
 	$hashtags       = '';
@@ -1393,7 +1400,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			// don't display when draft is updated or if no message.
 			if ( ! ( ( '1' === $_REQUEST['message'] ) && ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) ) && 'no' !== $tweet_this ) {
 				$log   = wpt_get_log( 'wpt_status_message', $post_id );
-				$class = ( __( 'Tweet sent successfully.', 'wp-to-twitter' ) !== $log ) ? 'error' : 'updated';
+				$class = ( __( 'Status update sent successfully.', 'wp-to-twitter' ) !== $log ) ? 'error' : 'updated';
 				if ( '' !== trim( $log ) ) {
 					echo "<div class='$class'><p>$log</p></div>";
 				}
@@ -1412,12 +1419,12 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		if ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) {
 			// Translators: post type.
-			$tweet_status = sprintf( __( '%s will not be Tweeted on update.', 'wp-to-twitter' ), ucfirst( $type ) );
+			$tweet_status = sprintf( __( '%s will not be posted on update.', 'wp-to-twitter' ), ucfirst( $type ) );
 		}
 		if ( 'publish' === $status && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 			?>
 			<div class='tweet-buttons'>
-				<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-twitter' aria-hidden='true'></span><?php _e( 'Tweet Now', 'wp-to-twitter' ); ?></button>
+				<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-twitter' aria-hidden='true'></span><?php _e( 'Send Update Now', 'wp-to-twitter' ); ?></button>
 			<?php
 			if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
 				?>
@@ -1445,7 +1452,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			?>
 			<p class='jtw'>
-				<label for="wpt_custom_tweet"><?php _e( 'Custom Tweet', 'wp-to-twitter' ); ?></label><br/>
+				<label for="wpt_custom_tweet"><?php _e( 'Custom Status Update', 'wp-to-twitter' ); ?></label><br/>
 				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php esc_attr( $expanded ); ?>" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
 				<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
 			</p>
@@ -1469,13 +1476,13 @@ function wpt_add_twitter_inner_box( $post ) {
 			<?php
 		}
 		if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
-			// "no" means 'Don't Tweet' (is checked)
+			// "no" means 'Don't Post' (is checked)
 			$nochecked  = ( 'no' === $tweet_this ) ? ' checked="checked"' : '';
 			$yeschecked = ( 'yes' === $tweet_this ) ? ' checked="checked"' : '';
 			?>
 		<p class='toggle-btn-group'>
-			<input type="radio" name="_jd_tweet_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Tweet", 'wp-to-twitter' ); ?></label>
-			<input type="radio" name="_jd_tweet_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( 'Tweet', 'wp-to-twitter' ); ?></label>
+			<input type="radio" name="_jd_tweet_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Post", 'wp-to-twitter' ); ?></label>
+			<input type="radio" name="_jd_tweet_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( 'Post', 'wp-to-twitter' ); ?></label>
 		</p>
 			<?php
 		} else {
@@ -1550,8 +1557,8 @@ function wpt_add_twitter_inner_box( $post ) {
 		</div>
 		<?php
 	} else {
-		// permissions: this user isn't allowed to Tweet.
-		_e( 'Your role does not have the ability to Post Tweets from this site.', 'wp-to-twitter' );
+		// permissions: this user isn't allowed to post status updates.
+		_e( 'Your role does not have the ability to post status updates from this site.', 'wp-to-twitter' );
 		?>
 		<input type='hidden' name='_jd_tweet_this' value='no'/>
 		<?php
@@ -1559,9 +1566,9 @@ function wpt_add_twitter_inner_box( $post ) {
 }
 
 /**
- * Format history of Tweets attempted on current post.
+ * Format history of status updates attempted on current post.
  *
- * @param array $post_id Post ID to fetch Tweets on.
+ * @param array $post_id Post ID to fetch status updates on.
  */
 function wpt_show_tweets( $post_id ) {
 	$previous_tweets = get_post_meta( $post_id, '_jd_wp_twitter', true );
@@ -1573,10 +1580,10 @@ function wpt_show_tweets( $post_id ) {
 	if ( ! empty( $previous_tweets ) || ! empty( $failed_tweets ) ) {
 		?>
 	<p class='panel-toggle'>
-		<a href='#wpt_tweet_history' class='history-toggle'><span class='dashicons dashicons-plus' aria-hidden="true"></span><?php _e( 'View Tweet History', 'wp-to-twitter' ); ?></a>
+		<a href='#wpt_tweet_history' class='history-toggle'><span class='dashicons dashicons-plus' aria-hidden="true"></span><?php _e( 'View Update History', 'wp-to-twitter' ); ?></a>
 	</p>
 	<div class='history'>
-	<p class='error'><em><?php _e( 'Previous Tweets', 'wp-to-twitter' ); ?>:</em></p>
+	<p class='error'><em><?php _e( 'Previous Updates', 'wp-to-twitter' ); ?>:</em></p>
 	<ul>
 		<?php
 		$has_history   = false;
@@ -1584,9 +1591,18 @@ function wpt_show_tweets( $post_id ) {
 		if ( is_array( $previous_tweets ) ) {
 			foreach ( $previous_tweets as $previous_tweet ) {
 				if ( '' !== $previous_tweet ) {
-					$has_history    = true;
+					$has_history     = true;
+					$twitter_intent  = '';
+					$mastodon_intent = '';
+					if ( wtt_oauth_test() ) {
+						$twitter_intent = "<a href='https://twitter.com/intent/tweet?text=" . urlencode( $ft ) . "'>" . __( 'Repost on X.com', 'wp-to-twitter' ) . '</a>';
+					}
+					if ( wpt_mastodon_connection() ) {
+						$mastodon        = get_option( 'wpt_mastodon_instance' );
+						$mastodon_intent = "<a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $ft ) . "'>" . __( 'Repost on Mastodon', 'wp-to-twitter' ) . '</a>';
+					}
 					$hidden_fields .= "<input type='hidden' name='_jd_wp_twitter[]' value='" . esc_attr( $previous_tweet ) . "' />";
-					echo "<li>$previous_tweet <a href='http://twitter.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>Retweet this</a></li>";
+					echo "<li>$previous_tweet $twitter_intent $mastodon_intent</li>";
 				}
 			}
 		}
@@ -1598,21 +1614,31 @@ function wpt_show_tweets( $post_id ) {
 		if ( is_array( $failed_tweets ) ) {
 			foreach ( $failed_tweets as $failed_tweet ) {
 				if ( ! empty( $failed_tweet ) ) {
-					$ft          = $failed_tweet['sentence'];
-					$reason      = $failed_tweet['code'];
-					$error       = $failed_tweet['error'];
-					$list        = true;
-					$error_list .= "<li> <code>Error: $reason</code> $ft <a href='http://twitter.com/intent/tweet?text=" . urlencode( $ft ) . "'>Tweet this</a><br /><em>$error</em></li>";
+					$ft     = $failed_tweet['sentence'];
+					$reason = $failed_tweet['code'];
+					$error  = $failed_tweet['error'];
+					$list   = true;
+
+					$twitter_intent  = '';
+					$mastodon_intent = '';
+					if ( wtt_oauth_test() ) {
+						$twitter_intent = "<a href='https://twitter.com/intent/tweet?text=" . urlencode( $ft ) . "'>" . __( 'Send update to X.com', 'wp-to-twitter' ) . '</a>';
+					}
+					if ( wpt_mastodon_connection() ) {
+						$mastodon        = get_option( 'wpt_mastodon_instance' );
+						$mastodon_intent = "<a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $ft ) . "'>" . __( 'Send update to Mastodon', 'wp-to-twitter' ) . '</a>';
+					}
+					$error_list .= "<li> <code>Error: $reason</code> $ft $twitter_intent $mastodon_intent <br /><em>$error</em></li>";
 				}
 			}
 			if ( true === $list ) {
-				echo "<p class='error'><em>" . __( 'Failed Tweets', 'wp-to-twitter' ) . ":</em></p>
+				echo "<p class='error'><em>" . __( 'Failed Status Updates', 'wp-to-twitter' ) . ":</em></p>
 				<ul>$error_list</ul>";
 			}
 		}
 		echo '<div>' . $hidden_fields . '</div>';
 		if ( $has_history || $list ) {
-			echo "<p><input type='checkbox' name='wpt_clear_history' id='wptch' value='clear' /> <label for='wptch'>" . __( 'Delete Tweet History', 'wp-to-twitter' ) . '</label></p>';
+			echo "<p><input type='checkbox' name='wpt_clear_history' id='wptch' value='clear' /> <label for='wptch'>" . __( 'Delete Status History', 'wp-to-twitter' ) . '</label></p>';
 		}
 		?>
 	</div>
@@ -1692,7 +1718,7 @@ function wpt_admin_scripts() {
 
 add_action( 'wp_ajax_wpt_tweet', 'wpt_ajax_tweet' );
 /**
- * Handle Tweets sent via Ajax Tweet Now/Schedule Tweet buttons.
+ * Handle updates sent via Ajax Update Now/Schedule Update buttons.
  */
 function wpt_ajax_tweet() {
 	if ( ! check_ajax_referer( 'wpt-tweet-nonce', 'security', false ) ) {
@@ -1753,8 +1779,8 @@ function wpt_ajax_tweet() {
 					);
 					break;
 			}
-			// Translators: Full text of Tweet, time scheduled for.
-			$return = ( 'tweet' === $action ) ? wpt_get_log( 'wpt_status_message', $post_ID ) : sprintf( __( 'Tweet scheduled: %1$s for %2$s', 'wp-to-twitter' ), '"' . $sentence . '"', $print_schedule );
+			// Translators: Full text of Update, time scheduled for.
+			$return = ( 'tweet' === $action ) ? wpt_get_log( 'wpt_status_message', $post_ID ) : sprintf( __( 'Update scheduled: %1$s for %2$s', 'wp-to-twitter' ), '"' . $sentence . '"', $print_schedule );
 			echo $return;
 			if ( count( $authors ) > 1 ) {
 				echo '<br />';
@@ -1767,7 +1793,7 @@ function wpt_ajax_tweet() {
 }
 
 /**
- * Post the Custom Tweet & custom Tweet data into the post meta table
+ * Post the Custom Update & custom Update data into the post meta table
  *
  * @param integer $id Post ID.
  * @param object  $post Post object.
@@ -1905,7 +1931,7 @@ if ( '1' === get_option( 'jd_twit_blogroll' ) ) {
 
 if ( function_exists( 'wp_after_insert_post' ) ) {
 	/**
-	 * Use the `wp_after_insert_post` action to run Tweets.
+	 * Use the `wp_after_insert_post` action to run Updates.
 	 *
 	 * @since WordPress 5.6
 	 */
@@ -1929,14 +1955,14 @@ function wpt_in_post_type( $id ) {
 		return true;
 	}
 	if ( WPT_DEBUG ) {
-		wpt_mail( '0: Not a Tweeted post type', 'This post type is not enabled for Tweeting: ' . $type, $id );
+		wpt_mail( '0: Not an updated post type', 'This post type is not enabled for status updates: ' . $type, $id );
 	}
 
 	return false;
 }
 
 /**
- * Get array of post types that can be Tweeted.
+ * Get array of post types that can be updated.
  *
  * @return array
  */
@@ -1952,10 +1978,10 @@ function wpt_allowed_post_types() {
 	}
 
 	/**
-	 * Return array of post types that can be sent as Tweets.
+	 * Return array of post types that can be sent as status updates.
 	 *
 	 * @hook wpt_allowed_post_types
-	 * @param {array} $types Array of post type names enabled for Tweets either when editing or publishing.
+	 * @param {array} $types Array of post type names enabled for status updates either when editing or publishing.
 	 * @param {array} $post_type_settings Multidimensional array of post types and post type settings.
 	 *
 	 * @return {array}
@@ -1965,7 +1991,7 @@ function wpt_allowed_post_types() {
 
 add_action( 'future_to_publish', 'wpt_future_to_publish', 16 );
 /**
- * Handle Tweeting posts scheduled for the future.
+ * Handle updating posts scheduled for the future.
  *
  * @param object $post Post object.
  */
@@ -2002,7 +2028,7 @@ function wpt_auto_tweet_allowed( $post_id ) {
 }
 
 /**
- * Handle Tweeting posts published directly. As of 12/10/2020, supports new wp_after_insert_post to improve support when used with block editor.
+ * Handle updating posts published directly. As of 12/10/2020, supports new wp_after_insert_post to improve support when used with block editor.
  *
  * @param int     $id Post ID.
  * @param object  $post Post object.
@@ -2019,7 +2045,7 @@ function wpt_twit( $id, $post = null, $updated = null, $post_before = null ) {
 		return $id;
 	}
 	// is there any reason to accept any other status?
-	wpt_mail( 'Tweeting published post', $id );
+	wpt_mail( 'Status update on published post', $id );
 	wpt_twit_instant( $id, $post, $updated, $post_before );
 }
 
@@ -2027,7 +2053,7 @@ add_action( 'xmlrpc_publish_post', 'wpt_twit_xmlrpc' );
 add_action( 'publish_phone', 'wpt_twit_xmlrpc' );
 
 /**
- * For future posts, check transients to see whether this post has already been published. Prevents duplicate Tweet attempts in older versions of WP.
+ * For future posts, check transients to see whether this post has already been published. Prevents duplicate status update attempts in older versions of WP.
  *
  * @param integer $id Post ID.
  */
@@ -2045,7 +2071,7 @@ function wpt_twit_future( $id ) {
 }
 
 /**
- * For immediate posts, check transients to see whether this post has already been published. Prevents duplicate Tweet attempts in older versions of WP or cases where a future action is being run after the initial action.
+ * For immediate posts, check transients to see whether this post has already been published. Prevents duplicate status update attempts in older versions of WP or cases where a future action is being run after the initial action.
  *
  * @param int     $id Post ID.
  * @param object  $post Post object.
@@ -2070,7 +2096,7 @@ function wpt_twit_instant( $id, $post, $updated, $post_before ) {
 }
 
 /**
- * Tweet XMLRPC posts.
+ * Status updates on XMLRPC posts.
  *
  * @param integer $id Post ID.
  *
@@ -2081,7 +2107,7 @@ function wpt_twit_xmlrpc( $id ) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || wp_is_post_revision( $id ) || ! wpt_in_post_type( $id ) ) {
 		return $id;
 	}
-	wpt_mail( 'Tweeting XMLRPC published post', $id );
+	wpt_mail( 'Status update sent on XMLRPC published post', $id );
 	wpt_tweet( $id, 'xmlrpc' );
 	return $id;
 }
