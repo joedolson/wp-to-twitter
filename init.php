@@ -4,20 +4,20 @@
  *
  * @package     XPoster
  * @author      Joe Dolson
- * @copyright   2008-2023 Joe Dolson
+ * @copyright   2008-2024 Joe Dolson
  * @license     GPL-2.0+
  *
  * @wordpress-plugin
  * Plugin Name: XPoster
  * Plugin URI:  http://www.xposterpro.com
- * Description: Posts a Tweet when you update your WordPress blog or post a link, using your URL shortener. Many options to customize and promote your Tweets.
+ * Description: Posts a status update when you update your WordPress blog or post a link, using your URL shortener. Many options to customize and promote your updates.
  * Author:      Joseph C Dolson
  * Author URI:  http://www.joedolson.com
  * Text Domain: wp-to-twitter
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
  * Domain Path: lang
- * Version:     4.1.2
+ * Version:     4.2.0-alpha
  */
 
 /*

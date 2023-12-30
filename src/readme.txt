@@ -7,21 +7,24 @@ Tested up to: 6.4
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.1.2
+Stable tag: 4.2.0-alpha
 
 Posts to X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
 == Description ==
 
-= Post Tweets from WordPress to X.com. =
+= Post Updates from WordPress to X.com and Mastodon. =
+
+*New in version 4.2: Mastodon support.*
 
 XPoster, formerly known as WP to Twitter, is a time-saving tool for keeping your X.com accounts up to date with news and posts from your site.
 
-XPoster uses a customizable Tweet template for Tweets sent when updating or editing posts and pages or custom post types. You can customize your Tweet for each post, using custom template tags to generate the Tweet. 
+XPoster uses customizable status templates for updates sent when updating or editing posts, pages, or custom post types. You can customize your messages for each post, using custom template tags to generate the status update. 
 
 = Free Features =
 
-* Use post tags as X.com hashtags
+* Support for X.com and Mastodon.
+* Use post tags as hashtags
 * Use alternate URLs in place of post permalinks
 * Support for Google Analytics
 * Support for XMLRPC remote clients
@@ -29,18 +32,19 @@ XPoster uses a customizable Tweet template for Tweets sent when updating or edit
 * Rate limiting: make sure you don't exceed X.com's API rate limits. 
 
 = Premium Features in [XPoster Pro](https://xposterpro.com) =
-* Authors can set up their own X.com accounts in their profiles
-* Time delayed Tweeting
-* Scheduled Tweet management
-* Simultaneously Tweet to site and author X.com accounts
-* Preview and Tweet comments
-* Filter Tweets by taxonomy (categories, tags, or custom taxonomies)
+
+* Authors can set up their own accounts in their profiles
+* Time delayed status updates
+* Scheduled update management
+* Simultaneously post updates to site and author accounts
+* Preview and send status updates for comments
+* Filter updates by taxonomy (categories, tags, or custom taxonomies)
 * Upload images to X.com with alt attributes
 * Integrated X.com Card support
 * Support for Player Cards with integrated captions
-* Automatically schedule Tweets of old posts
+* Automatically schedule updates from old posts
 
-Want to stay up to date on XPoster? [Follow me on X.com!](https://twitter.com/joedolson)
+Want to stay up to date on XPoster? [Follow me on X.com!](https://twitter.com/joedolson) or [Follow me on Mastodon!](https://toot.io/@joedolson)
 
 = Translations =
 
@@ -53,6 +57,10 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 4.2.0
+
+* Add support for posting to Mastodon instances.
 
 = 4.1.2 =
 
