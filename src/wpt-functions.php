@@ -209,7 +209,7 @@ function wpt_show_last_tweet() {
 				$title = '(' . __( 'No post', 'wp-to-twitter' ) . ')';
 			}
 			$notice = esc_html( $log[1] );
-			echo "<div class='updated'><p><strong>" . __( 'Last Tweet', 'wp-to-twitter' ) . "</strong>: $title &raquo; $notice</p></div>";
+			echo "<div class='updated'><p><strong>" . __( 'Last Status Update', 'wp-to-twitter' ) . "</strong>: $title &raquo; $notice</p></div>";
 		}
 	}
 }
