@@ -71,6 +71,15 @@ class Wpt_Mastodon_Api {
 	}
 
 	/**
+	 * Verify account credentials
+	 *
+	 * @return array Mastodon response.
+	 */
+	public function verify() {
+		return $this->call_api( '/api/v1/accounts/verify_credentials', 'GET', array() );
+	}
+
+	/**
 	 * Post to the API endpoint.
 	 *
 	 * @param string $endpoint REST API path.
