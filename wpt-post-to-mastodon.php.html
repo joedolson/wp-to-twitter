@@ -99,6 +99,7 @@ function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $i
  * @return array
  */
 function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
+	$notice = '';
 	/**
 	 * Turn on staging mode. Staging mode is automatically turned on if WPT_STAGING_MODE constant is defined.
 	 *
@@ -152,13 +153,14 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 				$success   = true;
 				$http_code = 200;
 				$status_id = $return['id'];
+				$notice   .= __( 'Successful status update sent to Mastodon.', 'wp-to-twitter' );
 			} else {
 				$http_code = 401;
-				$notice    = __( 'Status update failed.', 'wp-to-twitter' );
+				$notice   .= __( 'Mastodon status update failed.', 'wp-to-twitter' );
 			}
 		} else {
 			$http_code = '000';
-			$notice    = __( 'Status Update cancelled by custom filter.', 'wp-to-twitter' );
+			$notice   .= __( 'Mastodon status update cancelled by custom filter.', 'wp-to-twitter' );
 		}
 	}
 
