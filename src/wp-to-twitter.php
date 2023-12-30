@@ -394,7 +394,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 
 		return false;
 	} elseif ( '' === $twit || ! $twit ) {
-		wpt_mail( 'Statud update check: empty sentence', "$twit, $auth, $id, $media", $id ); // DEBUG.
+		wpt_mail( 'Status update check: empty sentence', "$twit, $auth, $id, $media", $id ); // DEBUG.
 		$error = __( 'This status update was blank and could not be sent to the API.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '403-2', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
@@ -1595,11 +1595,11 @@ function wpt_show_tweets( $post_id ) {
 					$twitter_intent  = '';
 					$mastodon_intent = '';
 					if ( wtt_oauth_test() ) {
-						$twitter_intent = "<a href='https://twitter.com/intent/tweet?text=" . urlencode( $ft ) . "'>" . __( 'Repost on X.com', 'wp-to-twitter' ) . '</a>';
+						$twitter_intent = "<a href='https://twitter.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Repost on X.com', 'wp-to-twitter' ) . '</a>';
 					}
 					if ( wpt_mastodon_connection() ) {
 						$mastodon        = get_option( 'wpt_mastodon_instance' );
-						$mastodon_intent = "<a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $ft ) . "'>" . __( 'Repost on Mastodon', 'wp-to-twitter' ) . '</a>';
+						$mastodon_intent = "<a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $previous_tweet ) . "'>" . __( 'Repost on Mastodon', 'wp-to-twitter' ) . '</a>';
 					}
 					$hidden_fields .= "<input type='hidden' name='_jd_wp_twitter[]' value='" . esc_attr( $previous_tweet ) . "' />";
 					echo "<li>$previous_tweet $twitter_intent $mastodon_intent</li>";

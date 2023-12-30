@@ -166,6 +166,10 @@ label[for="wpt_license_key"] {
 	width: 100%;
 }
 
+#wpt_settings_page .inline-labels label {
+	vertical-align: inherit;
+}
+
 #wpt_settings_page .tabs {
 	margin: .5em 0 0;
 	padding: 0 4px;
