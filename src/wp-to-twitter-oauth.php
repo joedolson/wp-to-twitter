@@ -6,7 +6,7 @@
  * @package  XPoster
  * @author   Joe Dolson
  * @license  GPLv2 or later
- * @link     https://www.joedolson.com/wp-to-twitter/
+ * @link     https://www.xposterpro.com
  */
 
 use WpToTwitter_Vendor\Noweh\TwitterApi\Client;
@@ -447,21 +447,6 @@ function wtt_connect_oauth( $auth = false ) {
 		echo '</div>
 		</div>';
 	}
-}
-
-/**
- * Mask secure values.
- *
- * @param string $value Original value.
- *
- * @return string
- */
-function wpt_mask_attr( $value ) {
-	$count  = strlen( $value );
-	$substr = substr( $value, -5 );
-	$return = str_pad( $substr, $count, '*', STR_PAD_LEFT );
-
-	return $return;
 }
 
 /**

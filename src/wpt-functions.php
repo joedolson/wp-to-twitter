@@ -119,8 +119,8 @@ function wpt_check_functions() {
 		$message .= '<li><strong>' . __( "XPoster successfully contacted your URL shortening service.</strong>  This link should point to your site's homepage:", 'wp-to-twitter' );
 		$message .= " <a href='$shrink'>$shrink</a></li>";
 	}
-	// check twitter credentials.
-	if ( wtt_oauth_test() ) {
+	// check twitter & mastodon credentials.
+	if ( wtt_oauth_test() || wpt_mastodon_connection() ) {
 		$rand     = wp_rand( 1000000, 9999999 );
 		$testpost = wpt_post_to_twitter( "This is a test of XPoster. $shrink ($rand)" );
 		if ( $testpost ) {
@@ -131,7 +131,7 @@ function wpt_check_functions() {
 			$message .= "<li class='error'>$error</li>";
 		}
 	} else {
-		$message .= '<strong>' . __( 'You have not connected WordPress to X.com.', 'wp-to-twitter' ) . '</strong> ';
+		$message .= '<strong>' . __( 'You have not connected WordPress to X.com or Mastodon.', 'wp-to-twitter' ) . '</strong> ';
 	}
 	if ( false === $testpost && false === $shrink ) {
 		$message .= '<li class="error">' . __( "<strong>Your server does not appear to support the required methods for XPoster to function.</strong> You can try it anyway - these tests aren't perfect.", 'wp-to-twitter' ) . '</li>';
@@ -156,6 +156,7 @@ function wpt_settings_tabs() {
 	$pro_text = ( function_exists( 'wpt_pro_exists' ) ) ? __( 'Pro Settings', 'wp-to-twitter' ) : __( 'XPoster PRO', 'wp-to-twitter' );
 	$pages    = array(
 		'connection' => __( 'X Connection', 'wp-to-twitter' ),
+		'mastodon'   => __( 'Mastodon API', 'wp-to-twitter' ),
 		'basic'      => __( 'Basic Settings', 'wp-to-twitter' ),
 		'shortener'  => __( 'URL Shortener', 'wp-to-twitter' ),
 		'advanced'   => __( 'Advanced Settings', 'wp-to-twitter' ),
@@ -176,6 +177,21 @@ function wpt_settings_tabs() {
 		}
 	}
 	echo $output;
+}
+
+/**
+ * Mask secure values.
+ *
+ * @param string $value Original value.
+ *
+ * @return string
+ */
+function wpt_mask_attr( $value ) {
+	$count  = strlen( $value );
+	$substr = substr( $value, -5 );
+	$return = str_pad( $substr, $count, '*', STR_PAD_LEFT );
+
+	return $return;
 }
 
 /**
