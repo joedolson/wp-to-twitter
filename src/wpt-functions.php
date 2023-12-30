@@ -122,7 +122,7 @@ function wpt_check_functions() {
 	// check twitter & mastodon credentials.
 	if ( wtt_oauth_test() || wpt_mastodon_connection() ) {
 		$rand     = wp_rand( 1000000, 9999999 );
-		$testpost = wpt_post_to_twitter( "This is a test of XPoster. $shrink ($rand)" );
+		$testpost = wpt_post_to_service( "This is a test of XPoster. $shrink ($rand)" );
 		if ( $testpost ) {
 			$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to X.com.', 'wp-to-twitter' ) . '</strong></li>';
 		} else {
