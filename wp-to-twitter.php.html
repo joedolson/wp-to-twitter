@@ -1450,7 +1450,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( 'publish' === $status &amp;&amp; ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 			?>
 			&lt;div class='tweet-buttons'>
-				&lt;button type='button' class='tweet button-primary' data-action='tweet'>&lt;span class='dashicons dashicons-twitter' aria-hidden='true'>&lt;/span>&lt;?php _e( 'Send Update Now', 'wp-to-twitter' ); ?>&lt;/button>
+				&lt;button type='button' class='tweet button-primary' data-action='tweet'>&lt;span class='dashicons dashicons-share' aria-hidden='true'>&lt;/span>&lt;?php _e( 'Share Now', 'wp-to-twitter' ); ?>&lt;/button>
 			&lt;?php
 			if ( function_exists( 'wpt_pro_exists' ) &amp;&amp; wpt_pro_exists() ) {
 				?>
