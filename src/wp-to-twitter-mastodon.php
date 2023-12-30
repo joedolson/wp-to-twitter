@@ -25,7 +25,7 @@ function wpt_update_mastodon_settings( $auth = false, $post = false ) {
 
 				if ( ! empty( $post['wpt_mastodon_token'] ) && ! empty( $post['wpt_mastodon_instance'] ) ) {
 					$ack = sanitize_text_field( trim( $post['wpt_mastodon_token'] ) );
-					$acs = sanitize_text_field( trim( $post['wpt_mastodon_instance'] ) );
+					$acs = sanitize_text_field( trim( untrailingslashit( $post['wpt_mastodon_instance'] ) ) );
 
 					if ( ! $auth ) {
 						// If values are filled with asterisks, do not update; these are masked values.
