@@ -336,6 +336,23 @@ function wpt_check_recent_tweet( $id, $auth ) {
 	return false;
 }
 
+
+/**
+ * Performs the API post to target services. Alias for wpt_post_to_twitter.
+ *
+ * @param string  $text Text of post to be sent to service.
+ * @param int     $auth Author ID.
+ * @param int     $id Post ID.
+ * @param boolean $media Whether to upload media attached to the post specified in $id.
+ *
+ * @return boolean Success of query.
+ */
+function wpt_post_to_service( $text, $auth = false, $id = false, $media = false ) {
+	$return = wpt_post_to_twitter( $text, $auth, $id, $media );
+
+	return $return;
+}
+
 /**
  * Performs the API post to target services.
  *
@@ -1042,7 +1059,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 					if ( '0' === (string) $post_info['wpt_delay_tweet'] || '' === $post_info['wpt_delay_tweet'] || 'on' === $post_info['wpt_no_delay'] ) {
 						foreach ( $wpt_selected_users as $acct ) {
 							if ( wtt_oauth_test( $acct, 'verify' ) ) {
-								wpt_post_to_twitter( $sentence2, $acct, $post_ID, $media );
+								wpt_post_to_service( $sentence2, $acct, $post_ID, $media );
 							}
 						}
 					} else {
@@ -1175,7 +1192,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 						}
 					}
 				} else {
-					wpt_post_to_twitter( $sentence, false, $post_ID, $media );
+					wpt_post_to_service( $sentence, false, $post_ID, $media );
 				}
 				// END WPT PRO.
 			}
@@ -1221,7 +1238,7 @@ function wpt_twit_link( $link_id ) {
 		}
 
 		if ( '' !== $sentence ) {
-			wpt_post_to_twitter( $sentence, false, $link_id );
+			wpt_post_to_service( $sentence, false, $link_id );
 		}
 
 		return $link_id;
@@ -1747,7 +1764,7 @@ function wpt_ajax_tweet() {
 
 			switch ( $action ) {
 				case 'tweet':
-					wpt_post_to_twitter( $sentence, $auth, $post_ID, $media );
+					wpt_post_to_service( $sentence, $auth, $post_ID, $media );
 					break;
 				case 'schedule':
 					wp_schedule_single_event(
