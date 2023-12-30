@@ -451,13 +451,12 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
  * @param string   $twit Posted status text.
  */
 function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
-	$error     = $response['error'];
 	$return    = $response['return'];
 	$http_code = $response['http'];
 	$notice    = $response['notice'];
 	$tweet_id  = isset( $response['tweet_id'] ) ? $response['tweet_id'] : false;
 	$status_id = isset( $response['status_id'] ) ? $response['status_id'] : false;
-	wpt_mail( "X.com Response: $http_code", $error, $id ); // DEBUG.
+	wpt_mail( "X.com Response: $http_code", $notice, $id ); // DEBUG.
 	// only save last status if successful.
 	if ( 200 === $http_code ) {
 		if ( ! $auth ) {
@@ -466,7 +465,7 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 			update_user_meta( $auth, 'wpt_last_tweet', $twit );
 		}
 	}
-	wpt_save_error( $id, $auth, $twit, $error, $http_code, time() );
+	wpt_save_error( $id, $auth, $twit, $notice, $http_code, time() );
 	wpt_save_success( $id, $twit, $http_code );
 	if ( ! $return ) {
 		/**
@@ -480,8 +479,8 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 		 * @param {int}    $id Post ID for status update.
 		 * @param {string} $error Error message returned.
 		 */
-		do_action( 'wpt_tweet_failed', $connection, $id, $error );
-		wpt_set_log( 'wpt_status_message', $id, $error );
+		do_action( 'wpt_tweet_failed', $connection, $id, $notice );
+		wpt_set_log( 'wpt_status_message', $id, $notice );
 	} else {
 		/**
 		 * Executes an action after a status is posted successfully.

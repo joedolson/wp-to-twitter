@@ -100,10 +100,12 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 		 */
 		$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id, $status['text'] );
 		$tweet_id = false;
+		$success  = false;
 		if ( $do_tweet ) {
 			try {
 				$return     = $connection->tweet()->create()->performRequest( $status, true );
 				$http_code  = 200;
+				$success    = true;
 				$tweet_id   = $return->data->id;
 				$headers    = $return->headers;
 				$rate_limit = array(
@@ -146,6 +148,7 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 	}
 
 	return array(
+		'return'   => $success,
 		'http'     => $http_code,
 		'notice'   => $notice,
 		'tweet_id' => $tweet_id,
