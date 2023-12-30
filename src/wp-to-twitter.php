@@ -349,17 +349,24 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		return false;
 	}
 
-	if ( ! wpt_check_oauth( $auth ) ) {
-		$error = __( 'This account is not authorized to post to X.com.', 'wp-to-twitter' );
+	$check_twitter  = wpt_check_oauth( $auth );
+	$check_mastodon = wpt_mastodon_connection( $auth );
+	if ( ! $check_twitter && ! $check_mastodon ) {
+		$error = __( 'This account is not authorized to post to any services.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '401', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
-		wpt_mail( 'Account not authorized with X.com', 'Post ID: ' . $id );
+		if ( ! $check_twitter ) {
+			wpt_mail( 'Account not authorized with X.com API.', 'Post ID: ' . $id );
+		}
+		if ( ! $check_mastodon ) {
+			wpt_mail( 'Account not authorized with Mastodon.', 'Post ID: ' . $id );
+		}
 
 		return false;
 	} // exit silently if not authorized.
 
 	$check = ( ! $auth ) ? get_option( 'jd_last_tweet', '' ) : get_user_meta( $auth, 'wpt_last_tweet', true ); // get user's last tweet.
-	// prevent duplicate Tweets.
+	// prevent duplicate Tweets. Checks whether this text has already been sent.
 	if ( $check === $twit && '' !== $twit ) {
 		wpt_mail( 'Matched: tweet identical', "This Tweet: $twit; Check Tweet: $check; $auth, $id, $media", $id ); // DEBUG.
 		$error = __( 'This tweet is identical to another Tweet recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'X.com requires all Tweets to be unique.', 'wp-to-twitter' );
@@ -369,7 +376,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		return false;
 	} elseif ( '' === $twit || ! $twit ) {
 		wpt_mail( 'Tweet check: empty sentence', "$twit, $auth, $id, $media", $id ); // DEBUG.
-		$error = __( 'This tweet was blank and could not be sent to X.com.', 'wp-to-twitter' );
+		$error = __( 'This tweet was blank and could not be sent to the API.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '403-2', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
 
