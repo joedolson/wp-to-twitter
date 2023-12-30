@@ -368,15 +368,15 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 	$check = ( ! $auth ) ? get_option( 'jd_last_tweet', '' ) : get_user_meta( $auth, 'wpt_last_tweet', true ); // get user's last tweet.
 	// prevent duplicate Tweets. Checks whether this text has already been sent.
 	if ( $check === $twit && '' !== $twit ) {
-		wpt_mail( 'Matched: tweet identical', "This Tweet: $twit; Check Tweet: $check; $auth, $id, $media", $id ); // DEBUG.
-		$error = __( 'This tweet is identical to another Tweet recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'X.com requires all Tweets to be unique.', 'wp-to-twitter' );
+		wpt_mail( 'Matched: status update identical', "This Update: $twit; Check Update: $check; $auth, $id, $media", $id ); // DEBUG.
+		$error = __( 'This status update is identical to another update recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'X.com requires all Tweets to be unique.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '403-1', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
 
 		return false;
 	} elseif ( '' === $twit || ! $twit ) {
-		wpt_mail( 'Tweet check: empty sentence', "$twit, $auth, $id, $media", $id ); // DEBUG.
-		$error = __( 'This tweet was blank and could not be sent to the API.', 'wp-to-twitter' );
+		wpt_mail( 'Statud update check: empty sentence', "$twit, $auth, $id, $media", $id ); // DEBUG.
+		$error = __( 'This status update was blank and could not be sent to the API.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '403-2', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error );
 
