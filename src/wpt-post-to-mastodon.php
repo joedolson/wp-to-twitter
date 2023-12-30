@@ -121,7 +121,7 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		if ( $do_post ) {
 			$return    = $connection->post_status( $status );
 			$http_code = 200;
-			$status_id = $return->data->id;
+			$status_id = $return['id'];
 		} else {
 			$http_code = '000';
 			$notice    = __( 'Status Update cancelled by custom filter.', 'wp-to-twitter' );
