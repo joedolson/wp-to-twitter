@@ -36,7 +36,7 @@ function wpt_updated_settings() {
 	}
 	// Connect to Mastodon.
 	if ( isset( $_POST['mastodon_settings'] ) ) {
-		$post          = map_deep( $_POST, 'sanitize_text_field' );
+		$post             = map_deep( $_POST, 'sanitize_text_field' );
 		$mastodon_message = wpt_update_mastodon_settings( false, $post );
 	} else {
 		$mastodon_message = '';
