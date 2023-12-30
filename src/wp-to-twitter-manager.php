@@ -27,13 +27,20 @@ function wpt_updated_settings() {
 	if ( ! wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) {
 		wp_die( 'XPoster: Security check failed' );
 	}
+	// Connect to Twitter
 	if ( isset( $_POST['oauth_settings'] ) ) {
 		$post          = map_deep( $_POST, 'sanitize_text_field' );
 		$oauth_message = wpt_update_oauth_settings( false, $post );
 	} else {
 		$oauth_message = '';
 	}
-
+	// Connect to Mastodon.
+	if ( isset( $_POST['mastodon_settings'] ) ) {
+		$post          = map_deep( $_POST, 'sanitize_text_field' );
+		$oauth_message = wpt_update_mastodon_settings( false, $post );
+	} else {
+		$oauth_message = '';
+	}
 	$message = '';
 
 	// notifications from oauth connection.
@@ -191,7 +198,8 @@ function wpt_updated_settings() {
 
 	// Check whether the server has supported for needed functions.
 	if ( isset( $_POST['submit-type'] ) && 'check-support' === $_POST['submit-type'] ) {
-		$message = wpt_check_functions();
+		$service = ( isset( $_POST['mastodon'] ) ) ? 'mastodon' : 'xcom';
+		$message = wpt_check_functions( $service );
 	}
 
 	if ( $message ) {
@@ -239,6 +247,11 @@ function wpt_update_settings() {
 	if ( 'connection' === $current ) {
 		if ( function_exists( 'wtt_connect_oauth' ) ) {
 			wtt_connect_oauth();
+		}
+	}
+	if ( 'mastodon' === $current ) {
+		if ( function_exists( 'wtt_connect_mastodon' ) ) {
+			wtt_connect_mastodon();
 		}
 	}
 	if ( 'pro' === $current ) {
@@ -819,20 +832,20 @@ function wpt_sidebar() {
 
 		<div class="ui-sortable meta-box-sortables">
 			<div class="postbox">
-				<h3><?php _e( 'Test XPoster', 'wp-to-twitter' ); ?></h3>
+				<h3><?php _e( 'Test Status Updates', 'wp-to-twitter' ); ?></h3>
 
 				<div class="inside test">
 				<p>
-				<?php _e( 'Check whether XPoster is set up for X.com and your URL Shortener. The test sends a status update to X.com and shortens a URL.', 'wp-to-twitter' ); ?>
+				<?php _e( 'Check whether XPoster is set up for your connected services and URL Shortener. The test sends a status update to each connected service and shortens a URL.', 'wp-to-twitter' ); ?>
 				</p>
 				<form method="post" action="">
-					<input type="hidden" name="submit-type" value="check-support"/>
+					<input type="hidden" name="submit-type" value="check-support" />
 					<?php
 					$nonce = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
 					echo "<div>$nonce</div>";
 					?>
 					<p>
-						<input type="submit" name="submit" value="<?php esc_attr_e( 'Test XPoster', 'wp-to-twitter' ); ?>" class="button-secondary" />
+						<input type="submit" name="status-update" value="<?php esc_attr_e( 'Test Updates', 'wp-to-twitter' ); ?>" class="button-secondary" />
 					</p>
 				</form>
 				</div>
