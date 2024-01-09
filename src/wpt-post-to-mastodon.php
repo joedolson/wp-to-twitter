@@ -127,7 +127,7 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 				$success   = true;
 				$http_code = 200;
 				$status_id = $return['id'];
-				$notice   .= __( 'Successful status update sent to Mastodon.', 'wp-to-twitter' );
+				$notice   .= __( 'Sent to Mastodon.', 'wp-to-twitter' );
 			} else {
 				$http_code = 401;
 				$notice   .= __( 'Mastodon status update failed.', 'wp-to-twitter' );
