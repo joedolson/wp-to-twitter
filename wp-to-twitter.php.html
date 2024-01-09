@@ -530,7 +530,7 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 		if ( ! $has_status_id &amp;&amp; $status_id ) {
 			update_post_meta( $id, '_wpt_status_id', $status_id );
 		}
-		wpt_set_log( 'wpt_status_message', $id, $notice . ' ' . __( 'Status sent successfully.', 'wp-to-twitter' ) );
+		wpt_set_log( 'wpt_status_message', $id, $notice );
 	}
 }
 
