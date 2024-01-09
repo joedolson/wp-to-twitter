@@ -250,8 +250,8 @@ function wpt_updated_settings() {
  * @return array
  */
 function wpt_possible_post_types() {
-	$post_types   = get_post_types( array(), 'objects' );
-	$exclusions   = array( 'wp_navigation', 'wp_block', 'attachment', 'nav_menu_item', 'revision' );
+	$post_types = get_post_types( array(), 'objects' );
+	$exclusions = array( 'wp_navigation', 'wp_block', 'attachment', 'nav_menu_item', 'revision' );
 	/**
 	 * Exclude post types from the list of available types to post to X.com.
 	 *
@@ -374,8 +374,8 @@ function wpt_update_settings() {
 						$wpt_settings = get_option( 'wpt_post_types' );
 						$tabs         = "<ul class='tabs' role='tablist'>";
 						foreach ( $post_types as $type ) {
-							$name = $type->labels->name;
-							$slug = $type->name;
+							$name  = $type->labels->name;
+							$slug  = $type->name;
 							$tabs .= "<li><a href='#wpt_$slug' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name</a></li>";
 						}
 						if ( '1' === get_option( 'link_manager_enabled' ) || true === apply_filters( 'pre_option_link_manager_enabled', false ) ) {
