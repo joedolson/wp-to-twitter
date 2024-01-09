@@ -114,7 +114,7 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 					'rate-24'       => $headers['x-app-limit-24hour-limit'],
 					'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
 				);
-				$notice    = __( 'Sent to X.com', 'wp-to-twitter' );
+				$notice     = __( 'Sent to X.com', 'wp-to-twitter' );
 				update_option( 'wpt_app_limit', $rate_limit );
 			} catch ( RequestException $e ) {
 				// Get Guzzle exception response.
