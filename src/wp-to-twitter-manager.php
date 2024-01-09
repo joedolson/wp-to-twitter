@@ -245,6 +245,36 @@ function wpt_updated_settings() {
 }
 
 /**
+ * Build array of post types eligible for XPoster to send updates for.
+ *
+ * @return array
+ */
+function wpt_possible_post_types() {
+	$post_types   = get_post_types( array(), 'objects' );
+	$exclusions   = array( 'wp_navigation', 'wp_block', 'attachment', 'nav_menu_item', 'revision' );
+	/**
+	 * Exclude post types from the list of available types to post to X.com.
+	 *
+	 * @hook wpt_exclude_post_types
+	 *
+	 * @param {array} $exclusions Array of post type name slugs to exclude.
+	 *
+	 * @return {array}
+	 */
+	$excluded = apply_filters( 'wpt_exclude_post_types', $exclusions );
+	$return   = array();
+	foreach ( $post_types as $type ) {
+		// If post type is both private & has no UI, don't show.
+		if ( false === $type->public && false === $type->show_ui || in_array( $type->name, $excluded, true ) ) {
+			continue;
+		}
+		$return[] = $type;
+	}
+
+	return $return;
+}
+
+/**
  * Show XPoster settings form.
  */
 function wpt_update_settings() {
@@ -340,31 +370,13 @@ function wpt_update_settings() {
 						echo apply_filters( 'wpt_tweet_length', '' );
 						echo apply_filters( 'wpt_auto_tweet', '' );
 						echo apply_filters( 'wpt_pick_shortener', '' );
-						$post_types   = get_post_types( array(), 'objects' );
+						$post_types   = wpt_possible_post_types();
 						$wpt_settings = get_option( 'wpt_post_types' );
 						$tabs         = "<ul class='tabs' role='tablist'>";
-						$exclusions   = array( 'wp_navigation', 'wp_block' );
-						/**
-						 * Exclude post types from the list of available types to post to X.com.
-						 *
-						 * @hook wpt_exclude_post_types
-						 *
-						 * @param {array} $exclusions Array of post type name slugs to exclude.
-						 *
-						 * @return {array}
-						 */
-						$excluded = apply_filters( 'wpt_exclude_post_types', $exclusions );
 						foreach ( $post_types as $type ) {
-							// If post type is both private & has no UI, don't show.
-							if ( false === $type->public && false === $type->show_ui || in_array( $type->name, $excluded, true ) ) {
-								continue;
-							}
 							$name = $type->labels->name;
 							$slug = $type->name;
-							if ( 'attachment' === $slug || 'nav_menu_item' === $slug || 'revision' === $slug ) {
-							} else {
-								$tabs .= "<li><a href='#wpt_$slug' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name</a></li>";
-							}
+							$tabs .= "<li><a href='#wpt_$slug' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name</a></li>";
 						}
 						if ( '1' === get_option( 'link_manager_enabled' ) || true === apply_filters( 'pre_option_link_manager_enabled', false ) ) {
 							$tabs .= "<li><a href='#wpt_links' id='tab_wpt_links' aria-controls='wpt_links'>" . __( 'Links', 'wp-to-twitter' ) . '</a></li>';
@@ -372,58 +384,51 @@ function wpt_update_settings() {
 						$tabs .= '</ul>';
 						echo $tabs;
 						foreach ( $post_types as $type ) {
-							if ( false === $type->public && false === $type->show_ui ) {
-								continue;
-							}
 							$name = $type->labels->name;
 							$slug = $type->name;
-							if ( 'attachment' === $slug || 'nav_menu_item' === $slug || 'revision' === $slug ) {
-								continue;
-							} else {
-								?>
-								<div class='wptab wpt_types wpt_<?php echo esc_attr( $slug ); ?>' aria-labelledby='tab_wpt_<?php echo esc_attr( $slug ); ?>' role="tabpanel" id='wpt_<?php echo esc_attr( $slug ); ?>'>
-								<fieldset>
-									<legend class="screen-reader-text"><?php _e( 'Status Templates', 'wp-to-twitter' ); ?></legend>
-									<p>
-										<input type="checkbox" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-published-update]" id="<?php echo esc_attr( $slug ); ?>-post-published-update" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'post-published-update' ); ?> />
-										<label for="<?php echo esc_attr( $slug ); ?>-post-published-update"><strong>
-										<?php
-										// Translators: post type.
-										printf( __( 'Update when %s are published', 'wp-to-twitter' ), $name );
-										?>
-										</strong></label>
-										<label for="<?php echo $slug; ?>-post-published-text"><br/>
-										<?php
-										// Translators: post type.
-										printf( __( 'Template for new %s', 'wp-to-twitter' ), $name );
-										?>
-										</label><br/>
-										<textarea class="wpt-template widefat" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-published-text]" id="<?php echo esc_attr( $slug ); ?>-post-published-text" cols="60" rows="3"><?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-published-text'] ) ) : ''; ?></textarea>
-									</p>
-									<p>
-										<input type="checkbox" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-edited-update]" id="<?php echo esc_attr( $slug ); ?>-post-edited-update" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'post-edited-update' ); ?> />
-										<label for="<?php echo esc_attr( $slug ); ?>-post-edited-update"><strong>
-										<?php
-										// Translators: post type name.
-										printf( __( 'Update when %s are edited', 'wp-to-twitter' ), $name );
-										?>
-										</strong></label><br/><label for="<?php echo esc_attr( $slug ); ?>-post-edited-text">
-										<?php
-										// Translators: post type name.
-										printf( __( 'Template for %1$s edits', 'wp-to-twitter' ), $name );
-										?>
-										</label><br/>
-										<textarea class="wpt-template widefat" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-edited-text]" id="<?php echo esc_attr( $slug ); ?>-post-edited-text" cols="60" rows="3"><?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-edited-text'] ) ) : ''; ?></textarea>
-									</p>
-								</fieldset>
-								<?php
-								if ( function_exists( 'wpt_list_terms' ) ) {
-									wpt_list_terms( $slug, $name );
-								}
-								?>
-								</div>
-								<?php
+							?>
+							<div class='wptab wpt_types wpt_<?php echo esc_attr( $slug ); ?>' aria-labelledby='tab_wpt_<?php echo esc_attr( $slug ); ?>' role="tabpanel" id='wpt_<?php echo esc_attr( $slug ); ?>'>
+							<fieldset>
+								<legend class="screen-reader-text"><?php _e( 'Status Templates', 'wp-to-twitter' ); ?></legend>
+								<p>
+									<input type="checkbox" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-published-update]" id="<?php echo esc_attr( $slug ); ?>-post-published-update" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'post-published-update' ); ?> />
+									<label for="<?php echo esc_attr( $slug ); ?>-post-published-update"><strong>
+									<?php
+									// Translators: post type.
+									printf( __( 'Update when %s are published', 'wp-to-twitter' ), $name );
+									?>
+									</strong></label>
+									<label for="<?php echo $slug; ?>-post-published-text"><br/>
+									<?php
+									// Translators: post type.
+									printf( __( 'Template for new %s', 'wp-to-twitter' ), $name );
+									?>
+									</label><br/>
+									<textarea class="wpt-template widefat" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-published-text]" id="<?php echo esc_attr( $slug ); ?>-post-published-text" cols="60" rows="3"><?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-published-text'] ) ) : ''; ?></textarea>
+								</p>
+								<p>
+									<input type="checkbox" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-edited-update]" id="<?php echo esc_attr( $slug ); ?>-post-edited-update" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'post-edited-update' ); ?> />
+									<label for="<?php echo esc_attr( $slug ); ?>-post-edited-update"><strong>
+									<?php
+									// Translators: post type name.
+									printf( __( 'Update when %s are edited', 'wp-to-twitter' ), $name );
+									?>
+									</strong></label><br/><label for="<?php echo esc_attr( $slug ); ?>-post-edited-text">
+									<?php
+									// Translators: post type name.
+									printf( __( 'Template for %1$s edits', 'wp-to-twitter' ), $name );
+									?>
+									</label><br/>
+									<textarea class="wpt-template widefat" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-edited-text]" id="<?php echo esc_attr( $slug ); ?>-post-edited-text" cols="60" rows="3"><?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-edited-text'] ) ) : ''; ?></textarea>
+								</p>
+							</fieldset>
+							<?php
+							if ( function_exists( 'wpt_list_terms' ) ) {
+								wpt_list_terms( $slug, $name );
 							}
+							?>
+							</div>
+							<?php
 						}
 						if ( '1' === get_option( 'link_manager_enabled' ) || true === apply_filters( 'pre_option_link_manager_enabled', false ) ) {
 							?>
