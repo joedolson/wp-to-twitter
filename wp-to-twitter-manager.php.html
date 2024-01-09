@@ -298,9 +298,10 @@ function wpt_update_settings() {
 
 	&lt;?php wpt_max_length(); ?>
 
-	&lt;div class='nav-tab-wrapper'>
+	&lt;nav class='nav-tab-wrapper' aria-labelledby="wpt-nav">
+		&lt;h2 id="wpt-nav" class="screen-reader-text">&lt;?php _e( 'XPoster Settings', 'wp-to-twitter' ); ?>&lt;/h2>
 		&lt;?php wpt_settings_tabs(); ?>
-	&lt;/div>
+	&lt;/nav>
 	&lt;div id="wpt_settings_page" class="postbox-container jcd-wide">
 	&lt;div class="metabox-holder">
 
