@@ -194,7 +194,7 @@ function wpt_mastodon_connection( $auth = false, $verify = false ) {
 		}
 	}
 	$mastodon = false;
-	if ( '' !== $token &amp;&amp; '' !== $instance ) {
+	if ( $token &amp;&amp; $instance ) {
 		$mastodon = new Wpt_Mastodon_Api( $token, $instance );
 		if ( $verify ) {
 			$verify = $mastodon->verify();
