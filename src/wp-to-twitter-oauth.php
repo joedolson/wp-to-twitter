@@ -324,7 +324,7 @@ function wtt_connect_oauth( $auth = false ) {
 
 		$submit = ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . __( 'Connect to X.com', 'wp-to-twitter' ) . '" /></p>' : '';
 		print( '
-			<h3><span>' . __( 'Connect to X.com', 'wp-to-twitter' ) . '</span></h3>
+			<h3 class="wpt-has-link"><span>' . __( 'Connect to X.com', 'wp-to-twitter' ) . '</span> <a href="https://xposterpro.com/connecting-xposter-and-x-com/" class="button button-secondary">' . __( 'Instructions', 'wp-to-twitter' ) . '</a></h3>
 			<div class="inside ' . $class . '">
 				<ol class="wpt-oauth-settings">
 					<li>' . __( 'Apply for a <a href="https://developer.twitter.com/en/apply-for-access">Developer Account with X.com</a>', 'wp-to-twitter' ) . '<ul>
@@ -333,7 +333,7 @@ function wtt_connect_oauth( $auth = false ) {
 					</ul></li>
 					<li>' . __( 'Add a new application in <a href="https://developer.twitter.com/en/portal/apps/new">X.com\'s project and app portal</a>', 'wp-to-twitter' ) . '
 						<ul>
-							<li>' . __( 'Name your application.', 'wp-to-twitter' ) . '(' . __( 'Your app name cannot include the word "Twitter."', 'wp-to-twitter' ) . ')</li>
+							<li>' . __( 'Name your application.', 'wp-to-twitter' ) . ' (' . __( 'Your app name cannot include the word "Twitter."', 'wp-to-twitter' ) . ')</li>
 							<li>' . __( 'Click "Next" to move to the Keys & Tokens step.', 'wp-to-twitter' ) . '</li>
 						</ul>
 					</li>

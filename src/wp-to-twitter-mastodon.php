@@ -129,16 +129,18 @@ function wtt_connect_mastodon( $auth = false ) {
 
 		$submit = ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . __( 'Connect to Mastodon', 'wp-to-twitter' ) . '" /></p>' : '';
 		print( '
-			<h3><span>' . __( 'Connect to Mastodon', 'wp-to-twitter' ) . '</span></h3>
+			<h3 class="wpt-has-link"><span>' . __( 'Connect to Mastodon', 'wp-to-twitter' ) . '</span> <a href="https://xposterpro.com/connecting-xposter-and-mastodon/" class="button button-secondary">' . __( 'Instructions', 'wp-to-twitter' ) . '</a></h3>
 			<div class="inside ' . $class . '">
 				<ol class="wpt-oauth-settings">
 					<li>' . __( 'Navigate to Preferences > Settings > Development in your Mastodon account.', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Click on "New application".', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Name your application.', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Add your website URL', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Add the API Scopes for your application. Minimum required permissions are "write:statuses" and "write:media".', 'wp-to-twitter' ) . '</li>
+					<li>' . __( 'Add the API Scopes for your application. Required permissions are <code>read</code>, <code>write:statuses</code> and <code>write:media</code>.', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Submit your application.', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Select your application from the list.', 'wp-to-twitter' ) . '</li>
+					<li>' . __( 'Select your application from the list of Your Applications.', 'wp-to-twitter' ) . '</li>
+					<li>' . __( 'Copy your Access Token', 'wp-to-twitter' ) . '</li>
+					<li>' . __( 'Add your Mastodon server URL', 'wp-to-twitter' ) . '</li>
 			' . $form . '
 					<div class="tokens">
 					<p>

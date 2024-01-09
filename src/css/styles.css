@@ -178,6 +178,12 @@ label[for="wpt_license_key"] {
 	font-size: 1.1em;
 }
 
+#wpt_settings_page .wpt-has-link {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
 #wpt_settings_page .tabs li {
 	display: inline;
 	margin: 0 auto;
