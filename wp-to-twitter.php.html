@@ -812,11 +812,11 @@ function wpt_post_info( $post_ID ) {
 	$values['cats']        = $cat_names;
 	$values['cat_descs']   = $cat_descs;
 	$values['categoryIds'] = $category_ids;
-	$values['category']    = html_entity_decode( $category, ENT_COMPAT, $encoding );
-	$values['cat_desc']    = html_entity_decode( $cat_desc, ENT_COMPAT, $encoding );
+	$values['category']    = ( $category ) ? html_entity_decode( $category, ENT_COMPAT, $encoding ) : '';
+	$values['cat_desc']    = ( $cat_desc ) ? html_entity_decode( $cat_desc, ENT_COMPAT, $encoding ) : '';
 	$excerpt_length        = get_option( 'jd_post_excerpt' );
 	$post_excerpt          = ( '' === trim( $post->post_excerpt ) ) ? mb_substr( strip_tags( strip_shortcodes( $post->post_content ) ), 0, $excerpt_length ) : mb_substr( strip_tags( strip_shortcodes( $post->post_excerpt ) ), 0, $excerpt_length );
-	$values['postExcerpt'] = html_entity_decode( $post_excerpt, ENT_COMPAT, $encoding );
+	$values['postExcerpt'] = ( $post_excerpt ) ? html_entity_decode( $post_excerpt, ENT_COMPAT, $encoding ) : '';
 	$thisposttitle         = $post->post_title;
 	if ( '' === $thisposttitle &amp;&amp; isset( $_POST['title'] ) ) {
 		$thisposttitle = wp_kses_post( $_POST['title'] );
