@@ -827,16 +827,7 @@ function wpt_sidebar() {
 					</p>
 					<div>
 					<p>
-						<a href="https://twitter.com/intent/follow?screen_name=joedolson" class="twitter-follow-button" data-size="small" data-related="joedolson">Follow @joedolson</a>
-						<script>!function (d, s, id) {
-								var js, fjs = d.getElementsByTagName(s)[0];
-								if (!d.getElementById(id)) {
-									js = d.createElement(s);
-									js.id = id;
-									js.src = "https://platform.twitter.com/widgets.js";
-									fjs.parentNode.insertBefore(js, fjs);
-								}
-							}(document, "script", "twitter-wjs");</script>
+						<a href="https://toot.io/@joedolson" class="mastodon-follow-button">Follow toot.io/@joedolson</a>
 					</p>
 					<?php
 					if ( 'premium' === $context ) {
