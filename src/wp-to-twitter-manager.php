@@ -272,9 +272,10 @@ function wpt_update_settings() {
 
 	<?php wpt_max_length(); ?>
 
-	<div class='nav-tab-wrapper'>
+	<nav class='nav-tab-wrapper' aria-labelledby="wpt-nav">
+		<h2 id="wpt-nav" class="screen-reader-text"><?php _e( 'XPoster Settings', 'wp-to-twitter' ); ?></h2>
 		<?php wpt_settings_tabs(); ?>
-	</div>
+	</nav>
 	<div id="wpt_settings_page" class="postbox-container jcd-wide">
 	<div class="metabox-holder">
 
