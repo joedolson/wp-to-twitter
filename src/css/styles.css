@@ -170,6 +170,13 @@ label[for="wpt_license_key"] {
 	vertical-align: inherit;
 }
 
+#wp-to-twitter .xposter-connection.dismissible {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
 #wpt_settings_page .tabs {
 	margin: .5em 0 0;
 	padding: 0 4px;

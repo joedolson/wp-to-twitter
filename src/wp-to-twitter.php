@@ -2145,3 +2145,43 @@ function wpt_needs_bearer_token() {
 		}
 	}
 }
+
+function wpt_dismiss_connection() {
+	if ( isset( $_GET['page'] ) && 'wp-tweets-pro' === $_GET['page'] && isset( $_GET['dismiss'] ) && 'connection' === $_GET['dismiss'] ) {
+		update_option( 'wpt_ignore_connection', 'true' );
+	}
+}
+add_action( 'admin_init', 'wpt_dismiss_connection' );
+/**
+ * Display notices if update services are not connected.
+ */
+function wpt_needs_connection() {
+	if ( isset( $_GET['page'] ) && 'wp-tweets-pro' === $_GET['page'] && ! 'true' === get_option( 'wpt_ignore_connection' ) ) {
+		$message  = '';
+		$mastodon = wpt_mastodon_connection();
+		$x        = wpt_check_oauth();
+		// show notification to authenticate with OAuth. No longer global; settings only.
+		if ( ! $mastodon && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
+			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&tab=mastodon' );
+			// Translators: Settings page to authenticate Mastodon.
+			$message = '<p>' . sprintf( __( "Mastodon requires authentication. <a href='%s'>Update your settings</a> to enable XPoster to send updates to Mastodon.", 'wp-to-twitter' ), $admin_url ) . '</p>';
+		}
+		// show notification to authenticate with OAuth. No longer global; settings only.
+		if ( ! $x && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
+			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
+			// Translators: Settings page to authenticate X.com.
+			$message = '<p>' . sprintf( __( "X.com requires authentication by OAuth. <a href='%s'>Update your settings</a> to enable XPoster to send updates to X.com.", 'wp-to-twitter' ), $admin_url ) . '</p>';
+		}
+		$is_dismissible = '';
+		$class          = 'xposter-connection';
+		if ( $x || $mastodon ) {
+			$class          = 'xposter-connection dismissible';
+			$dismiss_url    = add_query_arg( 'dismiss', 'connection', admin_url( 'admin.php?page=wp-tweets-pro' ) );
+			$is_dismissible = ' <a href="' . esc_url( $dismiss_url ) . '" class="button button-secondary">' . __( 'Ignore', 'wp-to-twitter' ) . '</a>';;
+		}
+		if ( $message ) {
+			echo "<div class='notice notice-error $class'>$message $is_dismissible</div>";
+		}
+	}
+}
+add_action( 'admin_notices', 'wpt_needs_connection' );

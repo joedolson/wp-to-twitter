@@ -106,7 +106,6 @@ function wtt_connect_mastodon( $auth = false ) {
 		echo '<div class="postbox">';
 	}
 	$information = '';
-
 	if ( $auth ) {
 		wpt_update_authenticated_users();
 	}
@@ -116,14 +115,6 @@ function wtt_connect_mastodon( $auth = false ) {
 	$nonce   = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
 	$connect = wpt_mastodon_connection( $auth );
 	if ( ! $connect ) {
-		// show notification to authenticate with OAuth. No longer global; settings only.
-		if ( ! wpt_check_oauth() && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
-			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&tab=mastodon' );
-			// Translators: Settings page to authenticate via OAuth.
-			$message = sprintf( __( "Mastodon requires authentication. <a href='%s'>Update your settings</a> to enable XPoster to send updates to Mastodon.", 'wp-to-twitter' ), $admin_url );
-			echo "<div class='error'><p>$message</p></div>";
-		}
-
 		$ack = ( ! $auth ) ? get_option( 'wpt_mastodon_token' ) : get_user_meta( $auth, 'wpt_mastodon_token', true );
 		$acs = ( ! $auth ) ? get_option( 'wpt_mastodon_instance' ) : get_user_meta( $auth, 'wpt_mastodon_instance', true );
 

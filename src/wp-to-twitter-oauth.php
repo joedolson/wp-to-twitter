@@ -306,14 +306,6 @@ function wtt_connect_oauth( $auth = false ) {
 		<input type="text" size="45" name="wtt_bearer_token" id="wtt_bearer_token" value="%s" />
 	</p>';
 	if ( ! wtt_oauth_test( $auth, 'verify' ) ) {
-		// show notification to authenticate with OAuth. No longer global; settings only.
-		if ( ! wpt_check_oauth() && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
-			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
-			// Translators: Settings page to authenticate via OAuth.
-			$message = sprintf( __( "X.com requires authentication by OAuth. You will need to <a href='%s'>update your settings</a> to complete installation of XPoster.", 'wp-to-twitter' ), $admin_url );
-			echo "<div class='error'><p>$message</p></div>";
-		}
-
 		$ack = ( ! $auth ) ? get_option( 'app_consumer_key' ) : get_user_meta( $auth, 'app_consumer_key', true );
 		$acs = ( ! $auth ) ? get_option( 'app_consumer_secret' ) : get_user_meta( $auth, 'app_consumer_secret', true );
 		$ot  = ( ! $auth ) ? get_option( 'oauth_token' ) : get_user_meta( $auth, 'oauth_token', true );
