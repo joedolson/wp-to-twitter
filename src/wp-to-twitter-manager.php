@@ -828,9 +828,15 @@ function wpt_sidebar() {
 				}
 				?>
 				<div class="inside resources">
+					<?php
+					if ( 'free' === $context ) {
+						?>
 					<p class="link-highlight">
 						<a href="https://xposterpro.com/awesome/xposter-pro/">Buy XPoster Pro</a>
 					</p>
+						<?php
+					}
+					?>
 					<div>
 					<p>
 						<a href="https://toot.io/@joedolson" class="mastodon-follow-button">Follow toot.io/@joedolson</a>
