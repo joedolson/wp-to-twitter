@@ -771,8 +771,8 @@ function wpt_post_info( $post_ID ) {
 	$values['_postModified'] = mysql2date( 'Y-m-d H:i:s', $moddate );
 	$values['postModified']  = mysql2date( $dateformat, $moddate );
 	// get first category.
-	$category   = null;
-	$cat_desc   = null;
+	$category   = '';
+	$cat_desc   = '';
 	$categories = get_the_category( $post_ID );
 	$cats       = array();
 	$cat_descs  = array();
@@ -2171,6 +2171,46 @@ function wpt_needs_bearer_token() {
 		}
 	}
 }
+
+function wpt_dismiss_connection() {
+	if ( isset( $_GET['page'] ) &amp;&amp; 'wp-tweets-pro' === $_GET['page'] &amp;&amp; isset( $_GET['dismiss'] ) &amp;&amp; 'connection' === $_GET['dismiss'] ) {
+		update_option( 'wpt_ignore_connection', 'true' );
+	}
+}
+add_action( 'admin_init', 'wpt_dismiss_connection' );
+/**
+ * Display notices if update services are not connected.
+ */
+function wpt_needs_connection() {
+	if ( isset( $_GET['page'] ) &amp;&amp; 'wp-tweets-pro' === $_GET['page'] &amp;&amp; ! 'true' === get_option( 'wpt_ignore_connection' ) ) {
+		$message  = '';
+		$mastodon = wpt_mastodon_connection();
+		$x        = wpt_check_oauth();
+		// show notification to authenticate with OAuth. No longer global; settings only.
+		if ( ! $mastodon &amp;&amp; ! ( isset( $_GET['tab'] ) &amp;&amp; 'connection' === $_GET['tab'] ) ) {
+			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&amp;tab=mastodon' );
+			// Translators: Settings page to authenticate Mastodon.
+			$message = '&lt;p>' . sprintf( __( "Mastodon requires authentication. &lt;a href='%s'>Update your settings&lt;/a> to enable XPoster to send updates to Mastodon.", 'wp-to-twitter' ), $admin_url ) . '&lt;/p>';
+		}
+		// show notification to authenticate with OAuth. No longer global; settings only.
+		if ( ! $x &amp;&amp; ! ( isset( $_GET['tab'] ) &amp;&amp; 'connection' === $_GET['tab'] ) ) {
+			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
+			// Translators: Settings page to authenticate X.com.
+			$message = '&lt;p>' . sprintf( __( "X.com requires authentication by OAuth. &lt;a href='%s'>Update your settings&lt;/a> to enable XPoster to send updates to X.com.", 'wp-to-twitter' ), $admin_url ) . '&lt;/p>';
+		}
+		$is_dismissible = '';
+		$class          = 'xposter-connection';
+		if ( $x || $mastodon ) {
+			$class          = 'xposter-connection dismissible';
+			$dismiss_url    = add_query_arg( 'dismiss', 'connection', admin_url( 'admin.php?page=wp-tweets-pro' ) );
+			$is_dismissible = ' &lt;a href="' . esc_url( $dismiss_url ) . '" class="button button-secondary">' . __( 'Ignore', 'wp-to-twitter' ) . '&lt;/a>';;
+		}
+		if ( $message ) {
+			echo "&lt;div class='notice notice-error $class'>$message $is_dismissible&lt;/div>";
+		}
+	}
+}
+add_action( 'admin_notices', 'wpt_needs_connection' );
 </code></pre>
         </article>
     </section>

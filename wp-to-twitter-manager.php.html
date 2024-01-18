@@ -854,9 +854,15 @@ function wpt_sidebar() {
 				}
 				?>
 				&lt;div class="inside resources">
+					&lt;?php
+					if ( 'free' === $context ) {
+						?>
 					&lt;p class="link-highlight">
 						&lt;a href="https://xposterpro.com/awesome/xposter-pro/">Buy XPoster Pro&lt;/a>
 					&lt;/p>
+						&lt;?php
+					}
+					?>
 					&lt;div>
 					&lt;p>
 						&lt;a href="https://toot.io/@joedolson" class="mastodon-follow-button">Follow toot.io/@joedolson&lt;/a>
