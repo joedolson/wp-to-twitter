@@ -745,8 +745,8 @@ function wpt_post_info( $post_ID ) {
 	$values['_postModified'] = mysql2date( 'Y-m-d H:i:s', $moddate );
 	$values['postModified']  = mysql2date( $dateformat, $moddate );
 	// get first category.
-	$category   = null;
-	$cat_desc   = null;
+	$category   = '';
+	$cat_desc   = '';
 	$categories = get_the_category( $post_ID );
 	$cats       = array();
 	$cat_descs  = array();
