@@ -58,7 +58,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
-= 4.2.0
+= 4.2.0 =
 
 * Add support for posting to Mastodon instances.
 * Bug fix: If category and category description not defined, PHP warning thrown.
