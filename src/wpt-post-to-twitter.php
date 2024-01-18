@@ -80,6 +80,7 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 	 * @return {bool}
 	 */
 	$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id );
+	$notice       = '';
 	if ( ( defined( 'WPT_STAGING_MODE' ) && true === WPT_STAGING_MODE ) || $staging_mode ) {
 		// if in staging mode, we'll behave as if the Tweet succeeded, but not send it.
 		$connection = true;
