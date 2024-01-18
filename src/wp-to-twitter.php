@@ -2146,6 +2146,9 @@ function wpt_needs_bearer_token() {
 	}
 }
 
+/**
+ * Dismiss the missing connection notice.
+ */
 function wpt_dismiss_connection() {
 	if ( isset( $_GET['page'] ) && 'wp-tweets-pro' === $_GET['page'] && isset( $_GET['dismiss'] ) && 'connection' === $_GET['dismiss'] ) {
 		update_option( 'wpt_ignore_connection', 'true' );
@@ -2177,7 +2180,7 @@ function wpt_needs_connection() {
 		if ( $x || $mastodon ) {
 			$class          = 'xposter-connection dismissible';
 			$dismiss_url    = add_query_arg( 'dismiss', 'connection', admin_url( 'admin.php?page=wp-tweets-pro' ) );
-			$is_dismissible = ' <a href="' . esc_url( $dismiss_url ) . '" class="button button-secondary">' . __( 'Ignore', 'wp-to-twitter' ) . '</a>';;
+			$is_dismissible = ' <a href="' . esc_url( $dismiss_url ) . '" class="button button-secondary">' . __( 'Ignore', 'wp-to-twitter' ) . '</a>';
 		}
 		if ( $message ) {
 			echo "<div class='notice notice-error $class'>$message $is_dismissible</div>";
