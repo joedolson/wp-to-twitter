@@ -7,7 +7,7 @@ Tested up to: 6.4
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.2.0-alpha
+Stable tag: 4.2.0
 
 Posts to X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -61,6 +61,13 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 4.2.0
 
 * Add support for posting to Mastodon instances.
+* Bug fix: If category and category description not defined, PHP warning thrown.
+* Bug fix: Make tabbed navigation use a `nav` element for improved accessibility.
+* Bug fix: Media heading could show in meta box when no media options are enabled.
+* Bug fix: Should not show bearer token message on profile page if user settings not enabled.
+* Text changes: Change references to "Twitter" and "Tweet".
+* Docs: Improve and add some additional hook documentation.
+* 
 
 = 4.1.2 =
 
