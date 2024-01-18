@@ -129,7 +129,7 @@ function wtt_connect_mastodon( $auth = false ) {
 					<li>' . __( 'Add your website URL', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Set the API Scopes for your application. Required: <code>read</code>, <code>write:statuses</code> and <code>write:media</code>.', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Submit your application.', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Select your application from the list of Your Applications.', 'wp-to-twitter' ) . '</li>
+					<li>' . __( 'Select your application from the list of "Your Applications."', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Copy your Access Token', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Add your Mastodon server URL', 'wp-to-twitter' ) . '</li>
 			' . $form . '
