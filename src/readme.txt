@@ -58,6 +58,10 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 4.2.1 =
+
+* Bug fix: All notices used error class, regardless of actual status.
+
 = 4.2.0 =
 
 * Add support for posting to Mastodon instances.
