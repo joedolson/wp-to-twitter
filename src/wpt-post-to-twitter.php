@@ -130,6 +130,7 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 					);
 					update_option( 'wpt_app_limit', $rate_limit );
 					$http_code = $response->getStatusCode();
+					$notice    = __( 'Request Exception occurred when sending to X.com', 'wp-to-twitter' );
 					wpt_mail( 'X RequestException', print_r( $response, 1 ), $id );
 				}
 			} catch ( Exception $e ) {
