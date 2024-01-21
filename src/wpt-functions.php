@@ -67,11 +67,16 @@ function wpt_selected( $field, $value, $type = 'select' ) {
  * @param string $data Option key.
  * @param int    $id Post ID.
  * @param string $message Log message.
+ * @param string $http HTTP code for this message.
  */
-function wpt_set_log( $data, $id, $message ) {
+function wpt_set_log( $data, $id, $message, $http = '200' ) {
 	if ( 'test' === $id ) {
 		update_option( $data, $message );
 	} else {
+		$message = array(
+			'message' => $message,
+			'http'    => (string) $http,
+		);
 		update_post_meta( $id, '_' . $data, $message );
 	}
 	update_option( $data . '_last', array( $id, $message ) );

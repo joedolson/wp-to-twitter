@@ -346,7 +346,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		if ( ! $status || 'publish' !== $status ) {
 			$error = __( 'This post is no longer published or has been deleted', 'wp-to-twitter' );
 			wpt_save_error( $id, $auth, $twit, $error, '404', time() );
-			wpt_set_log( 'wpt_status_message', $id, $error );
+			wpt_set_log( 'wpt_status_message', $id, $error, '404' );
 
 			return false;
 		}
@@ -374,7 +374,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 	if ( ! $check_twitter && ! $check_mastodon ) {
 		$error = __( 'This account is not authorized to post to any services.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '401', time() );
-		wpt_set_log( 'wpt_status_message', $id, $error );
+		wpt_set_log( 'wpt_status_message', $id, $error, '401' );
 		if ( ! $check_twitter ) {
 			wpt_mail( 'Account not authorized with X.com API.', 'Post ID: ' . $id );
 		}
@@ -391,14 +391,14 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		wpt_mail( 'Matched: status update identical', "This Update: $twit; Check Update: $check; $auth, $id, $media", $id ); // DEBUG.
 		$error = __( 'This status update is identical to another update recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'All status updates are expected to be unique.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '403-1', time() );
-		wpt_set_log( 'wpt_status_message', $id, $error );
+		wpt_set_log( 'wpt_status_message', $id, $error, '403' );
 
 		return false;
 	} elseif ( '' === $twit || ! $twit ) {
 		wpt_mail( 'Status update check: empty sentence', "$twit, $auth, $id, $media", $id ); // DEBUG.
 		$error = __( 'This status update was blank and could not be sent to the API.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '403-2', time() );
-		wpt_set_log( 'wpt_status_message', $id, $error );
+		wpt_set_log( 'wpt_status_message', $id, $error, '403' );
 
 		return false;
 	} else {
@@ -437,7 +437,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 
 			return $return;
 		} else {
-			wpt_set_log( 'wpt_status_message', $id, __( 'No API connection found.', 'wp-to-twitter' ) );
+			wpt_set_log( 'wpt_status_message', $id, __( 'No API connection found.', 'wp-to-twitter' ), '404' );
 
 			return false;
 		}
@@ -483,7 +483,7 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 		 * @param {string} $error Error message returned.
 		 */
 		do_action( 'wpt_tweet_failed', $connection, $id, $notice );
-		wpt_set_log( 'wpt_status_message', $id, $notice );
+		wpt_set_log( 'wpt_status_message', $id, $notice, $http_code );
 	} else {
 		/**
 		 * Executes an action after a status is posted successfully.
@@ -1402,9 +1402,17 @@ function wpt_add_twitter_inner_box( $post ) {
 			// don't display when draft is updated or if no message.
 			if ( ! ( ( '1' === $_REQUEST['message'] ) && ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) ) && 'no' !== $tweet_this ) {
 				$log   = wpt_get_log( 'wpt_status_message', $post_id );
-				$class = ( __( 'Status update sent successfully.', 'wp-to-twitter' ) !== $log ) ? 'error' : 'updated';
-				if ( '' !== trim( $log ) ) {
-					echo "<div class='$class'><p>$log</p></div>";
+				if ( is_array( $log ) ) {
+					$message = $log['message'];
+					$http    = $log['http'];
+				} else {
+					$message = $log;
+					$http    = '200';
+				}
+				// FIX THIS.
+				$class = ( '200' !== (string) $http ) ? 'error' : 'success';
+				if ( '' !== trim( $message ) ) {
+					echo "<div class='notice notice-$class'><p>$message</p></div>";
 				}
 			}
 		}
@@ -1776,8 +1784,10 @@ function wpt_ajax_tweet() {
 					);
 					break;
 			}
+			$log     = wpt_get_log( 'wpt_status_message', $post_ID );
+			$message = is_array( $log ) ? $log['message'] : $log;
 			// Translators: Full text of Update, time scheduled for.
-			$return = ( 'tweet' === $action ) ? wpt_get_log( 'wpt_status_message', $post_ID ) : sprintf( __( 'Update scheduled: %1$s for %2$s', 'wp-to-twitter' ), '"' . $sentence . '"', $print_schedule );
+			$return = ( 'tweet' === $action ) ? $message : sprintf( __( 'Update scheduled: %1$s for %2$s', 'wp-to-twitter' ), '"' . $sentence . '"', $print_schedule );
 			echo $return;
 			if ( count( $authors ) > 1 ) {
 				echo '<br />';
