@@ -1401,7 +1401,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( isset( $_REQUEST['message'] ) && '10' !== $_REQUEST['message'] ) {
 			// don't display when draft is updated or if no message.
 			if ( ! ( ( '1' === $_REQUEST['message'] ) && ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) ) && 'no' !== $tweet_this ) {
-				$log   = wpt_get_log( 'wpt_status_message', $post_id );
+				$log = wpt_get_log( 'wpt_status_message', $post_id );
 				if ( is_array( $log ) ) {
 					$message = $log['message'];
 					$http    = $log['http'];
