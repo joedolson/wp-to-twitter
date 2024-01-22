@@ -108,7 +108,7 @@ function wpt_updated_settings() {
 					<p>' . __( 'Mastodon authentication data cleared.', 'wp-to-twitter' ) . '</p>
 				</div>
 			' );
-		} elseif ( 'noconnection' === $oauth_message ) {
+		} elseif ( 'noconnection' === $mastodon_message ) {
 			print( '
 				<div id="message" class="error fade">
 					<p>' . __( 'Mastodon authentication Failed. XPoster was unable to complete a connection with those credentials.', 'wp-to-twitter' ) . '</p>
