@@ -1,8 +1,8 @@
 {
   "name": "wp-to-twitter",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "private": true,
-  "description": "X.com WordPress plug-in.",
+  "description": "X.com/Mastodon WordPress plug-in.",
   "author": "Joe Dolson",
   "license": "GPL-2.0-or-later",
   "keywords": [

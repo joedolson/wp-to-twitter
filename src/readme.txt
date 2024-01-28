@@ -7,7 +7,7 @@ Tested up to: 6.4
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.2.0
+Stable tag: 4.2.1
 
 Posts to X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -61,6 +61,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 4.2.1 =
 
 * Bug fix: All notices used error class, regardless of actual status.
+* Bug fix: Add a notice when a request exception occurs.
 
 = 4.2.0 =
 
