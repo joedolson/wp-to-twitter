@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_hash_source - XPoster Hook Doumentation</title>
+    <title>Filter: wpt_should_block_status - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_hash_source</h1></header>
+    <header><h1 class="page-title">Filter: wpt_should_block_status</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_hash_source">apply_filters( 'wpt_hash_source', <span class="signature">$tags, $post_ID )</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="wpt_should_block_status">apply_filters( 'wpt_should_block_status', <span class="signature">$filter, $post_info )</span><span class="type-signature"> &rarr; {bool}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Change the taxonomy used by default to generate post tags. Array of terms attached to post.</p>
+    <p>Apply filters against this post to determine whether it should be allowed to be sent.</p>
 </div>
 
 
@@ -77,7 +77,30 @@
 
         <tr>
             
-                <td class="name"><code>$tags</code></td>
+                <td class="name"><code>$filter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Always false by default.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$post_info</code></td>
             
 
             <td class="type">
@@ -93,30 +116,7 @@
 
             
 
-            <td class="description last"><p>Array of post terms.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$post_ID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Post ID.</p></td>
+            <td class="description last"><p>Array of post data.</p></td>
         </tr>
 
     
@@ -157,7 +157,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line1260">line 1260</a>
+        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line947">line 947</a>
     </li></ul></dd>
     
 
@@ -183,6 +183,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <p>True to block post.</p>
+</div>
+
 
 
 <dl>
@@ -191,7 +195,7 @@
     </dt>
     <dd>
         
-<span class="param-type">array</span>
+<span class="param-type">bool</span>
 
 
     </dd>
