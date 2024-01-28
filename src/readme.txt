@@ -63,6 +63,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Bug fix: All notices used error class, regardless of actual status.
 * Bug fix: Add a notice when a request exception occurs.
 * Bug fix: Misnamed variable in Mastodon authentication process.
+* Mention Mastodon in plugin name.
 
 = 4.2.0 =
 
