@@ -1,4 +1,4 @@
-=== XPoster - Share to Twitter/X from WordPress ===
+=== XPoster - Share to X and Mastodon ===
 Contributors: joedolson
 Donate link: https://xposterpro.com
 Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
