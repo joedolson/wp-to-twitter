@@ -944,13 +944,21 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 		unset( $debug_post_info['post_content'] );
 		unset( $debug_post_info['postContent'] );
 		wpt_mail( '2: XPoster Post Info (post content omitted)', print_r( $debug_post_info, 1 ), $post_ID ); // DEBUG.
-		if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() && function_exists( 'wpt_filter_post_info' ) ) {
-			$filter = wpt_filter_post_info( $post_info );
-			if ( true === $filter ) {
-				wpt_mail( '3: Post blocked by XPoster Pro custom filters', 'No additional data available', $post_ID );
+		/**
+		 * Apply filters against this post to determine whether it should be allowed to be sent.
+		 *
+		 * @hook wpt_should_block_status
+		 *
+		 * @param {bool}  $filter Always false by default.
+		 * @param {array} $post_info Array of post data.
+		 *
+		 * @return {bool} True to block post.
+		 */
+		$filter = apply_filters( 'wpt_should_block_status', false, $post_info );
+		if ( true === $filter ) {
+			wpt_mail( '3: Post blocked by XPoster Pro custom filters', 'No additional data available', $post_ID );
 
-				return false;
-			}
+			return false;
 		}
 		/**
 		 * Return true to ignore this post based on POST data. Default false.
