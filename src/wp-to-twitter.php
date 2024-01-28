@@ -1932,9 +1932,12 @@ function wpt_plugin_update_message() {
 	define( 'WPT_PLUGIN_README_URL', 'http://svn.wp-plugins.org/wp-to-twitter/trunk/readme.txt' );
 	$response = wp_remote_get( WPT_PLUGIN_README_URL, array( 'user-agent' => 'WordPress/XPoster' . $wpt_version . '; ' . get_bloginfo( 'url' ) ) );
 	if ( ! is_wp_error( $response ) || is_array( $response ) ) {
-		$data = $response['body'];
-		$bits = explode( '== Upgrade Notice ==', $data );
-		$note = '</div><div id="wpt-upgrade" class="notice inline notice-warning"><ul><li><strong style="color:#c22;">Upgrade Notes:</strong> ' . str_replace( '* ', '', nl2br( trim( $bits[1] ) ) ) . '</li></ul>';
+		$data   = $response['body'];
+		$bits   = explode( '== Upgrade Notice ==', $data );
+		$notice = trim( str_replace( '* ', '', nl2br( trim( $bits[1] ) ) ) );
+		if ( $notice ) {
+			$note = '</div><div id="wpt-upgrade" class="notice inline notice-warning"><ul><li><strong style="color:#c22;">Upgrade Notes:</strong> ' . str_replace( '* ', '', nl2br( trim( $bits[1] ) ) ) . '</li></ul>';
+		}
 	}
 
 	echo $note;
