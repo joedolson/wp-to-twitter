@@ -88,7 +88,7 @@ function wpt_set_log( $data, $id, $message, $http = '200' ) {
  * @param string $data Option key.
  * @param int    $id Post ID.
  *
- * @return string message.
+ * @return string|array message.
  */
 function wpt_get_log( $data, $id ) {
 	if ( 'test' === $id ) {
@@ -220,8 +220,9 @@ function wpt_show_last_tweet() {
 			} else {
 				$title = '(' . __( 'No post', 'wp-to-twitter' ) . ')';
 			}
-			$notice = esc_html( $log[1] );
-			echo "<div class='updated'><p><strong>" . __( 'Last Status Update', 'wp-to-twitter' ) . "</strong>: $title &raquo; $notice</p></div>";
+			$notice = esc_html( $log[1]['message'] );
+			$code   = esc_html( $log[1]['http'] );
+			echo "<div class='updated'><p><strong>" . __( 'Last Status Update', 'wp-to-twitter' ) . ": <code>$code</code></strong> $title &raquo; $notice</p></div>";
 		}
 	}
 }
