@@ -58,6 +58,12 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 4.2.2 =
+
+* Bug fix: Last Tweet notice improperly called array. Props @mattyrob.
+* Bug fix: Only show upgrade notice if it's populated in the readme.
+* Change: Change Pro filters to a filter instead of a direct function call.
+
 = 4.2.1 =
 
 * Bug fix: All notices used error class, regardless of actual status.
