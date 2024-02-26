@@ -1699,8 +1699,9 @@ function wpt_admin_scripts() {
 	if ( SCRIPT_DEBUG ) {
 		$wpt_version .= '-' . wp_rand( 10000, 99999 );
 	}
+	wp_register_script( 'wpt.charcount', plugins_url( 'js/jquery.charcount.js', __FILE__ ), array( 'jquery' ), $wpt_version );
 	if ( 'post' === $current_screen->base || 'xposter-pro_page_wp-to-twitter-schedule' === $current_screen->id ) {
-		wp_enqueue_script( 'wpt.charcount', plugins_url( 'js/jquery.charcount.js', __FILE__ ), array( 'jquery' ), $wpt_version );
+		wp_enqueue_script( 'wpt.charcount' );
 		wp_register_style( 'wpt-post-styles', plugins_url( 'css/post-styles.css', __FILE__ ), array(), $wpt_version );
 		wp_enqueue_style( 'wpt-post-styles' );
 		$config = wpt_max_length();
