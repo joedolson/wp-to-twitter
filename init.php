@@ -42,4 +42,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require dirname( __FILE__ ) . '/src/wp-to-twitter.php';
+require __DIR__ . '/src/wp-to-twitter.php';
