@@ -70,7 +70,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$wpt_debug = get_option( 'wpt_debug_tweets', true );
+$wpt_debug = get_option( 'wpt_debug_tweets', false );
 define( 'WPT_DEBUG', $wpt_debug );
 define( 'WPT_DEBUG_BY_EMAIL', false ); // Email debugging no longer default as of 3.3.0.
 define( 'WPT_DEBUG_ADDRESS', get_option( 'admin_email' ) );
@@ -83,16 +83,16 @@ if ( function_exists( 'wp_get_environment_type' ) ) {
 	}
 }
 
-require_once( plugin_dir_path( __FILE__ ) . 'vendor_prefixed/vendor/scoper-autoload.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'wpt-functions.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'wpt-post-to-twitter.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'wpt-post-to-mastodon.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-mastodon.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'wpt-truncate.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php' );
+require_once plugin_dir_path( __FILE__ ) . 'vendor_prefixed/vendor/scoper-autoload.php';
+require_once plugin_dir_path( __FILE__ ) . 'wpt-functions.php';
+require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-twitter.php';
+require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-mastodon.php';
+require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php';
+require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php';
+require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-mastodon.php';
+require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php';
+require_once plugin_dir_path( __FILE__ ) . 'wpt-truncate.php';
+require_once plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php';
 
 global $wpt_version;
 $wpt_version = '4.2.1';
@@ -705,24 +705,24 @@ function wpt_attachment_path( $attachment_id, $size = '' ) {
 /**
  * For servers without PEAR normalize installed, approximates normalization. With normalizer, executes normalization on string.
  *
- * @param string $string Text to normalize.
+ * @param string $text Text to normalize.
  *
  * @return string Normalized text.
  */
-function wpt_normalize( $string ) {
+function wpt_normalize( $text ) {
 	if ( version_compare( PHP_VERSION, '5.0.0', '>=' ) &amp;&amp; function_exists( 'normalizer_normalize' ) ) {
-		if ( normalizer_is_normalized( $string ) ) {
-			return $string;
+		if ( normalizer_is_normalized( $text ) ) {
+			return $text;
 		}
 
-		return normalizer_normalize( $string );
+		return normalizer_normalize( $text );
 	} else {
 		$normalizer = new WPT_Normalizer();
-		if ( $normalizer->is_normalized( $string ) ) {
-			return $string;
+		if ( $normalizer->is_normalized( $text ) ) {
+			return $text;
 		}
 
-		return $normalizer->normalize( $string );
+		return $normalizer->normalize( $text );
 	}
 }
 
@@ -1138,7 +1138,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 						$first  = true;
 						foreach ( $wpt_selected_users as $acct ) {
 							if ( wtt_oauth_test( $acct, 'verify' ) ) {
-								for ( $i = 1; $i &lt;= $repeat; $i ++ ) {
+								for ( $i = 1; $i &lt;= $repeat; $i++ ) {
 									$continue = apply_filters( 'wpt_allow_reposts', true, $i, $post_ID, $acct );
 									if ( $continue ) {
 										$retweet = apply_filters( 'wpt_set_retweet_text', $template, $i, $post_ID );
@@ -1356,7 +1356,7 @@ function wpt_generate_hash_tags( $post_ID ) {
 			}
 			if ( mb_strlen( $newtag ) > 2 &amp;&amp; ( mb_strlen( $newtag ) &lt;= $max_characters ) &amp;&amp; ( $i &lt;= $max_tags ) ) {
 				$hashtags .= "$newtag ";
-				$i ++;
+				++$i;
 			}
 		}
 	}
@@ -1939,7 +1939,7 @@ function wpt_admin_style() {
  * @return link new array.
  */
 function wpt_plugin_action( $links, $file ) {
-	if ( plugin_basename( dirname( __FILE__ ) . '/wp-to-twitter.php' ) === $file ) {
+	if ( plugin_basename( __DIR__ . '/wp-to-twitter.php' ) === $file ) {
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 		$links[]   = "&lt;a href='$admin_url'>" . __( 'XPoster Settings', 'wp-to-twitter' ) . '&lt;/a>';
 	}
