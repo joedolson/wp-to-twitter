@@ -147,7 +147,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					$opath = get_option( 'yourlspath' );
 					$ypath = str_replace( 'user', 'includes', $opath );
 					if ( file_exists( dirname( $ypath ) . '/load-yourls.php' ) ) { // YOURLS 1.4+.
-						require_once( dirname( $ypath ) . '/load-yourls.php' );
+						require_once dirname( $ypath ) . '/load-yourls.php';
 						global $ydb;
 						if ( function_exists( 'yourls_add_new_link' ) ) {
 							$yourls_result = yourls_add_new_link( $url, $keyword_format, $post_title );
@@ -255,7 +255,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						$shrink = $url;
 					} else {
 						if ( class_exists( 'Hum' ) && method_exists( 'Hum', 'get_shortlink' ) ) {
-							$hum    = new Hum;
+							$hum    = new Hum();
 							$shrink = $hum->get_shortlink( $url, $post_ID, 'post', true );
 
 						} else {
@@ -357,7 +357,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			define( 'YOURLS_FLOOD_DELAY_SECONDS', 0 ); // Disable flood check.
 			if ( file_exists( dirname( get_option( 'yourlspath' ) ) . '/load-yourls.php' ) ) { // YOURLS 1.4+.
 				global $ydb;
-				require_once( dirname( get_option( 'yourlspath' ) ) . '/load-yourls.php' );
+				require_once dirname( get_option( 'yourlspath' ) ) . '/load-yourls.php';
 				$yourls_result = yourls_api_expand( $short_url );
 			}
 			if ( $yourls_result ) {

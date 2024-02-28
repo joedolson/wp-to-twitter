@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-include( dirname( __FILE__ ) . '/classes/class-wpt-normalizer.php' );
+require dirname( __FILE__ ) . '/classes/class-wpt-normalizer.php';
 
 /**
  * See if checkboxes should be checked
@@ -364,15 +364,15 @@ function wpt_show_debug() {
  * Send a remote query expecting JSON.
  *
  * @param string $url Target URL.
- * @param array  $array Arguments if not default.
+ * @param array  $args JSON decode arguments if not default.
  * @param string $method Query method.
  * @throws Exception JSON error string.
  *
  * @return JSON object.
  */
-function wpt_remote_json( $url, $array = true, $method = 'GET' ) {
+function wpt_remote_json( $url, $args = true, $method = 'GET' ) {
 	$input = wpt_fetch_url( $url, $method );
-	$obj   = json_decode( $input, $array );
+	$obj   = json_decode( $input, $args );
 	if ( function_exists( 'json_last_error' ) ) { // > PHP 5.3.
 		try {
 			if ( is_null( $obj ) ) {
@@ -430,12 +430,12 @@ function wpt_is_valid_url( $url ) {
  * @param string $method Method.
  * @param string $body Body of query.
  * @param string $headers Headers to add.
- * @param string $return Array key from fetched object to return.
+ * @param string $return_type Array key from fetched object to return.
  *
  * @return string|false value from query.
  */
-function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $return = 'body' ) {
-	$request = new WP_Http;
+function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $return_type = 'body' ) {
+	$request = new WP_Http();
 	$result  = $request->request(
 		$url,
 		array(
@@ -448,7 +448,7 @@ function wpt_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $retur
 
 	if ( ! is_wp_error( $result ) && isset( $result['body'] ) ) {
 		if ( 200 === absint( $result['response']['code'] ) ) {
-			if ( 'body' === $return ) {
+			if ( 'body' === $return_type ) {
 				return $result['body'];
 			} else {
 				return $result;
@@ -877,30 +877,30 @@ function wpt_delete_copied_meta( $new_id, $post ) {
 }
 
 /**
- * Provide aliases for changed function names if plug-ins or themes are calling XPoster functions in custom code.
+ * Provide aliases for changed function names if plug-ins or themes are calling XPoster functions in custom code. Deprecated.
  *
  * @param string $url Query url.
  * @param string $method Method.
  * @param string $body Body.
  * @param string $headers Headers.
- * @param string $return Return data.
+ * @param string $return_type Return data.
  *
  * @return data.
  */
-function jd_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $return = 'body' ) {
-	return wpt_fetch_url( $url, $method, $body, $headers, $return );
+function jd_fetch_url( $url, $method = 'GET', $body = '', $headers = '', $return_type = 'body' ) {
+	return wpt_fetch_url( $url, $method, $body, $headers, $return_type );
 }
 
 /**
- * Alias for remote_json.
+ * Alias for remote_json. Deprecated.
  *
  * @param string $url Query url.
- * @param array  $array Arguments.
+ * @param array  $query_args Arguments sent to remote query.
  *
  * @return remote JSON.
  */
-function jd_remote_json( $url, $array = true ) {
-	return wpt_remote_json( $url, $array );
+function jd_remote_json( $url, $query_args = true ) {
+	return wpt_remote_json( $url, $query_args );
 }
 
 /**

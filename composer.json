@@ -27,7 +27,7 @@
         "lint": "phpcs --standard=phpcs.xml.dist",
         "test": "phpunit -c phpunit.xml.dist --verbose",
         "scope": [
-            "@php ./vendor/bin/php-scoper add-prefix -d src/vendor -o ../vendor_prefixed -c ../../scoper.inc.php --force",
+            "@php ./vendor/bin/php-scoper add-prefix -d src/vendor -o ../vendor_prefixed -c ../../scoper-inc.php --force",
             "composer dump-autoload --working-dir src/vendor_prefixed --classmap-authoritative"
         ]
     },

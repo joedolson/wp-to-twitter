@@ -286,13 +286,13 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 /**
  * Check whether a tag is within the string.
  *
- * @param string $string String. Probably a Tweet.
+ * @param string $text String. Probably a Tweet.
  * @param string $tag Template tag text.
  *
  * @return boolean.
  */
-function wpt_has( $string, $tag ) {
-	if ( strpos( $string, $tag ) === false ) {
+function wpt_has( $text, $tag ) {
+	if ( strpos( $text, $tag ) === false ) {
 		return false;
 	}
 
@@ -302,14 +302,14 @@ function wpt_has( $string, $tag ) {
 /**
  * Check whether any tags are present.
  *
- * @param string $string String. Probably a Tweet.
+ * @param string $text String. Probably a Tweet.
  *
  * @return boolean.
  */
-function wpt_has_tags( $string ) {
+function wpt_has_tags( $text ) {
 	$tags = wpt_tags();
 	foreach ( $tags as $tag ) {
-		if ( wpt_has( $string, "#$tag#" ) ) {
+		if ( wpt_has( $text, "#$tag#" ) ) {
 			return true;
 		}
 	}

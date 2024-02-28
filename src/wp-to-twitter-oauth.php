@@ -89,7 +89,7 @@ function wpt_oauth_connection( $auth = false, $api = '2' ) {
 			);
 			$client   = new Client( $settings );
 		} else {
-			require_once( plugin_dir_path( __FILE__ ) . 'classes/class-wpt-twitteroauth.php' );
+			require_once plugin_dir_path( __FILE__ ) . 'classes/class-wpt-twitteroauth.php';
 			$connection            = new Wpt_TwitterOAuth( $ack, $acs, $ot, $ots );
 			$connection->useragent = get_option( 'blogname' ) . ' ' . home_url();
 			$client                = $connection;
