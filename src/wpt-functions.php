@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require dirname( __FILE__ ) . '/classes/class-wpt-normalizer.php';
+require __DIR__ . '/classes/class-wpt-normalizer.php';
 
 /**
  * See if checkboxes should be checked

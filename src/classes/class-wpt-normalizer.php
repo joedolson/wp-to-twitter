@@ -79,7 +79,7 @@ class WPT_Normalizer {
 	 *
 	 * @return boolean
 	 */
-	static public function is_normalized( $s, $form = self::NFC ) {
+	public static function is_normalized( $s, $form = self::NFC ) {
 		if ( strspn( $s, self::$ascii ) === strlen( $s ) ) {
 			return true;
 		}
@@ -97,7 +97,7 @@ class WPT_Normalizer {
 	 *
 	 * @return boolean or normalized string.
 	 */
-	static public function normalize( $s, $form = self::NFC ) {
+	public static function normalize( $s, $form = self::NFC ) {
 		if ( ! preg_match( '//u', $s ) ) {
 			return false;
 		}
