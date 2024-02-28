@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$wpt_debug = get_option( 'wpt_debug_tweets', true );
+$wpt_debug = get_option( 'wpt_debug_tweets', false );
 define( 'WPT_DEBUG', $wpt_debug );
 define( 'WPT_DEBUG_BY_EMAIL', false ); // Email debugging no longer default as of 3.3.0.
 define( 'WPT_DEBUG_ADDRESS', get_option( 'admin_email' ) );
