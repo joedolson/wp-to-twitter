@@ -688,7 +688,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 */
 		private static function generate_nonce() {
 			$mt   = microtime();
-			$rand = mt_rand();
+			$rand = wp_rand();
 
 			return md5( $mt . $rand ); // md5s look nicer than numbers.
 		}
