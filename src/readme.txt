@@ -7,7 +7,7 @@ Tested up to: 6.4
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.2.1
+Stable tag: 4.2.2
 
 Posts to X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -62,7 +62,9 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 * Bug fix: Last Tweet notice improperly called array. Props @mattyrob, @pyro-code01.
 * Bug fix: Only show upgrade notice if it's populated in the readme.
+* Change: Change scripts to register separately from enqueuing.
 * Change: Change Pro filters to a filter instead of a direct function call.
+* Tooling: Update to PHPCS 3.
 
 = 4.2.1 =
 
