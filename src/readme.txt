@@ -1,7 +1,7 @@
 === XPoster - Share to X and Mastodon ===
 Contributors: joedolson
 Donate link: https://xposterpro.com
-Tags: twitter, microblogging, bitly, yourls, redirect, shortener, post, links, social, sharing, media, tweet
+Tags: twitter, post, social, sharing, tweet
 Requires at least: 6.0
 Tested up to: 6.4
 Requires PHP: 7.4
