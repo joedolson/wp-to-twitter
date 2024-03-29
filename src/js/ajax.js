@@ -37,7 +37,7 @@
 				'security': wpt_data.security
 			};
 			$.post(ajaxurl, data, function (response) {
-				$('.wpt_log').text(response).show(500);
+				$('.wpt_log').text(response).show(300);
 			});
 		});
 	});
