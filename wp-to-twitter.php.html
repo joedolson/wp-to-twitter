@@ -1463,7 +1463,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		if ( 'publish' === $status &amp;&amp; '1' !== $options[ $type ]['post-edited-update'] ) {
 			// Translators: post type.
-			$tweet_status = sprintf( __( '%s will not be posted on update.', 'wp-to-twitter' ), ucfirst( $type ) );
+			$tweet_status = sprintf( __( '%s will not be shared on save.', 'wp-to-twitter' ), ucfirst( $type ) );
 		}
 		if ( 'publish' === $status &amp;&amp; ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 			?>
