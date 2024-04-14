@@ -1442,23 +1442,35 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( 'publish' === $status && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 			?>
 			<div class='tweet-buttons'>
-				<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-share' aria-hidden='true'></span><?php _e( 'Share Now', 'wp-to-twitter' ); ?></button>
-			<?php
-			if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
+				<div class="wpt-buttons">
+					<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-share' aria-hidden='true'></span><?php _e( 'Share Now', 'wp-to-twitter' ); ?></button>
+				<?php
+				if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
+					?>
+				<button type='button' class='tweet schedule button-secondary' data-action='schedule' disabled><?php _e( 'Schedule', 'wp-to-twitter' ); ?></button>
+				<button type='button' class='time button-secondary'>
+					<span class="dashicons dashicons-clock" aria-hidden="true"></span><span class="screen-reader-text"><?php _e( 'Set Date/Time', 'wp-to-twitter' ); ?></span>
+				</button>
+					<?php
+				}
 				?>
-			<button type='button' class='tweet schedule button-secondary' data-action='schedule' disabled><?php _e( 'Schedule', 'wp-to-twitter' ); ?></button>
-			<button type='button' class='time button-secondary'>
-				<span class="dashicons dashicons-clock" aria-hidden="true"></span><span class="screen-reader-text"><?php _e( 'Set Date/Time', 'wp-to-twitter' ); ?></span>
-			</button>
+				</div>
+				<?php
+				if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
+					?>
 			<div id="wpt_set_tweet_time">
 				<?php
 				$datavalue = gmdate( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
 				$timevalue = date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
 				?>
-				<label for='wpt_date'><?php _e( 'Date', 'wp-to-twitter' ); ?></label>
-				<input type='date' value='' class='wpt_date date' name='wpt_datetime' id='wpt_date' data-value='<?php echo $datavalue; ?>' /><br/>
-				<label for='wpt_time'><?php _e( 'Time', 'wp-to-twitter' ); ?></label>
-				<input type='text' value='<?php echo $timevalue; ?>' class='wpt_time time' name='wpt_datetime' id='wpt_time'/>
+				<div class="wpt-date-field">
+					<label for='wpt_date'><?php _e( 'Date', 'wp-to-twitter' ); ?></label>
+					<input type='date' value='' class='wpt_date date' name='wpt_datetime' id='wpt_date' data-value='<?php echo $datavalue; ?>' /><br/>
+				</div>
+				<div class="wpt-time-field">
+					<label for='wpt_time'><?php _e( 'Time', 'wp-to-twitter' ); ?></label>
+					<input type='time' value='<?php echo $timevalue; ?>' class='wpt_time time' name='wpt_datetime' id='wpt_time'/>
+				</div>
 			</div>
 				<?php
 			}

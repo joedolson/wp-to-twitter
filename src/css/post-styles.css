@@ -192,21 +192,17 @@ button.time div {
 }
 
 .wpt_log, #wpt_set_tweet_time {
-	padding: .5em;
+	padding: .5rem 0;
 }
 
 #wpt_set_tweet_time {
-	background: #f6f6f6;
-	color: #333;
+	display: flex;
 }
 
-.tweet-buttons {
-	display: grid;
-	grid-template-columns: 48% 34% 18%;
-	column-gap: 2px;
-	padding: .75em 12px;
-	margin: -6px -14px 0;
-	background: #f3f3f3;
+.tweet-buttons .wpt-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 3px;
 }
 
 .wpt-wrap {
