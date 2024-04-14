@@ -1459,10 +1459,10 @@ function wpt_add_twitter_inner_box( $post ) {
 				if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
 					?>
 			<div id="wpt_set_tweet_time">
-				<?php
-				$datavalue = gmdate( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
-				$timevalue = date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
-				?>
+					<?php
+					$datavalue = gmdate( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
+					$timevalue = date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
+					?>
 				<div class="wpt-date-field">
 					<label for='wpt_date'><?php _e( 'Date', 'wp-to-twitter' ); ?></label>
 					<input type='date' value='' class='wpt_date date' name='wpt_datetime' id='wpt_date' data-value='<?php echo $datavalue; ?>' /><br/>
@@ -1472,9 +1472,9 @@ function wpt_add_twitter_inner_box( $post ) {
 					<input type='time' value='<?php echo $timevalue; ?>' class='wpt_time time' name='wpt_datetime' id='wpt_time'/>
 				</div>
 			</div>
-				<?php
-			}
-			?>
+					<?php
+				}
+				?>
 			</div>
 			<div class='wpt_log' aria-live='assertive'></div>
 			<?php
