@@ -195,9 +195,15 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 					if ( $connection ) {
 						$data = $connection->get( 'https://api.twitter.com/1.1/account/verify_credentials.json' );
 						if ( '200' !== (string) $connection->http_code ) {
-							$data  = json_decode( $data );
-							$code  = "<a href='https://developer.twitter.com/en/support/twitter-api/error-troubleshooting'>" . $data->errors[0]->code . '</a>';
-							$error = $data->errors[0]->message;
+							$parsed = json_decode( $data );
+							if ( is_object( $parsed ) ) {
+								$code  = "<a href='https://developer.twitter.com/en/support/twitter-api/error-troubleshooting'>" . $parsed->errors[0]->code . '</a>';
+								$error = $parsed->errors[0]->message;
+							} else {
+								$code  = 'null';
+								$error = __( 'Data was not returned in a recognizable format.', 'wp-to-twitter' );
+								echo '<pre>'; print_r( $data ); echo '</pre>';
+							}
 							update_option( 'wpt_error', "$code: $error" );
 						} else {
 							delete_option( 'wpt_error' );
