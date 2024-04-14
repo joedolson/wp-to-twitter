@@ -237,11 +237,11 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 							update_option( 'wpt_curl_error', $error_code );
 						}
 						if ( '1' === get_option( 'wp_debug_oauth' ) ) {
-							echo '<pre><strong>Summary Connection Response:</strong><br />';
+							echo '<h2>Summary Connection Response</h2><pre>';
 							print_r( $error_information );
-							echo '<br /><strong>Account Verification Data:</strong><br />';
+							echo '</pre><h2>Account Verification Data</h2><pre>';
 							print_r( $data );
-							echo '<br /><strong>Full Connection Response:</strong><br />';
+							echo '</pre><h2>Full Connection Response</h2><pre>';
 							print_r( $connection );
 							echo '</pre>';
 						}
