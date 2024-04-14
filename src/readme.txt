@@ -7,7 +7,7 @@ Tested up to: 6.5
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.2.2
+Stable tag: 4.2.3
 
 Posts to X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -57,6 +57,13 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 4.2.3 =
+
+* Bug fix: Update deprecated JS.
+* Bug fix: Handle case if connection response is not valid JSON.
+* Bug fix: Minor improvements to CSS & JS.
+* Update tested to & copyrights.
 
 = 4.2.2 =
 
