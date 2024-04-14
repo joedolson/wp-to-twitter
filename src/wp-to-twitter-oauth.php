@@ -202,7 +202,6 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 							} else {
 								$code  = 'null';
 								$error = __( 'Data was not returned in a recognizable format.', 'wp-to-twitter' );
-								echo '<pre>'; print_r( $data ); echo '</pre>';
 							}
 							update_option( 'wpt_error', "$code: $error" );
 						} else {
