@@ -328,7 +328,14 @@ function wpt_show_debug() {
 		$debug_log = get_post_meta( $post_ID, '_wpt_debug_log' );
 		if ( is_array( $debug_log ) ) {
 			foreach ( $debug_log as $entry ) {
-				$date     = date_i18n( 'Y-m-d H:i:s', $entry[0] );
+				$microtime = $entry[0];
+				$date      = explode( ' ', $microtime );
+				if ( count( $date ) > 1 ) {
+					$datetime = $date[1];
+				} else {
+					$datetime = $date[0];
+				}
+				$date     = date_i18n( 'Y-m-d H:i:s', $datetime );
 				$subject  = $entry[1];
 				$body     = $entry[2];
 				$records .= "<li><button type='button' class='toggle-debug button-secondary' aria-expanded='false'><strong>$date</strong>:<br />" . esc_html( $subject ) . "</button><pre class='wpt-debug-details'>" . esc_html( $body ) . '</pre></li>';
