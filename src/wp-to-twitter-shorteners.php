@@ -29,9 +29,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 * @return shortened URL.
 	 */
 	function wpt_shorten_url( $url, $post_title, $post_ID, $testmode = false, $store_urls = true ) {
-		wpt_mail( 'Shortener running: initial link', "Url: $url, Title: $post_title, Post ID: $post_ID, Test mode: $testmode", $post_ID ); // DEBUG.
-		// filter link before sending to shortener or adding analytics.
 		$shortener = (string) get_option( 'jd_shortener' );
+		wpt_mail( 'Shortener running: initial link', "Url: $url, Title: $post_title, Post ID: $post_ID, Test mode: $testmode, Shortener: $shortener", $post_ID ); // DEBUG.
 		// if the URL already exists & a shortener is enabled, return it without processing.
 		if ( '3' === $shortener && wpt_short_url( $post_ID ) && $store_urls ) {
 			$shrink = wpt_short_url( $post_ID );
