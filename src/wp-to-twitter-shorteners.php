@@ -296,7 +296,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		$store_urls = apply_filters( 'wpt_store_urls', true, $post_ID, $url );
 		if ( function_exists( 'wpt_shorten_url' ) && $store_urls ) {
 			$shortener = get_option( 'jd_shortener' );
-			// Don't store URLs if the not shortening is selected.
+			// Don't store URLs if not shortening is selected.
 			if ( '3' === $shortener ) {
 				return;
 			}
