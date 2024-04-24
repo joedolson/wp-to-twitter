@@ -427,7 +427,7 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 		$reference = '';
 	}
 
-	return array(
+	$return = array(
 		'url'         => $thisposturl,
 		'title'       => $title,
 		'blog'        => $blogname,
@@ -445,6 +445,8 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 		'cat_desc'    => $cat_desc,
 		'longurl'     => $post['postLink'],
 	);
+
+	return $return;
 }
 
 /**
