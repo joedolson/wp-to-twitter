@@ -47,7 +47,7 @@ function wpt_filter_urls( $tweet, $post_ID ) {
 		$urls = $match[0];
 		foreach ( $urls as $url ) {
 			if ( esc_url( $url ) ) {
-				$short = wpt_shorten_url( $url, $title, $post_ID, false, false );
+				$short = wpt_shorten_url( $url, $title, $post_ID, false, false, false );
 				if ( $short ) {
 					$tweet = str_replace( $url, $short, $tweet );
 				}
