@@ -432,7 +432,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
 			$return['mastodon'] = $response;
 		}
-		wpt_mail( 'X Connection', "$twit, $auth, $id, $media", $id );
+		wpt_mail( 'Share Connection Status', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
 		if ( ! empty( $return ) ) {
 
 			return $return;
@@ -823,7 +823,7 @@ function wpt_post_info( $post_ID ) {
  *
  * @param int $post_id Post ID.
  *
- * @return mixed
+ * @return string|bool False if no stored URL.
  */
 function wpt_short_url( $post_id ) {
 	global $post_ID;
