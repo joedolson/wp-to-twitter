@@ -220,8 +220,13 @@ function wpt_show_last_tweet() {
 			} else {
 				$title = '(' . __( 'No post', 'wp-to-twitter' ) . ')';
 			}
-			$notice = esc_html( $log[1]['message'] );
-			$code   = esc_html( $log[1]['http'] );
+			if ( is_array( $log[1] ) ) {
+				$notice = esc_html( $log[1]['message'] );
+				$code   = esc_html( $log[1]['http'] );
+			} else {
+				$notice = esc_html( $log[1] );
+				$code   = '';
+			}
 			echo "<div class='updated'><p><strong>" . __( 'Last Status Update', 'wp-to-twitter' ) . ": <code>$code</code></strong> $title &raquo; $notice</p></div>";
 		}
 	}
