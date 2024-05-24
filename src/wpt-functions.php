@@ -223,11 +223,14 @@ function wpt_show_last_tweet() {
 			if ( is_array( $log[1] ) ) {
 				$notice = esc_html( $log[1]['message'] );
 				$code   = esc_html( $log[1]['http'] );
-			} else {
+			} elseif ( is_string( $log[1] ) ) {
 				$notice = esc_html( $log[1] );
 				$code   = '';
+			} else {
+				$notice = __( 'Unrecognized error', 'wp-to-twitter' );
+				$code   = '';
 			}
-			echo "<div class='updated'><p><strong>" . __( 'Last Status Update', 'wp-to-twitter' ) . ": <code>$code</code></strong> $title &raquo; $notice</p></div>";
+			echo "<div class='notice notice-info'><p><strong>" . __( 'Last Status Update', 'wp-to-twitter' ) . ": <code>$code</code></strong> $title &raquo; $notice</p></div>";
 		}
 	}
 }
