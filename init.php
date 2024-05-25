@@ -17,11 +17,11 @@
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
  * Domain Path: lang
- * Version:     4.2.3
+ * Version:     4.2.4
  */
 
 /*
-	Copyright 2011-2024  Joe Dolson (email : joe@joedolson.com)
+	Copyright 2008-2024  Joe Dolson (email : joe@joedolson.com)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by

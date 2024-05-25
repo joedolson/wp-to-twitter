@@ -17,7 +17,7 @@
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
  * Domain Path: lang
- * Version:     4.2.3
+ * Version:     4.2.4
  */
 
 /*
@@ -69,7 +69,7 @@ require_once plugin_dir_path( __FILE__ ) . 'wpt-truncate.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php';
 
 global $wpt_version;
-$wpt_version = '4.2.3';
+$wpt_version = '4.2.4';
 
 add_action( 'init', 'wpt_load_textdomain' );
 /**

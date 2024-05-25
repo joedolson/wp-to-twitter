@@ -7,7 +7,7 @@ Tested up to: 6.5
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.2.3
+Stable tag: 4.2.4
 
 Posts to X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -64,6 +64,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Bug fix: Add selected shortener to debugging info.
 * Bug fix: Verify that last status is an array & return unrecognized error message if not identifiable.
 * Change: Add $get_url parameter to `wpt_shorten_url` to explicitly determine whether existing short URLs are fetched.
+* Feature: Status update template tag buttons in editor.
 
 = 4.2.3 =
 
