@@ -131,7 +131,7 @@ function wptotwitter_activate() {
 		update_option( 'wpt_post_types', $initial_settings );
 		update_option( 'jd_twit_blogroll', '1' );
 		update_option( 'newlink-published-text', 'New link: #title# #url#' );
-		update_option( 'jd_shortener', '1' );
+		update_option( 'jd_shortener', '3' );
 		update_option( 'jd_strip_nonan', '0' );
 		update_option( 'jd_max_tags', 4 );
 		update_option( 'jd_max_characters', 20 );
