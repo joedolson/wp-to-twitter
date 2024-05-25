@@ -292,7 +292,7 @@ function wpt_update_settings() {
 	<aside class="xposter-sales"><p class="link-highlight">
 		<?php
 			// Translators: URL to purchase.
-			printf( __( 'Why not try a license for XPoster Pro? <a href="%s">Buy Now</a>', 'wp-to-twitter' ), 'https://xposterpro.com/awesome/xposter-pro/' );
+			printf( __( 'Buy <strong>XPoster Pro</strong> &mdash; supercharge your social media! <a href="%s">Buy Now</a>', 'wp-to-twitter' ), 'https://xposterpro.com/awesome/xposter-pro/' );
 		?>
 		</p></aside>
 		<?php
