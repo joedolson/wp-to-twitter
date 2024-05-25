@@ -1556,7 +1556,8 @@ function wpt_add_twitter_inner_box( $post ) {
 				<?php
 				$tags = wpt_tags();
 				foreach ( $tags as $tag ) {
-					echo '<li><code>#' . $tag . '#</code></li>';
+					$pressed = ( false === stripos( $expanded, '#' . $tag . '#' ) ) ? 'false' : 'true';
+					echo '<li><button type="button" class="button-secondary" aria-pressed="' . $pressed . '">#' . $tag . '#</button></li>';
 				}
 				do_action( 'wpt_notes_tab', $post_id );
 				?>
@@ -1712,6 +1713,7 @@ function wpt_admin_scripts() {
 				'first'   => $first,
 				'is_ssl'  => ( wpt_is_ssl( home_url() ) ) ? 'true' : 'false',
 				'text'    => __( 'Characters left: ', 'wp-to-twitter' ),
+				'updated' => __( 'Custom post template updated', 'wp-to-twitter' ),
 			)
 		);
 	}

@@ -189,6 +189,23 @@ button.time div {
 .wptab .inline-list {
 	display: flex;
 	flex-wrap: wrap;
+	gap: 2px;
+}
+
+.wptab .inline-list li {
+	margin: 0;
+}
+
+.wptab .inline-list li .button-secondary {
+	padding: 0 4px;
+	line-height: 1.82;
+	min-height: auto;
+}
+
+.wptab .inline-list button[aria-pressed="true"] {
+	border: 1px solid #6e6e6e;
+	color: #434343;
+	background-color: #e6e6e7;
 }
 
 .wpt_log, #wpt_set_tweet_time {
