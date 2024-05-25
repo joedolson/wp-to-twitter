@@ -666,7 +666,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 * Form to select your shortener.
 	 */
 	function wpt_pick_shortener() {
-		$shortener = (string) get_option( 'jd_shortener' );
+		$shortener = (string) get_option( 'jd_shortener', false );
 		if ( '2' === $shortener &amp;&amp; ! function_exists( 'wbitly_shorten_url' ) ) {
 			$install_bitly = admin_url( 'plugin-install.php?s=codehaveli+bitly+url+shortener&amp;tab=search&amp;type=term' );
 			// Translators: search URL to find Bit.ly plug-in.
