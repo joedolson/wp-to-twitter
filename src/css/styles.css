@@ -22,6 +22,15 @@ aside.xposter-sales {
 	margin-top: 10px;
 }
 
+.wpt-connection-form .auth-fields {
+	margin: .5rem 0;
+	padding: .25rem 1rem;
+	width:fit-content;
+	background:rgba( 0,0,0,.04 );
+	box-shadow: 3px 3px 3px #ddd;
+	border: 1px solid #bbb;
+}
+
 .wpt-connection-form label {
 	font-weight: 600;
 	display: block;

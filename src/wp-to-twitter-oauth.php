@@ -323,6 +323,7 @@ function wtt_connect_oauth( $auth = false ) {
 		print( '
 			<h3 class="wpt-has-link"><span>' . __( 'Connect to X.com', 'wp-to-twitter' ) . '</span> <a href="https://xposterpro.com/connecting-xposter-and-x-com/" class="button button-secondary">' . __( 'Instructions', 'wp-to-twitter' ) . '</a></h3>
 			<div class="inside ' . $class . '">
+			' . $form . '
 				<ol class="wpt-oauth-settings">
 					<li>' . __( 'Apply for a <a href="https://developer.twitter.com/en/apply-for-access">Developer Account with X.com</a>', 'wp-to-twitter' ) . '<ul>
 						<li><a href="https://developer.twitter.com/en/developer-terms/policy">' . __( 'Review the Terms of Service for use of the X.com API', 'wp-to-twitter' ) . '</a></li>
@@ -335,8 +336,7 @@ function wtt_connect_oauth( $auth = false ) {
 						</ul>
 					</li>
 					<li>' . __( 'Copy your API Key and API Key secret.', 'wp-to-twitter' ) . '
-			' . $form . '
-					<div class="tokens">
+					<div class="tokens auth-fields">
 					<p>
 						<label for="wtt_app_consumer_key">' . __( 'API Key', 'wp-to-twitter' ) . '</label>
 						<input type="text" size="45" name="wtt_app_consumer_key" id="wtt_app_consumer_key" value="' . esc_attr( wpt_mask_attr( $ack ) ) . '" />
@@ -358,7 +358,7 @@ function wtt_connect_oauth( $auth = false ) {
 					<li>' . __( 'Change to the "Keys and Tokens" tab', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Generate your Access Token and Secret from the "Authentication Tokens" section.', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Add your Access Token, Secret, and Bearer Token:', 'wp-to-twitter' ) . ' (' . __( 'If the Access Level for your Access Token is not "<em>Read and write</em>", return to step 7, change your permissions, and generate new Tokens.', 'wp-to-twitter' ) . ')
-					<div class="tokens">
+					<div class="tokens auth-fields">
 					<p>
 						<label for="wtt_oauth_token">' . __( 'Access Token', 'wp-to-twitter' ) . '</label>
 						<input type="text" size="45" name="wtt_oauth_token" id="wtt_oauth_token" value="' . esc_attr( wpt_mask_attr( $ot ) ) . '" />

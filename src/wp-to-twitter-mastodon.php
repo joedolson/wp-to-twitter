@@ -122,6 +122,7 @@ function wtt_connect_mastodon( $auth = false ) {
 		print( '
 			<h3 class="wpt-has-link"><span>' . __( 'Connect to Mastodon', 'wp-to-twitter' ) . '</span> <a href="https://xposterpro.com/connecting-xposter-and-mastodon/" class="button button-secondary">' . __( 'Instructions', 'wp-to-twitter' ) . '</a></h3>
 			<div class="inside ' . $class . '">
+			' . $form . '
 				<ol class="wpt-oauth-settings">
 					<li>' . __( 'Navigate to Preferences > Settings > Development in your Mastodon account.', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Click on "New application".', 'wp-to-twitter' ) . '</li>
@@ -132,8 +133,7 @@ function wtt_connect_mastodon( $auth = false ) {
 					<li>' . __( 'Select your application from the list of "Your Applications."', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Copy your Access Token', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Add your Mastodon server URL', 'wp-to-twitter' ) . '</li>
-			' . $form . '
-					<div class="tokens">
+					<div class="tokens auth-fields">
 					<p>
 						<label for="wpt_mastodon_token">' . __( 'Access Token', 'wp-to-twitter' ) . '</label>
 						<input type="text" size="45" name="wpt_mastodon_token" id="wpt_mastodon_token" value="' . esc_attr( wpt_mask_attr( $ack ) ) . '" />
