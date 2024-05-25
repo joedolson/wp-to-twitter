@@ -58,6 +58,13 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 4.2.4 =
+
+* Bug fix: Debugging timestamps saved as microtime but read as time.
+* Bug fix: Add selected shortener to debugging info.
+* Bug fix: Verify that last status is an array & return unrecognized error message if not identifiable.
+* Change: Add $get_url parameter to `wpt_shorten_url` to explicitly determine whether existing short URLs are fetched.
+
 = 4.2.3 =
 
 * Bug fix: Update deprecated JS.

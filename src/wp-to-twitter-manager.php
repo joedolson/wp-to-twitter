@@ -557,39 +557,33 @@ function wpt_update_settings() {
 						<fieldset>
 							<legend class='screen-reader-text'><?php _e( 'Template Settings', 'wp-to-twitter' ); ?></legend>
 							<p>
-								<label for="jd_post_excerpt"><?php _e( 'Post excerpt (#post#) in characters:', 'wp-to-twitter' ); ?></label>
-								<input type="text" name="jd_post_excerpt" id="jd_post_excerpt" size="3" maxlength="3" value="<?php echo( esc_attr( get_option( 'jd_post_excerpt' ) ) ); ?>"/>
+								<label for="jd_post_excerpt"><?php _e( 'Post excerpt length in characters', 'wp-to-twitter' ); ?></label><br />
+								<input type="text" name="jd_post_excerpt" id="jd_post_excerpt" size="3" maxlength="3" value="<?php echo( esc_attr( get_option( 'jd_post_excerpt' ) ) ); ?>" />
 							</p>
 							<?php
 							if ( '' === get_option( 'jd_date_format', '' ) ) {
-								$format = ( esc_attr( stripslashes( get_option( 'date_format' ) ) ) );
+								$format = stripslashes( get_option( 'date_format' ) );
 							} else {
-								$format = ( esc_attr( get_option( 'jd_date_format' ) ) );
+								$format = get_option( 'jd_date_format' );
 							}
 							?>
 							<p>
-								<label for="jd_date_format"><?php _e( 'Date Format (#date#):', 'wp-to-twitter' ); ?></label>
-								<input type="text" aria-describedby="date_format_label" name="jd_date_format" id="jd_date_format" size="12" maxlength="12" value="<?php echo trim( $format ); ?>" />
-								<?php
-								if ( '' !== get_option( 'jd_date_format', '' ) ) {
-									echo date_i18n( get_option( 'jd_date_format' ) );
-								} else {
-									echo '<em>' . date_i18n( get_option( 'date_format' ) ) . '</em>';
-								}
-								?>
-								(<em id="date_format_label"><a href='https://wordpress.org/support/article/formatting-date-and-time/'><?php _e( 'Date Formatting', 'wp-to-twitter' ); ?></a></em>)
+								<label for="jd_date_format"><?php _e( 'Date Format:', 'wp-to-twitter' ); ?></label><br />
+								<input type="text" aria-describedby="date_format_label" name="jd_date_format" id="jd_date_format" size="12" maxlength="12" value="<?php echo trim( esc_attr( $format ) ); ?>" />
+								<span id="date_format_label"><?php _e( 'Currently:', 'wp-to-twitter' ); ?> <?php echo date_i18n( $format ); ?> <a href='https://wordpress.org/support/article/formatting-date-and-time/'><?php _e( 'Date Formatting', 'wp-to-twitter' ); ?></a>
+								</span>
 							</p>
 
 							<p>
-								<label for="jd_twit_prepend"><?php _e( 'Custom text before status:', 'wp-to-twitter' ); ?></label>
+								<label for="jd_twit_prepend"><?php _e( 'Custom text before status:', 'wp-to-twitter' ); ?></label><br />
 								<input type="text" name="jd_twit_prepend" id="jd_twit_prepend" size="20" value="<?php echo esc_attr( stripslashes( get_option( 'jd_twit_prepend' ) ) ); ?>"/>
 							</p>
 							<p>
-								<label for="jd_twit_append"><?php _e( 'Custom text after status:', 'wp-to-twitter' ); ?></label>
+								<label for="jd_twit_append"><?php _e( 'Custom text after status:', 'wp-to-twitter' ); ?></label><br />
 								<input type="text" name="jd_twit_append" id="jd_twit_append" size="20" value="<?php echo esc_attr( stripslashes( get_option( 'jd_twit_append' ) ) ); ?>"/>
 							</p>
 							<p>
-								<label for="jd_twit_custom_url"><?php _e( 'Custom field for alternate post URL:', 'wp-to-twitter' ); ?></label>
+								<label for="jd_twit_custom_url"><?php _e( 'Custom field for alternate post URL:', 'wp-to-twitter' ); ?></label><br />
 								<input type="text" name="jd_twit_custom_url" id="jd_twit_custom_url" size="30" maxlength="120" value="<?php echo esc_attr( stripslashes( get_option( 'jd_twit_custom_url' ) ) ); ?>"/>
 							</p>
 						</fieldset>
@@ -598,7 +592,7 @@ function wpt_update_settings() {
 			</div>
 			<div class="ui-sortable meta-box-sortables">
 				<div class="postbox">
-					<h3><span><?php _e( 'Special Cases', 'wp-to-twitter' ); ?></span></h3>
+					<h3><span><?php _e( 'Status update controls', 'wp-to-twitter' ); ?></span></h3>
 					<div class="inside">
 						<fieldset>
 							<legend id="special_cases" class='screen-reader-text'><?php _e( 'Special Cases', 'wp-to-twitter' ); ?></legend>
@@ -609,7 +603,7 @@ function wpt_update_settings() {
 								</li>
 								<li>
 									<input type="checkbox" name="jd_tweet_default_edit" id="jd_tweet_default_edit" value="1" <?php echo wpt_checkbox( 'jd_tweet_default_edit' ); ?> />
-									<label for="jd_tweet_default_edit"><?php _e( 'Do not post statuses by default (editing only)', 'wp-to-twitter' ); ?></label>
+									<label for="jd_tweet_default_edit"><?php _e( 'Do not post statuses by default when editing', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
 									<input type="checkbox" name="wpt_inline_edits" id="wpt_inline_edits" value="1" <?php echo wpt_checkbox( 'wpt_inline_edits' ); ?> />
@@ -706,26 +700,30 @@ function wpt_update_settings() {
 					</div>
 				</div>
 			</div>
+			<?php
+			$default_order   = array(
+				'excerpt'  => 0,
+				'title'    => 1,
+				'date'     => 2,
+				'category' => 3,
+				'blogname' => 4,
+				'author'   => 5,
+				'account'  => 6,
+				'tags'     => 7,
+				'modified' => 8,
+				'@'        => 9,
+				'cat_desc' => 10,
+			);
+			$preferred_order = get_option( 'wpt_truncation_order', false );
+			$preferred_order = map_deep( $preferred_order, 'absint' );
+			if ( $preferred_order && $preferred_order !== $default_order ) {
+				?>
 			<div class="ui-sortable meta-box-sortables">
 				<div class="postbox">
 					<h3><span><?php _e( 'Template tag priority order', 'wp-to-twitter' ); ?></span></h3>
 					<div class="inside">
 						<?php
-						$inputs          = '';
-						$default_order   = array(
-							'excerpt'  => 0,
-							'title'    => 1,
-							'date'     => 2,
-							'category' => 3,
-							'blogname' => 4,
-							'author'   => 5,
-							'account'  => 6,
-							'tags'     => 7,
-							'modified' => 8,
-							'@'        => 9,
-							'cat_desc' => 10,
-						);
-						$preferred_order = get_option( 'wpt_truncation_order' );
+						$inputs = '';
 						if ( ! $preferred_order ) {
 							$preferred_order = array();
 						}
@@ -760,6 +758,9 @@ function wpt_update_settings() {
 					</div>
 				</div>
 			</div>
+				<?php
+			}
+			?>
 			<div class="ui-sortable meta-box-sortables">
 				<div class="postbox">
 					<h3><span><?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?></span></h3>
