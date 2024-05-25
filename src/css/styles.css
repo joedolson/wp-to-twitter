@@ -234,13 +234,15 @@ label[for="wpt_license_key"] {
 }
 
 #wp-to-twitter  .wpt-pro-tab {
-	background: #213e7f;
-	color: #fff;
+	background: #fcb000;
+	color: #000;
+	border-color: #000;
 }
 
 #wp-to-twitter .wpt-pro-tab:hover, #wp-to-twitter .wpt-pro-tab:focus {
-	background: #fff;
-	color: #213e7f;
+	background: #000;
+	color: #fcb000;
+	border-color: #fcb000;
 }
 
 .wpt-permissions .wptab {
