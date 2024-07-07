@@ -3,7 +3,7 @@ Contributors: joedolson
 Donate link: https://xposterpro.com
 Tags: twitter, post, social, sharing, tweet
 Requires at least: 6.0
-Tested up to: 6.5
+Tested up to: 6.6
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
