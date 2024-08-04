@@ -9,10 +9,10 @@
  *
  * @wordpress-plugin
  * Plugin Name: XPoster
- * Plugin URI:  http://www.xposterpro.com
+ * Plugin URI:  https://www.xposterpro.com
  * Description: Posts a status update when you update your WordPress blog or post a link, using your URL shortener. Many options to customize and promote your updates.
  * Author:      Joseph C Dolson
- * Author URI:  http://www.joedolson.com
+ * Author URI:  https://www.joedolson.com
  * Text Domain: wp-to-twitter
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
