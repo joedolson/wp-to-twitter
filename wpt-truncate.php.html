@@ -228,7 +228,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 							} else {
 								$new_value = $old_value;
 								while ( ( mb_strlen( $old_value ) - $trim ) &lt; mb_strlen( $new_value ) ) {
-									$new_value = trim( mb_substr( $new_value, 0, mb_strrpos( $new_value, '#', $encoding ) - 1 ) );
+									$new_value = trim( mb_substr( $new_value, 0, mb_strrpos( $new_value, '#', 0, $encoding ) - 1 ) );
 								}
 							}
 							// Just flat out truncate everything else cold.
