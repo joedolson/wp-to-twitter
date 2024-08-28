@@ -58,6 +58,10 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 4.2.5 =
+
+* Bug fix: Fatal error thrown on PHP 8+ if removing stray characters from tag boundaries due to obsolete argument usage in `mb_strrpos()`. Props @toru.
+
 = 4.2.4 =
 
 * Bug fix: Debugging timestamps saved as microtime but read as time.
