@@ -538,10 +538,11 @@ if ( ! function_exists( 'mb_strrpos' ) ) {
 	 * @param string $haystack String.
 	 * @param string $needle String.
 	 * @param int    $offset integer: optional start position.
+	 * @param string $encoding Character encoding expected.
 	 *
 	 * @return int
 	 */
-	function mb_strrpos( $haystack, $needle, $offset = 0 ) {
+	function mb_strrpos( $haystack, $needle, $offset = 0, $encoding ) {
 		$needle = preg_quote( $needle, '/' );
 
 		$ar = array();
