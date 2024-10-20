@@ -1754,7 +1754,6 @@ function wpt_admin_scripts() {
 	}
 }
 
-
 add_action( 'wp_ajax_wpt_tweet', 'wpt_ajax_tweet' );
 /**
  * Handle updates sent via Ajax Update Now/Schedule Update buttons.
@@ -1798,9 +1797,7 @@ function wpt_ajax_tweet() {
 		$media          = ( '1' === $upload ) ? false : true; // this is correct; the boolean logic is reversed. Blah.
 
 		foreach ( $authors as $auth ) {
-
 			$auth = ( 'main' === $auth ) ? false : $auth;
-
 			switch ( $action ) {
 				case 'tweet':
 					wpt_post_to_service( $sentence, $auth, $post_ID, $media );
