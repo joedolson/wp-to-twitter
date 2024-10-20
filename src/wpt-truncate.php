@@ -381,7 +381,20 @@ function wpt_make_tag( $value ) {
  * @return array of values.
  */
 function wpt_create_values( $post, $post_ID, $ref ) {
-	$shrink = ( '' !== $post['shortUrl'] && false !== $post['shortUrl'] ) ? $post['shortUrl'] : apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
+	/**
+	 * Run filters that shorten links.
+	 *
+	 * @hook wptt_shorten_link
+	 *
+	 * @param {string} $permalink The post permalink.
+	 * @param {string} $title The post title.
+	 * @param {int}    $post_ID The post ID.
+	 * @param {bool}   $test False because this is not a test cycle.
+	 *
+	 * @return {string}
+	 */
+	$shortlink = apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
+	$shrink    = ( '' !== $post['shortUrl'] && false !== $post['shortUrl'] ) ? $post['shortUrl'] : $shortlink;
 	// generate template variable values.
 	$auth         = $post['authId'];
 	$title        = trim( apply_filters( 'wpt_status', $post['postTitle'], $post_ID, 'title' ) );
@@ -427,7 +440,8 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 		$reference = '';
 	}
 
-	$return = array(
+	// If this order is changed, changes must also be replicated in `wpt_tags()`.
+	$values = array(
 		'url'         => $thisposturl,
 		'title'       => $title,
 		'blog'        => $blogname,
@@ -445,6 +459,12 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 		'cat_desc'    => $cat_desc,
 		'longurl'     => $post['postLink'],
 	);
+	// If tags array has been changed by a filter, update the order here, as well.
+	$tags   = wpt_tags();
+	$return = array();
+	foreach ( $tags as $key ) {
+		$return[ $key ] = $values[ $key ];
+	}
 
 	return $return;
 }
