@@ -353,6 +353,7 @@ function wpt_tags() {
 	 * Add a new template tag placeholder.
 	 *
 	 * @hook wpt_tags
+	 *
 	 * @param {array} $tags Array of strings for each tag, e.g. 'blog' for #blog#.
 	 *
 	 * @return {array}
@@ -463,7 +464,22 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$tags   = wpt_tags();
 	$return = array();
 	foreach ( $tags as $key ) {
-		$return[ $key ] = $values[ $key ];
+		// If this key doesn't exist in the default values array, this was added in `wpt_tags` filter.
+		if ( ! isset( $values[ $key ] ) ) {
+			/**
+			 * Filter the value of a custom template tag.
+			 *
+			 * @hook wpt_custom_tag
+			 *
+			 * @param {string} $tag_value The output for a custom tag. Default empty.
+			 * @param {int}     $post_ID The post ID.
+			 *
+			 * @return {string}
+			 */
+			$return[ $key ] = apply_filters( 'wpt_custom_tag', '', $post_ID );
+		} else {
+			$return[ $key ] = $values[ $key ];
+		}
 	}
 
 	return $return;
