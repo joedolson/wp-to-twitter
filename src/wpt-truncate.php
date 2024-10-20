@@ -118,7 +118,7 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 	// order matters; arrays have to be ordered the same way.
 	$tags   = array_map( 'wpt_make_tag', wpt_tags() );
 	$values = wpt_create_values( $post, $post_ID, $ref );
-
+	// Replace the template tags with their corresponding values.
 	$post_tweet = str_ireplace( $tags, $values, $tweet );
 	// check total length.
 	$str_length = mb_strlen( urldecode( wpt_normalize( $post_tweet ) ), $encoding );
@@ -476,9 +476,9 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 			 *
 			 * @return {string}
 			 */
-			$return[ $key ] = apply_filters( 'wpt_custom_tag', '', $post_ID );
+			$return[ $key ] = trim( apply_filters( 'wpt_custom_tag', '', $post_ID ) );
 		} else {
-			$return[ $key ] = $values[ $key ];
+			$return[ $key ] = trim( $values[ $key ] );
 		}
 	}
 
