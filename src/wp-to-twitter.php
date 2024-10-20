@@ -1214,7 +1214,18 @@ function wpt_twit_link( $link_id ) {
 		if ( mb_strlen( $sentence ) > 118 ) {
 			$sentence = mb_substr( $sentence, 0, 114 ) . '...';
 		}
-
+		/**
+		 * Customize the URL shortening of a link in the link manager.
+		 *
+		 * @hook wptt_shorten_link
+		 *
+		 * @param {string} $thispostlink The passed bookmark link.
+		 * @param {string} $thislinkname The provided link title.
+		 * @param {bool}   $post_ID False, because links don't have post IDs.
+		 * @param {bool}   $test 'link' to indicate a link is being shortened.
+		 *
+		 * @return {string}
+		 */
 		$shrink = apply_filters( 'wptt_shorten_link', $thispostlink, $thislinkname, false, 'link' );
 		if ( false === stripos( $sentence, '#url#' ) ) {
 			$sentence = $sentence . ' ' . $shrink;
