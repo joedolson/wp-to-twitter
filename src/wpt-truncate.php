@@ -120,6 +120,9 @@ function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = fa
 	$values = wpt_create_values( $post, $post_ID, $ref );
 	// Replace the template tags with their corresponding values.
 	$post_tweet = str_ireplace( $tags, $values, $tweet );
+	$test = array( $post_tweet, $tags, $values, $tweet );
+	update_option( 'wpt_test', $test );
+
 	// check total length.
 	$str_length = mb_strlen( urldecode( wpt_normalize( $post_tweet ) ), $encoding );
 
