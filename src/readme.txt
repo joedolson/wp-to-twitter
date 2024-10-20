@@ -7,7 +7,7 @@ Tested up to: 6.6
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.2.4
+Stable tag: 4.2.5
 
 Posts to X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -61,6 +61,9 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 4.2.5 =
 
 * Bug fix: Fatal error thrown on PHP 8+ if removing stray characters from tag boundaries due to obsolete argument usage in `mb_strrpos()`. Props @toru.
+* Bug fix: Update classes to allow dynamic properties following PHP 8.2 dynamic prop deprecation.
+* Bug fix: If template tags were re-ordered in the `wpt_tags` filter, they were not also reordered in values.
+* Filter: add `wpt_custom_tag` filter to manage the value of custom tags added in `wpt_tags`.
 
 = 4.2.4 =
 
