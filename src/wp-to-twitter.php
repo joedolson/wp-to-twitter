@@ -71,14 +71,6 @@ require_once plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php';
 global $wpt_version;
 $wpt_version = '4.2.5';
 
-add_action( 'init', 'wpt_load_textdomain' );
-/**
- * Set up text domain for XPoster.
- */
-function wpt_load_textdomain() {
-	load_plugin_textdomain( 'wp-to-twitter' );
-}
-
 /**
  * Check for OAuth configuration
  *
