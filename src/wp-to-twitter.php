@@ -715,10 +715,7 @@ function wpt_is_ssl( $url ) {
  * @return array Post data used in status update functions.
  */
 function wpt_post_info( $post_ID ) {
-	$encoding = get_option( 'blog_charset', '' );
-	if ( '' === $encoding ) {
-		$encoding = 'UTF-8';
-	}
+	$encoding     = get_option( 'blog_charset', 'UTF-8' );
 	$post         = get_post( $post_ID );
 	$category_ids = array();
 	$values       = array();
