@@ -33,8 +33,8 @@
 	const templateTags = document.querySelectorAll( '#wp2t .inline-list button' );
 	let   custom       = document.getElementById( 'wpt_custom_tweet' );
 	let   template     = document.querySelector( '#wp2t .wpt-template code' );
-	let   customText   = custom.value;
-	let   templateText = template.innerText;
+	let   customText   = ( null !== custom ) ? custom.value : '';
+	let   templateText = ( null !== template ) ? template.innerText : '';
 	templateTags.forEach((el) => {
 		el.addEventListener( 'click', function(e) {
 			let pressed  = el.getAttribute( 'aria-pressed' );
