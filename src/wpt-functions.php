@@ -124,8 +124,8 @@ function wpt_check_functions() {
 		$message .= '<li><strong>' . __( "XPoster successfully contacted your URL shortening service.</strong>  This link should point to your site's homepage:", 'wp-to-twitter' );
 		$message .= " <a href='$shrink'>$shrink</a></li>";
 	}
-	// check twitter & mastodon credentials.
-	if ( wtt_oauth_test() || wpt_mastodon_connection() ) {
+	// check social network credentials.
+	if ( wtt_oauth_test() || wpt_mastodon_connection() || wpt_bluesky_connection() ) {
 		$rand     = wp_rand( 1000000, 9999999 );
 		$testpost = wpt_post_to_service( "This is a test of XPoster. $shrink ($rand)" );
 		if ( $testpost && ! empty( $testpost ) ) {
@@ -136,6 +136,9 @@ function wpt_check_functions() {
 				if ( 'mastodon' === $key ) {
 					$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to your Mastodon instance.', 'wp-to-twitter' ) . '</strong></li>';
 				}
+				if ( 'bluesky' === $key ) {
+					$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to your Bluesky account.', 'wp-to-twitter' ) . '</strong></li>';
+				}
 			}
 		} else {
 			$error    = wpt_get_log( 'wpt_status_message', 'test' );
@@ -143,7 +146,7 @@ function wpt_check_functions() {
 			$message .= "<li class='error'>$error</li>";
 		}
 	} else {
-		$message .= '<strong>' . __( 'You have not connected WordPress to X.com or Mastodon.', 'wp-to-twitter' ) . '</strong> ';
+		$message .= '<strong>' . __( 'You have not connected WordPress to a supported service.', 'wp-to-twitter' ) . '</strong> ';
 	}
 	if ( false === $testpost && false === $shrink ) {
 		$message .= '<li class="error">' . __( "<strong>Your server does not appear to support the required methods for XPoster to function.</strong> You can try it anyway - these tests aren't perfect.", 'wp-to-twitter' ) . '</li>';
@@ -169,7 +172,8 @@ function wpt_settings_tabs() {
 	$pages    = array(
 		'connection' => __( 'X Connection', 'wp-to-twitter' ),
 		'mastodon'   => __( 'Mastodon API', 'wp-to-twitter' ),
-		'basic'      => __( 'Basic Settings', 'wp-to-twitter' ),
+		'bluesky'    => __( 'Bluesky API', 'wp-to-twitter' ),
+		'basic'      => __( 'Settings', 'wp-to-twitter' ),
 		'shortener'  => __( 'URL Shortener', 'wp-to-twitter' ),
 		'advanced'   => __( 'Advanced Settings', 'wp-to-twitter' ),
 		'support'    => __( 'Get Help', 'wp-to-twitter' ),

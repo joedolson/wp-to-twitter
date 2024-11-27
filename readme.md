@@ -1,6 +1,6 @@
 # XPoster
 
-Automatically send your posts as X.com or Mastodon status updates.
+Automatically send your posts as Bluesky or Mastodon status updates.
 
 ![Code Linting](https://github.com/joedolson/wp-to-twitter/actions/workflows/main.yml/badge.svg) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)](https://www.gnu.org/license/gpl-2.0.html)
 
@@ -9,7 +9,7 @@ Automatically send your posts as X.com or Mastodon status updates.
 * Donate link: https://www.joedolson.com/donate/
 * Tags: accessibility, WordPress
 * Requires at least: 6.0
-* Tested up to: 6.6
+* Tested up to: 6.7
 * Stable tag: `4.2.6`
 * License: GPLv2 or later  
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html  

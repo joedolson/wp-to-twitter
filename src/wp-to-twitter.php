@@ -61,9 +61,11 @@ require_once plugin_dir_path( __FILE__ ) . 'vendor_prefixed/vendor/scoper-autolo
 require_once plugin_dir_path( __FILE__ ) . 'wpt-functions.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-twitter.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-mastodon.php';
+require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-bluesky.php';
 require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php';
 require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php';
 require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-mastodon.php';
+require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-bluesky.php';
 require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-truncate.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php';
@@ -363,7 +365,8 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 
 	$check_twitter  = wpt_check_oauth( $auth );
 	$check_mastodon = wpt_mastodon_connection( $auth );
-	if ( ! $check_twitter && ! $check_mastodon ) {
+	$check_bluesky  = wpt_bluesky_connection( $auth );
+	if ( ! $check_twitter && ! $check_mastodon && ! $check_bluesky ) {
 		$error = __( 'This account is not authorized to post to any services.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '401', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error, '401' );
@@ -372,6 +375,9 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		}
 		if ( ! $check_mastodon ) {
 			wpt_mail( 'Account not authorized with Mastodon.', 'Post ID: ' . $id );
+		}
+		if ( ! $check_bluesky ) {
+			wpt_mail( 'Account not authorized with Bluesky.', 'Post ID: ' . $id );
 		}
 
 		return false;
@@ -423,6 +429,13 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
 			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
 			$return['mastodon'] = $response;
+		}
+		if ( wpt_bluesky_connection( $auth ) ) {
+			$connection = wpt_bluesky_connection( $auth );
+			$image      = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id );
+			$response   = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
+			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
+			$return['bluesky'] = $response;
 		}
 		wpt_mail( 'Share Connection Status', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
 		if ( ! empty( $return ) ) {
@@ -617,6 +630,8 @@ function wpt_image_binary( $attachment, $service = 'twitter' ) {
 		}
 
 		return $file;
+	} elseif ( 'bluesky' === $service ) {
+		// Media uploading for Bluesky. TODO.
 	} else {
 		$upload    = wp_get_attachment_image_src( $attachment, $size );
 		$image_url = $upload[0];
@@ -1625,15 +1640,19 @@ function wpt_show_tweets( $post_id ) {
 					$has_history     = true;
 					$twitter_intent  = '';
 					$mastodon_intent = '';
+					$bluesky_intent  = '';
 					if ( wtt_oauth_test() ) {
-						$twitter_intent = "<a href='https://twitter.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Repost on X.com', 'wp-to-twitter' ) . '</a>';
+						$twitter_intent = "<a href='https://x.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Repost on X.com', 'wp-to-twitter' ) . '</a>';
 					}
 					if ( wpt_mastodon_connection() ) {
 						$mastodon        = get_option( 'wpt_mastodon_instance' );
 						$mastodon_intent = "<a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $previous_tweet ) . "'>" . __( 'Repost on Mastodon', 'wp-to-twitter' ) . '</a>';
 					}
+					if ( wpt_bluesky_connection() ) {
+						$bluesky_intent = "<a href='https://bsky.app/intent/compose?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Repost on Bluesky', 'wp-to-twitter' ) . '</a>';
+					}
 					$hidden_fields .= "<input type='hidden' name='_jd_wp_twitter[]' value='" . esc_attr( $previous_tweet ) . "' />";
-					echo "<li>$previous_tweet $twitter_intent $mastodon_intent</li>";
+					echo "<li>$previous_tweet $twitter_intent $mastodon_intent $bluesky_intent</li>";
 				}
 			}
 		}
@@ -1652,14 +1671,18 @@ function wpt_show_tweets( $post_id ) {
 
 					$twitter_intent  = '';
 					$mastodon_intent = '';
+					$bluesky_intent  = '';
 					if ( wtt_oauth_test() ) {
-						$twitter_intent = "<a href='https://twitter.com/intent/tweet?text=" . urlencode( $ft ) . "'>" . __( 'Send update to X.com', 'wp-to-twitter' ) . '</a>';
+						$twitter_intent = "<a href='https://x.com/intent/tweet?text=" . urlencode( $ft ) . "'>" . __( 'Send to X.com', 'wp-to-twitter' ) . '</a>';
 					}
 					if ( wpt_mastodon_connection() ) {
 						$mastodon        = get_option( 'wpt_mastodon_instance' );
-						$mastodon_intent = "<a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $ft ) . "'>" . __( 'Send update to Mastodon', 'wp-to-twitter' ) . '</a>';
+						$mastodon_intent = "<a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $ft ) . "'>" . __( 'Send to Mastodon', 'wp-to-twitter' ) . '</a>';
 					}
-					$error_list .= "<li> <code>Error: $reason</code> $ft $twitter_intent $mastodon_intent <br /><em>$error</em></li>";
+					if ( wpt_bluesky_connection() ) {
+						$bluesky_intent = "<a href='https://bsky.app/intent/compose?text=" . urlencode( $ft ) . "'>" . __( 'Send to Bluesky', 'wp-to-twitter' ) . '</a>';
+					}
+					$error_list .= "<li> <code>Error: $reason</code> $ft $twitter_intent $mastodon_intent $bluesky_intent <br /><em>$error</em></li>";
 				}
 			}
 			if ( true === $list ) {
@@ -2196,21 +2219,28 @@ function wpt_needs_connection() {
 		$message  = '';
 		$mastodon = wpt_mastodon_connection();
 		$x        = wpt_check_oauth();
-		// show notification to authenticate with OAuth. No longer global; settings only.
+		$bluesky  = wpt_bluesky_connection();
+		// show notification to authenticate with Mastodon.
 		if ( ! $mastodon && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&tab=mastodon' );
 			// Translators: Settings page to authenticate Mastodon.
 			$message = '<p>' . sprintf( __( "Mastodon requires authentication. <a href='%s'>Update your settings</a> to enable XPoster to send updates to Mastodon.", 'wp-to-twitter' ), $admin_url ) . '</p>';
 		}
-		// show notification to authenticate with OAuth. No longer global; settings only.
+		// show notification to authenticate with OAuth.
 		if ( ! $x && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 			// Translators: Settings page to authenticate X.com.
 			$message = '<p>' . sprintf( __( "X.com requires authentication by OAuth. <a href='%s'>Update your settings</a> to enable XPoster to send updates to X.com.", 'wp-to-twitter' ), $admin_url ) . '</p>';
 		}
+		// show notification to authenticate with Bluesky.
+		if ( ! $x && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
+			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&tab=bluesky' );
+			// Translators: Settings page to authenticate Bluesky.
+			$message = '<p>' . sprintf( __( "Bluesky requires authentication. <a href='%s'>Update your settings</a> to enable XPoster to send updates to Bluesky.", 'wp-to-twitter' ), $admin_url ) . '</p>';
+		}
 		$is_dismissible = '';
 		$class          = 'xposter-connection';
-		if ( $x || $mastodon ) {
+		if ( $x || $mastodon || $bluesky ) {
 			$class          = 'xposter-connection dismissible';
 			$dismiss_url    = add_query_arg( 'dismiss', 'connection', admin_url( 'admin.php?page=wp-tweets-pro' ) );
 			$is_dismissible = ' <a href="' . esc_url( $dismiss_url ) . '" class="button button-secondary">' . __( 'Ignore', 'wp-to-twitter' ) . '</a>';

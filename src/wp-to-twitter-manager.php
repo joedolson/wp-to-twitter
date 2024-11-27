@@ -27,19 +27,23 @@ function wpt_updated_settings() {
 	if ( ! wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) {
 		wp_die( 'XPoster: Security check failed' );
 	}
+	$oauth_message    = '';
+	$mastodon_message = '';
+	$bluesky_message  = '';
 	// Connect to Twitter.
 	if ( isset( $_POST['oauth_settings'] ) ) {
 		$post          = map_deep( $_POST, 'sanitize_text_field' );
 		$oauth_message = wpt_update_oauth_settings( false, $post );
-	} else {
-		$oauth_message = '';
 	}
 	// Connect to Mastodon.
 	if ( isset( $_POST['mastodon_settings'] ) ) {
 		$post             = map_deep( $_POST, 'sanitize_text_field' );
 		$mastodon_message = wpt_update_mastodon_settings( false, $post );
-	} else {
-		$mastodon_message = '';
+	}
+	// Connect to Bluesky.
+	if ( isset( $_POST['bluesky_settings'] ) ) {
+		$post             = map_deep( $_POST, 'sanitize_text_field' );
+		$bluesky_message = wpt_update_bluesky_settings( false, $post );
 	}
 	$message = '';
 
@@ -120,6 +124,48 @@ function wpt_updated_settings() {
 					<p>' . __( 'Mastodon authentication response not understood.', 'wp-to-twitter' ) . '</p>
 				</div>
 			' );
+		}
+	}
+
+
+	// notifications from Bluesky connection.
+	if ( isset( $_POST['bluesky_settings'] ) ) {
+		if ( 'success' === $bluesky_message ) {
+			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro?tab=basic' );
+			wp_admin_notice(
+				__( 'XPoster is now connected to your Bluesky account.', 'wp-to-twitter' ) . " <a href='$admin_url'>" . __( 'Configure your status update templates', 'wp-to-twitter' ) . '</a>',
+				array(
+					'type' => 'notice'
+				)
+			);
+		} elseif ( 'failed' === $bluesky_message ) {
+			wp_admin_notice(
+				__( 'XPoster failed to connect with your Bluesky account.', 'wp-to-twitter' ) . ' <strong>' . __( 'Error:', 'wp-to-twitter' ) . '</strong> ' . get_option( 'wpt_error' ),
+				array(
+					'type' => 'error'
+				)
+			);
+		} elseif ( 'cleared' === $bluesky_message ) {
+			wp_admin_notice(
+				__( 'Bluesky authentication data cleared.', 'wp-to-twitter' ),
+				array(
+					'type' => 'notice'
+				)
+			);
+		} elseif ( 'noconnection' === $bluesky_message ) {
+			wp_admin_notice(
+				__( 'Bluesky authentication Failed. XPoster was unable to complete a connection with those credentials.', 'wp-to-twitter' ),
+				array(
+					'type' => 'error'
+				)
+			);
+		} else {
+			wp_admin_notice(
+				__( 'Bluesky authentication response not understood.', 'wp-to-twitter' ),
+				array(
+					'type' => 'error'
+				)
+			);
 		}
 	}
 
@@ -235,7 +281,8 @@ function wpt_updated_settings() {
 
 	// Check whether the server has supported for needed functions.
 	if ( isset( $_POST['submit-type'] ) && 'check-support' === $_POST['submit-type'] ) {
-		$service = ( isset( $_POST['mastodon'] ) ) ? 'mastodon' : 'xcom';
+		$service = ( isset( $_POST['bluesky'] ) ) ? 'bluesky' : 'xcom';
+		$service = ( isset( $_POST['mastodon'] ) ) ? 'mastodon' : $service;
 		$message = wpt_check_functions( $service );
 	}
 
@@ -320,6 +367,11 @@ function wpt_update_settings() {
 	if ( 'mastodon' === $current ) {
 		if ( function_exists( 'wtt_connect_mastodon' ) ) {
 			wtt_connect_mastodon();
+		}
+	}
+	if ( 'bluesky' === $current ) {
+		if ( function_exists( 'wtt_connect_bluesky' ) ) {
+			wtt_connect_bluesky();
 		}
 	}
 	if ( 'pro' === $current ) {

@@ -1,29 +1,30 @@
-=== XPoster - Share to X and Mastodon ===
+=== XPoster - Share to Bluesky and Mastodon ===
 Contributors: joedolson
 Donate link: https://xposterpro.com
-Tags: twitter, post, social, sharing, tweet
+Tags: bluesky, post, social, sharing, mastodon
 Requires at least: 6.0
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
 Stable tag: 4.2.6
 
-Posts to X when you update your WordPress blog or add a link, with your chosen URL shortening service.
+Posts to Bluesky or Mastodon when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
 == Description ==
 
-= Post Updates from WordPress to X.com and Mastodon. =
+= Post Updates from WordPress to Bluesky, Mastodon, and X. =
 
-*New in version 4.2: Mastodon support.*
+* New in version 4.3: Bluesky support.
+* New in version 4.2: Mastodon support.
 
-XPoster, formerly known as WP to Twitter, is a time-saving tool for keeping your X.com accounts up to date with news and posts from your site.
+XPoster, formerly known as WP to Twitter, is a time-saving tool for keeping your social media accounts up to date with news and posts from your site.
 
 XPoster uses customizable status templates for updates sent when updating or editing posts, pages, or custom post types. You can customize your messages for each post, using custom template tags to generate the status update. 
 
 = Free Features =
 
-* Support for X.com and Mastodon.
+* Support for Bluesky, Mastodon, and X.
 * Use post tags as hashtags
 * Use alternate URLs in place of post permalinks
 * Support for Google Analytics
@@ -39,12 +40,12 @@ XPoster uses customizable status templates for updates sent when updating or edi
 * Simultaneously post updates to site and author accounts
 * Preview and send status updates for comments
 * Filter updates by taxonomy (categories, tags, or custom taxonomies)
-* Upload images to X.com with alt attributes
-* Integrated X.com Card support
-* Support for Player Cards with integrated captions
+* Upload images with alt attributes
+* Integrated Card support
+* Support for Player Cards with integrated captions where supported
 * Automatically schedule updates from old posts
 
-Want to stay up to date on XPoster? [Follow me on X.com!](https://twitter.com/joedolson) or [Follow me on Mastodon!](https://toot.io/@joedolson)
+Want to stay up to date on XPoster? [Follow me on Bluesky!](https://bsky.app/profile/joedolson.bsky.social) or [Follow me on Mastodon!](https://toot.io/@joedolson)
 
 = Translations =
 

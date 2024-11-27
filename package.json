@@ -2,7 +2,7 @@
   "name": "wp-to-twitter",
   "version": "4.2.6",
   "private": true,
-  "description": "X.com/Mastodon WordPress plug-in.",
+  "description": "Bluesky/Mastodon WordPress plug-in.",
   "author": "Joe Dolson",
   "license": "GPL-2.0-or-later",
   "keywords": [
