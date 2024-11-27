@@ -183,21 +183,24 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
  * @param mixed int|boolean $auth Current author context.
  * @param array             $verify Array of credentials to validate.
  *
- * @return mixed $bluesky or false
+ * @return mixed array or false
  */
 function wpt_bluesky_connection( $auth = false, $verify = false ) {
 	if ( ! empty( $verify ) ) {
-		$password = $verify['token']; // TODO: Fetching a token needs to happen every time? Need username here.
+		$password = $verify['password'];
+		$user     = $verify['identifier'];
 	} else {
 		if ( ! $auth ) {
 			$password = get_option( 'wpt_bluesky_token' );
+			$user     = get_option( 'wpt_bluesky_username' );
 		} else {
 			$password = get_user_meta( $auth, 'wpt_bluesky_token', true );
+			$user     = get_user_meta( $auth, 'wpt_bluesky_username', true );
 		}
 	}
 	$bluesky = false;
-	if ( $password ) {
-		$bluesky = new Wpt_Bluesky_Api( $password, $username );
+	if ( $password &amp;&amp; $user ) {
+		$bluesky = new Wpt_Bluesky_Api( $password, $user );
 		if ( $verify ) {
 			$verify = $bluesky->verify();
 
