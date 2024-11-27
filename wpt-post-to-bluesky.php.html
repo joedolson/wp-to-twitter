@@ -132,7 +132,7 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
 		$status = array(
 			'type'      => 'app.bsky.feed.post',
 			'text'      => $status['text'],
-			'createdAt' => date( DATE_ATOM ),
+			'createdAt' => gmdate( DATE_ATOM ),
 		);
 		if ( ! empty( $image ) ) {
 			$status['embed'] = array(
@@ -187,17 +187,17 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
  */
 function wpt_bluesky_connection( $auth = false, $verify = false ) {
 	if ( ! empty( $verify ) ) {
-		$token    = $verify['token'];
+		$password = $verify['token']; // TODO: Fetching a token needs to happen every time? Need username here.
 	} else {
 		if ( ! $auth ) {
-			$token    = get_option( 'wpt_bluesky_token' );
+			$password = get_option( 'wpt_bluesky_token' );
 		} else {
-			$token    = get_user_meta( $auth, 'wpt_bluesky_token', true );
+			$password = get_user_meta( $auth, 'wpt_bluesky_token', true );
 		}
 	}
 	$bluesky = false;
-	if ( $token ) {
-		$bluesky = new Wpt_Bluesky_Api( $token );
+	if ( $password ) {
+		$bluesky = new Wpt_Bluesky_Api( $password, $username );
 		if ( $verify ) {
 			$verify = $bluesky->verify();
 
