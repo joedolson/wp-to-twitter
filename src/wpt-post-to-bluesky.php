@@ -174,7 +174,7 @@ function wpt_bluesky_connection( $auth = false, $verify = false ) {
 	}
 	$bluesky = false;
 	if ( $password && $user ) {
-		$bluesky = new Wpt_Bluesky_Api( $password, $user );
+		$bluesky = new Wpt_Bluesky_Api( $user, $password );
 		if ( $verify ) {
 			$verify = $bluesky->verify();
 
