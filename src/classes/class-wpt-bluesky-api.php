@@ -124,11 +124,14 @@ class Wpt_Bluesky_Api {
 			$new_facets = array();
 			foreach ( $mentions as $mention ) {
 				$post     = array(
-					'handle'       => $handle,
-					'verification' => true,
+					'handle' => trim( str_replace( '@', '', $handle ) ),
 				);
-				$did      = $this->call_api( 'https://bsky.social/xrpc/com.atproto.identity.resolveHandle', $post );
-				$id       = ( is_array( $did ) ) ? $did['did'] : false;
+				$did      = add_query_arg( $post, 'https://bsky.social/xrpc/com.atproto.identity.resolveHandle' );
+				$response = json_decode( wp_remote_get( $did )['body'] );
+				$id       = ( property_exists( $response, 'did' ) ) ? $response->did : false;
+				if ( ! $id ) {
+					continue;
+				}
 				$new_facets[] = array(
 					'index'    => array(
 						'byteStart' => $mention['start'],
