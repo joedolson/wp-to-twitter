@@ -24,30 +24,28 @@ function wpt_update_bluesky_settings( $auth = false, $post = false ) {
 				}
 
 				if ( ! empty( $post['wpt_bluesky_token'] ) ) {
-					$ack = sanitize_text_field( trim( $post['wpt_bluesky_token'] ) );
+					$ack  = sanitize_text_field( trim( $post['wpt_bluesky_token'] ) );
+					$user = sanitize_text_field( trim( $post['wpt_bluesky_username'] ) );
 
 					if ( ! $auth ) {
 						// If values are filled with asterisks, do not update; these are masked values.
 						if ( stripos( $ack, '***' ) === false ) {
 							update_option( 'wpt_bluesky_token', $ack );
+							update_option( 'wpt_bluesky_username', $user );
 						}
 					} else {
 						if ( stripos( $ack, '***' ) === false ) {
 							update_user_meta( $auth, 'wpt_bluesky_token', $ack );
+							update_user_meta( $auth, 'wpt_bluesky_username', $user );
 						}
 					}
 					$message  = 'failed';
 					$validate = array(
-						'token' => $ack,
+						'password'   => $ack,
+						'identifier' => $user,
 					);
-					$verify   = wpt_bluesky_connection( $auth, $validate );
-					if ( isset( $verify['username'] ) ) {
-						$username = sanitize_text_field( stripslashes( $verify['username'] ) );
-						if ( ! $auth ) {
-							update_option( 'wpt_bluesky_username', $username );
-						} else {
-							update_user_meta( $auth, 'wpt_bluesky_username', $username );
-						}
+					$verify = wpt_bluesky_connection( $auth, $validate );
+					if ( isset( $verify['active'] ) && $verify['active'] ) {
 						$message = 'success';
 						delete_option( 'wpt_curl_error' );
 						if ( '1' === get_option( 'wp_debug_oauth' ) ) {
@@ -105,8 +103,8 @@ function wtt_connect_bluesky( $auth = false ) {
 	$nonce   = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
 	$connect = wpt_bluesky_connection( $auth );
 	if ( ! $connect ) {
-		$ack = ( ! $auth ) ? get_option( 'wpt_bluesky_token' ) : get_user_meta( $auth, 'wpt_bluesky_token', true );
-
+		$ack    = ( ! $auth ) ? get_option( 'wpt_bluesky_token' ) : get_user_meta( $auth, 'wpt_bluesky_token', true );
+		$user   = ( ! $auth ) ? get_option( 'wpt_bluesky_username' ) : get_user_meta( $auth, 'wpt_bluesky_username', true );
 		$submit = ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . __( 'Connect to Bluesky', 'wp-to-twitter' ) . '" /></p>' : '';
 		print( '
 			<h3 class="wpt-has-link"><span>' . __( 'Connect to Bluesky', 'wp-to-twitter' ) . '</span> <a href="https://xposterpro.com/connecting-xposter-and-bluesky/" class="button button-secondary">' . __( 'Instructions', 'wp-to-twitter' ) . '</a></h3>
@@ -116,13 +114,18 @@ function wtt_connect_bluesky( $auth = false ) {
 					<li>' . __( 'Navigate to Settings > Privacy and Security > App passwords in your Bluesky account.', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Click on "Add App Password".', 'wp-to-twitter' ) . '</li>
 					<li>' . __( 'Name your app password.', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Copy your App Password', 'wp-to-twitter' ) . '</li>
+					<li>' . __( 'Copy your App Password.', 'wp-to-twitter' ) . '
+					<li>' . __( 'Add your App Password and Bluesky Handle to setings', 'wp-to-twitter' ) . '
 					<div class="tokens auth-fields">
 					<p>
 						<label for="wpt_bluesky_token">' . __( 'App Password', 'wp-to-twitter' ) . '</label>
 						<input type="text" size="45" name="wpt_bluesky_token" id="wpt_bluesky_token" value="' . esc_attr( wpt_mask_attr( $ack ) ) . '" />
 					</p>
-					</div>
+					<p>
+						<label for="wpt_bluesky_username">' . __( 'Bluesky Handle', 'wp-to-twitter' ) . '</label>
+						<input type="text" size="45" name="wpt_bluesky_username" id="wpt_bluesky_username" value="' . esc_attr( wpt_mask_attr( $ack ) ) . '" />
+					</p>
+					</div></li>
 				</ol>
 				' . $submit . '
 				<input type="hidden" name="bluesky_settings" value="wtt_oauth_test" class="hidden" />
