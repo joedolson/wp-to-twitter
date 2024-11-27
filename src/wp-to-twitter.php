@@ -2221,23 +2221,24 @@ function wpt_needs_connection() {
 		$x        = wpt_check_oauth();
 		$bluesky  = wpt_bluesky_connection();
 		// show notification to authenticate with Mastodon.
-		if ( ! $mastodon && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
+		if ( ! $mastodon ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&tab=mastodon' );
 			// Translators: Settings page to authenticate Mastodon.
-			$message = '<p>' . sprintf( __( "Mastodon requires authentication. <a href='%s'>Update your settings</a> to enable XPoster to send updates to Mastodon.", 'wp-to-twitter' ), $admin_url ) . '</p>';
+			$message .= '<li>' . sprintf( __( "Mastodon requires authentication. <a href='%s'>Update your Mastodon settings</a> to enable XPoster to send updates to Mastodon.", 'wp-to-twitter' ), $admin_url ) . '</li>';
 		}
 		// show notification to authenticate with OAuth.
-		if ( ! $x && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
+		if ( ! $x ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 			// Translators: Settings page to authenticate X.com.
-			$message = '<p>' . sprintf( __( "X.com requires authentication by OAuth. <a href='%s'>Update your settings</a> to enable XPoster to send updates to X.com.", 'wp-to-twitter' ), $admin_url ) . '</p>';
+			$message .= '<li>' . sprintf( __( "X.com requires authentication by OAuth. <a href='%s'>Update your X settings</a> to enable XPoster to send updates to X.com.", 'wp-to-twitter' ), $admin_url ) . '</li>';
 		}
 		// show notification to authenticate with Bluesky.
-		if ( ! $x && ! ( isset( $_GET['tab'] ) && 'connection' === $_GET['tab'] ) ) {
+		if ( ! $bluesky ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&tab=bluesky' );
 			// Translators: Settings page to authenticate Bluesky.
-			$message = '<p>' . sprintf( __( "Bluesky requires authentication. <a href='%s'>Update your settings</a> to enable XPoster to send updates to Bluesky.", 'wp-to-twitter' ), $admin_url ) . '</p>';
+			$message .= '<li>' . sprintf( __( "Bluesky requires authentication. <a href='%s'>Update your Bluesky settings</a> to enable XPoster to send updates to Bluesky.", 'wp-to-twitter' ), $admin_url ) . '</li>';
 		}
+		$message        = ( $message ) ? '<ul>' . $message . '</ul>' : '';
 		$is_dismissible = '';
 		$class          = 'xposter-connection';
 		if ( $x || $mastodon || $bluesky ) {
