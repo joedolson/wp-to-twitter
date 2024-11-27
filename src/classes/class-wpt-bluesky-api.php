@@ -165,8 +165,8 @@ class Wpt_Bluesky_Api {
 		$tags = array();
 
 		foreach ( $matches[0] as $match ) {
-			$tag   = $match[0];
-			$tag   = trim( $tag, '.;:,-_!?' );
+			$tag    = $match[0];
+			$tag    = trim( $tag, '.;:,-_!?' );
 			$length = strlen( $tag );
 			// Bluesky doesn't allow tags longer than 64 characters, not including #.
 			if ( $length > 65 ) {
@@ -222,7 +222,7 @@ class Wpt_Bluesky_Api {
 		$facets = $this->parse_links( $facets, $status['text'] );
 		$facets = $this->parse_mentions( $facets, $status['text'] );
 		$facets = $this->parse_tags( $facets, $status['text'] );
-		
+
 		if ( ! empty( $facets ) ) {
 			$post['record']['facets'] = $facets;
 		}
