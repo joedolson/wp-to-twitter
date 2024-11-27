@@ -45,14 +45,15 @@ function wpt_update_bluesky_settings( $auth = false, $post = false ) {
 						'identifier' => $user,
 					);
 					$verify = wpt_bluesky_connection( $auth, $validate );
+					if ( '1' === get_option( 'wp_debug_oauth' ) ) {
+						echo '<br /><strong>Account Verification Data:</strong><br /><pre>';
+						print_r( $verify );
+						echo '</pre>';
+					}
 					if ( isset( $verify['active'] ) && $verify['active'] ) {
 						$message = 'success';
 						delete_option( 'wpt_curl_error' );
-						if ( '1' === get_option( 'wp_debug_oauth' ) ) {
-							echo '<br /><strong>Account Verification Data:</strong><br />';
-							print_r( $verify );
-							echo '</pre>';
-						}
+
 					} else {
 						$message = 'noconnection';
 					}
