@@ -104,7 +104,7 @@ class Wpt_Bluesky_Api {
 	 * @return array $post
 	 */
 	public function parse_mentions( $facets, $text ) {
-		$regex = '/(^|\s|\()(@)([a-zA-Z0-9.-]+)(\b)/g';
+		$regex = '/(^|\s|\()(@)([a-zA-Z0-9.-]+)(\b)/';
 		preg_match_all( $regex, $text, $matches, PREG_OFFSET_CAPTURE );
 
 		$mentions = array();
@@ -157,7 +157,7 @@ class Wpt_Bluesky_Api {
 	 * @return array $post
 	 */
 	public function parse_tags( $facets, $text ) {
-		$regex = '/(?:^|\s)(#[^\d\s]\S*)(?=\s)?/g';
+		$regex = '/(?:^|\s)(#[^\d\s]\S*)(?=\s)?/';
 		preg_match_all( $regex, $text, $matches, PREG_OFFSET_CAPTURE );
 		$tags = array();
 
