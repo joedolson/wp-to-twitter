@@ -154,10 +154,10 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
 		$status = apply_filters( 'wpt_filter_bluesky_status', $status, $id, $auth );
 		if ( $do_post ) {
 			$return = $connection->post_status( $status );
-			if ( isset( $return['id'] ) ) {
+			if ( isset( $return['cid'] ) ) {
 				$success   = true;
 				$http_code = 200;
-				$status_id = $return['id'];
+				$status_id = $return['cid'];
 				$notice   .= __( 'Sent to Bluesky.', 'wp-to-twitter' );
 			} else {
 				$http_code = 401;
