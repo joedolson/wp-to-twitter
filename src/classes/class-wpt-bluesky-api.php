@@ -126,8 +126,6 @@ class Wpt_Bluesky_Api {
 		if ( isset( $data['verification'] ) ) {
 			$headers = array(
 				'Content-Type: application/json',
-				'Accept: application/json',
-				'Accept-Charset: utf-8',
 			);
 			unset( $data['verification'] );
 		} else {
@@ -153,7 +151,7 @@ class Wpt_Bluesky_Api {
 				'curl_error_code' => curl_errno( $ch ),
 				'curl_error'      => curl_error( $ch ),
 			);
-			return json_encode( $error );
+			return $error;
 		}
 		curl_close( $ch );
 
