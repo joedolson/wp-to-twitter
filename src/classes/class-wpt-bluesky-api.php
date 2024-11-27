@@ -41,6 +41,7 @@ class Wpt_Bluesky_Api {
 	 * Construct.
 	 *
 	 * @param string $username Access token for Bluesky instance.
+	 * @param string $app_password App password for Bluesky.
 	 */
 	public function __construct( $username, $app_password ) {
 		$this->username     = $username;
@@ -55,44 +56,44 @@ class Wpt_Bluesky_Api {
 	 * @return array Bluesky response.
 	 */
 	public function post_status( $status ) {
-		$post = array(
+		$post  = array(
 			'collection' => 'app.bsky.feed.post',
 			'repo'       => $this->username,
 			'record'     => $status,
 		);
 		$regex = '/(https?:\/\/[^\s]+)/';
-    	preg_match_all( $regex, $status['text'], $matches, PREG_OFFSET_CAPTURE );
+		preg_match_all( $regex, $status['text'], $matches, PREG_OFFSET_CAPTURE );
 		$links = array();
 
 		foreach ( $matches[0] as $match ) {
 			$urlstring = $match[0];
 			$start     = $match[1];
-			$end        = $start + strlen( $urlstring );
+			$end       = $start + strlen( $urlstring );
 
 			$links[] = array(
 				'start' => $start,
 				'end'   => $end,
-				'url'   => $urlstring
+				'url'   => $urlstring,
 			);
 		}
-	
+
 		if ( ! empty( $links ) ) {
 			$facets = array();
 			foreach ( $links as $link ) {
 				$facets[] = array(
-					'index' => array(
+					'index'    => array(
 						'byteStart' => $link['start'],
 						'byteEnd'   => $link['end'],
 					),
 					'features' => array(
 						array(
 							'$type' => 'app.bsky.richtext.facet#link',
-							'uri'   => $link['url'], 
+							'uri'   => $link['url'],
 						),
-					)
+					),
 				);
 			}
-			$fields['record']['facets'] =  $facets;
+			$fields['record']['facets'] = $facets;
 		}
 
 		return $this->call_api( 'https://bsky.social/xrpc/com.atproto.repo.createRecord', 'POST', $post );
@@ -111,7 +112,7 @@ class Wpt_Bluesky_Api {
 
 		return $this->call_api( 'https://bsky.social/xrpc/com.atproto.server.createSession', 'POST', $args );
 	}
-	
+
 	/**
 	 * Post to the API endpoint.
 	 *
@@ -123,7 +124,7 @@ class Wpt_Bluesky_Api {
 	 */
 	public function call_api( $endpoint, $method, $data ) {
 		$headers = array(
-			'Authorization: Bearer ' . $this->token,
+			'Authorization: Bearer ' . $this->verify()['accessJwt'],
 			'Content-Type: application/json',
 			'Accept: application/json',
 			'Accept-Charset: utf-8',

@@ -42,7 +42,7 @@ function wpt_updated_settings() {
 	}
 	// Connect to Bluesky.
 	if ( isset( $_POST['bluesky_settings'] ) ) {
-		$post             = map_deep( $_POST, 'sanitize_text_field' );
+		$post            = map_deep( $_POST, 'sanitize_text_field' );
 		$bluesky_message = wpt_update_bluesky_settings( false, $post );
 	}
 	$message = '';
@@ -127,7 +127,6 @@ function wpt_updated_settings() {
 		}
 	}
 
-
 	// notifications from Bluesky connection.
 	if ( isset( $_POST['bluesky_settings'] ) ) {
 		if ( 'success' === $bluesky_message ) {
@@ -135,35 +134,35 @@ function wpt_updated_settings() {
 			wp_admin_notice(
 				__( 'XPoster is now connected to your Bluesky account.', 'wp-to-twitter' ) . " <a href='$admin_url'>" . __( 'Configure your status update templates', 'wp-to-twitter' ) . '</a>',
 				array(
-					'type' => 'notice'
+					'type' => 'notice',
 				)
 			);
 		} elseif ( 'failed' === $bluesky_message ) {
 			wp_admin_notice(
 				__( 'XPoster failed to connect with your Bluesky account.', 'wp-to-twitter' ) . ' <strong>' . __( 'Error:', 'wp-to-twitter' ) . '</strong> ' . get_option( 'wpt_error' ),
 				array(
-					'type' => 'error'
+					'type' => 'error',
 				)
 			);
 		} elseif ( 'cleared' === $bluesky_message ) {
 			wp_admin_notice(
 				__( 'Bluesky authentication data cleared.', 'wp-to-twitter' ),
 				array(
-					'type' => 'notice'
+					'type' => 'notice',
 				)
 			);
 		} elseif ( 'noconnection' === $bluesky_message ) {
 			wp_admin_notice(
 				__( 'Bluesky authentication Failed. XPoster was unable to complete a connection with those credentials.', 'wp-to-twitter' ),
 				array(
-					'type' => 'error'
+					'type' => 'error',
 				)
 			);
 		} else {
 			wp_admin_notice(
 				__( 'Bluesky authentication response not understood.', 'wp-to-twitter' ),
 				array(
-					'type' => 'error'
+					'type' => 'error',
 				)
 			);
 		}

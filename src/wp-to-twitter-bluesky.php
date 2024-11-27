@@ -38,7 +38,7 @@ function wpt_update_bluesky_settings( $auth = false, $post = false ) {
 					}
 					$message  = 'failed';
 					$validate = array(
-						'token'    => $ack,
+						'token' => $ack,
 					);
 					$verify   = wpt_bluesky_connection( $auth, $validate );
 					if ( isset( $verify['username'] ) ) {
