@@ -49,20 +49,16 @@ class Wpt_Bluesky_Api {
 	}
 
 	/**
-	 * Post a status to the bluesky status endpoint.
+	 * Parse links in a status string into Bluesky facets.
 	 *
-	 * @param array $status Array posted to Bluesky. [status,visibility,language,media_ids="[]"].
+	 * @param array  $facets Existing Bluesky post facets.
+	 * @param string $text Text string to be parsed.
 	 *
-	 * @return array Bluesky response.
+	 * @return array $post
 	 */
-	public function post_status( $status ) {
-		$post  = array(
-			'collection' => 'app.bsky.feed.post',
-			'repo'       => $this->username,
-			'record'     => $status,
-		);
+	public function parse_links( $facets, $text ) {
 		$regex = '/(https?:\/\/[^\s]+)/';
-		preg_match_all( $regex, $status['text'], $matches, PREG_OFFSET_CAPTURE );
+		preg_match_all( $regex, $text, $matches, PREG_OFFSET_CAPTURE );
 		$links = array();
 
 		foreach ( $matches[0] as $match ) {
@@ -78,9 +74,9 @@ class Wpt_Bluesky_Api {
 		}
 
 		if ( ! empty( $links ) ) {
-			$facets = array();
+			$new_facets = array();
 			foreach ( $links as $link ) {
-				$facets[] = array(
+				$new_facets[] = array(
 					'index'    => array(
 						'byteStart' => $link['start'],
 						'byteEnd'   => $link['end'],
@@ -93,6 +89,138 @@ class Wpt_Bluesky_Api {
 					),
 				);
 			}
+			$facets = array_merge( $facets, $new_facets );
+		}
+
+		return $facets;
+	}
+
+	/**
+	 * Parse mentions in a status string into Bluesky facets.
+	 *
+	 * @param array  $facets Existing Bluesky post facets.
+	 * @param string $text Text string to be parsed.
+	 *
+	 * @return array $post
+	 */
+	public function parse_mentions( $facets, $text ) {
+		$regex = '/(^|\s|\()(@)([a-zA-Z0-9.-]+)(\b)/g';
+		preg_match_all( $regex, $text, $matches, PREG_OFFSET_CAPTURE );
+
+		$mentions = array();
+		foreach ( $matches[0] as $match ) {
+			$handle = $match[0];
+			$start  = $match[1];
+			$end    = $start + strlen( $handle );
+
+			$mentions[] = array(
+				'start'  => $start,
+				'end'    => $end,
+				'handle' => $handle,
+			);
+		}
+
+		if ( ! empty( $mentions ) ) {
+			$new_facets = array();
+			foreach ( $mentions as $mention ) {
+				$post     = array(
+					'handle'       => $handle,
+					'verification' => true,
+				);
+				$did      = $this->call_api( 'https://bsky.social/xrpc/com.atproto.identity.resolveHandle', $handle );
+				$id       = ( is_array( $did ) ) ? $did['did'] : false;
+				$new_facets[] = array(
+					'index'    => array(
+						'byteStart' => $mention['start'],
+						'byteEnd'   => $mention['end'],
+					),
+					'features' => array(
+						array(
+							'$type' => 'app.bsky.richtext.facet#mention',
+							'did'   => $id,
+						),
+					),
+				);
+			}
+			$facets = array_merge( $facets, $new_facets );
+		}
+
+		return $facets;
+	}
+
+	/**
+	 * Parse tags in a status string into Bluesky facets.
+	 *
+	 * @param array  $facets Existing Bluesky post facets.
+	 * @param string $text Text string to be parsed.
+	 *
+	 * @return array $post
+	 */
+	public function parse_tags( $facets, $text ) {
+		$regex = '/(?:^|\s)(#[^\d\s]\S*)(?=\s)?/g';
+		preg_match_all( $regex, $text, $matches, PREG_OFFSET_CAPTURE );
+		$tags = array();
+
+		foreach ( $matches[0] as $match ) {
+			$tag   = $match[0];
+			$tag   = trim( $tag, '.;:,-_!?' );
+			$length = strlen( $tag );
+			// Bluesky doesn't allow tags longer than 64 characters, not including #.
+			if ( $length > 65 ) {
+				continue;
+			}
+			$start = $match[1];
+			$end   = $start + strlen( $tag );
+
+			$tags[] = array(
+				'start' => $start,
+				'end'   => $end,
+				'tag'   => $tag,
+			);
+		}
+
+		if ( ! empty( $tags ) ) {
+			$new_facets = array();
+			foreach ( $tags as $tag ) {
+				$new_facets[] = array(
+					'index'    => array(
+						'byteStart' => $tag['start'],
+						'byteEnd'   => $tag['end'],
+					),
+					'features' => array(
+						array(
+							'$type' => 'app.bsky.richtext.facet#tag',
+							'tag'   => str_replace( '#', '', $tag['tag'] ),
+						),
+					),
+				);
+			}
+			$facets = array_merge( $facets, $new_facets );
+		}
+
+		return $facets;
+	}
+
+	/**
+	 * Post a status to the bluesky status endpoint.
+	 *
+	 * @param array $status Array posted to Bluesky. [status,visibility,language,media_ids="[]"].
+	 *
+	 * @return array Bluesky response.
+	 */
+	public function post_status( $status ) {
+		$facets = array();
+		$post   = array(
+			'collection' => 'app.bsky.feed.post',
+			'repo'       => $this->username,
+			'record'     => $status,
+		);
+		// Parse links into facets.
+		$facets = $this->parse_links( $facets, $status['text'] );
+		$facets = $this->parse_mentions( $facets, $status['text'] );
+		$facets = $this->parse_tags( $facets, $status['text'] );
+		
+		if ( ! empty( $facets ) ) {
 			$post['record']['facets'] = $facets;
 		}
 
