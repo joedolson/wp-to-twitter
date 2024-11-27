@@ -127,7 +127,7 @@ class Wpt_Bluesky_Api {
 					'handle'       => $handle,
 					'verification' => true,
 				);
-				$did      = $this->call_api( 'https://bsky.social/xrpc/com.atproto.identity.resolveHandle', $handle );
+				$did      = $this->call_api( 'https://bsky.social/xrpc/com.atproto.identity.resolveHandle', $post );
 				$id       = ( is_array( $did ) ) ? $did['did'] : false;
 				$new_facets[] = array(
 					'index'    => array(
@@ -202,7 +202,7 @@ class Wpt_Bluesky_Api {
 	}
 
 	/**
-	 * Post a status to the bluesky status endpoint.
+	 * Post a status to the Bluesky status endpoint.
 	 *
 	 * @param array $status Array posted to Bluesky. [status,visibility,language,media_ids="[]"].
 	 *
