@@ -87,9 +87,11 @@ require_once plugin_dir_path( __FILE__ ) . 'vendor_prefixed/vendor/scoper-autolo
 require_once plugin_dir_path( __FILE__ ) . 'wpt-functions.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-twitter.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-mastodon.php';
+require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-bluesky.php';
 require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-oauth.php';
 require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php';
 require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-mastodon.php';
+require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-bluesky.php';
 require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-truncate.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php';
@@ -389,7 +391,8 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 
 	$check_twitter  = wpt_check_oauth( $auth );
 	$check_mastodon = wpt_mastodon_connection( $auth );
-	if ( ! $check_twitter &amp;&amp; ! $check_mastodon ) {
+	$check_bluesky  = wpt_bluesky_connection( $auth );
+	if ( ! $check_twitter &amp;&amp; ! $check_mastodon &amp;&amp; ! $check_bluesky ) {
 		$error = __( 'This account is not authorized to post to any services.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '401', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error, '401' );
@@ -398,6 +401,9 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		}
 		if ( ! $check_mastodon ) {
 			wpt_mail( 'Account not authorized with Mastodon.', 'Post ID: ' . $id );
+		}
+		if ( ! $check_bluesky ) {
+			wpt_mail( 'Account not authorized with Bluesky.', 'Post ID: ' . $id );
 		}
 
 		return false;
@@ -449,6 +455,13 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
 			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
 			$return['mastodon'] = $response;
+		}
+		if ( wpt_bluesky_connection( $auth ) ) {
+			$connection = wpt_bluesky_connection( $auth );
+			$image      = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id );
+			$response   = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
+			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
+			$return['bluesky'] = $response;
 		}
 		wpt_mail( 'Share Connection Status', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
 		if ( ! empty( $return ) ) {
@@ -643,6 +656,8 @@ function wpt_image_binary( $attachment, $service = 'twitter' ) {
 		}
 
 		return $file;
+	} elseif ( 'bluesky' === $service ) {
+		// Media uploading for Bluesky. TODO.
 	} else {
 		$upload    = wp_get_attachment_image_src( $attachment, $size );
 		$image_url = $upload[0];
@@ -1651,15 +1666,19 @@ function wpt_show_tweets( $post_id ) {
 					$has_history     = true;
 					$twitter_intent  = '';
 					$mastodon_intent = '';
+					$bluesky_intent  = '';
 					if ( wtt_oauth_test() ) {
-						$twitter_intent = "&lt;a href='https://twitter.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Repost on X.com', 'wp-to-twitter' ) . '&lt;/a>';
+						$twitter_intent = "&lt;a href='https://x.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Repost on X.com', 'wp-to-twitter' ) . '&lt;/a>';
 					}
 					if ( wpt_mastodon_connection() ) {
 						$mastodon        = get_option( 'wpt_mastodon_instance' );
 						$mastodon_intent = "&lt;a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $previous_tweet ) . "'>" . __( 'Repost on Mastodon', 'wp-to-twitter' ) . '&lt;/a>';
 					}
+					if ( wpt_bluesky_connection() ) {
+						$bluesky_intent = "&lt;a href='https://bsky.app/intent/compose?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Repost on Bluesky', 'wp-to-twitter' ) . '&lt;/a>';
+					}
 					$hidden_fields .= "&lt;input type='hidden' name='_jd_wp_twitter[]' value='" . esc_attr( $previous_tweet ) . "' />";
-					echo "&lt;li>$previous_tweet $twitter_intent $mastodon_intent&lt;/li>";
+					echo "&lt;li>$previous_tweet $twitter_intent $mastodon_intent $bluesky_intent&lt;/li>";
 				}
 			}
 		}
@@ -1678,14 +1697,18 @@ function wpt_show_tweets( $post_id ) {
 
 					$twitter_intent  = '';
 					$mastodon_intent = '';
+					$bluesky_intent  = '';
 					if ( wtt_oauth_test() ) {
-						$twitter_intent = "&lt;a href='https://twitter.com/intent/tweet?text=" . urlencode( $ft ) . "'>" . __( 'Send update to X.com', 'wp-to-twitter' ) . '&lt;/a>';
+						$twitter_intent = "&lt;a href='https://x.com/intent/tweet?text=" . urlencode( $ft ) . "'>" . __( 'Send to X.com', 'wp-to-twitter' ) . '&lt;/a>';
 					}
 					if ( wpt_mastodon_connection() ) {
 						$mastodon        = get_option( 'wpt_mastodon_instance' );
-						$mastodon_intent = "&lt;a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $ft ) . "'>" . __( 'Send update to Mastodon', 'wp-to-twitter' ) . '&lt;/a>';
+						$mastodon_intent = "&lt;a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $ft ) . "'>" . __( 'Send to Mastodon', 'wp-to-twitter' ) . '&lt;/a>';
 					}
-					$error_list .= "&lt;li> &lt;code>Error: $reason&lt;/code> $ft $twitter_intent $mastodon_intent &lt;br />&lt;em>$error&lt;/em>&lt;/li>";
+					if ( wpt_bluesky_connection() ) {
+						$bluesky_intent = "&lt;a href='https://bsky.app/intent/compose?text=" . urlencode( $ft ) . "'>" . __( 'Send to Bluesky', 'wp-to-twitter' ) . '&lt;/a>';
+					}
+					$error_list .= "&lt;li> &lt;code>Error: $reason&lt;/code> $ft $twitter_intent $mastodon_intent $bluesky_intent &lt;br />&lt;em>$error&lt;/em>&lt;/li>";
 				}
 			}
 			if ( true === $list ) {
@@ -2222,21 +2245,28 @@ function wpt_needs_connection() {
 		$message  = '';
 		$mastodon = wpt_mastodon_connection();
 		$x        = wpt_check_oauth();
-		// show notification to authenticate with OAuth. No longer global; settings only.
+		$bluesky  = wpt_bluesky_connection();
+		// show notification to authenticate with Mastodon.
 		if ( ! $mastodon &amp;&amp; ! ( isset( $_GET['tab'] ) &amp;&amp; 'connection' === $_GET['tab'] ) ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&amp;tab=mastodon' );
 			// Translators: Settings page to authenticate Mastodon.
 			$message = '&lt;p>' . sprintf( __( "Mastodon requires authentication. &lt;a href='%s'>Update your settings&lt;/a> to enable XPoster to send updates to Mastodon.", 'wp-to-twitter' ), $admin_url ) . '&lt;/p>';
 		}
-		// show notification to authenticate with OAuth. No longer global; settings only.
+		// show notification to authenticate with OAuth.
 		if ( ! $x &amp;&amp; ! ( isset( $_GET['tab'] ) &amp;&amp; 'connection' === $_GET['tab'] ) ) {
 			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 			// Translators: Settings page to authenticate X.com.
 			$message = '&lt;p>' . sprintf( __( "X.com requires authentication by OAuth. &lt;a href='%s'>Update your settings&lt;/a> to enable XPoster to send updates to X.com.", 'wp-to-twitter' ), $admin_url ) . '&lt;/p>';
 		}
+		// show notification to authenticate with Bluesky.
+		if ( ! $x &amp;&amp; ! ( isset( $_GET['tab'] ) &amp;&amp; 'connection' === $_GET['tab'] ) ) {
+			$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&amp;tab=bluesky' );
+			// Translators: Settings page to authenticate Bluesky.
+			$message = '&lt;p>' . sprintf( __( "Bluesky requires authentication. &lt;a href='%s'>Update your settings&lt;/a> to enable XPoster to send updates to Bluesky.", 'wp-to-twitter' ), $admin_url ) . '&lt;/p>';
+		}
 		$is_dismissible = '';
 		$class          = 'xposter-connection';
-		if ( $x || $mastodon ) {
+		if ( $x || $mastodon || $bluesky ) {
 			$class          = 'xposter-connection dismissible';
 			$dismiss_url    = add_query_arg( 'dismiss', 'connection', admin_url( 'admin.php?page=wp-tweets-pro' ) );
 			$is_dismissible = ' &lt;a href="' . esc_url( $dismiss_url ) . '" class="button button-secondary">' . __( 'Ignore', 'wp-to-twitter' ) . '&lt;/a>';
@@ -2265,7 +2295,7 @@ add_action( 'admin_notices', 'wpt_needs_connection' );
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_postpone_rendering.html">wpt_postpone_rendering</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_tweet.html">wpt_show_last_tweet</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_postpone_rendering.html">wpt_postpone_rendering</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_tweet.html">wpt_show_last_tweet</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
 </nav>
 
 <br class="clear">
