@@ -151,7 +151,7 @@ function wtt_connect_bluesky( $auth = false ) {
 			' . $information . $form . '
 				<div id="wtt_authentication_display">
 					<ul>
-						<li><strong class="auth_label">' . __( 'Username ', 'wp-to-twitter' ) . '</strong> <code class="auth_code"><a href="' . esc_url( $acs ) . '/@' . esc_attr( $uname ) . '">' . esc_attr( $uname ) . '</a></code></li>
+						<li><strong class="auth_label">' . __( 'Username ', 'wp-to-twitter' ) . '</strong> <code class="auth_code"><a href="https://bsky.app/profile/' . esc_attr( $uname ) . '">' . esc_attr( $uname ) . '</a></code></li>
 						<li><strong class="auth_label">' . __( 'Access Token ', 'wp-to-twitter' ) . '</strong> <code class="auth_code">' . esc_attr( wpt_mask_attr( $ack ) ) . '</code></li>
 					</ul>
 					<div>
