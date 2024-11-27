@@ -44,7 +44,7 @@ function wpt_update_bluesky_settings( $auth = false, $post = false ) {
 						'password'   => $ack,
 						'identifier' => $user,
 					);
-					$verify = wpt_bluesky_connection( $auth, $validate );
+					$verify   = wpt_bluesky_connection( $auth, $validate );
 					if ( '1' === get_option( 'wp_debug_oauth' ) ) {
 						echo '<br /><strong>Account Verification Data:</strong><br /><pre>';
 						print_r( $verify );
