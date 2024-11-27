@@ -93,7 +93,7 @@ class Wpt_Bluesky_Api {
 					),
 				);
 			}
-			$fields['record']['facets'] = $facets;
+			$post['record']['facets'] = $facets;
 		}
 
 		return $this->call_api( 'https://bsky.social/xrpc/com.atproto.repo.createRecord', $post );
