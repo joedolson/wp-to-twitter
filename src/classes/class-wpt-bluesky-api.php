@@ -96,7 +96,7 @@ class Wpt_Bluesky_Api {
 			$fields['record']['facets'] = $facets;
 		}
 
-		return $this->call_api( 'https://bsky.social/xrpc/com.atproto.repo.createRecord', 'POST', $post );
+		return $this->call_api( 'https://bsky.social/xrpc/com.atproto.repo.createRecord', $post );
 	}
 
 	/**
@@ -106,33 +106,42 @@ class Wpt_Bluesky_Api {
 	 */
 	public function verify() {
 		$args = array(
-			'identifier' => $this->username,
-			'password'   => $this->app_password,
+			'identifier'   => $this->username,
+			'password'     => $this->app_password,
+			'verification' => true,
 		);
 
-		return $this->call_api( 'https://bsky.social/xrpc/com.atproto.server.createSession', 'POST', $args );
+		return $this->call_api( 'https://bsky.social/xrpc/com.atproto.server.createSession', $args );
 	}
 
 	/**
 	 * Post to the API endpoint.
 	 *
 	 * @param string $endpoint REST API path.
-	 * @param string $method query method. GET, POST, etc.
 	 * @param array  $data Data being posted.
 	 *
 	 * @return array Bluesky response or error.
 	 */
-	public function call_api( $endpoint, $method, $data ) {
-		$headers = array(
-			'Authorization: Bearer ' . $this->verify()['accessJwt'],
-			'Content-Type: application/json',
-			'Accept: application/json',
-			'Accept-Charset: utf-8',
-		);
+	public function call_api( $endpoint, $data ) {
+		if ( isset( $data['verification'] ) ) {
+			$headers = array(
+				'Content-Type: application/json',
+				'Accept: application/json',
+				'Accept-Charset: utf-8',
+			);
+			unset( $data['verification'] );
+		} else {
+			$headers = array(
+				'Authorization: Bearer ' . $this->verify()['accessJwt'],
+				'Content-Type: application/json',
+				'Accept: application/json',
+				'Accept-Charset: utf-8',
+			);
+		}
 
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_URL, $endpoint );
-		curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $method );
+		curl_setopt( $ch, CURLOPT_POST, true );
 		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $data ) );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
