@@ -226,8 +226,9 @@ class Wpt_Bluesky_Api {
 		if ( ! empty( $facets ) ) {
 			$post['record']['facets'] = $facets;
 		}
-
-		return $this->call_api( 'https://bsky.social/xrpc/com.atproto.repo.createRecord', $post );
+		$response = $this->call_api( 'https://bsky.social/xrpc/com.atproto.repo.createRecord', $post );
+	
+		return $response;
 	}
 
 	/**
@@ -260,12 +261,18 @@ class Wpt_Bluesky_Api {
 			);
 			unset( $data['verification'] );
 		} else {
-			$headers = array(
-				'Authorization: Bearer ' . $this->verify()['accessJwt'],
-				'Content-Type: application/json',
-				'Accept: application/json',
-				'Accept-Charset: utf-8',
-			);
+			if ( isset( $data['headers'] ) ) {
+				// If the caller sets a header parameter, that replaces all non-authorization headers.
+				$headers = array_merge( array( 'Authorization: Bearer ' . $this->verify()['accessJwt'] ), $data['headers'] );
+				unset( $data['headers'] );
+			} else {
+				$headers = array(
+					'Authorization: Bearer ' . $this->verify()['accessJwt'],
+					'Content-Type: application/json',
+					'Accept: application/json',
+					'Accept-Charset: utf-8',
+				);
+			}
 		}
 
 		$ch = curl_init();

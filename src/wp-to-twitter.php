@@ -630,8 +630,15 @@ function wpt_image_binary( $attachment, $service = 'twitter' ) {
 		}
 
 		return $file;
+
 	} elseif ( 'bluesky' === $service ) {
-		// Media uploading for Bluesky. TODO.
+		$path      = wpt_attachment_path( $attachment, $size );
+		global $wp_filesystem;
+		require_once ABSPATH . '/wp-admin/includes/file.php';
+		WP_Filesystem();
+		$file = $wp_filesystem->get_contents( $path );
+
+		return $file;
 	} else {
 		$upload    = wp_get_attachment_image_src( $attachment, $size );
 		$image_url = $upload[0];
@@ -647,7 +654,7 @@ function wpt_image_binary( $attachment, $service = 'twitter' ) {
 		if ( ! $binary ) {
 			return false;
 		}
-
+		// TODO: should this be encoded or not?
 		return base64_encode( $binary );
 	}
 }
