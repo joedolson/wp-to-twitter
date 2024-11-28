@@ -227,7 +227,7 @@ class Wpt_Bluesky_Api {
 			$post['record']['facets'] = $facets;
 		}
 		$response = $this->call_api( 'https://bsky.social/xrpc/com.atproto.repo.createRecord', $post );
-	
+
 		return $response;
 	}
 

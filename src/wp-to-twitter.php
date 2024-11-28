@@ -632,7 +632,7 @@ function wpt_image_binary( $attachment, $service = 'twitter' ) {
 		return $file;
 
 	} elseif ( 'bluesky' === $service ) {
-		$path      = wpt_attachment_path( $attachment, $size );
+		$path = wpt_attachment_path( $attachment, $size );
 		global $wp_filesystem;
 		require_once ABSPATH . '/wp-admin/includes/file.php';
 		WP_Filesystem();

@@ -56,7 +56,7 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 			);
 			$blob    = $connection->call_api( 'https://bsky.social/xrpc/com.atproto.repo.uploadBlob', $request );
 			$request = array(
-				'$type' => 'app.bsky.embed.images',
+				'$type'  => 'app.bsky.embed.images',
 				'images' => array(
 					array(
 						'alt'   => $alt_text,
