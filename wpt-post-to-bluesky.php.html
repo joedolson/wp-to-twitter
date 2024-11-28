@@ -69,13 +69,26 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 			 */
 			$alt_text        = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
 			$attachment_data = wpt_image_binary( $attachment, 'bluesky' );
+			$mimetype        = get_post_mime_type( $attachment );
 			// Return without attempting if fails to fetch image object.
 			if ( ! $attachment_data ) {
-				return $status;
+				return $request;
 			}
 			$request = array(
-				'image' => $attachment_data,
-				'alt'   => $alt_text,
+				'data'    => $attachment_data,
+				'headers' => array(
+					"Content-Type: $mimetype",
+				),
+			);
+			$blob    = $connection->call_api( 'https://bsky.social/xrpc/com.atproto.repo.uploadBlob', $request );
+			$request = array(
+				'$type' => 'app.bsky.embed.images',
+				'images' => array(
+					array(
+						'alt'   => $alt_text,
+						'image' => $blob['blob'],
+					),
+				),
 			);
 		}
 	}
@@ -135,10 +148,7 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
 			'createdAt' => gmdate( DATE_ATOM ),
 		);
 		if ( ! empty( $image ) ) {
-			$status['embed'] = array(
-				'$type'  => 'app.bsky.embed.images',
-				'images' => $image,
-			);
+			$status['embed'] = $image;
 		}
 		/**
 		 * Filter status array for Bluesky.
