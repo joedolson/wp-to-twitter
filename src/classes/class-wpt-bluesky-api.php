@@ -256,6 +256,7 @@ class Wpt_Bluesky_Api {
 	 * @return array Bluesky response or error.
 	 */
 	public function call_api( $endpoint, $data ) {
+		// Verification gets the bearer token, and does not require it.
 		if ( isset( $data['verification'] ) ) {
 			$headers = array(
 				'Content-Type: application/json',
@@ -265,7 +266,7 @@ class Wpt_Bluesky_Api {
 			$data = json_encode( $data );
 		} else {
 			if ( isset( $data['content-type'] ) ) {
-				// If the caller sets a header parameter, that replaces all non-authorization headers.
+				// Media uploads are passed with a content-type of the object uploaded.
 				$headers = array(
 					'Content-Type: ' . $data['content-type'],
 					'Authorization: Bearer ' . $this->verify()['accessJwt'],
