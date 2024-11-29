@@ -50,7 +50,7 @@ require_once plugin_dir_path( __FILE__ ) . 'classes/class-wpt-bluesky-api.php';
  * @param array    $status Array of posting information.
  * @param int      $id Post ID.
  *
- * @return array
+ * @return array Image blob array to be posted with status.
  */
 function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id ) {
 	$request = array();
@@ -75,10 +75,8 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 				return $request;
 			}
 			$request = array(
-				'data'    => $attachment_data,
-				'headers' => array(
-					"Content-Type: $mimetype",
-				),
+				'data'         => $attachment_data,
+				'content-type' => $mimetype,
 			);
 			$blob    = $connection->call_api( 'https://bsky.social/xrpc/com.atproto.repo.uploadBlob', $request );
 			$request = array(
