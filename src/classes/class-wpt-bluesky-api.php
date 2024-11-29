@@ -237,7 +237,7 @@ class Wpt_Bluesky_Api {
 	 * @return array Bluesky response.
 	 */
 	public function verify() {
-		$args = array(
+		$args     = array(
 			'identifier'   => $this->username,
 			'password'     => $this->app_password,
 			'verification' => true,
@@ -266,7 +266,7 @@ class Wpt_Bluesky_Api {
 		} else {
 			if ( isset( $data['content-type'] ) ) {
 				// If the caller sets a header parameter, that replaces all non-authorization headers.
-				$headers = array( 
+				$headers = array(
 					'Content-Type: ' . $data['content-type'],
 					'Authorization: Bearer ' . $this->verify()['accessJwt'],
 				);
@@ -278,7 +278,7 @@ class Wpt_Bluesky_Api {
 					'Accept: application/json',
 					'Accept-Charset: utf-8',
 				);
-				$data   = json_encode( $data );
+				$data    = json_encode( $data );
 			}
 		}
 
