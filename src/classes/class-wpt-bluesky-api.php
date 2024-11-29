@@ -272,6 +272,7 @@ class Wpt_Bluesky_Api {
 					'Authorization: Bearer ' . $this->verify()['accessJwt'],
 				);
 				unset( $data['content-type'] );
+				$data = $data['data'];
 			} else {
 				$headers = array(
 					'Authorization: Bearer ' . $this->verify()['accessJwt'],
