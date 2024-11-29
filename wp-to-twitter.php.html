@@ -917,6 +917,8 @@ function wpt_post_with_media( $post_ID, $post_info = array() ) {
  * @param string $post_type Type of post.
  * @param array  $post_info Post info.
  * @param int    $post_ID Post ID.
+ *
+ * @return bool False to block this from posting.
  */
 function wpt_category_limit( $post_type, $post_info, $post_ID ) {
 	$continue = true;
@@ -2178,6 +2180,7 @@ function wpt_twit_instant( $id, $post, $updated, $post_before ) {
 
 		return;
 	}
+
 	wpt_tweet( $id, 'instant', $post, $updated, $post_before );
 }
 
