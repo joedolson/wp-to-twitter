@@ -242,8 +242,9 @@ class Wpt_Bluesky_Api {
 			'password'     => $this->app_password,
 			'verification' => true,
 		);
+		$response = $this->call_api( 'https://bsky.social/xrpc/com.atproto.server.createSession', $args );
 
-		return $this->call_api( 'https://bsky.social/xrpc/com.atproto.server.createSession', $args );
+		return $response;
 	}
 
 	/**
@@ -259,12 +260,17 @@ class Wpt_Bluesky_Api {
 			$headers = array(
 				'Content-Type: application/json',
 			);
+			// Remove verification flag and encode data.
 			unset( $data['verification'] );
+			$data = json_encode( $data );
 		} else {
-			if ( isset( $data['headers'] ) ) {
+			if ( isset( $data['content-type'] ) ) {
 				// If the caller sets a header parameter, that replaces all non-authorization headers.
-				$headers = array_merge( array( 'Authorization: Bearer ' . $this->verify()['accessJwt'] ), $data['headers'] );
-				unset( $data['headers'] );
+				$headers = array( 
+					'Content-Type: ' . $data['content-type'],
+					'Authorization: Bearer ' . $this->verify()['accessJwt'],
+				);
+				unset( $data['content-type'] );
 			} else {
 				$headers = array(
 					'Authorization: Bearer ' . $this->verify()['accessJwt'],
@@ -272,13 +278,14 @@ class Wpt_Bluesky_Api {
 					'Accept: application/json',
 					'Accept-Charset: utf-8',
 				);
+				$data   = json_encode( $data );
 			}
 		}
 
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_URL, $endpoint );
 		curl_setopt( $ch, CURLOPT_POST, true );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $data ) );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
 		$reply = curl_exec( $ch );
