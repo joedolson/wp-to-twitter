@@ -41,14 +41,17 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 			 *
 			 * @return {string}
 			 */
-			$alt_text        = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
-			$attachment_data = wpt_image_binary( $attachment, 'bluesky' );
-			$mimetype        = get_post_mime_type( $attachment );
-			$mimetypes       = array( 'image/png', 'image/jpeg', 'image/webp' );
-			$fileinfo        = wp_prepare_attachment_for_js( $attachment );
-			$size            = $fileinfo['filesizeinBytes'];
+			$alt_text  = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
+			$path      = wpt_attachment_path( $attachment, 'large' );
+			$mimetype  = mime_content_type( $path );
+			$mimetypes = array( 'image/png', 'image/jpeg', 'image/webp' );
+			$size      = filesize( $path );
 			// Return without attempting if fails to fetch image object.
-			if ( ! ( $attachment_data && in_array( $mimetype, $mimetypes, true ) && (int) $size < 1000000 ) ) {
+			if ( ! ( in_array( $mimetype, $mimetypes, true ) && (int) $size < 1000000 ) ) {
+				return $request;
+			}
+			$attachment_data = wpt_image_binary( $attachment, 'bluesky' );
+			if ( ! $attachment_data ) {
 				return $request;
 			}
 			$request = array(
