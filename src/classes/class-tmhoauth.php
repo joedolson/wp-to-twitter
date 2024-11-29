@@ -25,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * 20 February 2013
  */
+#[AllowDynamicProperties]
 class TmhOAuth {
 	const VERSION = '0.7.5';
 
