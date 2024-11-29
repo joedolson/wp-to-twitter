@@ -44,8 +44,11 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 			$alt_text        = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
 			$attachment_data = wpt_image_binary( $attachment, 'bluesky' );
 			$mimetype        = get_post_mime_type( $attachment );
+			$mimetypes       = array( 'image/png', 'image/jpeg', 'image/webp' );
+			$fileinfo        = wp_prepare_attachment_for_js( $attachment );
+			$size            = $fileinfo['filesizeinBytes'];
 			// Return without attempting if fails to fetch image object.
-			if ( ! $attachment_data ) {
+			if ( ! ( $attachment_data && in_array( $mimetype, $mimetypes, true ) && (int) $size < 1000000 ) ) {
 				return $request;
 			}
 			$request = array(
