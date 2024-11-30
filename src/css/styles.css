@@ -194,10 +194,34 @@ label[for="wpt_license_key"] {
 	font-size: 1.1em;
 }
 
+#profile-page .wpt-has-link,
 #wpt_settings_page .wpt-has-link {
 	display: flex;
 	align-items: center;
 	gap: 12px;
+}
+
+.wpt-user-services {
+	display: grid;
+	grid-template-columns: repeat( 3, 1fr );
+	gap: 12px;
+}
+
+.wpt-user-services .wpt-user-service {
+	padding: 1rem;
+	background: rgba( 0,0,0,.04 );
+}
+
+@media ( width < 1384px ) {
+	.wpt-user-services {
+		grid-template-columns: repeat( 2, 1fr );
+	}
+}
+
+@media ( width < 782px ) {
+	.wpt-user-services {
+		grid-template-columns: repeat( 1, 1fr );
+	}
 }
 
 #wpt_settings_page .tabs li {
