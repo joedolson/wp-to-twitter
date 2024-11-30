@@ -1069,8 +1069,18 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 						}
 					} else {
 						foreach ( $wpt_selected_users as $acct ) {
-							$acct     = ( 'main' === $acct ) ? false : $acct;
-							$offset   = ( $auth !== $acct ) ? apply_filters( 'wpt_random_delay', wp_rand( 60, 480 ) ) : 0;
+							$acct = ( 'main' === $acct ) ? false : $acct;
+							/**
+							 * Filter the delay between posting and sending status updates.
+							 *
+							 * @hook wpt_random_delay
+							 *
+							 * @param int $rand Random integer between 60 and 480.
+							 *
+							 * @return int
+							 */
+							$delay    = apply_filters( 'wpt_random_delay', wp_rand( 60, 480 ) );
+							$offset   = ( $auth !== $acct ) ? $delay : 0;
 							$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
 							if ( $verified ) {
 								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
