@@ -541,7 +541,7 @@ function wpt_custom_shortcodes( $sentence, $post_ID ) {
 			$field     = str_replace( $params, '', $shortcode );
 			$value     = strip_tags( get_post_meta( $post_ID, $field, true ) );
 			/**
-			 * Filter the output of a custom field template tag.
+			 * Filter the output of a custom field template tag. Custom field tags are marked with `[[$field]]`.
 			 *
 			 * @hook wpt_custom_shortcode
 			 *
@@ -578,6 +578,17 @@ function wpt_user_meta_shortcodes( $sentence, $auth_id ) {
 		foreach ( $matches[0] as $value ) {
 			$shortcode = "$value";
 			$field     = str_replace( $params, '', $shortcode );
+			/**
+			 * Filter custom user meta. User meta tags are marked with `{{$field}}`.
+			 *
+			 * @hook wpt_user_meta_shortcode
+			 *
+			 * @param {string} $value Returned singular value of a post meta field, tags stripped.
+			 * @param {int}  $auth_id User ID.
+			 * @param {string} $field Name of user meta field.
+			 *
+			 * @return {string}
+			 */
 			$custom    = apply_filters( 'wpt_user_meta_shortcode', strip_tags( get_user_meta( $auth_id, $field, true ) ), $auth_id, $field );
 			$sentence  = str_replace( $shortcode, $custom, $sentence );
 		}
