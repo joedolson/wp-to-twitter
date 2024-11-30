@@ -67,6 +67,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Minor debugging improvements.
 * Bug fix: Avoid JS errors if metabox not enqueued.
 * Encode backup title in same manner as primary title.
+* Improve coverage of documented filters.
 
 = 4.2.6 =
 
