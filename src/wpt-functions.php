@@ -123,7 +123,7 @@ function wpt_check_functions() {
 	 *
 	 * @return {string}
 	 */
-	$shrink   = apply_filters( 'wptt_shorten_link', $testurl, $title, false, true );
+	$shrink = apply_filters( 'wptt_shorten_link', $testurl, $title, false, true );
 	if ( false === $shrink ) {
 		$error    = htmlentities( get_option( 'wpt_shortener_status' ) );
 		$message .= '<li class="error"><strong>' . __( 'XPoster was unable to contact your selected URL shortening service.', 'wp-to-twitter' ) . '</strong></li>';
