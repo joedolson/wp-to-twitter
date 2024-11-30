@@ -201,7 +201,7 @@ function wpt_settings_tabs() {
 	$x_connected = ( wtt_oauth_test() ) ? $yes : $no;
 	$m_connected = ( wpt_mastodon_connection() ) ? $yes : $no;
 	$b_connected = ( wpt_bluesky_connection() ) ? $yes : $no;
-	$pages    = array(
+	$pages       = array(
 		'connection' => __( 'X', 'wp-to-twitter' ) . $x_connected,
 		'mastodon'   => __( 'Mastodon', 'wp-to-twitter' ) . $m_connected,
 		'bluesky'    => __( 'Bluesky', 'wp-to-twitter' ) . $b_connected,
