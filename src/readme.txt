@@ -7,7 +7,7 @@ Tested up to: 6.7
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.2.6
+Stable tag: 4.3.0
 
 Posts to Bluesky or Mastodon when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -58,6 +58,15 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 4.3.0 =
+
+* Add support for Bluesky.
+* Misc. improvements to handling of multiple services.
+* Misc. improvements to UI.
+* Minor debugging improvements.
+* Bug fix: Avoid JS errors if metabox not enqueued.
+* Encode backup title in same manner as primary title.
 
 = 4.2.6 =
 
