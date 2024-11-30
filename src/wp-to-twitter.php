@@ -1075,9 +1075,9 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 							 *
 							 * @hook wpt_random_delay
 							 *
-							 * @param int $rand Random integer between 60 and 480.
+							 * @param {int} $rand Random integer between 60 and 480.
 							 *
-							 * @return int
+							 * @return {int}
 							 */
 							$delay    = apply_filters( 'wpt_random_delay', wp_rand( 60, 480 ) );
 							$offset   = ( $auth !== $acct ) ? $delay : 0;
@@ -1163,7 +1163,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 										}
 										// add original delay to schedule.
 										$delay = ( isset( $post_info['wpt_delay_tweet'] ) ) ? ( (int) $post_info['wpt_delay_tweet'] ) * 60 : 0;
-										// Don't delay the first stats update of the group.
+										// Don't delay the first status update of the group.
 										$offset = ( true === $first ) ? 0 : wp_rand( 60, 240 ); // delay each co-tweet by 1-4 minutes.
 										$time   = apply_filters( 'wpt_schedule_retweet', ( $post_info['wpt_retweet_after'] ) * ( 60 * 60 ) * $i, $acct, $i, $post_info );
 										wp_schedule_single_event(
