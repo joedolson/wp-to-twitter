@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_filter_mastodon_status - XPoster Hook Doumentation</title>
+    <title>Filter: wpt_edit_sensitivity - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_filter_mastodon_status</h1></header>
+    <header><h1 class="page-title">Filter: wpt_edit_sensitivity</h1></header>
 	<main>
     
 
@@ -36,14 +36,16 @@
 
     
 
-    <h4 class="name" id="wpt_filter_mastodon_status">apply_filters( 'wpt_filter_mastodon_status', <span class="signature">$status, $post, $auth )</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="wpt_edit_sensitivity">apply_filters( 'wpt_edit_sensitivity', <span class="signature">$sensitivity )</span><span class="type-signature"> &rarr; {int}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Filter status array for Mastodon.</p>
+    <p>Filter the sensitivity used to distinguish between new posts and edits.
+Default allows up to a 10 second discrepancy in time stamps where post will be treated as new.
+This is necessary because the post date and modified date can sometimes different by a second on any server.</p>
 </div>
 
 
@@ -77,30 +79,7 @@
 
         <tr>
             
-                <td class="name"><code>$status</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Array of parameters sent to Mastodon.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$post</code></td>
+                <td class="name"><code>$sensitivity</code></td>
             
 
             <td class="type">
@@ -116,33 +95,7 @@
 
             
 
-            <td class="description last"><p>Post ID being tweeted.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$auth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-|
-
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Authoring context.</p></td>
+            <td class="description last"><p>Integer representing seconds. Default 10.</p></td>
         </tr>
 
     
@@ -183,7 +136,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wpt-post-to-mastodon.php.html">wpt-post-to-mastodon.php</a>, <a href="wpt-post-to-mastodon.php.html#line112">line 112</a>
+        <a href="wpt-functions.php.html">wpt-functions.php</a>, <a href="wpt-functions.php.html#line638">line 638</a>
     </li></ul></dd>
     
 
@@ -217,7 +170,7 @@
     </dt>
     <dd>
         
-<span class="param-type">array</span>
+<span class="param-type">int</span>
 
 
     </dd>
