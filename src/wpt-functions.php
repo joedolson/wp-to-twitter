@@ -111,6 +111,18 @@ function wpt_check_functions() {
 	$testurl  = get_bloginfo( 'url' );
 	$testpost = false;
 	$title    = urlencode( 'Your blog home' );
+	/**
+	 * Filter the URL passed when running a test function.
+	 *
+	 * @hook wptt_shorten_link
+	 *
+	 * @param {string}   $testurl Unshortened test URL.
+	 * @param {string}   $title Title text to use for URL shortener.
+	 * @param {int|bool} $post_ID Post ID. Default false.
+	 * @param {bool}     $testing In testing mode. Default true.
+	 *
+	 * @return {string}
+	 */
 	$shrink   = apply_filters( 'wptt_shorten_link', $testurl, $title, false, true );
 	if ( false === $shrink ) {
 		$error    = htmlentities( get_option( 'wpt_shortener_status' ) );
@@ -186,6 +198,16 @@ function wpt_settings_tabs() {
 		'pro'        => $pro_text,
 	);
 
+	/**
+	 * Filter the array of tabs representings settings pages.
+	 *
+	 * @hook wpt_settings_tabs_pages
+	 *
+	 * @param {array}  $pages Array of pages with `[ 'key' => 'title' ]`.
+	 * @param {string} $current Array key of current page.
+	 *
+	 * @return {array}
+	 */
 	$pages     = apply_filters( 'wpt_settings_tabs_pages', $pages, $current );
 	$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 
@@ -613,7 +635,17 @@ function wtt_option_selected( $field, $value, $type = 'checkbox' ) {
  * @return integer (boolean)
  */
 function wpt_post_is_new( $modified, $postdate ) {
-	// Default allows up to a 10 second discrepancy for slow processing.
+	/**
+	 * Filter the sensitivity used to distinguish between new posts and edits.
+	 * Default allows up to a 10 second discrepancy in time stamps where post will be treated as new.
+	 * This is necessary because the post date and modified date can sometimes different by a second on any server.
+	 *
+	 * @hook wpt_edit_sensitivity
+	 *
+	 * @param {int} $sensitivity Integer representing seconds. Default 10.
+	 *
+	 * @return {int}
+	 */
 	$modifier  = apply_filters( 'wpt_edit_sensitivity', 10 ); // alter time in seconds to modified date.
 	$mod_date  = strtotime( $modified );
 	$post_date = strtotime( $postdate ) + $modifier;
@@ -632,16 +664,26 @@ function wpt_post_is_new( $modified, $postdate ) {
  * @return mixed boolean|integer Attachment ID.
  */
 function wpt_post_attachment( $post_ID ) {
-	$return             = false;
+	$attachment_id = false;
+	/**
+	 * Filter whether a post should use its featured image to post with a status update.
+	 *
+	 * @hook wpt_use_featured_image
+	 *
+	 * @param {bool} $use True to use the featured image.
+	 * @param {int}  $post_ID Post ID.
+	 *
+	 * @return {bool}
+	 */
 	$use_featured_image = apply_filters( 'wpt_use_featured_image', true, $post_ID );
 	if ( has_post_thumbnail( $post_ID ) && $use_featured_image ) {
 		$attachment = get_post_thumbnail_id( $post_ID );
-		// X.com API endpoint does not accept GIFs.
+		// X.com & Bluesky API endpoints do not accept GIFs.
 		if ( wp_attachment_is( 'gif', $attachment ) ) {
 			return false;
 		}
 
-		$return = $attachment;
+		$attachment_id = $attachment;
 	} else {
 		$args        = array(
 			'post_type'      => 'attachment',
@@ -653,13 +695,22 @@ function wpt_post_attachment( $post_ID ) {
 		);
 		$attachments = get_posts( $args );
 		if ( $attachments ) {
-			$return = $attachments[0]->ID; // Return the first attachment.
+			$attachment_id = $attachments[0]->ID; // Return the first attachment.
 		} else {
-			$return = false;
+			$attachment_id = false;
 		}
 	}
-
-	return apply_filters( 'wpt_post_attachment', $return, $post_ID );
+	/**
+	 * Filter the attachment ID to post with a status update.
+	 *
+	 * @hook wpt_post_attachment
+	 *
+	 * @param {int} $attachment_id Attachment ID.
+	 * @param {int} $post_ID Post ID.
+	 *
+	 * @return {int|bool}
+	 */
+	return apply_filters( 'wpt_post_attachment', $attachment_id, $post_ID );
 }
 
 /**
@@ -897,6 +948,15 @@ add_action( 'dp_duplicate_page', 'wpt_delete_copied_meta', 10, 2 );
  * @param object $post Old Post.
  */
 function wpt_delete_copied_meta( $new_id, $post ) {
+	/**
+	 * Filter to allow Duplicate Posts plugin to copy XPoster meta data when a post is duplicated.
+	 *
+	 * @hook wpt_allow_copy_meta
+	 *
+	 * @param {bool} $disable True to allow meta to be copied. Default false.
+	 *
+	 * @return {bool}
+	 */
 	$disable = apply_filters( 'wpt_allow_copy_meta', false );
 	if ( $disable ) {
 		return;
