@@ -1040,10 +1040,10 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 			}
 			if ( $newpost || $oldpost ) {
 				$template = ( '' !== $custom_tweet ) ? $custom_tweet : $nptext;
-				$sentence = jd_truncate_tweet( $template, $post_info, $post_ID );
+				$sentence = wpt_truncate_tweet( $template, $post_info, $post_ID );
 				wpt_mail( '5: Status Update Template Processed', "Template: $template; Status: $sentence", $post_ID ); // DEBUG.
 				if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
-					$sentence2 = jd_truncate_tweet( $template, $post_info, $post_ID, false, $auth );
+					$sentence2 = wpt_truncate_tweet( $template, $post_info, $post_ID, false, $auth );
 				}
 			}
 			if ( '' !== $sentence ) {
@@ -1155,7 +1155,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 										if ( 'false' !== $postpone_rendering ) {
 											$retweet = $retweet;
 										} else {
-											$retweet = jd_truncate_tweet( $retweet, $post_info, $post_ID, true, $acct );
+											$retweet = wpt_truncate_tweet( $retweet, $post_info, $post_ID, true, $acct );
 										}
 										if ( '' === $retweet ) {
 											// If a filter sets this value to empty, exit without scheduling.
@@ -1825,7 +1825,7 @@ function wpt_ajax_tweet() {
 		$sentence       = ( isset( $_REQUEST['tweet_text'] ) && '' !== trim( $_REQUEST['tweet_text'] ) ) ? $_REQUEST['tweet_text'] : $default;
 		$sentence       = stripcslashes( trim( $sentence ) );
 		$post_info      = wpt_post_info( $post_ID );
-		$sentence       = jd_truncate_tweet( $sentence, $post_info, $post_ID, false, $user_ID );
+		$sentence       = wpt_truncate_tweet( $sentence, $post_info, $post_ID, false, $user_ID );
 		$schedule       = ( isset( $_REQUEST['tweet_schedule'] ) ) ? strtotime( $_REQUEST['tweet_schedule'] ) : wp_rand( 60, 240 );
 		$print_schedule = date_i18n( get_option( 'date_format' ) . ' @ ' . get_option( 'time_format' ), $schedule );
 		$offset         = ( 60 * 60 * get_option( 'gmt_offset' ) );

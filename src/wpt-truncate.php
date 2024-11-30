@@ -59,7 +59,7 @@ function wpt_filter_urls( $tweet, $post_ID ) {
 }
 
 /**
- * Parse the text of a Tweet to ensure included tags don't exceed length requirements.
+ * Deprecated 11/30/2024. Aliases `wpt_truncate_tweet`.
  *
  * @param string  $tweet Tweet text.
  * @param array   $post Post data.
@@ -70,6 +70,21 @@ function wpt_filter_urls( $tweet, $post_ID ) {
  * @return string New text.
  */
 function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = false ) {
+	return wpt_truncate_tweet( $tweet, $post, $post_ID, $retweet, $ref );
+}
+
+/**
+ * Parse the text of a Tweet to ensure included tags don't exceed length requirements.
+ *
+ * @param string  $tweet Tweet text.
+ * @param array   $post Post data.
+ * @param int     $post_ID Post ID.
+ * @param boolean $retweet Is this a retweet.
+ * @param boolean $ref X.com author Reference.
+ *
+ * @return string New text.
+ */
+function wpt_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = false ) {
 	// media file no longer needs accounting in shortening. 9/22/2016.
 	$maxlength = wpt_max_length();
 	$length    = $maxlength['base_length'];
@@ -524,8 +539,20 @@ function wpt_custom_shortcodes( $sentence, $post_ID ) {
 		foreach ( $matches[0] as $value ) {
 			$shortcode = "$value";
 			$field     = str_replace( $params, '', $shortcode );
-			$custom    = apply_filters( 'wpt_custom_shortcode', strip_tags( get_post_meta( $post_ID, $field, true ) ), $post_ID, $field );
-			$sentence  = str_replace( $shortcode, $custom, $sentence );
+			$value     = strip_tags( get_post_meta( $post_ID, $field, true ) );
+			/**
+			 * Filter the output of a custom field template tag.
+			 *
+			 * @hook wpt_custom_shortcode
+			 *
+			 * @param {string} $value Returned singular value of a post meta field, tags stripped.
+			 * @param {int}    $post_ID Post ID.
+			 * @param {string} $field Post meta field name.
+			 *
+			 * @return {string}
+			 */
+			$custom   = apply_filters( 'wpt_custom_shortcode', $value, $post_ID, $field );
+			$sentence = str_replace( $shortcode, $custom, $sentence );
 		}
 	}
 
