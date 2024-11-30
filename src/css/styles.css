@@ -224,6 +224,20 @@ label[for="wpt_license_key"] {
 	}
 }
 
+#wp-to-twitter .nav-tab {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+#wp-to-twitter .nav-tab .dashicons-no {
+	color: #b32d2e;
+}
+
+#wp-to-twitter .nav-tab .dashicons-yes {
+	color: #008a20;
+}
+
 #wpt_settings_page .tabs li {
 	display: inline;
 	margin: 0 auto;

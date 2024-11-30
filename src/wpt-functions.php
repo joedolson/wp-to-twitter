@@ -169,10 +169,16 @@ function wpt_settings_tabs() {
 	$default  = ( '' === $username || false === $username ) ? 'connection' : 'basic';
 	$current  = ( isset( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : $default;
 	$pro_text = ( function_exists( 'wpt_pro_exists' ) ) ? __( 'Pro Settings', 'wp-to-twitter' ) : __( 'XPoster PRO', 'wp-to-twitter' );
+
+	$yes         = '<span class="dashicons dashicons-yes" aria-label="Connected"></span>';
+	$no          = '<span class="dashicons dashicons-no" aria=label="Unconnected"></span>';
+	$x_connected = ( wtt_oauth_test() ) ? $yes : $no;
+	$m_connected = ( wpt_mastodon_connection() ) ? $yes : $no;
+	$b_connected = ( wpt_bluesky_connection() ) ? $yes : $no;
 	$pages    = array(
-		'connection' => __( 'X Connection', 'wp-to-twitter' ),
-		'mastodon'   => __( 'Mastodon API', 'wp-to-twitter' ),
-		'bluesky'    => __( 'Bluesky API', 'wp-to-twitter' ),
+		'connection' => __( 'X', 'wp-to-twitter' ) . $x_connected,
+		'mastodon'   => __( 'Mastodon', 'wp-to-twitter' ) . $m_connected,
+		'bluesky'    => __( 'Bluesky', 'wp-to-twitter' ) . $b_connected,
 		'basic'      => __( 'Settings', 'wp-to-twitter' ),
 		'shortener'  => __( 'URL Shortener', 'wp-to-twitter' ),
 		'advanced'   => __( 'Advanced Settings', 'wp-to-twitter' ),
