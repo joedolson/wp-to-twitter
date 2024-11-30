@@ -173,9 +173,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		/**
 		 * Build a signature.
 		 *
-		 * @param object $request Request object.
-		 * @param object $consumer Consumer object.
-		 * @param string $token Token.
+		 * @param object        $request Request object.
+		 * @param object        $consumer Consumer object.
+		 * @param string|object $token Token or object with secret property.
 		 *
 		 * @return base 64 signature.
 		 */
@@ -212,7 +212,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 *
 		 * @param object $request Request object.
 		 * @param object $consumer Consumer object.
-		 * @param string $token Token.
+		 * @param string|object $token Token or object with token property.
 		 *
 		 * @return signature.
 		 *
@@ -264,7 +264,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 *
 		 * @param Object $request Request.
 		 *
-		 * @return Either way should return a string representation of the certificate.
+		 * @return OpenSSLAsymmetricKey|OpenSSLCertificate|array|string Either way should return a string representation of the certificate.
 		 */
 		protected abstract function fetch_private_cert( &$request );
 
@@ -708,13 +708,13 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		/**
 		 * Version
 		 *
-		 * @var $version
+		 * @var string $version
 		 */
 		protected $version = '1.0';           // hi blaine.
 		/**
 		 * Array of methods usable.
 		 *
-		 * @var $signature_methods
+		 * @var array $signature_methods
 		 */
 		protected $signature_methods = array();
 
@@ -1046,9 +1046,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		/**
 		 * Encode as rfc3986.
 		 *
-		 * @param string $input Any string input.
+		 * @param string|array $input Any string input or array of strings.
 		 *
-		 * @return encoded input.
+		 * @return string|array encoded input.
 		 */
 		public static function urlencode_rfc3986( $input ) {
 			if ( is_array( $input ) ) {

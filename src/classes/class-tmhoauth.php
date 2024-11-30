@@ -164,7 +164,7 @@ class TmhOAuth {
 	 *
 	 * @param mixed $data the scalar or array to encode.
 	 *
-	 * @return $data encoded in a way compatible with OAuth
+	 * @return null|array $data encoded in a way compatible with OAuth
 	 */
 	private function safe_encode( $data ) {
 		if ( is_array( $data ) ) {
