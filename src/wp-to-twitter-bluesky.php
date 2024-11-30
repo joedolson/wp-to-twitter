@@ -119,12 +119,12 @@ function wtt_connect_bluesky( $auth = false ) {
 					<li>' . __( 'Add your App Password and Bluesky Handle to setings', 'wp-to-twitter' ) . '
 					<div class="tokens auth-fields">
 					<p>
-						<label for="wpt_bluesky_token">' . __( 'App Password', 'wp-to-twitter' ) . '</label>
-						<input type="text" size="45" name="wpt_bluesky_token" id="wpt_bluesky_token" value="' . esc_attr( wpt_mask_attr( $ack ) ) . '" />
-					</p>
-					<p>
 						<label for="wpt_bluesky_username">' . __( 'Bluesky Handle', 'wp-to-twitter' ) . '</label>
 						<input placeholder="joedolson.bsky.social" type="text" size="45" name="wpt_bluesky_username" id="wpt_bluesky_username" value="' . esc_attr( wpt_mask_attr( $user ) ) . '" />
+					</p>
+					<p>
+						<label for="wpt_bluesky_token">' . __( 'App Password', 'wp-to-twitter' ) . '</label>
+						<input type="text" size="45" name="wpt_bluesky_token" id="wpt_bluesky_token" value="' . esc_attr( wpt_mask_attr( $ack ) ) . '" />
 					</p>
 					</div></li>
 				</ol>
