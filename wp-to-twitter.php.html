@@ -1097,7 +1097,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 						foreach ( $wpt_selected_users as $acct ) {
 							$acct     = ( 'main' === $acct ) ? false : $acct;
 							$offset   = ( $auth !== $acct ) ? apply_filters( 'wpt_random_delay', wp_rand( 60, 480 ) ) : 0;
-							$verified = $verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
+							$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
 							if ( $verified ) {
 								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
 
@@ -1152,7 +1152,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 						$repeat = $post_info['wpt_retweet_repeat'];
 						$first  = true;
 						foreach ( $wpt_selected_users as $acct ) {
-							$verified = $verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
+							$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
 							if ( $verified ) {
 								for ( $i = 1; $i &lt;= $repeat; $i++ ) {
 									$continue = apply_filters( 'wpt_allow_reposts', true, $i, $post_ID, $acct );
