@@ -1973,7 +1973,9 @@ function wpt_admin_style() {
 	if ( SCRIPT_DEBUG ) {
 		$wpt_version .= '-' . wp_rand( 10000, 99999 );
 	}
-	if ( isset( $_GET['page'] ) &amp;&amp; ( 'wp-to-twitter' === $_GET['page'] || 'wp-tweets-pro' === $_GET['page'] || 'wp-to-twitter-schedule' === $_GET['page'] || 'wp-to-twitter-tweets' === $_GET['page'] || 'wp-to-twitter-errors' === $_GET['page'] ) ) {
+	global $current_screen;
+
+	if ( isset( $_GET['page'] ) &amp;&amp; ( 'wp-to-twitter' === $_GET['page'] || 'wp-tweets-pro' === $_GET['page'] || 'wp-to-twitter-schedule' === $_GET['page'] || 'wp-to-twitter-tweets' === $_GET['page'] || 'wp-to-twitter-errors' === $_GET['page'] ) || 'profile' === $current_screen->base ) {
 		wp_enqueue_style( 'wpt-styles', plugins_url( 'css/styles.css', __FILE__ ), array(), $wpt_version );
 	}
 }
