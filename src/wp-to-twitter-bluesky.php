@@ -124,7 +124,7 @@ function wtt_connect_bluesky( $auth = false ) {
 					</p>
 					<p>
 						<label for="wpt_bluesky_username">' . __( 'Bluesky Handle', 'wp-to-twitter' ) . '</label>
-						<input type="text" size="45" name="wpt_bluesky_username" id="wpt_bluesky_username" value="' . esc_attr( wpt_mask_attr( $user ) ) . '" />
+						<input placeholder="joedolson.bsky.social" type="text" size="45" name="wpt_bluesky_username" id="wpt_bluesky_username" value="' . esc_attr( wpt_mask_attr( $user ) ) . '" />
 					</p>
 					</div></li>
 				</ol>
