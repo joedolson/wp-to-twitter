@@ -1051,7 +1051,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 				if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 					$wpt_selected_users = $post_info['wpt_authorized_users'];
 					// set up basic author/main account values.
-					$auth_verified = wtt_oauth_test( $auth, 'verify' );
+					$auth_verified = ( wtt_oauth_test( $auth, 'verify' ) || wpt_mastodon_connection( $auth ) || wpt_bluesky_connection( $auth ) ) ? true : false;
 					if ( empty( $wpt_selected_users ) && '1' === get_option( 'jd_individual_twitter_users' ) ) {
 						$wpt_selected_users = ( $auth_verified ) ? array( $auth ) : array( false );
 					}
@@ -1062,15 +1062,17 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 					$wpt_selected_users = apply_filters( 'wpt_filter_users', $wpt_selected_users, $post_info );
 					if ( '0' === (string) $post_info['wpt_delay_tweet'] || '' === $post_info['wpt_delay_tweet'] || 'on' === $post_info['wpt_no_delay'] ) {
 						foreach ( $wpt_selected_users as $acct ) {
-							if ( wtt_oauth_test( $acct, 'verify' ) ) {
+							$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
+							if ( $verified ) {
 								wpt_post_to_service( $sentence2, $acct, $post_ID, $media );
 							}
 						}
 					} else {
 						foreach ( $wpt_selected_users as $acct ) {
-							$acct   = ( 'main' === $acct ) ? false : $acct;
-							$offset = ( $auth !== $acct ) ? apply_filters( 'wpt_random_delay', wp_rand( 60, 480 ) ) : 0;
-							if ( wtt_oauth_test( $acct, 'verify' ) ) {
+							$acct     = ( 'main' === $acct ) ? false : $acct;
+							$offset   = ( $auth !== $acct ) ? apply_filters( 'wpt_random_delay', wp_rand( 60, 480 ) ) : 0;
+							$verified = $verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
+							if ( $verified ) {
 								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
 
 								/**
@@ -1124,7 +1126,8 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 						$repeat = $post_info['wpt_retweet_repeat'];
 						$first  = true;
 						foreach ( $wpt_selected_users as $acct ) {
-							if ( wtt_oauth_test( $acct, 'verify' ) ) {
+							$verified = $verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
+							if ( $verified ) {
 								for ( $i = 1; $i <= $repeat; $i++ ) {
 									$continue = apply_filters( 'wpt_allow_reposts', true, $i, $post_ID, $acct );
 									if ( $continue ) {
@@ -1788,7 +1791,9 @@ function wpt_ajax_tweet() {
 	$upload       = ( isset( $_REQUEST['tweet_upload'] ) && null !== $_REQUEST['tweet_upload'] ) ? (int) $_REQUEST['tweet_upload'] : '1';
 	$current_user = wp_get_current_user();
 	if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
-		if ( wtt_oauth_test( $current_user->ID, 'verify' ) ) {
+		$acct     = $current_user->ID;
+		$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
+		if ( $verified ) {
 			$auth    = $current_user->ID;
 			$user_ID = $current_user->ID;
 		} else {
