@@ -391,9 +391,9 @@ function wpt_show_debug() {
 /**
  * Send a remote query expecting JSON.
  *
- * @param string $url Target URL.
- * @param array  $args JSON decode arguments if not default.
- * @param string $method Query method.
+ * @param string    $url Target URL.
+ * @param null|bool $args JSON decode arguments if not default.
+ * @param string    $method Query method.
  * @throws Exception JSON error string.
  *
  * @return JSON object.
