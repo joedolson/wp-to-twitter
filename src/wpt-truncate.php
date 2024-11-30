@@ -27,6 +27,15 @@ function wpt_max_length() {
 
 	$values['base_length'] = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : 140 ) - 1;
 
+	/**
+	 * Filter the max length array used for calculating status update truncation.
+	 *
+	 * @hook wpt_max_length
+	 *
+	 * @param {array} $values Array with various values used for calculating how long your status update can be.
+	 *
+	 * @return {array}
+	 */
 	return apply_filters( 'wpt_max_length', $values );
 }
 
@@ -92,6 +101,7 @@ function wpt_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = f
 	 * Filter a Tweet template prior to parsing tags.
 	 *
 	 * @hook wpt_tweet_sentence
+	 *
 	 * @param {string} $tweet Template for this Tweet.
 	 * @param {int}    $post_ID Post ID.
 	 *
@@ -589,8 +599,8 @@ function wpt_user_meta_shortcodes( $sentence, $auth_id ) {
 			 *
 			 * @return {string}
 			 */
-			$custom    = apply_filters( 'wpt_user_meta_shortcode', strip_tags( get_user_meta( $auth_id, $field, true ) ), $auth_id, $field );
-			$sentence  = str_replace( $shortcode, $custom, $sentence );
+			$custom   = apply_filters( 'wpt_user_meta_shortcode', strip_tags( get_user_meta( $auth_id, $field, true ) ), $auth_id, $field );
+			$sentence = str_replace( $shortcode, $custom, $sentence );
 		}
 	}
 
