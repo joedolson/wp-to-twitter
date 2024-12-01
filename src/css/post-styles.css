@@ -7,6 +7,10 @@
 	width: 100%;
 }
 
+#wp2t .wpt-template {
+	margin: 6px 0;
+}
+
 #wp2t .counter {
     font-weight: 600;
 }
@@ -26,13 +30,13 @@
 }
 
 #wpt_selected_image {
-	height: 180px;
+	height: 150px;
 	background: rgba( 0,0,0,.04 );
 	border: 2px dashed #ccc;
 }
 
 #wpt_selected_image img {
-	max-height: 180px;
+	max-height: 150px;
 	width: auto;
 }
 
@@ -100,9 +104,9 @@
     padding: 0;
 }
 
-#wp2t .wpt_auth_users select {
-	width: calc( 100% - 24px );
-	max-height: 21em;
+#wp2t .wpt_auth_users ul {
+	max-height: 12em;
+	overflow-y: scroll;
 }
 
 .panel-toggle a {
@@ -139,7 +143,7 @@
 
 }
 
-#side-sortables .wpt-options {
+#side-sortables .wpt-options .wptab {
 	grid-template-columns: repeat( 1, 1fr );
 }
 
@@ -202,6 +206,7 @@ button.time div {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 2px;
+	margin: 0;
 }
 
 .wptab .inline-list li {
