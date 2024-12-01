@@ -1449,10 +1449,13 @@ function wpt_add_twitter_inner_box( $post ) {
 		$type         = $post->post_type;
 		$status       = $post->post_status;
 		wpt_show_metabox_message( $post, $options );
-		$tweet = esc_attr( stripcslashes( get_post_meta( $post->ID, '_jd_twitter', true ) ) );
-		$tweet = apply_filters( 'wpt_user_text', $tweet, $status );
+		$user_tweet = apply_filters( 'wpt_user_text', '', $status );
 		// Formulate Template display.
 		$template = wpt_display_status_template( $post, $options );
+		if ( $user_tweet ) {
+			// If a user template is defined, replace the existing template.
+			$template = $user_tweet;
+		}
 		if ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) {
 			// Translators: post type.
 			$tweet_status = sprintf( __( '%s will not be shared on save.', 'wp-to-twitter' ), ucfirst( $type ) );
@@ -1469,8 +1472,8 @@ function wpt_add_twitter_inner_box( $post ) {
 			?>
 			<p class='jtw'>
 				<label for="wpt_custom_tweet"><?php _e( 'Custom Status Update', 'wp-to-twitter' ); ?></label><br/>
-				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
-				<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post->ID ); ?>
+				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"></textarea>
+				<?php echo apply_filters( 'wpt_custom_box', '', $template, $post->ID ); ?>
 			</p>
 			<div class="wpt-template-resources wpt-flex">
 				<p class='wpt-template'>
@@ -1500,7 +1503,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			}
 		} else {
 			?>
-			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $tweet ); ?>' />
+			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $template ); ?>' />
 			<p class='wpt-template'>
 				<?php _e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo stripcslashes( $template ); ?></code>
 				<?php echo apply_filters( 'wpt_template_block', '', $template, $post->ID ); ?>
