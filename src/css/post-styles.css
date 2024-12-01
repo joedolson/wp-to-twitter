@@ -279,7 +279,6 @@ button.time div {
     text-align: center;
     cursor: pointer;
     background-color: #f3f3f3;
-	display: inline-block;
 	width: 50%;
     text-decoration: underline;	
 	color: #6e6e6e;
