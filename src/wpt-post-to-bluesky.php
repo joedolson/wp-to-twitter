@@ -162,6 +162,7 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
 		'http'      => $http_code,
 		'notice'    => $notice,
 		'status_id' => $status_id,
+		'service'   => 'bluesky',
 	);
 }
 

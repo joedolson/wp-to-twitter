@@ -459,12 +459,14 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
  * @param string   $twit Posted status text.
  */
 function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
-	$return    = $response['return'];
-	$http_code = $response['http'];
-	$notice    = $response['notice'];
-	$tweet_id  = isset( $response['tweet_id'] ) ? $response['tweet_id'] : false;
-	$status_id = isset( $response['status_id'] ) ? $response['status_id'] : false;
-	wpt_mail( "X.com Response: $http_code", $notice, $id ); // DEBUG.
+	$return      = $response['return'];
+	$http_code   = $response['http'];
+	$notice      = $response['notice'];
+	$service     = isset( $response['service'] ) ? $response['service'] : false;
+	$tweet_id    = ( 'x' === $service ) ? $response['status_id'] : false;
+	$mastodon_id = ( 'mastodon' === $service ) ? $response['status_id'] : false;
+	$bluesky_id  = ( 'bluesky' === $service ) ? $response['status_id'] : false;
+	wpt_mail( "Status Update Response: $http_code / $service", $notice, $id ); // DEBUG.
 	// only save last status if successful.
 	if ( 200 === $http_code ) {
 		if ( ! $auth ) {
@@ -499,15 +501,20 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 		 * @param {int}    $id Post ID for status update.
 		 */
 		do_action( 'wpt_tweet_posted', $connection, $id );
-		// Log the Status ID of the first Tweet on this post.
+		// Log the Status ID of the first status update on this post.
 		$has_tweet_id = get_post_meta( $id, '_wpt_tweet_id', true );
 		if ( ! $has_tweet_id && $tweet_id ) {
 			update_post_meta( $id, '_wpt_tweet_id', $tweet_id );
 		}
-		// Log the Status ID of the first non-Tweet update on this post.
-		$has_status_id = get_post_meta( $id, '_wpt_status_id', true );
-		if ( ! $has_status_id && $status_id ) {
-			update_post_meta( $id, '_wpt_status_id', $status_id );
+		// Log the Status ID of the first Mastodon update on this post.
+		$has_mastodon_id = get_post_meta( $id, '_wpt_status_id', true );
+		if ( ! $has_mastodon_id && $mastodon_id ) {
+			update_post_meta( $id, '_wpt_status_id', $mastodon_id );
+		}
+		// Log the Status ID of the first Bluesky update on this post.
+		$has_bluesky_id = get_post_meta( $id, '_wpt_bluesky_id', true );
+		if ( ! $has_bluesky_id && $bluesky_id ) {
+			update_post_meta( $id, '_wpt_bluesky_id', $bluesky_id );
 		}
 		wpt_set_log( 'wpt_status_message', $id, $notice );
 	}

@@ -97,7 +97,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		$keyword_format = ( '1' === get_option( 'jd_keyword_format' ) ) ? $post_ID : '';
 		$keyword_format = ( '2' === get_option( 'jd_keyword_format' ) ) ? get_post_meta( $post_ID, '_yourls_keyword', true ) : $keyword_format;
 		/**
-		 * Apply a custom shortener to your Tweet. Return false to allow the settings to parse the URL or a URL to shortcircuit plugin settings.
+		 * Apply a custom shortener to your status update. Return false to allow the settings to parse the URL or a URL to shortcircuit plugin settings.
 		 *
 		 * @hook wpt_do_shortening
 		 * @param {bool}   $shrink False prior to shortening.
@@ -676,7 +676,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		<?php
 		if ( '3' !== $shortener ) {
 			?>
-			<input type='checkbox' value='false' name='wpt_use_stored_urls' id='wpt_use_stored_urls' <?php checked( get_option( 'wpt_use_stored_urls' ), 'false' ); ?>> <label for='wpt_use_stored_urls'><?php _e( 'Always request a new short URL for Tweets', 'wp-to-twitter' ); ?></label>
+			<input type='checkbox' value='false' name='wpt_use_stored_urls' id='wpt_use_stored_urls' <?php checked( get_option( 'wpt_use_stored_urls' ), 'false' ); ?>> <label for='wpt_use_stored_urls'><?php _e( 'Always request a new short URL for status updates', 'wp-to-twitter' ); ?></label>
 			<?php
 		}
 		?>

@@ -143,6 +143,7 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		'http'      => $http_code,
 		'notice'    => $notice,
 		'status_id' => $status_id,
+		'service'   => 'mastodon',
 	);
 }
 
