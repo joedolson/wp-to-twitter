@@ -313,6 +313,28 @@ label[for="wpt_license_key"] {
 	gap: 5px;
 }
 
+.wpt-flex {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	justify-content: center;
+}
+
+.wpt-flex.wpt-social {
+	margin: 0;
+	align-items: center;
+}
+
+.wpt-flex.wpt-social li {
+	margin: 0;
+}
+
+.wpt-flex.wpt-social a {
+	display: block;
+	padding: 3px;
+	border-radius: 3px;
+}
+
 #maxlengthwarning {
 	background: #f5e6ab;
 	padding: 5px;

@@ -1564,7 +1564,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() && ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
 				wpt_schedule_values( $post_id );
 				do_action( 'wpt_custom_tab', $post_id, 'visible' );
-				// WPT PRO OPTIONS.
+				// XPoster Pro OPTIONS.
 				if ( current_user_can( 'edit_others_posts' ) ) {
 					if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
 						$selected = ( get_post_meta( $post_id, '_wpt_authorized_users', true ) ) ? get_post_meta( $post_id, '_wpt_authorized_users', true ) : array();
@@ -1575,7 +1575,7 @@ function wpt_add_twitter_inner_box( $post ) {
 					}
 				}
 			}
-			// WPT PRO.
+			// XPoster PRO.
 			if ( ! current_user_can( 'wpt_twitter_custom' ) && ! current_user_can( 'manage_options' ) ) {
 				?>
 				<p><?php _e( 'Customizing XPoster options is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
@@ -1943,8 +1943,7 @@ add_action( 'admin_menu', 'wpt_admin_page' );
  */
 function wpt_admin_page() {
 	if ( function_exists( 'add_menu_page' ) && ! function_exists( 'wpt_pro_functions' ) ) {
-		$icon_path = plugins_url( 'images/logo-white.png', __FILE__ );
-		add_menu_page( 'XPoster', 'XPoster', 'manage_options', 'wp-tweets-pro', 'wpt_update_settings', $icon_path );
+		add_menu_page( 'XPoster', 'XPoster', 'manage_options', 'wp-tweets-pro', 'wpt_update_settings', 'dashicons-share' );
 	}
 }
 
