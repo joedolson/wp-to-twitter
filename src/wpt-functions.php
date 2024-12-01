@@ -62,7 +62,7 @@ function wpt_selected( $field, $value, $type = 'select' ) {
 }
 
 /**
- * Insert a Tweet record into logs.
+ * Insert a status update record into logs.
  *
  * @param string $data Option key.
  * @param int    $id Post ID.
@@ -83,7 +83,7 @@ function wpt_set_log( $data, $id, $message, $http = '200' ) {
 }
 
 /**
- * Get information from Tweet logs.
+ * Get information from status update logs.
  *
  * @param string $data Option key.
  * @param int    $id Post ID.
@@ -239,7 +239,7 @@ function wpt_mask_attr( $value ) {
 }
 
 /**
- * Show the last Tweet attempt as admin notice.
+ * Show the last status update attempt as admin notice.
  */
 function wpt_show_last_update() {
 	/**
@@ -277,7 +277,7 @@ function wpt_show_last_update() {
 }
 
 /**
- * Handle Tweet & URL shortener errors.
+ * Handle Update & URL shortener errors.
  */
 function wpt_handle_errors() {
 	if ( isset( $_POST['submit-type'] ) && 'clear-error' === $_POST['submit-type'] ) {
@@ -286,7 +286,7 @@ function wpt_handle_errors() {
 	if ( '1' === get_option( 'wp_url_failure' ) ) {
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 		$nonce     = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
-		$error     = '<div class="error"><p>' . __( 'The query to the URL shortener API failed, and your URL was not shrunk. The full post URL was attached to your Tweet. Check with your URL shortening provider to see if there are any known issues.', 'wp-to-twitter' ) .
+		$error     = '<div class="error"><p>' . __( 'The query to the URL shortener API failed, and your URL was not shrunk. The full post URL was attached to your status update. Check with your URL shortening provider to see if there are any known issues.', 'wp-to-twitter' ) .
 			'</p><form method="post" action="' . $admin_url . '">
 				<div>
 					<input type="hidden" name="submit-type" value="clear-error"/>
@@ -336,7 +336,7 @@ function wpt_cap_checkbox( $role, $cap, $name ) {
  *
  * @param string  $subject Subject of error.
  * @param string  $body Body of error.
- * @param int     $post_ID ID of Post being Tweeted.
+ * @param int     $post_ID ID of Post being shared.
  * @param boolean $override Send message if debug disabled.
  */
 function wpt_mail( $subject, $body, $post_ID = false, $override = false ) {
@@ -355,7 +355,7 @@ function wpt_mail( $subject, $body, $post_ID = false, $override = false ) {
  *
  * @param string $subject Subject of error.
  * @param string $body Body of error.
- * @param int    $post_ID ID of post being Tweeted.
+ * @param int    $post_ID ID of post being shared.
  */
 function wpt_debug_log( $subject, $body, $post_ID ) {
 	if ( ! $post_ID ) {
@@ -998,7 +998,7 @@ function jd_remote_json( $url, $query_args = true ) {
 }
 
 /**
- * Send a Tweet for a new link.
+ * Send a status update for a new link.
  *
  * @param int $link_id Link ID.
  *

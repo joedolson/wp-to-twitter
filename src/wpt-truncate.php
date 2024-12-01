@@ -1,6 +1,6 @@
 <?php
 /**
- * Construct and check lengths of Tweets - XPoster
+ * Construct and check lengths of status updates - XPoster
  *
  * @category Core
  * @package  XPoster
@@ -41,15 +41,15 @@ function wpt_max_length() {
 
 add_filter( 'wpt_tweet_sentence', 'wpt_filter_urls', 10, 2 );
 /**
- * Filter the URLs in a tweet and shorten them.
+ * Filter the URLs in a status update and shorten them.
  *
- * @param string $tweet Tweet.
+ * @param string $update Status update text.
  * @param int    $post_ID Post ID.
  *
- * @return string New tweet text.
+ * @return string New update text.
  */
-function wpt_filter_urls( $tweet, $post_ID ) {
-	preg_match_all( '#\bhttps?://[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#', $tweet, $match );
+function wpt_filter_urls( $update, $post_ID ) {
+	preg_match_all( '#\bhttps?://[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#', $update, $match );
 	$title = get_the_title( $post_ID );
 
 	if ( isset( $match[0] ) && ! empty( $match[0] ) ) {
@@ -58,128 +58,128 @@ function wpt_filter_urls( $tweet, $post_ID ) {
 			if ( esc_url( $url ) ) {
 				$short = wpt_shorten_url( $url, $title, $post_ID, false, false, false );
 				if ( $short ) {
-					$tweet = str_replace( $url, $short, $tweet );
+					$update = str_replace( $url, $short, $update );
 				}
 			}
 		}
 	}
 
-	return $tweet;
+	return $update;
 }
 
 /**
- * Deprecated 11/30/2024. Aliases `wpt_truncate_tweet`.
+ * Deprecated 11/30/2024. Aliases `wpt_truncate_status`.
  *
- * @param string  $tweet Tweet text.
+ * @param string  $update Status update text.
  * @param array   $post Post data.
  * @param int     $post_ID Post ID.
- * @param boolean $retweet Is this a retweet.
+ * @param boolean $repost Is this a repost.
  * @param boolean $ref X.com author Reference.
  *
  * @return string New text.
  */
-function jd_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = false ) {
-	return wpt_truncate_tweet( $tweet, $post, $post_ID, $retweet, $ref );
+function jd_truncate_tweet( $update, $post, $post_ID, $repost = false, $ref = false ) {
+	return wpt_truncate_status( $update, $post, $post_ID, $repost, $ref );
 }
 
 /**
- * Parse the text of a Tweet to ensure included tags don't exceed length requirements.
+ * Parse the text of a status update to ensure included tags don't exceed length requirements.
  *
- * @param string  $tweet Tweet text.
+ * @param string  $update Status update text.
  * @param array   $post Post data.
  * @param int     $post_ID Post ID.
- * @param boolean $retweet Is this a retweet.
+ * @param boolean $repost Is this a repost.
  * @param boolean $ref X.com author Reference.
  *
  * @return string New text.
  */
-function wpt_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = false ) {
+function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = false ) {
 	// media file no longer needs accounting in shortening. 9/22/2016.
 	$maxlength = wpt_max_length();
 	$length    = $maxlength['base_length'];
 	/**
-	 * Filter a Tweet template prior to parsing tags.
+	 * Filter a template prior to parsing tags.
 	 *
 	 * @hook wpt_tweet_sentence
 	 *
-	 * @param {string} $tweet Template for this Tweet.
+	 * @param {string} $update Template for this status update.
 	 * @param {int}    $post_ID Post ID.
 	 *
 	 * @return {string}
 	 */
-	$tweet    = apply_filters( 'wpt_tweet_sentence', $tweet, $post_ID );
-	$tweet    = trim( wpt_custom_shortcodes( $tweet, $post_ID ) );
-	$tweet    = trim( wpt_user_meta_shortcodes( $tweet, $post['authId'] ) );
+	$update    = apply_filters( 'wpt_tweet_sentence', $update, $post_ID );
+	$update    = trim( wpt_custom_shortcodes( $update, $post_ID ) );
+	$update    = trim( wpt_user_meta_shortcodes( $update, $post['authId'] ) );
 	$encoding = ( 'UTF-8' !== get_option( 'blog_charset' ) && '' !== get_option( 'blog_charset', '' ) ) ? get_option( 'blog_charset' ) : 'UTF-8';
 	$diff     = 0;
 
-	// Add custom append/prepend fields to Tweet text.
-	if ( '' !== get_option( 'jd_twit_prepend', '' ) && '' !== $tweet ) {
-		$tweet = stripslashes( get_option( 'jd_twit_prepend' ) ) . ' ' . $tweet;
+	// Add custom append/prepend fields to status update text.
+	if ( '' !== get_option( 'jd_twit_prepend', '' ) && '' !== $update ) {
+		$update = stripslashes( get_option( 'jd_twit_prepend' ) ) . ' ' . $update;
 	}
-	if ( '' !== get_option( 'jd_twit_append', '' ) && '' !== $tweet ) {
-		$tweet = $tweet . ' ' . stripslashes( get_option( 'jd_twit_append' ) );
+	if ( '' !== get_option( 'jd_twit_append', '' ) && '' !== $update ) {
+		$update = $update . ' ' . stripslashes( get_option( 'jd_twit_append' ) );
 	}
 
-	// there are no tags in this Tweet. Truncate and return.
-	if ( ! wpt_has_tags( $tweet ) ) {
-		$post_tweet = mb_substr( $tweet, 0, $length, $encoding );
+	// there are no tags in this update. Truncate and return.
+	if ( ! wpt_has_tags( $update ) ) {
+		$post_update = mb_substr( $update, 0, $length, $encoding );
 		/**
-		 * Filter a Tweet template that does not contain any XPoster template tags.
+		 * Filter an update template that does not contain any XPoster template tags.
 		 *
 		 * @hook wpt_custom_truncate
-		 * @param {string} $post_tweet Text to Tweet truncated to maximum allowed length.
-		 * @param {string} $tweet Original passed text.
+		 * @param {string} $post_status Text to status update truncated to maximum allowed length.
+		 * @param {string} $update Original passed text.
 		 * @param {int}    $post_ID Post ID.
-		 * @param {bool}   $retweet Boolean flag that indicates whether this is being reposted.
+		 * @param {bool}   $repost Boolean flag that indicates whether this is being reposted.
 		 * @param {int}    $reference Pass reference (1).
 		 *
 		 * @return {string}
 		 */
-		return apply_filters( 'wpt_custom_truncate', $post_tweet, $tweet, $post_ID, $retweet, 1 );
+		return apply_filters( 'wpt_custom_truncate', $post_update, $update, $post_ID, $repost, 1 );
 	}
 
-	// create full unconditional post tweet - prior to truncation.
+	// create full unconditional post update - prior to truncation.
 	// order matters; arrays have to be ordered the same way.
 	$tags   = array_map( 'wpt_make_tag', wpt_tags() );
 	$values = wpt_create_values( $post, $post_ID, $ref );
 	// Replace the template tags with their corresponding values.
-	$post_tweet = str_ireplace( $tags, $values, $tweet );
+	$post_update = str_ireplace( $tags, $values, $update );
 
 	// check total length.
-	$str_length = mb_strlen( urldecode( wpt_normalize( $post_tweet ) ), $encoding );
+	$str_length = mb_strlen( urldecode( wpt_normalize( $post_update ) ), $encoding );
 
 	// Check whether completed replacement is still within allowed length.
 	if ( $str_length < $length + 1 ) {
-		if ( mb_strlen( wpt_normalize( $post_tweet ) ) > $length + 1 ) {
-			$post_tweet = mb_substr( $post_tweet, 0, $length, $encoding );
+		if ( mb_strlen( wpt_normalize( $post_update ) ) > $length + 1 ) {
+			$post_update = mb_substr( $post_update, 0, $length, $encoding );
 		}
 		/**
-		 * Filter a Tweet template after tags have been parsed but prior to truncating for length.
+		 * Filter an update template after tags have been parsed but prior to truncating for length.
 		 *
 		 * @hook wpt_custom_truncate
-		 * @param {string} $post_tweet Text to Tweet truncated to maximum allowed length.
-		 * @param {string} $tweet Original passed text.
+		 * @param {string} $post_update Text to Tweet truncated to maximum allowed length.
+		 * @param {string} $update Original passed text.
 		 * @param {int}    $post_ID Post ID.
-		 * @param {bool}   $retweet Boolean flag that indicates whether this is being reposted.
+		 * @param {bool}   $repost Boolean flag that indicates whether this is being reposted.
 		 * @param {int}    $reference Pass reference (2).
 		 *
 		 * @return {string}
 		 */
-		return apply_filters( 'wpt_custom_truncate', $post_tweet, $tweet, $post_ID, $retweet, 2 ); // return early if all is well.
+		return apply_filters( 'wpt_custom_truncate', $post_update, $update, $post_ID, $repost, 2 ); // return early if all is well.
 	} else {
-		$has_excerpt_tag = wpt_has( $tweet, '#post#' );
-		$has_title_tag   = wpt_has( $tweet, '#title#' );
-		$has_short_url   = wpt_has( $tweet, '#url#' );
-		$has_long_url    = wpt_has( $tweet, '#longurl#' );
+		$has_excerpt_tag = wpt_has( $update, '#post#' );
+		$has_title_tag   = wpt_has( $update, '#title#' );
+		$has_short_url   = wpt_has( $update, '#url#' );
+		$has_long_url    = wpt_has( $update, '#longurl#' );
 
 		$url_strlen     = mb_strlen( urldecode( wpt_normalize( $values['url'] ) ), $encoding );
 		$longurl_strlen = mb_strlen( urldecode( wpt_normalize( $values['longurl'] ) ), $encoding );
 
-		// Tweet is too long, so we'll have to truncate that sucker.
+		// Status update is too long, so we'll have to truncate that sucker.
 		$length_array = wpt_length_array( $values, $encoding );
 
-		// X.com's t.co shortener is mandatory. All URLS are max-character value set by X.com.
+		// X.com's t.co shortener is mandatory. All URLS are max-character value set by X.com. Only true on X.
 		$tco   = ( wpt_is_ssl( $values['url'] ) ) ? $maxlength['https_length'] : $maxlength['http_length'];
 		$order = get_option( 'wpt_truncation_order' );
 		if ( is_array( $order ) ) {
@@ -210,12 +210,12 @@ function wpt_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = f
 			foreach ( $preferred as $key => $value ) {
 				// don't truncate content of post excerpt or title if those tags not in use.
 				if ( ! ( 'excerpt' === $key && ! $has_excerpt_tag ) && ! ( 'title' === $key && ! $has_title_tag ) ) {
-					$str_length = mb_strlen( urldecode( wpt_normalize( trim( $post_tweet ) ) ), $encoding );
+					$str_length = mb_strlen( urldecode( wpt_normalize( trim( $post_update ) ) ), $encoding );
 					if ( $str_length > ( $length + 1 + $diff ) ) {
 						$trim      = $str_length - ( $length + 1 + $diff );
 						$old_value = $values[ $key ];
 						// prevent URL from being modified.
-						$post_tweet = str_ireplace( array( $values['url'], $values['longurl'] ), array( '#url#', '#longurl#' ), $post_tweet );
+						$post_update = str_ireplace( array( $values['url'], $values['longurl'] ), array( '#url#', '#longurl#' ), $post_update );
 
 						// These tag fields should be removed completely, rather than truncated.
 						if ( wpt_remove_tag( $key ) ) {
@@ -252,22 +252,22 @@ function wpt_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = f
 							 */
 							$new_value = apply_filters( 'wpt_filter_truncated_value', $new_value, $key, $old_value );
 						}
-						$post_tweet = str_ireplace( $old_value, $new_value, $post_tweet );
+						$post_update = str_ireplace( $old_value, $new_value, $post_update );
 						// put URL back before checking length.
-						$post_tweet = str_ireplace( array( '#url#', '#longurl#' ), array( $values['url'], $values['longurl'] ), $post_tweet );
+						$post_update = str_ireplace( array( '#url#', '#longurl#' ), array( $values['url'], $values['longurl'] ), $post_update );
 					} else {
-						if ( mb_strlen( wpt_normalize( $post_tweet ), $encoding ) > ( $length + 1 + $diff ) ) {
-							$post_tweet = mb_substr( $post_tweet, 0, ( $length + $diff ), $encoding );
+						if ( mb_strlen( wpt_normalize( $post_update ), $encoding ) > ( $length + 1 + $diff ) ) {
+							$post_update = mb_substr( $post_update, 0, ( $length + $diff ), $encoding );
 						}
 					}
 				}
 			}
 		}
 
-		// this is needed in case a tweet needs to be truncated outright and the truncation values aren't in the above.
+		// this is needed in case an update needs to be truncated outright and the truncation values aren't in the above.
 		// 1) removes URL 2) checks length of remainder 3) Replaces URL.
-		if ( mb_strlen( wpt_normalize( $post_tweet ) ) > $length + 1 ) {
-			$tweet = false;
+		if ( mb_strlen( wpt_normalize( $post_update ) ) > $length + 1 ) {
+			$update = false;
 			if ( $has_short_url ) {
 				$url = $values['url'];
 				$tag = '#url#';
@@ -275,44 +275,44 @@ function wpt_truncate_tweet( $tweet, $post, $post_ID, $retweet = false, $ref = f
 				$url = $values['longurl'];
 				$tag = '#longurl#';
 			} else {
-				$post_tweet = mb_substr( $post_tweet, 0, ( $length + $diff ), $encoding );
-				$tweet      = true;
+				$post_update = mb_substr( $post_update, 0, ( $length + $diff ), $encoding );
+				$update      = true;
 			}
 
-			if ( ! $tweet ) {
-				$temp = str_ireplace( $url, $tag, $post_tweet );
-				if ( mb_strlen( wpt_normalize( $temp ) ) > ( ( $length + 1 ) - ( $tco - strlen( $tag ) ) ) && $temp !== $post_tweet ) {
+			if ( ! $update ) {
+				$temp = str_ireplace( $url, $tag, $post_update );
+				if ( mb_strlen( wpt_normalize( $temp ) ) > ( ( $length + 1 ) - ( $tco - strlen( $tag ) ) ) && $temp !== $post_update ) {
 					if ( false === stripos( $temp, '#url#' ) && false === stripos( $temp, '#longurl#' ) ) {
-						$post_tweet = trim( mb_substr( $temp, 0, $length, $encoding ) );
+						$post_update = trim( mb_substr( $temp, 0, $length, $encoding ) );
 					} else {
-						$post_tweet = trim( mb_substr( $temp, 0, ( $length - $tco - 1 ), $encoding ) );
+						$post_update = trim( mb_substr( $temp, 0, ( $length - $tco - 1 ), $encoding ) );
 					}
 					// it's possible to trim off the #url# part in this process. If that happens, put it back.
-					$sub_sentence = ( ! wpt_has( $post_tweet, $tag ) && ( $has_short_url || $has_long_url ) ) ? $post_tweet . ' ' . $tag : $post_tweet;
-					$post_tweet   = str_ireplace( $tag, $url, $sub_sentence );
+					$sub_sentence = ( ! wpt_has( $post_update, $tag ) && ( $has_short_url || $has_long_url ) ) ? $post_update . ' ' . $tag : $post_update;
+					$post_update   = str_ireplace( $tag, $url, $sub_sentence );
 				}
 			}
 		}
 	}
 	/**
-	 * Filter a Tweet template after all content checks are completed.
+	 * Filter a status update template after all content checks are completed.
 	 *
 	 * @hook wpt_custom_truncate
-	 * @param {string} $post_tweet Text to Tweet truncated to maximum allowed length.
-	 * @param {string} $tweet Original passed text.
+	 * @param {string} $post_update Text to status update truncated to maximum allowed length.
+	 * @param {string} $update Original passed text.
 	 * @param {int}    $post_ID Post ID.
-	 * @param {bool}   $retweet Boolean flag that indicates whether this is being reposted.
+	 * @param {bool}   $repost Boolean flag that indicates whether this is being reposted.
 	 * @param {int}    $reference Pass reference (3).
 	 *
 	 * @return {string}
 	 */
-	return apply_filters( 'wpt_custom_truncate', $post_tweet, $tweet, $post_ID, $retweet, 3 );
+	return apply_filters( 'wpt_custom_truncate', $post_update, $update, $post_ID, $repost, 3 );
 }
 
 /**
  * Check whether a tag is within the string.
  *
- * @param string $text String. Probably a Tweet.
+ * @param string $text String. Probably a status update.
  * @param string $tag Template tag text.
  *
  * @return boolean.
