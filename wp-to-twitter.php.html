@@ -485,12 +485,14 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
  * @param string   $twit Posted status text.
  */
 function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
-	$return    = $response['return'];
-	$http_code = $response['http'];
-	$notice    = $response['notice'];
-	$tweet_id  = isset( $response['tweet_id'] ) ? $response['tweet_id'] : false;
-	$status_id = isset( $response['status_id'] ) ? $response['status_id'] : false;
-	wpt_mail( "X.com Response: $http_code", $notice, $id ); // DEBUG.
+	$return      = $response['return'];
+	$http_code   = $response['http'];
+	$notice      = $response['notice'];
+	$service     = isset( $response['service'] ) ? $response['service'] : false;
+	$tweet_id    = ( 'x' === $service ) ? $response['status_id'] : false;
+	$mastodon_id = ( 'mastodon' === $service ) ? $response['status_id'] : false;
+	$bluesky_id  = ( 'bluesky' === $service ) ? $response['status_id'] : false;
+	wpt_mail( "Status Update Response: $http_code / $service", $notice, $id ); // DEBUG.
 	// only save last status if successful.
 	if ( 200 === $http_code ) {
 		if ( ! $auth ) {
@@ -525,15 +527,20 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 		 * @param {int}    $id Post ID for status update.
 		 */
 		do_action( 'wpt_tweet_posted', $connection, $id );
-		// Log the Status ID of the first Tweet on this post.
+		// Log the Status ID of the first status update on this post.
 		$has_tweet_id = get_post_meta( $id, '_wpt_tweet_id', true );
 		if ( ! $has_tweet_id &amp;&amp; $tweet_id ) {
 			update_post_meta( $id, '_wpt_tweet_id', $tweet_id );
 		}
-		// Log the Status ID of the first non-Tweet update on this post.
-		$has_status_id = get_post_meta( $id, '_wpt_status_id', true );
-		if ( ! $has_status_id &amp;&amp; $status_id ) {
-			update_post_meta( $id, '_wpt_status_id', $status_id );
+		// Log the Status ID of the first Mastodon update on this post.
+		$has_mastodon_id = get_post_meta( $id, '_wpt_status_id', true );
+		if ( ! $has_mastodon_id &amp;&amp; $mastodon_id ) {
+			update_post_meta( $id, '_wpt_status_id', $mastodon_id );
+		}
+		// Log the Status ID of the first Bluesky update on this post.
+		$has_bluesky_id = get_post_meta( $id, '_wpt_bluesky_id', true );
+		if ( ! $has_bluesky_id &amp;&amp; $bluesky_id ) {
+			update_post_meta( $id, '_wpt_bluesky_id', $bluesky_id );
 		}
 		wpt_set_log( 'wpt_status_message', $id, $notice );
 	}
@@ -2247,10 +2254,10 @@ function wpt_needs_bearer_token() {
 		}
 		if ( ! $bt &amp;&amp; $authorized ) {
 			if ( $auth &amp;&amp; get_option( 'jd_individual_twitter_users' ) ) {
-				echo "&lt;div class='notice error important'>&lt;p>" . __( '&lt;strong>XPoster (formerly WP to Twitter)&lt;/strong> needs a Bearer Token added to your profile settings to support the X.com API.', 'wp-to-twitter' ) . '&lt;/p>&lt;/div>';
+				echo "&lt;div class='notice error important'>&lt;p>" . __( '&lt;strong>XPoster&lt;/strong> needs a Bearer Token added to your profile settings to support the X.com API.', 'wp-to-twitter' ) . '&lt;/p>&lt;/div>';
 			} elseif ( current_user_can( 'manage_options' ) ) {
 				// Translators: URL to connection settings.
-				echo "&lt;div class='notice error important'>&lt;p>" . sprintf( __( '&lt;strong>XPoster (formerly WP to Twitter)&lt;/strong> needs a Bearer Token added to the &lt;a href="%s">connection settings&lt;/a> to support the X.com API.', 'wp-to-twitter' ), admin_url( 'admin.php?page=wp-tweets-pro&amp;tab=connection' ) ) . '&lt;/p>&lt;/div>';
+				echo "&lt;div class='notice error important'>&lt;p>" . sprintf( __( '&lt;strong>XPoster&lt;/strong> needs a Bearer Token added to the &lt;a href="%s">connection settings&lt;/a> to support the X.com API.', 'wp-to-twitter' ), admin_url( 'admin.php?page=wp-tweets-pro&amp;tab=connection' ) ) . '&lt;/p>&lt;/div>';
 			}
 		}
 	}
@@ -2259,8 +2266,8 @@ function wpt_needs_bearer_token() {
 /**
  * Check connections.
  *
- * @param $auth            int|bool User ID or false to check primary connection.
- * @param $get_connections bool True to return an array with the valid connections. Default false.
+ * @param int|bool $auth User ID or false to check primary connection.
+ * @param bool     $get_connections True to return an array with the valid connections. Default false.
  *
  * @return bool|array
  */

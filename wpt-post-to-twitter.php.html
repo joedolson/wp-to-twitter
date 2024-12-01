@@ -177,10 +177,11 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 	}
 
 	return array(
-		'return'   => $success,
-		'http'     => $http_code,
-		'notice'   => $notice,
-		'tweet_id' => $tweet_id,
+		'return'    => $success,
+		'http'      => $http_code,
+		'notice'    => $notice,
+		'status_id' => $tweet_id,
+		'service'   => 'x',
 	);
 }
 </code></pre>
