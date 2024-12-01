@@ -1736,7 +1736,7 @@ function wpt_admin_scripts() {
 	}
 }
 
-add_action( 'wp_ajax_wpt_tweet', 'wpt_ajax_tweet' );
+add_action( 'wp_ajax_wpt_post_update', 'wpt_ajax_tweet' );
 /**
  * Handle updates sent via Ajax Update Now/Schedule Update buttons.
  */
@@ -1762,7 +1762,6 @@ function wpt_ajax_tweet() {
 		$auth    = false;
 		$user_ID = $current_user->ID;
 	}
-
 	$authors = ( is_array( $authors ) &amp;&amp; ! empty( $authors ) ) ? $authors : array( $auth );
 
 	if ( current_user_can( 'wpt_can_tweet' ) ) {
