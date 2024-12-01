@@ -18,12 +18,11 @@
 			if ( visible ) {
 				$( '.wpt_log' ).hide( 200 );
 			}
-			e.preventDefault();
-			let text   = $('#wpt_custom_tweet').val();
-			let date   = $('#wpt_set_tweet_time .date').val();
-			let time   = $('#wpt_set_tweet_time .time').val();
-			let auth   = $('#wpt_authorized_users').val();
-			
+			let text = $('#wpt_custom_tweet').val();
+			let date = $('#wpt_set_tweet_time .date').val();
+			let time = $('#wpt_set_tweet_time .time').val();
+			let auth = $('#wpt_authorized_users').val();
+
 			let upload = $('input:radio[name=_wpt_image]:checked').val();
 			let tweet_action = ( $(this).attr('data-action') === 'tweet' ) ? 'tweet' : 'schedule'
 			let data = {
