@@ -1542,32 +1542,6 @@ function wpt_add_twitter_inner_box( $post ) {
 			&lt;div class='wpt_log' aria-live='assertive'>&lt;/div>
 			&lt;?php
 		}
-		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
-			?>
-			&lt;p class='jtw'>
-				&lt;label for="wpt_custom_tweet">&lt;?php _e( 'Custom Status Update', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
-				&lt;textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="&lt;?php esc_attr( $expanded ); ?>" rows="2" cols="60">&lt;?php echo esc_attr( $tweet ); ?>&lt;/textarea>
-				&lt;?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
-			&lt;/p>
-			&lt;p class='wpt-template'>
-				&lt;?php _e( 'Template:', 'wp-to-twitter' ); ?>&lt;br />&lt;code>&lt;?php echo stripcslashes( $expanded ); ?>&lt;/code>
-				&lt;?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
-			&lt;/p>
-			&lt;?php
-			echo apply_filters( 'wpt_custom_retweet_fields', '', $post_id );
-			if ( get_option( 'jd_keyword_format' ) === '2' ) {
-				$custom_keyword = get_post_meta( $post_id, '_yourls_keyword', true );
-				echo "&lt;label for='yourls_keyword'>" . __( 'YOURLS Custom Keyword', 'wp-to-twitter' ) . "&lt;/label> &lt;input type='text' name='_yourls_keyword' id='yourls_keyword' value='$custom_keyword' />";
-			}
-		} else {
-			?>
-			&lt;input type="hidden" name='_jd_twitter' value='&lt;?php echo esc_attr( $tweet ); ?>' />
-			&lt;p class='wpt-template'>
-				&lt;?php _e( 'Template:', 'wp-to-twitter' ); ?> &lt;code>&lt;?php echo stripcslashes( $expanded ); ?>&lt;/code>
-				&lt;?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
-			&lt;/p>
-			&lt;?php
-		}
 		if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
 			// "no" means 'Don't Post' (is checked)
 			$nochecked  = ( 'no' === $tweet_this ) ? ' checked="checked"' : '';
@@ -1581,6 +1555,47 @@ function wpt_add_twitter_inner_box( $post ) {
 		} else {
 			?>
 		&lt;input type='hidden' name='_jd_tweet_this' value='&lt;?php echo $tweet_this; ?>'/>
+			&lt;?php
+		}
+		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
+			?>
+			&lt;p class='jtw'>
+				&lt;label for="wpt_custom_tweet">&lt;?php _e( 'Custom Status Update', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
+				&lt;textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="&lt;?php esc_attr( $expanded ); ?>" rows="2" cols="60">&lt;?php echo esc_attr( $tweet ); ?>&lt;/textarea>
+				&lt;?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
+			&lt;/p>
+			&lt;div class="wpt-template-resources wpt-flex">
+				&lt;p class='wpt-template'>
+					&lt;?php _e( 'Default template:', 'wp-to-twitter' ); ?>&lt;br />&lt;code>&lt;?php echo stripcslashes( $expanded ); ?>&lt;/code>
+					&lt;?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
+				&lt;/p>
+				&lt;div class='wptab' id='notes'>
+					&lt;h3 class="screen-reader-text">&lt;?php _e( 'Template Tags', 'wp-to-twitter' ); ?>&lt;/h3>
+					&lt;ul class="inline-list">
+					&lt;?php
+					$tags = wpt_tags();
+					foreach ( $tags as $tag ) {
+						$pressed = ( false === stripos( $expanded, '#' . $tag . '#' ) ) ? 'false' : 'true';
+						echo '&lt;li>&lt;button type="button" class="button-secondary" aria-pressed="' . $pressed . '">#' . $tag . '#&lt;/button>&lt;/li>';
+					}
+					do_action( 'wpt_notes_tab', $post_id );
+					?>
+					&lt;/ul>
+				&lt;/div>
+			&lt;/div>
+			&lt;?php
+			echo apply_filters( 'wpt_custom_retweet_fields', '', $post_id );
+			if ( get_option( 'jd_keyword_format' ) === '2' ) {
+				$custom_keyword = get_post_meta( $post_id, '_yourls_keyword', true );
+				echo "&lt;label for='yourls_keyword'>" . __( 'YOURLS Custom Keyword', 'wp-to-twitter' ) . "&lt;/label> &lt;input type='text' name='_yourls_keyword' id='yourls_keyword' value='$custom_keyword' />";
+			}
+		} else {
+			?>
+			&lt;input type="hidden" name='_jd_twitter' value='&lt;?php echo esc_attr( $tweet ); ?>' />
+			&lt;p class='wpt-template'>
+				&lt;?php _e( 'Template:', 'wp-to-twitter' ); ?> &lt;code>&lt;?php echo stripcslashes( $expanded ); ?>&lt;/code>
+				&lt;?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
+			&lt;/p>
 			&lt;?php
 		}
 		?>
@@ -1612,19 +1627,6 @@ function wpt_add_twitter_inner_box( $post ) {
 				}
 			}
 			?>
-			&lt;/div>
-			&lt;div class='wptab' id='notes'>
-				&lt;h3>&lt;?php _e( 'Template Tags', 'wp-to-twitter' ); ?>&lt;/h3>
-				&lt;ul class="inline-list">
-				&lt;?php
-				$tags = wpt_tags();
-				foreach ( $tags as $tag ) {
-					$pressed = ( false === stripos( $expanded, '#' . $tag . '#' ) ) ? 'false' : 'true';
-					echo '&lt;li>&lt;button type="button" class="button-secondary" aria-pressed="' . $pressed . '">#' . $tag . '#&lt;/button>&lt;/li>';
-				}
-				do_action( 'wpt_notes_tab', $post_id );
-				?>
-				&lt;/ul>
 			&lt;/div>
 		&lt;/div>
 		&lt;?php wpt_show_tweets( $post_id ); ?>
@@ -2252,6 +2254,29 @@ function wpt_needs_bearer_token() {
 			}
 		}
 	}
+}
+
+/**
+ * Check connections.
+ *
+ * @param $auth            int|bool User ID or false to check primary connection.
+ * @param $get_connections bool True to return an array with the valid connections. Default false.
+ *
+ * @return bool|array
+ */
+function wpt_check_connections( $auth = false, $get_connections = false ) {
+	$connected = false;
+	if ( ! $get_connections ) {
+		$connected = ( wtt_oauth_test( $auth, 'verify' ) || wpt_mastodon_connection( $auth ) || wpt_bluesky_connection( $auth ) ) ? true : false;
+	} else {
+		$connected = array(
+			'twitter'  => wtt_oauth_test( $auth, 'verify' ),
+			'mastodon' => wpt_mastodon_connection( $auth ),
+			'bluesky'  => wpt_bluesky_connection( $auth ),
+		);
+	}
+
+	return $connected;
 }
 
 /**
