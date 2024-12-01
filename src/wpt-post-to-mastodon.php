@@ -81,10 +81,11 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 	 * @param {bool}     $staging_mode True to enable staging mode.
 	 * @param {int|bool} $auth Current author.
 	 * @param {int}      $id Post ID.
+	 * @param {string}   $service Service being put into staging.
 	 *
 	 * @return {bool}
 	 */
-	$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id );
+	$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id, 'mastodon' );
 	if ( ( defined( 'WPT_STAGING_MODE' ) && true === WPT_STAGING_MODE ) || $staging_mode ) {
 		// if in staging mode, we'll behave as if the update succeeded, but not send it.
 		$connection = true;
