@@ -1538,10 +1538,25 @@ function wpt_add_twitter_inner_box( $post ) {
 				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php esc_attr( $expanded ); ?>" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
 				<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post_id ); ?>
 			</p>
-			<p class='wpt-template'>
-				<?php _e( 'Template:', 'wp-to-twitter' ); ?><br /><code><?php echo stripcslashes( $expanded ); ?></code>
-				<?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
-			</p>
+			<div class="wpt-template-resources wpt-flex">
+				<p class='wpt-template'>
+					<?php _e( 'Default template:', 'wp-to-twitter' ); ?><br /><code><?php echo stripcslashes( $expanded ); ?></code>
+					<?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
+				</p>
+				<div class='wptab' id='notes'>
+					<h3 class="screen-reader-text"><?php _e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
+					<ul class="inline-list">
+					<?php
+					$tags = wpt_tags();
+					foreach ( $tags as $tag ) {
+						$pressed = ( false === stripos( $expanded, '#' . $tag . '#' ) ) ? 'false' : 'true';
+						echo '<li><button type="button" class="button-secondary" aria-pressed="' . $pressed . '">#' . $tag . '#</button></li>';
+					}
+					do_action( 'wpt_notes_tab', $post_id );
+					?>
+					</ul>
+				</div>
+			</div>
 			<?php
 			echo apply_filters( 'wpt_custom_retweet_fields', '', $post_id );
 			if ( get_option( 'jd_keyword_format' ) === '2' ) {
@@ -1586,19 +1601,6 @@ function wpt_add_twitter_inner_box( $post ) {
 				}
 			}
 			?>
-			</div>
-			<div class='wptab' id='notes'>
-				<h3><?php _e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
-				<ul class="inline-list">
-				<?php
-				$tags = wpt_tags();
-				foreach ( $tags as $tag ) {
-					$pressed = ( false === stripos( $expanded, '#' . $tag . '#' ) ) ? 'false' : 'true';
-					echo '<li><button type="button" class="button-secondary" aria-pressed="' . $pressed . '">#' . $tag . '#</button></li>';
-				}
-				do_action( 'wpt_notes_tab', $post_id );
-				?>
-				</ul>
 			</div>
 		</div>
 		<?php wpt_show_tweets( $post_id ); ?>
@@ -2226,6 +2228,29 @@ function wpt_needs_bearer_token() {
 			}
 		}
 	}
+}
+
+/**
+ * Check connections.
+ *
+ * @param $auth            int|bool User ID or false to check primary connection.
+ * @param $get_connections bool True to return an array with the valid connections. Default false.
+ *
+ * @return bool|array
+ */
+function wpt_check_connections( $auth = false, $get_connections = false ) {
+	$connected = false;
+	if ( ! $get_connections ) {
+		$connected = ( wtt_oauth_test( $auth, 'verify' ) || wpt_mastodon_connection( $auth ) || wpt_bluesky_connection( $auth ) ) ? true : false;
+	} else {
+		$connected = array(
+			'twitter'  => wtt_oauth_test( $auth, 'verify' ),
+			'mastodon' => wpt_mastodon_connection( $auth ),
+			'bluesky'  => wpt_bluesky_connection( $auth ),
+		);
+	}
+
+	return $connected;
 }
 
 /**
