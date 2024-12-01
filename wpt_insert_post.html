@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Action: wpt_tweet_failed - XPoster Hook Doumentation</title>
+    <title>Action: wpt_insert_post - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Action: wpt_tweet_failed</h1></header>
+    <header><h1 class="page-title">Action: wpt_insert_post</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_tweet_failed">do_action( 'wpt_tweet_failed', <span class="signature">$connection, $id, $error )</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="wpt_insert_post">do_action( 'wpt_insert_post', <span class="signature">$_POST, $id )</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Executes an action after posting a status fails.</p>
+    <p>Runs when post data is inserted.</p>
 </div>
 
 
@@ -77,13 +77,13 @@
 
         <tr>
             
-                <td class="name"><code>$connection</code></td>
+                <td class="name"><code>$_POST</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">array</span>
 
 
             
@@ -93,7 +93,7 @@
 
             
 
-            <td class="description last"><p>The current OAuth connection.</p></td>
+            <td class="description last"><p>Unaltered POST data.</p></td>
         </tr>
 
     
@@ -116,30 +116,7 @@
 
             
 
-            <td class="description last"><p>Post ID for status update.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$error</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Error message returned.</p></td>
+            <td class="description last"><p>Post ID</p></td>
         </tr>
 
     
@@ -155,9 +132,6 @@
 
     
 
-    
-    <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>3.6.0</li></ul></dd>
     
 
     
@@ -183,7 +157,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line481">line 481</a>
+        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line1922">line 1922</a>
     </li></ul></dd>
     
 

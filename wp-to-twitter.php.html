@@ -1920,24 +1920,24 @@ function wpt_save_post( $id, $post ) {
 		}
 		if ( isset( $_POST['_yourls_keyword'] ) ) {
 			$yourls = sanitize_text_field( $_POST['_yourls_keyword'] );
-			$update = update_post_meta( $id, '_yourls_keyword', $yourls );
+			update_post_meta( $id, '_yourls_keyword', $yourls );
 		}
 		if ( isset( $_POST['_jd_twitter'] ) &amp;&amp; '' !== $_POST['_jd_twitter'] ) {
 			$twitter = sanitize_textarea_field( $_POST['_jd_twitter'] );
-			$update  = update_post_meta( $id, '_jd_twitter', $twitter );
+			update_post_meta( $id, '_jd_twitter', $twitter );
 		} elseif ( isset( $_POST['_jd_twitter'] ) &amp;&amp; '' === $_POST['_jd_twitter'] ) {
 			delete_post_meta( $id, '_jd_twitter' );
 		}
 		if ( isset( $_POST['_jd_wp_twitter'] ) &amp;&amp; '' !== $_POST['_jd_wp_twitter'] ) {
 			$wp_twitter = sanitize_textarea_field( $_POST['_jd_wp_twitter'] );
-			$update     = update_post_meta( $id, '_jd_wp_twitter', $wp_twitter );
+			update_post_meta( $id, '_jd_wp_twitter', $wp_twitter );
 		}
 		if ( isset( $_POST['_wpt_post_this'] ) ) {
 			$post_this = ( 'no' === $_POST['_wpt_post_this'] ) ? 'no' : 'yes';
-			$update    = update_post_meta( $id, '_wpt_post_this', $post_this );
+			update_post_meta( $id, '_wpt_post_this', $post_this );
 		} else {
 			$post_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
-			$update       = update_post_meta( $id, '_wpt_post_this', $post_default );
+			update_post_meta( $id, '_wpt_post_this', $post_default );
 		}
 		if ( isset( $_POST['wpt_clear_history'] ) &amp;&amp; 'clear' === $_POST['wpt_clear_history'] ) {
 			delete_post_meta( $id, '_wpt_failed' );
@@ -1945,8 +1945,15 @@ function wpt_save_post( $id, $post ) {
 			delete_post_meta( $id, '_wpt_short_url' );
 			delete_post_meta( $id, '_wp_jd_twitter' );
 		}
-		// WPT PRO.
-		$update = apply_filters( 'wpt_insert_post', $_POST, $id );
+		/**
+		 * Runs when post data is inserted.
+		 *
+		 * @hook wpt_insert_post
+		 *
+		 * @param {array} $_POST Unaltered POST data.
+		 * @param {int}   $id Post ID
+		 */
+		do_action( 'wpt_insert_post', $_POST, $id );
 		// WPT PRO.
 		// only send debug data if post meta is updated.
 		wpt_mail( 'Post Meta Processed', 'XPoster post meta was updated' . "\n\n" . print_r( map_deep( $_POST, 'sanitize_textarea_field' ), 1 ), $id ); // DEBUG.
@@ -2354,7 +2361,7 @@ add_action( 'admin_notices', 'wpt_needs_connection' );
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_postpone_rendering.html">wpt_postpone_rendering</a></li><li><a href="wpt_random_delay.html">wpt_random_delay</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_postpone_rendering.html">wpt_postpone_rendering</a></li><li><a href="wpt_random_delay.html">wpt_random_delay</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
 </nav>
 
 <br class="clear">
