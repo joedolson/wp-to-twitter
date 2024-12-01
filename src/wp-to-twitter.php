@@ -1573,7 +1573,7 @@ function wpt_show_tweets( $post_id ) {
 		<a href='#wpt_tweet_history' class='history-toggle'><span class='dashicons dashicons-plus' aria-hidden="true"></span><?php _e( 'View Update History', 'wp-to-twitter' ); ?></a>
 	</p>
 	<div class='history'>
-	<p class='error'><em><?php _e( 'Previous Updates', 'wp-to-twitter' ); ?>:</em></p>
+	<h4 class='wpt-past-updates'><em><?php _e( 'Previous Updates', 'wp-to-twitter' ); ?>:</em></h4>
 	<ul>
 		<?php
 		$has_history   = false;
@@ -1626,11 +1626,11 @@ function wpt_show_tweets( $post_id ) {
 					if ( wpt_bluesky_connection() ) {
 						$bluesky_intent = "<a href='https://bsky.app/intent/compose?text=" . urlencode( $ft ) . "'>" . __( 'Send to Bluesky', 'wp-to-twitter' ) . '</a>';
 					}
-					$error_list .= "<li> <code>Error: $reason</code> $ft $twitter_intent $mastodon_intent $bluesky_intent <br /><em>$error</em></li>";
+					$error_list .= "<li><code>Error: $reason</code> $ft $twitter_intent $mastodon_intent $bluesky_intent <br /><em>$error</em></li>";
 				}
 			}
 			if ( true === $list ) {
-				echo "<p class='error'><em>" . __( 'Failed Status Updates', 'wp-to-twitter' ) . ":</em></p>
+				echo "<h4 class='wpt-failed-updates'><em>" . __( 'Failed Status Updates', 'wp-to-twitter' ) . ":</em></h4>
 				<ul>$error_list</ul>";
 			}
 		}

@@ -50,8 +50,13 @@
 	padding: 0 12px 12px;
 }
 
-.wp-to-twitter .panel-toggle {
-	margin-bottom: 0;
+.wp-to-twitter .history ul li {
+	margin-bottom: 1rem;
+}
+
+.wp-to-twitter .history ul li em {
+	margin-top: .5rem;
+	display: block;
 }
 
 #wpt_custom_retweets fieldset {

@@ -16,11 +16,13 @@
  */
 function wpt_meta_box_support( $is_pro = 'free' ) {
 	?>
-	<p class="wpt-support">
+	<div class="wpt-support">
 	<?php
 	if ( 'pro' === $is_pro ) {
 		?>
-		<a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php _e( 'Get Support', 'wp-to-twitter' ); ?></a> &raquo;
+		<p>
+			<a class="button-secondary" href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php _e( 'Get Support', 'wp-to-twitter' ); ?></a>
+		</p>
 		<?php
 	} else {
 		?>
@@ -30,7 +32,7 @@ function wpt_meta_box_support( $is_pro = 'free' ) {
 		<?php
 	}
 	?>
-	</p>
+	</div>
 	<?php
 }
 
