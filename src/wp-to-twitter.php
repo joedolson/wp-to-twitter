@@ -923,7 +923,7 @@ function wpt_category_limit( $post_type, $post_info, $post_ID ) {
  *
  * @return int $post_ID
  */
-function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, $post_before = null ) {
+function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = null, $post_before = null ) {
 	if ( wp_is_post_autosave( $post_ID ) || wp_is_post_revision( $post_ID ) ) {
 		return $post_ID;
 	}
@@ -1233,7 +1233,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
  *
  * @return mixed boolean/integer link ID if successful, false if failure.
  */
-function wpt_twit_link( $link_id ) {
+function wpt_post_update_link( $link_id ) {
 	wpt_check_version();
 	$thislinkprivate = sanitize_text_field( $_POST['link_visible'] );
 	if ( 'N' !== $thislinkprivate ) {
@@ -2020,7 +2020,7 @@ function wpt_plugin_update_message() {
 }
 
 if ( '1' === get_option( 'jd_twit_blogroll' ) ) {
-	add_action( 'add_link', 'wpt_twit_link' );
+	add_action( 'add_link', 'wpt_post_update_link' );
 }
 
 if ( function_exists( 'wp_after_insert_post' ) ) {
@@ -2030,10 +2030,10 @@ if ( function_exists( 'wp_after_insert_post' ) ) {
 	 * @since WordPress 5.6
 	 */
 	add_action( 'wp_after_insert_post', 'wpt_save_post', 10, 2 );
-	add_action( 'wp_after_insert_post', 'wpt_twit', 15, 4 );
+	add_action( 'wp_after_insert_post', 'wpt_do_post_update', 15, 4 );
 } else {
 	add_action( 'save_post', 'wpt_save_post', 10, 2 );
-	add_action( 'save_post', 'wpt_twit', 15 );
+	add_action( 'save_post', 'wpt_do_post_update', 15 );
 }
 /**
  * Check whether a given post is in an allowed post type and has an update template configured.
@@ -2095,7 +2095,7 @@ function wpt_future_to_publish( $post ) {
 		return;
 	}
 	wpt_mail( 'Transitioning future to publish', $id );
-	wpt_twit_future( $id );
+	wpt_post_update_future( $id );
 }
 
 /**
@@ -2129,7 +2129,7 @@ function wpt_auto_tweet_allowed( $post_id ) {
  * @param boolean $updated True if updated, false if inserted.
  * @param object  $post_before The post prior to this update, or null for new posts.
  */
-function wpt_twit( $id, $post = null, $updated = null, $post_before = null ) {
+function wpt_do_post_update( $id, $post = null, $updated = null, $post_before = null ) {
 	if ( ( empty( $_POST ) && ! wpt_auto_tweet_allowed( $id ) ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $id ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX && ! wpt_auto_tweet_allowed( $id ) ) || ! wpt_in_post_type( $id ) ) {
 		return $id;
 	}
@@ -2140,28 +2140,28 @@ function wpt_twit( $id, $post = null, $updated = null, $post_before = null ) {
 	}
 	// is there any reason to accept any other status?
 	wpt_mail( 'Status update on published post', $id );
-	wpt_twit_instant( $id, $post, $updated, $post_before );
+	wpt_post_update_instant( $id, $post, $updated, $post_before );
 }
 
-add_action( 'xmlrpc_publish_post', 'wpt_twit_xmlrpc' );
-add_action( 'publish_phone', 'wpt_twit_xmlrpc' );
+add_action( 'xmlrpc_publish_post', 'wpt_post_update_xmlrpc' );
+add_action( 'publish_phone', 'wpt_post_update_xmlrpc' );
 
 /**
  * For future posts, check transients to see whether this post has already been published. Prevents duplicate status update attempts in older versions of WP.
  *
  * @param integer $id Post ID.
  */
-function wpt_twit_future( $id ) {
-	set_transient( '_wpt_twit_future', $id, 10 );
+function wpt_post_update_future( $id ) {
+	set_transient( '_wpt_post_update_future', $id, 10 );
 	// instant action has already run for this post.
 	// prevent running actions twice (need both for older WP).
-	if ( get_transient( '_wpt_twit_instant' ) && (int) get_transient( '_wpt_twit_instant' ) === $id ) {
-		delete_transient( '_wpt_twit_instant' );
+	if ( get_transient( '_wpt_post_update_instant' ) && (int) get_transient( '_wpt_twit_instant' ) === $id ) {
+		delete_transient( '_wpt_post_update_instant' );
 
 		return;
 	}
 
-	wpt_tweet( $id, 'future' );
+	wpt_post_update( $id, 'future' );
 }
 
 /**
@@ -2187,7 +2187,7 @@ function wpt_twit_instant( $id, $post, $updated, $post_before ) {
 		return;
 	}
 
-	wpt_tweet( $id, 'instant', $post, $updated, $post_before );
+	wpt_post_update( $id, 'instant', $post, $updated, $post_before );
 }
 
 /**
@@ -2197,13 +2197,13 @@ function wpt_twit_instant( $id, $post, $updated, $post_before ) {
  *
  * @return post ID.
  */
-function wpt_twit_xmlrpc( $id ) {
+function wpt_post_update_xmlrpc( $id ) {
 	set_transient( '_wpt_twit_xmlrpc', $id, 10 );
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || wp_is_post_revision( $id ) || ! wpt_in_post_type( $id ) ) {
 		return $id;
 	}
 	wpt_mail( 'Status update sent on XMLRPC published post', $id );
-	wpt_tweet( $id, 'xmlrpc' );
+	wpt_post_update( $id, 'xmlrpc' );
 	return $id;
 }
 
