@@ -1448,112 +1448,34 @@ function wpt_add_twitter_inner_box( $post ) {
 		$options      = get_option( 'wpt_post_types' );
 		$type         = $post->post_type;
 		$status       = $post->post_status;
-		$post_this    = get_post_meta( $post->ID, '_wpt_post_this', true );
-		if ( ! $post_this ) {
-			$post_this = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
-		}
-		if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] && '1' === get_option( 'jd_tweet_default_edit' ) && 'publish' === $status ) {
-			$post_this = 'no';
-		}
-		if ( isset( $_REQUEST['message'] ) && '10' !== $_REQUEST['message'] ) {
-			// don't display when draft is updated or if no message.
-			if ( ! ( ( '1' === $_REQUEST['message'] ) && ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) ) && 'no' !== $post_this ) {
-				$log = wpt_get_log( 'wpt_status_message', $post->ID );
-				if ( is_array( $log ) ) {
-					$message = $log['message'];
-					$http    = $log['http'];
-				} else {
-					$message = $log;
-					$http    = '200';
-				}
-				// FIX THIS.
-				$class = ( '200' !== (string) $http ) ? 'error' : 'success';
-				if ( '' !== trim( $message ) ) {
-					echo "<div class='notice notice-$class'><p>$message</p></div>";
-				}
-			}
-		}
+		wpt_show_metabox_message( $post, $options );
 		$tweet = esc_attr( stripcslashes( get_post_meta( $post->ID, '_jd_twitter', true ) ) );
 		$tweet = apply_filters( 'wpt_user_text', $tweet, $status );
 		// Formulate Template display.
-		$template = ( 'publish' === $status ) ? $options[ $type ]['post-edited-text'] : $options[ $type ]['post-published-text'];
-		$expanded = $template;
-		if ( '' !== get_option( 'jd_twit_prepend', '' ) ) {
-			$expanded = '<em>' . stripslashes( get_option( 'jd_twit_prepend' ) ) . '</em> ' . $expanded;
-		}
-		if ( '' !== get_option( 'jd_twit_append', '' ) ) {
-			$expanded = $expanded . ' <em>' . stripslashes( get_option( 'jd_twit_append' ) ) . '</em>';
-		}
+		$template = wpt_display_status_template( $post, $options );
 		if ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) {
 			// Translators: post type.
 			$tweet_status = sprintf( __( '%s will not be shared on save.', 'wp-to-twitter' ), ucfirst( $type ) );
 		}
 		if ( 'publish' === $status && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
-			?>
-			<div class='tweet-buttons'>
-				<div class="wpt-buttons">
-					<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-share' aria-hidden='true'></span><?php _e( 'Share Now', 'wp-to-twitter' ); ?></button>
-				<?php
-				if ( 'pro' === $is_pro ) {
-					?>
-				<button type='button' class='tweet schedule button-secondary' data-action='schedule' disabled><?php _e( 'Schedule', 'wp-to-twitter' ); ?></button>
-				<button type='button' class='time button-secondary'>
-					<span class="dashicons dashicons-clock" aria-hidden="true"></span><span class="screen-reader-text"><?php _e( 'Set Date/Time', 'wp-to-twitter' ); ?></span>
-				</button>
-					<?php
-				}
-				?>
-				</div>
-				<?php
-				if ( 'pro' === $is_pro ) {
-					?>
-			<div id="wpt_set_tweet_time">
-					<?php
-					$datavalue = gmdate( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
-					$timevalue = date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
-					?>
-				<div class="wpt-date-field">
-					<label for='wpt_date'><?php _e( 'Date', 'wp-to-twitter' ); ?></label>
-					<input type='date' value='' class='wpt_date date' name='wpt_datetime' id='wpt_date' data-value='<?php echo $datavalue; ?>' /><br/>
-				</div>
-				<div class="wpt-time-field">
-					<label for='wpt_time'><?php _e( 'Time', 'wp-to-twitter' ); ?></label>
-					<input type='time' value='<?php echo $timevalue; ?>' class='wpt_time time' name='wpt_datetime' id='wpt_time'/>
-				</div>
-			</div>
-					<?php
-				}
-				?>
-			</div>
-			<div class='wpt_log' aria-live='assertive'></div>
-			<?php
+			// Show metabox status buttons.
+			$buttons = wpt_display_metabox_status_buttons( $is_pro );
+			echo $buttons;
 		}
-		if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
-			// "no" means 'Don't Post' (is checked)
-			$nochecked  = ( 'no' === $post_this ) ? ' checked="checked"' : '';
-			$yeschecked = ( 'yes' === $post_this ) ? ' checked="checked"' : '';
-			?>
-		<p class='toggle-btn-group'>
-			<input type="radio" name="_wpt_post_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Post", 'wp-to-twitter' ); ?></label>
-			<input type="radio" name="_wpt_post_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( 'Post', 'wp-to-twitter' ); ?></label>
-		</p>
-			<?php
-		} else {
-			?>
-		<input type='hidden' name='_wpt_post_this' value='<?php echo $post_this; ?>'/>
-			<?php
-		}
+		// Show switch to flip update status.
+		$switch = wpt_show_post_switch( $post );
+		echo $switch;
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			?>
 			<p class='jtw'>
 				<label for="wpt_custom_tweet"><?php _e( 'Custom Status Update', 'wp-to-twitter' ); ?></label><br/>
-				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php esc_attr( $expanded ); ?>" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
+				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_attr( $tweet ); ?></textarea>
 				<?php echo apply_filters( 'wpt_custom_box', '', $tweet, $post->ID ); ?>
 			</p>
 			<div class="wpt-template-resources wpt-flex">
 				<p class='wpt-template'>
-					<?php _e( 'Default template:', 'wp-to-twitter' ); ?><br /><code><?php echo stripcslashes( $expanded ); ?></code>
-					<?php echo apply_filters( 'wpt_template_block', '', $expanded, $post->ID ); ?>
+					<?php _e( 'Default template:', 'wp-to-twitter' ); ?><br /><code><?php echo stripcslashes( $template ); ?></code>
+					<?php echo apply_filters( 'wpt_template_block', '', $template, $post->ID ); ?>
 				</p>
 				<div class='wptab' id='notes'>
 					<h3 class="screen-reader-text"><?php _e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
@@ -1561,7 +1483,7 @@ function wpt_add_twitter_inner_box( $post ) {
 					<?php
 					$tags = wpt_tags();
 					foreach ( $tags as $tag ) {
-						$pressed = ( false === stripos( $expanded, '#' . $tag . '#' ) ) ? 'false' : 'true';
+						$pressed = ( false === stripos( $template, '#' . $tag . '#' ) ) ? 'false' : 'true';
 						echo '<li><button type="button" class="button-secondary" aria-pressed="' . $pressed . '">#' . $tag . '#</button></li>';
 					}
 					do_action( 'wpt_notes_tab', $post->ID );
@@ -1580,8 +1502,8 @@ function wpt_add_twitter_inner_box( $post ) {
 			?>
 			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $tweet ); ?>' />
 			<p class='wpt-template'>
-				<?php _e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo stripcslashes( $expanded ); ?></code>
-				<?php echo apply_filters( 'wpt_template_block', '', $expanded, $post->ID ); ?>
+				<?php _e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo stripcslashes( $template ); ?></code>
+				<?php echo apply_filters( 'wpt_template_block', '', $template, $post->ID ); ?>
 			</p>
 			<?php
 		}

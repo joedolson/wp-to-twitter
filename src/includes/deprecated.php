@@ -44,7 +44,7 @@ function jd_remote_json( $url, $query_args = true ) {
  * @return twit link.
  */
 function jd_twit_link( $link_id ) {
-	return wpt_twit_link( $link_id );
+	return wpt_post_update_link( $link_id );
 }
 
 /**
