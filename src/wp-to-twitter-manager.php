@@ -840,13 +840,13 @@ function wpt_update_settings() {
 	}
 	if ( 'support' === $current ) {
 		?>
-	<div class="postbox" id="get-support">
-		<h3><span><?php _e( 'Get Plug-in Support', 'wp-to-twitter' ); ?></span></h3>
+		<div class="postbox" id="get-support">
+			<h3><span><?php _e( 'Get Plug-in Support', 'wp-to-twitter' ); ?></span></h3>
 
-		<div class="inside">
-		<?php wpt_get_support_form(); ?>
+			<div class="inside">
+			<?php wpt_get_support_form(); ?>
+			</div>
 		</div>
-	</div>
 		<?php
 	}
 	?>
