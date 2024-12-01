@@ -103,14 +103,14 @@ function wpt_check_version() {
 	global $wpt_version;
 	$prev_version = ( '' !== get_option( 'wp_to_twitter_version', '' ) ) ? get_option( 'wp_to_twitter_version' ) : '1.0.0';
 	if ( version_compare( $prev_version, $wpt_version, '<' ) ) {
-		wptotwitter_activate();
+		xposter_activate();
 	}
 }
 
 /**
  * Activate XPoster.
  */
-function wptotwitter_activate() {
+function xposter_activate() {
 	// If this has never run before, do the initial setup.
 	$new_install = ( '1' === get_option( 'wpt_twitter_setup' ) || '1' === get_option( 'twitterInitialised' ) ) ? false : true;
 	if ( $new_install ) {
@@ -158,7 +158,7 @@ function wptotwitter_activate() {
 		}
 
 		update_option( 'jd_post_excerpt', 60 );
-		// Use Google Analytics with X.com.
+		// Use Google Analytics.
 		update_option( 'twitter-analytics-campaign', 'twitter' );
 		update_option( 'use-twitter-analytics', '0' );
 		update_option( 'jd_dynamic_analytics', '0' );
