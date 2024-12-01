@@ -45,7 +45,7 @@ function wpt_meta_box_support( $is_pro = 'free' ) {
 function wpt_show_metabox_message( $post, $options ) {
 	$type      = $post->post_type;
 	$status    = $post->post_status;
-	$post_this = $post_this = wpt_get_post_update_status( $post );
+	$post_this = wpt_get_post_update_status( $post );
 	if ( isset( $_REQUEST['message'] ) && '10' !== $_REQUEST['message'] ) {
 		// don't display when draft is updated or if no message.
 		if ( ! ( ( '1' === $_REQUEST['message'] ) && ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) ) && 'no' !== $post_this ) {
@@ -114,6 +114,7 @@ function wpt_show_post_switch( $post ) {
  * Generate a status update template for display.
  *
  * @param WP_Post $post Post object.
+ * @param array   $options Post status options.
  *
  * @return string
  */
@@ -158,7 +159,7 @@ function wpt_display_metabox_status_buttons( $is_pro ) {
 			<label for="wpt_time">' . __( 'Time', 'wp-to-twitter' ) . '</label>
 			<input type="time" value="' . $timevalue . '" class="wpt_time time" name="wpt_datetime" id="wpt_time" />
 		</div>';
-		$fields = '<div id="wpt_set_tweet_time">' . $date_field . $time_field . '</div>';
+		$fields     = '<div id="wpt_set_tweet_time">' . $date_field . $time_field . '</div>';
 	}
 	$buttons  = "<div class='tweet-buttons'>" . $buttons . '</div>';
 	$buttons .= "<div class='wpt_log' aria-live='assertive'></div>";
