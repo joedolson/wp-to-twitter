@@ -1516,6 +1516,21 @@ function wpt_add_twitter_inner_box( $post ) {
 			<div class='wpt_log' aria-live='assertive'></div>
 			<?php
 		}
+		if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
+			// "no" means 'Don't Post' (is checked)
+			$nochecked  = ( 'no' === $tweet_this ) ? ' checked="checked"' : '';
+			$yeschecked = ( 'yes' === $tweet_this ) ? ' checked="checked"' : '';
+			?>
+		<p class='toggle-btn-group'>
+			<input type="radio" name="_jd_tweet_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Post", 'wp-to-twitter' ); ?></label>
+			<input type="radio" name="_jd_tweet_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( 'Post', 'wp-to-twitter' ); ?></label>
+		</p>
+			<?php
+		} else {
+			?>
+		<input type='hidden' name='_jd_tweet_this' value='<?php echo $tweet_this; ?>'/>
+			<?php
+		}
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			?>
 			<p class='jtw'>
@@ -1540,21 +1555,6 @@ function wpt_add_twitter_inner_box( $post ) {
 				<?php _e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo stripcslashes( $expanded ); ?></code>
 				<?php echo apply_filters( 'wpt_template_block', '', $expanded, $post_id ); ?>
 			</p>
-			<?php
-		}
-		if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
-			// "no" means 'Don't Post' (is checked)
-			$nochecked  = ( 'no' === $tweet_this ) ? ' checked="checked"' : '';
-			$yeschecked = ( 'yes' === $tweet_this ) ? ' checked="checked"' : '';
-			?>
-		<p class='toggle-btn-group'>
-			<input type="radio" name="_jd_tweet_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Post", 'wp-to-twitter' ); ?></label>
-			<input type="radio" name="_jd_tweet_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( 'Post', 'wp-to-twitter' ); ?></label>
-		</p>
-			<?php
-		} else {
-			?>
-		<input type='hidden' name='_jd_tweet_this' value='<?php echo $tweet_this; ?>'/>
 			<?php
 		}
 		?>

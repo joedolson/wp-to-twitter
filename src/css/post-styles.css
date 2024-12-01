@@ -27,10 +27,24 @@
 	border: 1px solid #eee; 
 }
 
+.wpt_custom_image.field-holder {
+	position: relative;
+}
+
+#wpt_selected_image {
+	height: 180px;
+	background: rgba( 0,0,0,.04 );
+}
+
 #wpt_selected_image img {
-	width: 100%;
-	max-width: 100%;
-	height: auto;
+	max-height: 180px;
+	width: auto;
+}
+
+#wpt_custom_image_select {
+	position: absolute;
+	bottom: 6px;
+	right: 6px;
 }
 
 .edit-post-meta-boxes-area #wp2t.postbox > .inside {
@@ -121,6 +135,10 @@
 
 .wpt-options {
 	column-count: 3;
+}
+
+.wpt-options p {
+	break-inside: avoid;
 }
 
 .free .wpt-options {
@@ -253,7 +271,7 @@ button.time div {
 }
 
 .toggle-btn-group label {
-    padding: .25em 0;
+    padding: .5em 0;
     float: left;
     text-align: center;
     cursor: pointer;
