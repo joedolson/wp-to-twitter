@@ -1,6 +1,5 @@
 #wp2t .jtw {
     position: relative;
-	padding-bottom: 1rem;
 }
 
 #wp2t .jtw textarea {
@@ -9,12 +8,7 @@
 }
 
 #wp2t .counter {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    font-size: 1.1em;
     font-weight: 600;
-    color: #666;
 }
 
 #wpt_custom_retweets .jtw2 label {
@@ -34,6 +28,7 @@
 #wpt_selected_image {
 	height: 180px;
 	background: rgba( 0,0,0,.04 );
+	border: 2px dashed #ccc;
 }
 
 #wpt_selected_image img {
@@ -43,8 +38,8 @@
 
 #wpt_custom_image_select {
 	position: absolute;
-	bottom: 6px;
-	right: 6px;
+	bottom: 8px;
+	right: 8px;
 }
 
 .edit-post-meta-boxes-area #wp2t.postbox > .inside {
@@ -133,20 +128,19 @@
 	line-height: 1.4;
 }
 
-.wpt-options {
-	column-count: 3;
+.wpt-options .wptab {
+	display: grid;
+	grid-template-columns: repeat( 3, 1fr );
+	gap: 12px;
 }
 
-.wpt-options p {
-	break-inside: avoid;
-}
+.free .wpt-options .wptab {
+	grid-template-columns: repeat( 2, 1fr );
 
-.free .wpt-options {
-	column-count: 2;
 }
 
 #side-sortables .wpt-options {
-	column-count: 1;
+	grid-template-columns: repeat( 1, 1fr );
 }
 
 .wpt-debug-details {
@@ -256,12 +250,21 @@ button.time div {
 }
 
 .toggle-btn-group {
-	margin: .5em auto .5em !important;
+	margin: .5em 0 !important;
 	width: auto;
+	max-width: 20em;
 }
 
 .wptab .toggle-btn-group {
 	margin: .25em -5px .25em;
+	max-width: 100%;
+}
+
+.wpt-flex {
+	display: flex;
+	align-items: end;
+	gap: 16px;
+	flex-wrap: wrap;
 }
 
 .toggle-btn-group:after {
