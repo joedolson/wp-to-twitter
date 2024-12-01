@@ -133,9 +133,9 @@ function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = 
 	 *
 	 * @return {string}
 	 */
-	$update    = apply_filters( 'wpt_tweet_sentence', $update, $post_ID );
-	$update    = trim( wpt_custom_shortcodes( $update, $post_ID ) );
-	$update    = trim( wpt_user_meta_shortcodes( $update, $post['authId'] ) );
+	$update   = apply_filters( 'wpt_tweet_sentence', $update, $post_ID );
+	$update   = trim( wpt_custom_shortcodes( $update, $post_ID ) );
+	$update   = trim( wpt_user_meta_shortcodes( $update, $post['authId'] ) );
 	$encoding = ( 'UTF-8' !== get_option( 'blog_charset' ) &amp;&amp; '' !== get_option( 'blog_charset', '' ) ) ? get_option( 'blog_charset' ) : 'UTF-8';
 	$diff     = 0;
 
@@ -315,7 +315,7 @@ function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = 
 					}
 					// it's possible to trim off the #url# part in this process. If that happens, put it back.
 					$sub_sentence = ( ! wpt_has( $post_update, $tag ) &amp;&amp; ( $has_short_url || $has_long_url ) ) ? $post_update . ' ' . $tag : $post_update;
-					$post_update   = str_ireplace( $tag, $url, $sub_sentence );
+					$post_update  = str_ireplace( $tag, $url, $sub_sentence );
 				}
 			}
 		}
