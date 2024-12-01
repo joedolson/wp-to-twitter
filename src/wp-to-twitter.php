@@ -1443,7 +1443,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		$type         = $post->post_type;
 		$status       = $post->post_status;
 		$post_id      = $post->ID;
-		$post_this   = get_post_meta( $post_id, '_wpt_post_this', true );
+		$post_this    = get_post_meta( $post_id, '_wpt_post_this', true );
 		if ( ! $post_this ) {
 			$post_this = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
 		}
