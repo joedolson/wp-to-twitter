@@ -1069,10 +1069,10 @@ function wpt_tweet_length() {
 		// If not set, save as option so character counter works correctly.
 		update_option( 'wpt_tweet_length', $default );
 	}
-	$tweet_length = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : $default );
-	$control      = "<p class='tweet_length_control'>
+	$update_length = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : $default );
+	$control       = "<p class='tweet_length_control'>
 					<label for='wpt_tweet_length'>" . __( 'Maximum Status Length', 'wp-to-twitter' ) . "</label>
-					<input type='number' min='0' max='25000' step='1' value='$tweet_length' id='wpt_tweet_length' aria-describedby='maxlengthwarning' name='wpt_tweet_length' />
+					<input type='number' min='0' max='25000' step='1' value='$update_length' id='wpt_tweet_length' aria-describedby='maxlengthwarning' name='wpt_tweet_length' />
 					<span id='maxlengthwarning'>" . __( 'X.com Statuses longer than 280 characters require an <a href="https://help.twitter.com/en/using-x/x-premium">X Premium</a> subscription.', 'wp-to-twitter' ) . ' ' . __( 'Most Mastodon servers have a 500 character limit.', 'wp-to-twitter' ) . '</span>
 				</p>';
 

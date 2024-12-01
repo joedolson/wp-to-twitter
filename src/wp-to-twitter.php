@@ -928,7 +928,7 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 		return $post_ID;
 	}
 	wpt_check_version();
-	$tweet_this     = get_post_meta( $post_ID, '_jd_tweet_this', true );
+	$post_this      = get_post_meta( $post_ID, '_wpt_post_this', true );
 	$newpost        = false;
 	$oldpost        = false;
 	$is_inline_edit = false;
@@ -945,13 +945,13 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 		}
 	}
 	if ( '0' === get_option( 'jd_tweet_default' ) ) {
-		$default      = ( 'no' !== $tweet_this ) ? true : false;
+		$default      = ( 'no' !== $post_this ) ? true : false;
 		$text_default = 'no';
 	} else {
-		$default      = ( 'yes' === $tweet_this ) ? true : false;
+		$default      = ( 'yes' === $post_this ) ? true : false;
 		$text_default = 'yes';
 	}
-	wpt_mail( '1: Status Update', "Should send: $tweet_this; Setting: $text_default; Publication method: $type", $post_ID ); // DEBUG.
+	wpt_mail( '1: Status Update', "Should send: $post_this; Setting: $text_default; Publication method: $type", $post_ID ); // DEBUG.
 	if ( $default ) { // default switch: depend on default settings.
 		$post_info = wpt_post_info( $post_ID );
 		$media     = wpt_post_with_media( $post_ID, $post_info );
@@ -1028,8 +1028,8 @@ function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, 
 			if ( 0 === $new || true === $is_inline_edit ) {
 				// if this is an old post and editing updates are enabled.
 				if ( '1' === get_option( 'jd_tweet_default_edit' ) ) {
-					$tweet_this = apply_filters( 'wpt_tweet_this_edit', $tweet_this, $_POST );
-					if ( 'yes' !== $tweet_this ) {
+					$post_this = apply_filters( 'wpt_tweet_this_edit', $post_this, $_POST );
+					if ( 'yes' !== $post_this ) {
 						return false;
 					}
 				}
@@ -1443,12 +1443,12 @@ function wpt_add_twitter_inner_box( $post ) {
 		$type         = $post->post_type;
 		$status       = $post->post_status;
 		$post_id      = $post->ID;
-		$tweet_this   = get_post_meta( $post_id, '_jd_tweet_this', true );
-		if ( ! $tweet_this ) {
-			$tweet_this = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
+		$post_this   = get_post_meta( $post_id, '_wpt_post_this', true );
+		if ( ! $post_this ) {
+			$post_this = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
 		}
 		if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] && '1' === get_option( 'jd_tweet_default_edit' ) && 'publish' === $status ) {
-			$tweet_this = 'no';
+			$post_this = 'no';
 		}
 		if ( isset( $_REQUEST['message'] ) && '10' !== $_REQUEST['message'] ) {
 			// don't display when draft is updated or if no message.
@@ -1525,17 +1525,17 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
 			// "no" means 'Don't Post' (is checked)
-			$nochecked  = ( 'no' === $tweet_this ) ? ' checked="checked"' : '';
-			$yeschecked = ( 'yes' === $tweet_this ) ? ' checked="checked"' : '';
+			$nochecked  = ( 'no' === $post_this ) ? ' checked="checked"' : '';
+			$yeschecked = ( 'yes' === $post_this ) ? ' checked="checked"' : '';
 			?>
 		<p class='toggle-btn-group'>
-			<input type="radio" name="_jd_tweet_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Post", 'wp-to-twitter' ); ?></label>
-			<input type="radio" name="_jd_tweet_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( 'Post', 'wp-to-twitter' ); ?></label>
+			<input type="radio" name="_wpt_post_this" value="no" id="jtn"<?php echo $nochecked; ?> /><label for="jtn"><?php _e( "Don't Post", 'wp-to-twitter' ); ?></label>
+			<input type="radio" name="_wpt_post_this" value="yes" id="jty"<?php echo $yeschecked; ?> /><label for="jty"><?php _e( 'Post', 'wp-to-twitter' ); ?></label>
 		</p>
 			<?php
 		} else {
 			?>
-		<input type='hidden' name='_jd_tweet_this' value='<?php echo $tweet_this; ?>'/>
+		<input type='hidden' name='_wpt_post_this' value='<?php echo $post_this; ?>'/>
 			<?php
 		}
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
@@ -1637,7 +1637,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		// permissions: this user isn't allowed to post status updates.
 		_e( 'Your role does not have the ability to post status updates from this site.', 'wp-to-twitter' );
 		?>
-		<input type='hidden' name='_jd_tweet_this' value='no'/>
+		<input type='hidden' name='_wpt_post_this' value='no'/>
 		<?php
 	}
 }
@@ -1906,12 +1906,12 @@ function wpt_save_post( $id, $post ) {
 			$wp_twitter = sanitize_textarea_field( $_POST['_jd_wp_twitter'] );
 			$update     = update_post_meta( $id, '_jd_wp_twitter', $wp_twitter );
 		}
-		if ( isset( $_POST['_jd_tweet_this'] ) ) {
-			$tweet_this = ( 'no' === $_POST['_jd_tweet_this'] ) ? 'no' : 'yes';
-			$update     = update_post_meta( $id, '_jd_tweet_this', $tweet_this );
+		if ( isset( $_POST['_wpt_post_this'] ) ) {
+			$post_this = ( 'no' === $_POST['_wpt_post_this'] ) ? 'no' : 'yes';
+			$update    = update_post_meta( $id, '_wpt_post_this', $post_this );
 		} else {
-			$tweet_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
-			$update        = update_post_meta( $id, '_jd_tweet_this', $tweet_default );
+			$post_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
+			$update       = update_post_meta( $id, '_wpt_post_this', $post_default );
 		}
 		if ( isset( $_POST['wpt_clear_history'] ) && 'clear' === $_POST['wpt_clear_history'] ) {
 			delete_post_meta( $id, '_wpt_failed' );
