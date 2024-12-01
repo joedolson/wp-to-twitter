@@ -241,17 +241,17 @@ function wpt_mask_attr( $value ) {
 /**
  * Show the last Tweet attempt as admin notice.
  */
-function wpt_show_last_tweet() {
+function wpt_show_last_update() {
 	/**
 	 * Disable the admin notice that shows the last sent update.
 	 *
-	 * @hook wpt_show_last_tweet
+	 * @hook wpt_show_last_update
 	 *
 	 * @param {bool} $show true to show; false to hide.
 	 *
 	 * @return {bool}
 	 */
-	if ( apply_filters( 'wpt_show_last_tweet', true ) ) {
+	if ( apply_filters( 'wpt_show_last_update', true ) ) {
 		$log = wpt_get_log( 'wpt_status_message', 'last' );
 		if ( ! empty( $log ) && is_array( $log ) ) {
 			$post_ID = $log[0];
