@@ -1599,7 +1599,7 @@ function wpt_show_tweets( $post_id ) {
 		&lt;a href='#wpt_tweet_history' class='history-toggle'>&lt;span class='dashicons dashicons-plus' aria-hidden="true">&lt;/span>&lt;?php _e( 'View Update History', 'wp-to-twitter' ); ?>&lt;/a>
 	&lt;/p>
 	&lt;div class='history'>
-	&lt;p class='error'>&lt;em>&lt;?php _e( 'Previous Updates', 'wp-to-twitter' ); ?>:&lt;/em>&lt;/p>
+	&lt;h4 class='wpt-past-updates'>&lt;em>&lt;?php _e( 'Previous Updates', 'wp-to-twitter' ); ?>:&lt;/em>&lt;/h4>
 	&lt;ul>
 		&lt;?php
 		$has_history   = false;
@@ -1652,11 +1652,11 @@ function wpt_show_tweets( $post_id ) {
 					if ( wpt_bluesky_connection() ) {
 						$bluesky_intent = "&lt;a href='https://bsky.app/intent/compose?text=" . urlencode( $ft ) . "'>" . __( 'Send to Bluesky', 'wp-to-twitter' ) . '&lt;/a>';
 					}
-					$error_list .= "&lt;li> &lt;code>Error: $reason&lt;/code> $ft $twitter_intent $mastodon_intent $bluesky_intent &lt;br />&lt;em>$error&lt;/em>&lt;/li>";
+					$error_list .= "&lt;li>&lt;code>Error: $reason&lt;/code> $ft $twitter_intent $mastodon_intent $bluesky_intent &lt;br />&lt;em>$error&lt;/em>&lt;/li>";
 				}
 			}
 			if ( true === $list ) {
-				echo "&lt;p class='error'>&lt;em>" . __( 'Failed Status Updates', 'wp-to-twitter' ) . ":&lt;/em>&lt;/p>
+				echo "&lt;h4 class='wpt-failed-updates'>&lt;em>" . __( 'Failed Status Updates', 'wp-to-twitter' ) . ":&lt;/em>&lt;/h4>
 				&lt;ul>$error_list&lt;/ul>";
 			}
 		}
