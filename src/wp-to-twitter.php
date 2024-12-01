@@ -1894,24 +1894,24 @@ function wpt_save_post( $id, $post ) {
 		}
 		if ( isset( $_POST['_yourls_keyword'] ) ) {
 			$yourls = sanitize_text_field( $_POST['_yourls_keyword'] );
-			$update = update_post_meta( $id, '_yourls_keyword', $yourls );
+			update_post_meta( $id, '_yourls_keyword', $yourls );
 		}
 		if ( isset( $_POST['_jd_twitter'] ) && '' !== $_POST['_jd_twitter'] ) {
 			$twitter = sanitize_textarea_field( $_POST['_jd_twitter'] );
-			$update  = update_post_meta( $id, '_jd_twitter', $twitter );
+			update_post_meta( $id, '_jd_twitter', $twitter );
 		} elseif ( isset( $_POST['_jd_twitter'] ) && '' === $_POST['_jd_twitter'] ) {
 			delete_post_meta( $id, '_jd_twitter' );
 		}
 		if ( isset( $_POST['_jd_wp_twitter'] ) && '' !== $_POST['_jd_wp_twitter'] ) {
 			$wp_twitter = sanitize_textarea_field( $_POST['_jd_wp_twitter'] );
-			$update     = update_post_meta( $id, '_jd_wp_twitter', $wp_twitter );
+			update_post_meta( $id, '_jd_wp_twitter', $wp_twitter );
 		}
 		if ( isset( $_POST['_wpt_post_this'] ) ) {
 			$post_this = ( 'no' === $_POST['_wpt_post_this'] ) ? 'no' : 'yes';
-			$update    = update_post_meta( $id, '_wpt_post_this', $post_this );
+			update_post_meta( $id, '_wpt_post_this', $post_this );
 		} else {
 			$post_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
-			$update       = update_post_meta( $id, '_wpt_post_this', $post_default );
+			update_post_meta( $id, '_wpt_post_this', $post_default );
 		}
 		if ( isset( $_POST['wpt_clear_history'] ) && 'clear' === $_POST['wpt_clear_history'] ) {
 			delete_post_meta( $id, '_wpt_failed' );
@@ -1919,8 +1919,15 @@ function wpt_save_post( $id, $post ) {
 			delete_post_meta( $id, '_wpt_short_url' );
 			delete_post_meta( $id, '_wp_jd_twitter' );
 		}
-		// WPT PRO.
-		$update = apply_filters( 'wpt_insert_post', $_POST, $id );
+		/**
+		 * Runs when post data is inserted.
+		 *
+		 * @hook wpt_insert_post
+		 *
+		 * @param {array} $_POST Unaltered POST data.
+		 * @param {int}   $id Post ID
+		 */
+		do_action( 'wpt_insert_post', $_POST, $id );
 		// WPT PRO.
 		// only send debug data if post meta is updated.
 		wpt_mail( 'Post Meta Processed', 'XPoster post meta was updated' . "\n\n" . print_r( map_deep( $_POST, 'sanitize_textarea_field' ), 1 ), $id ); // DEBUG.
