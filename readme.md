@@ -14,7 +14,7 @@ Automatically send your posts as Bluesky or Mastodon status updates.
 * License: GPLv2 or later  
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
-This is the development environment for XPoster (formerly WP to Twitter).
+This is the development environment for XPoster.
 
 ## Contact
 

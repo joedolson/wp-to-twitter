@@ -2221,10 +2221,10 @@ function wpt_needs_bearer_token() {
 		}
 		if ( ! $bt && $authorized ) {
 			if ( $auth && get_option( 'jd_individual_twitter_users' ) ) {
-				echo "<div class='notice error important'><p>" . __( '<strong>XPoster (formerly WP to Twitter)</strong> needs a Bearer Token added to your profile settings to support the X.com API.', 'wp-to-twitter' ) . '</p></div>';
+				echo "<div class='notice error important'><p>" . __( '<strong>XPoster</strong> needs a Bearer Token added to your profile settings to support the X.com API.', 'wp-to-twitter' ) . '</p></div>';
 			} elseif ( current_user_can( 'manage_options' ) ) {
 				// Translators: URL to connection settings.
-				echo "<div class='notice error important'><p>" . sprintf( __( '<strong>XPoster (formerly WP to Twitter)</strong> needs a Bearer Token added to the <a href="%s">connection settings</a> to support the X.com API.', 'wp-to-twitter' ), admin_url( 'admin.php?page=wp-tweets-pro&tab=connection' ) ) . '</p></div>';
+				echo "<div class='notice error important'><p>" . sprintf( __( '<strong>XPoster</strong> needs a Bearer Token added to the <a href="%s">connection settings</a> to support the X.com API.', 'wp-to-twitter' ), admin_url( 'admin.php?page=wp-tweets-pro&tab=connection' ) ) . '</p></div>';
 			}
 		}
 	}
@@ -2233,8 +2233,8 @@ function wpt_needs_bearer_token() {
 /**
  * Check connections.
  *
- * @param $auth            int|bool User ID or false to check primary connection.
- * @param $get_connections bool True to return an array with the valid connections. Default false.
+ * @param int|bool $auth User ID or false to check primary connection.
+ * @param bool     $get_connections True to return an array with the valid connections. Default false.
  *
  * @return bool|array
  */

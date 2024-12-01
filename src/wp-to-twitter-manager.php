@@ -387,7 +387,6 @@ function wpt_update_settings() {
 					<div class="postbox">
 						<div class="inside purchase">
 							<h3><strong><?php _e( 'XPoster Pro', 'wp-to-twitter' ); ?></strong></h3>
-							<p class="xposter-highlight">WP to Twitter is now XPoster</p>
 							<p>
 								Are you wasting time switching between social media and WordPress to promote your posts? Do you have to delete updates because you accidentally published a post? Do you want to be able to schedule your post to send next week, directly from your post editor? XPoster Pro will help you out!
 							</p>

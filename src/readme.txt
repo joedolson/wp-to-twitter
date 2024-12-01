@@ -9,7 +9,7 @@ License: GPLv2 or later
 Text Domain: wp-to-twitter
 Stable tag: 4.3.0
 
-Posts to Bluesky or Mastodon when you update your WordPress blog or add a link, with your chosen URL shortening service.
+Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
 == Description ==
 
@@ -18,7 +18,7 @@ Posts to Bluesky or Mastodon when you update your WordPress blog or add a link, 
 * New in version 4.3: Bluesky support.
 * New in version 4.2: Mastodon support.
 
-XPoster, formerly known as WP to Twitter, is a time-saving tool for keeping your social media accounts up to date with news and posts from your site.
+XPoster is a time-saving tool for keeping your social media accounts up to date with news and posts from your site.
 
 XPoster uses customizable status templates for updates sent when updating or editing posts, pages, or custom post types. You can customize your messages for each post, using custom template tags to generate the status update. 
 
