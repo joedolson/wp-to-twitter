@@ -68,21 +68,6 @@ function wpt_filter_urls( $update, $post_ID ) {
 }
 
 /**
- * Deprecated 11/30/2024. Aliases `wpt_truncate_status`.
- *
- * @param string  $update Status update text.
- * @param array   $post Post data.
- * @param int     $post_ID Post ID.
- * @param boolean $repost Is this a repost.
- * @param boolean $ref X.com author Reference.
- *
- * @return string New text.
- */
-function jd_truncate_tweet( $update, $post, $post_ID, $repost = false, $ref = false ) {
-	return wpt_truncate_status( $update, $post, $post_ID, $repost, $ref );
-}
-
-/**
  * Parse the text of a status update to ensure included tags don't exceed length requirements.
  *
  * @param string  $update Status update text.
