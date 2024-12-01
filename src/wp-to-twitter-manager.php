@@ -332,7 +332,7 @@ function wpt_update_settings() {
 		echo "<div class='updated notice'><p>" . __( 'XPoster is in staging mode. Status updates will be reported as if successfully sent, but will not be posted.', 'wp-to-twitter' ) . '</p></div>';
 	}
 	wpt_updated_settings();
-	wpt_show_last_tweet();
+	wpt_show_last_update();
 	wpt_handle_errors();
 	if ( ! function_exists( 'wpt_pro_exists' ) ) {
 		?>
