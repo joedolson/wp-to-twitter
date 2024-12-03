@@ -2108,7 +2108,7 @@ function wpt_post_update_future( $id ) {
  * @param boolean $updated True if updated, false if inserted.
  * @param object  $post_before The post prior to this update, or null for new posts.
  */
-function wpt_twit_instant( $id, $post, $updated, $post_before ) {
+function wpt_post_update_instant( $id, $post, $updated, $post_before ) {
 	set_transient( '_wpt_twit_instant', $id, 10 );
 	// future action has already run for this post.
 	if ( get_transient( '_wpt_twit_future' ) &amp;&amp; (int) get_transient( '_wpt_twit_future' ) === $id ) {
