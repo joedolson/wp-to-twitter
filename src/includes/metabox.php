@@ -81,8 +81,8 @@ function wpt_get_post_update_status( $post, $options ) {
 		$post_this = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
 	}
 	$is_edit               = ( 'publish' === $status ) ? true : false;
-	$status_update_on_edit = ( '1' === $options[ $type ]['post-edited-update'] && '1' !== get_option( 'jd_tweet_default_edit' ) ) ? true : false; 
-	if ( $is_edit && ! $status_update_on_edit )  {
+	$status_update_on_edit = ( '1' === $options[ $type ]['post-edited-update'] && '1' !== get_option( 'jd_tweet_default_edit' ) ) ? true : false;
+	if ( $is_edit && ! $status_update_on_edit ) {
 		$post_this = 'no';
 	}
 
