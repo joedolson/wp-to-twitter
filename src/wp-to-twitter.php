@@ -1052,7 +1052,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				}
 			} else {
 				wpt_mail( '4c: Post action is publish', 'This event was a post publish action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
-				if ( '1' === (string) $post_type_settings[ $post_type ]['post-published-update'] || $post_this  ) {
+				if ( '1' === (string) $post_type_settings[ $post_type ]['post-published-update'] || $post_this ) {
 					$nptext = stripcslashes( $post_type_settings[ $post_type ]['post-published-text'] );
 					if ( ! $nptext ) {
 						wpt_mail( '4c: Published post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
