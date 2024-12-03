@@ -1482,7 +1482,7 @@ function wpt_add_twitter_inner_box( $post ) {
 					<?php echo apply_filters( 'wpt_template_block', '', $template, $post->ID ); ?>
 				</p>
 				<div class='wptab' id='notes'>
-					<h3 class="screen-reader-text"><?php _e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
+					<h3><?php _e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
 					<ul class="inline-list">
 					<?php
 					$tags = wpt_tags();
