@@ -45,7 +45,7 @@ function wpt_meta_box_support( $is_pro = 'free' ) {
 function wpt_show_metabox_message( $post, $options ) {
 	$type      = $post->post_type;
 	$status    = $post->post_status;
-	$post_this = wpt_get_post_update_status( $post );
+	$post_this = wpt_get_post_update_status( $post, $options );
 	if ( isset( $_REQUEST['message'] ) && '10' !== $_REQUEST['message'] ) {
 		// don't display when draft is updated or if no message.
 		if ( ! ( ( '1' === $_REQUEST['message'] ) && ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) ) && 'no' !== $post_this ) {
@@ -69,16 +69,20 @@ function wpt_show_metabox_message( $post, $options ) {
  * Check whether a post is supposed to be posted based on settings.
  *
  * @param WP_Post $post Post object.
+ * @param array   $options Status update options.
  *
  * @return string
  */
-function wpt_get_post_update_status( $post ) {
+function wpt_get_post_update_status( $post, $options ) {
 	$status    = $post->post_status;
+	$type      = $post->post_type;
 	$post_this = get_post_meta( $post->ID, '_wpt_post_this', true );
 	if ( ! $post_this ) {
 		$post_this = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
 	}
-	if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] && '1' === get_option( 'jd_tweet_default_edit' ) && 'publish' === $status ) {
+	$is_edit               = ( 'publish' === $status ) ? true : false;
+	$status_update_on_edit = ( '1' === $options[ $type ]['post-edited-update'] && '1' !== get_option( 'jd_tweet_default_edit' ) ) ? true : false; 
+	if ( $is_edit && ! $status_update_on_edit )  {
 		$post_this = 'no';
 	}
 
@@ -89,11 +93,12 @@ function wpt_get_post_update_status( $post ) {
  * Test whether the metabox should load with a 'yes' or 'no' preset for posting status and display toggle to update.
  *
  * @param WP_Post $post Post object.
+ * @param array   $options Status update options.
  *
  * @return string
  */
-function wpt_show_post_switch( $post ) {
-	$post_this = wpt_get_post_update_status( $post );
+function wpt_show_post_switch( $post, $options ) {
+	$post_this = wpt_get_post_update_status( $post, $options );
 
 	if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
 		// "no" means 'Don't Post' (is checked)
