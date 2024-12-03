@@ -1041,15 +1041,23 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 						return false;
 					}
 				}
-				wpt_mail( '4b: Post action is edit', 'This event was a post edit action, not a post publication.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
+				wpt_mail( '4b: Post action is edit', 'This event was a post edit action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
 				if ( '1' === (string) $post_type_settings[ $post_type ]['post-edited-update'] || $post_this ) {
-					$nptext  = stripcslashes( $post_type_settings[ $post_type ]['post-edited-text'] );
+					$nptext = stripcslashes( $post_type_settings[ $post_type ]['post-edited-text'] );
+					if ( ! $nptext ) {
+						wpt_mail( '4b: Edited post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
+					}
+
 					$oldpost = true;
 				}
 			} else {
 				wpt_mail( '4c: Post action is publish', 'This event was a post publish action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
 				if ( '1' === (string) $post_type_settings[ $post_type ]['post-published-update'] || $post_this  ) {
-					$nptext  = stripcslashes( $post_type_settings[ $post_type ]['post-published-text'] );
+					$nptext = stripcslashes( $post_type_settings[ $post_type ]['post-published-text'] );
+					if ( ! $nptext ) {
+						wpt_mail( '4b: Published post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
+					}
+
 					$newpost = true;
 				}
 			}
