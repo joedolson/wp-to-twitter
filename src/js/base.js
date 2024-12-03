@@ -1,4 +1,20 @@
 (function ($) {
+	let post_this = document.querySelectorAll( 'input[name=_wpt_post_this]' );
+	let wrapper   = document.querySelector( '.wpt-options-metabox' );
+
+	post_this.forEach( (el) => { 
+		if ( el && el.checked && el.value === 'no' ) {
+			wrapper.style.display = 'none';
+		}
+		el.addEventListener( 'change', function() {
+			console.log( el.value );
+			if ( el.checked && el.value == 'yes' ) {
+				wrapper.style.display = 'block';
+			} else {
+				wrapper.style.display = 'none';
+			}
+		});
+	});
 	$('#wpt_custom_tweet, #wpt_retweet_0, #wpt_retweet_1, #wpt_retweet_3').charCount({
 		allowed: wptSettings.allowed,
 		counterText: wptSettings.text

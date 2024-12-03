@@ -1449,6 +1449,10 @@ function wpt_add_twitter_inner_box( $post ) {
 		$type         = $post->post_type;
 		$status       = $post->post_status;
 		wpt_show_metabox_message( $post, $options );
+		// Show switch to flip update status.
+		$switch = wpt_show_post_switch( $post );
+		echo $switch;
+		echo '<div class="wpt-options-metabox">';
 		$user_tweet = apply_filters( 'wpt_user_text', '', $status );
 		// Formulate Template display.
 		$template = wpt_display_status_template( $post, $options );
@@ -1465,9 +1469,6 @@ function wpt_add_twitter_inner_box( $post ) {
 			$buttons = wpt_display_metabox_status_buttons( $is_pro );
 			echo $buttons;
 		}
-		// Show switch to flip update status.
-		$switch = wpt_show_post_switch( $post );
-		echo $switch;
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			?>
 			<p class='jtw'>
@@ -1547,6 +1548,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			echo "<p class='disabled'>$tweet_status</p>";
 		}
 		?>
+		</div>
 		</div>
 		<?php
 	} else {
