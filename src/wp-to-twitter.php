@@ -1450,7 +1450,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		$status       = $post->post_status;
 		wpt_show_metabox_message( $post, $options );
 		// Show switch to flip update status.
-		$switch = wpt_show_post_switch( $post );
+		$switch = wpt_show_post_switch( $post, $options );
 		echo $switch;
 		echo '<div class="wpt-options-metabox">';
 		$user_tweet = apply_filters( 'wpt_user_text', '', $status );
@@ -1459,10 +1459,6 @@ function wpt_add_twitter_inner_box( $post ) {
 		if ( $user_tweet ) {
 			// If a user template is defined, replace the existing template.
 			$template = $user_tweet;
-		}
-		if ( 'publish' === $status && '1' !== $options[ $type ]['post-edited-update'] ) {
-			// Translators: post type.
-			$tweet_status = sprintf( __( '%s will not be shared on save.', 'wp-to-twitter' ), ucfirst( $type ) );
 		}
 		if ( 'publish' === $status && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 			// Show metabox status buttons.
@@ -1543,11 +1539,6 @@ function wpt_add_twitter_inner_box( $post ) {
 		</div>
 		<?php wpt_show_tweets( $post->ID ); ?>
 		<?php wpt_meta_box_support( $is_pro ); ?>
-		<?php
-		if ( '' !== $tweet_status ) {
-			echo "<p class='disabled'>$tweet_status</p>";
-		}
-		?>
 		</div>
 		</div>
 		<?php
