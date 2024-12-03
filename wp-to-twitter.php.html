@@ -977,13 +977,15 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 		}
 	}
 	if ( '0' === get_option( 'jd_tweet_default' ) ) {
+		// If post this value is not set or equals 'yes'.
 		$default      = ( 'no' !== $post_this ) ? true : false;
 		$text_default = 'no';
 	} else {
+		// If post this is set and is equal to yes.
 		$default      = ( 'yes' === $post_this ) ? true : false;
 		$text_default = 'yes';
 	}
-	wpt_mail( '1: Status Update', "Should send: $post_this; Setting: $text_default; Publication method: $type", $post_ID ); // DEBUG.
+	wpt_mail( '1: Status Update', "Should send: $post_this; Default: $text_default; Publication method: $type", $post_ID ); // DEBUG.
 	if ( $default ) { // default switch: depend on default settings.
 		$post_info = wpt_post_info( $post_ID );
 		$media     = wpt_post_with_media( $post_ID, $post_info );
