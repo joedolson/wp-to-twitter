@@ -387,7 +387,7 @@ function wpt_show_debug() {
 				$date     = date_i18n( 'Y-m-d H:i:s', $datetime );
 				$subject  = $entry[1];
 				$body     = $entry[2];
-				$records .= "<li><button type='button' class='toggle-debug button-secondary' aria-expanded='false'><strong>$date</strong><br />" . esc_html( $subject ) . "</button><pre class='wpt-debug-details'>" . esc_html( $body ) . '</pre></li>';
+				$records .= "<li><button type='button' class='toggle-debug button-secondary' aria-expanded='false'><div><strong>$date</strong><br />" . esc_html( $subject ) . "</div><span class='dashicons dashicons-plus' aria-hidden='true'></span></button><pre class='wpt-debug-details'>" . esc_html( $body ) . '</pre></li>';
 			}
 		}
 		$script = "

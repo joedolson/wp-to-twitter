@@ -163,6 +163,13 @@
 	white-space: normal;
 	height: auto;
 	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#wp2t-debug .wpt-debug-log button[aria-expanded=true] .dashicons-plus::before {
+	content: "\f460";
 }
 
 .wpt-player-card-settings {
