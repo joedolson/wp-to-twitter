@@ -1055,7 +1055,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				if ( '1' === (string) $post_type_settings[ $post_type ]['post-published-update'] || $post_this  ) {
 					$nptext = stripcslashes( $post_type_settings[ $post_type ]['post-published-text'] );
 					if ( ! $nptext ) {
-						wpt_mail( '4b: Published post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
+						wpt_mail( '4c: Published post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
 					}
 
 					$newpost = true;
