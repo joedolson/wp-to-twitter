@@ -284,7 +284,7 @@ button.time div {
 	flex-wrap: wrap;
 }
 
-.toggle-btn-group:after {
+.toggle-btn-group::after {
     content: "";
     display: table;
     clear: both;
@@ -322,6 +322,7 @@ button.time div {
 	vertical-align: bottom;
 }
 
+.toggle-btn-group:has(input:focus),
 .toggle-btn-group label:hover,
 .toggle-btn-group label:focus {
     background-color: #ddd;
