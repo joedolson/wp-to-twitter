@@ -1539,7 +1539,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			?>
 			</div>
 		</div>
-		<?php wpt_show_tweets( $post->ID ); ?>
+		<?php wpt_show_history( $post->ID ); ?>
 		<?php wpt_meta_box_support( $is_pro ); ?>
 		</div>
 		</div>
@@ -1558,7 +1558,7 @@ function wpt_add_twitter_inner_box( $post ) {
  *
  * @param array $post_id Post ID to fetch status updates on.
  */
-function wpt_show_tweets( $post_id ) {
+function wpt_show_history( $post_id ) {
 	$previous_tweets = get_post_meta( $post_id, '_jd_wp_twitter', true );
 	$failed_tweets   = get_post_meta( $post_id, '_wpt_failed' );
 
