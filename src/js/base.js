@@ -15,6 +15,23 @@
 			}
 		});
 	});
+
+	let add_image = document.querySelectorAll( 'input[name=_wpt_image]' );
+	let image_holder = document.querySelector( '.wpt_custom_image' );
+
+	add_image.forEach( (el) => { 
+		if ( el && el.checked && el.value === '1' ) {
+			image_holder.style.display = 'none';
+		}
+		el.addEventListener( 'change', function() {
+			console.log( el.value );
+			if ( el.checked && el.value == '0' ) {
+				image_holder.style.display = 'block';
+			} else {
+				image_holder.style.display = 'none';
+			}
+		});
+	});
 	$('#wpt_custom_tweet, #wpt_retweet_0, #wpt_retweet_1, #wpt_retweet_3').charCount({
 		allowed: wptSettings.allowed,
 		counterText: wptSettings.text
