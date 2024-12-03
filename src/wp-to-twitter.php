@@ -951,9 +951,11 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 		}
 	}
 	if ( '0' === get_option( 'jd_tweet_default' ) ) {
+		// If post this value is not set or equals 'yes'.
 		$default      = ( 'no' !== $post_this ) ? true : false;
 		$text_default = 'no';
 	} else {
+		// If post this is set and is equal to yes.
 		$default      = ( 'yes' === $post_this ) ? true : false;
 		$text_default = 'yes';
 	}
