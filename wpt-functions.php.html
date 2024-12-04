@@ -914,6 +914,10 @@ function wpt_faq() {
 			'question' => __( "I'm receiving a '401 Unauthorized' error from X.com, but my credentials haven't changed. What should I do?", 'wp-to-twitter' ),
 			'answer'   => __( 'First, check and see whether your app has been suspended in your X.com developer account. If it has, see above. If not, this is most likely a temporary problem in the X.com API; but you can try generating new keys and secrets in your developer account and re-connect your app. Some users have also been successful by changing their account status to the free account. (Older accounts may have a legacy status that is not handled well by X.com.)', 'wp-to-twitter' ),
 		),
+		array(
+			'question' => __( "I'm receiving a '429 Too Many Requests' error from X.com. What should I do?", 'wp-to-twitter' ),
+			'answer'   => __( 'X.com changed their free API usage limits in October 2024, reducing them from 1500 per month to 500 per month, with a maximum allowance of 17 per day. This change significantly increases the likelihood that you will exceed the allowed API usage on the free account. Your only option is to upgrade to an alternate API tier; this is not included in a Premium X.com account.', 'wp-to-twitter' ),
+		),
 	);
 
 	echo '&lt;h2>' . __( 'Frequently Asked Questions', 'wp-to-twitter' ) . '&lt;/h2>';
