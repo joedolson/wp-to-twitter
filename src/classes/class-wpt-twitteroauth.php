@@ -231,7 +231,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * @param string $url URL.
 		 * @param array  $parameters Request params.
 		 *
-		 * @return decoded response.
+		 * @return array decoded response.
 		 */
 		public function post( $url, $parameters = array() ) {
 			$response = $this->wp_oauth_request( $url, $parameters, 'POST' );
@@ -356,7 +356,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 		 * @param array  $args Arguments for signing.
 		 * @param string $method Method type.
 		 *
-		 * @return Request.
+		 * @return string|array JSON encoded request or array.
 		 */
 		public function wp_oauth_request( $url, $args = array(), $method = null ) {
 			// Handle media requests using tmhOAuth library.
