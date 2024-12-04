@@ -58,7 +58,7 @@ function wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id
 					'attachment' => $attachment,
 				)
 			);
-			wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment", $id );
+			wpt_mail( 'Media Uploaded (X)', "$auth, $media_id, $attachment", $id );
 		}
 	}
 	return $status;

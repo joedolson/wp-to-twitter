@@ -74,6 +74,8 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 					),
 				),
 			);
+			wpt_mail( 'Media Uploaded (Bluesky)', "$auth, $blob, $attachment", $id );
+
 		}
 	}
 

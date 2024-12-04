@@ -61,7 +61,7 @@ function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $i
 			$media_id              = $response['id'];
 			$status['media_ids[]'] = $media_id;
 
-			wpt_mail( 'Media Uploaded', "$auth, $media_id, $attachment", $id );
+			wpt_mail( 'Media Uploaded (Mastodon)', "$auth, $media_id, $attachment", $id );
 		}
 	}
 
