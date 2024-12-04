@@ -33,7 +33,7 @@ function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $i
 			if ( ! $allowed ) {
 				wpt_mail( 'Media upload mime type not accepted by Mastodon', get_post_mime_type( $attachment ), $id );
 
-				return $request;
+				return $status;
 			}
 			$alt_text = get_post_meta( $attachment, '_wp_attachment_image_alt', true );
 			/**
