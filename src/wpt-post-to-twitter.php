@@ -28,7 +28,7 @@ function wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id
 	$text = $status['text'];
 	if ( $connection ) {
 		if ( $attachment ) {
-			$allowed  = wpt_check_mime_type( $attachment, 'x' );
+			$allowed = wpt_check_mime_type( $attachment, 'x' );
 			if ( ! $allowed ) {
 				wpt_mail( 'Media upload mime type not accepted by X', get_post_mime_type( $attachment ), $id );
 

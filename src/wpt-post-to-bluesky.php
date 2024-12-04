@@ -30,7 +30,7 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 	$request = array();
 	if ( $connection ) {
 		if ( $attachment ) {
-			$allowed  = wpt_check_mime_type( $attachment, 'bluesky' );
+			$allowed = wpt_check_mime_type( $attachment, 'bluesky' );
 			if ( ! $allowed ) {
 				wpt_mail( 'Media upload mime type not accepted by Bluesky', get_post_mime_type( $attachment ), $id );
 
