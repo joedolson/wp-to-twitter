@@ -929,23 +929,6 @@ function wpt_faq() {
 }
 
 /**
- * Check whether a file is writable.
- *
- * @param string $file Filename/path.
- *
- * @return boolean.
- */
-function wpt_is_writable( $file ) {
-	if ( function_exists( 'wp_is_writable' ) ) {
-		$is_writable = wp_is_writable( $file );
-	} else {
-		$is_writable = is_writeable( $file );
-	}
-
-	return $is_writable;
-}
-
-/**
  * Make a curl query.
  *
  * @param string $url URL to query.
