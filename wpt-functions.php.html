@@ -929,6 +929,47 @@ function wpt_faq() {
 }
 
 /**
+ * Check whether an image has a valid mime type for a service.
+ *
+ * @param int    $attachment_id Attachment ID.
+ * @param string $service Service name (lowercase).
+ *
+ * @return bool
+ */
+function wpt_check_mime_type( $attachment_id, $service ) {
+	$return           = false;
+	$valid_mime_types = array(
+		'x'        => array(
+			'image/jpeg',
+			'image/png',
+			'image/gif',
+			'image/webp',
+		),
+		'bluesky'  => array(
+			'image/jpeg',
+			'image/png',
+			'image/webp',
+			'image/heic',
+		),
+		'mastodon' => array(
+			'image/jpeg',
+			'image/png',
+			'image/webp',
+			'image/heic',
+			'image/avif',
+			'image/gif',
+		),
+	);
+	$allowed = $valid_mime_types[ $service ];
+	$mime_type = get_post_mime_type( $attachment_id );
+	if ( in_array( $mime_type, $allowed, true ) ) {
+		$return = true;
+	}
+
+	return $return;
+}
+
+/**
  * Make a curl query.
  *
  * @param string $url URL to query.
