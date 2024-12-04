@@ -934,7 +934,8 @@ function wpt_check_mime_type( $attachment_id, $service ) {
 			'image/gif',
 		),
 	);
-	$allowed = $valid_mime_types[ $service ];
+
+	$allowed   = $valid_mime_types[ $service ];
 	$mime_type = get_post_mime_type( $attachment_id );
 	if ( in_array( $mime_type, $allowed, true ) ) {
 		$return = true;
