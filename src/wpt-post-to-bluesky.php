@@ -30,6 +30,12 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 	$request = array();
 	if ( $connection ) {
 		if ( $attachment ) {
+			$allowed  = wpt_check_mime_type( $attachment, 'bluesky' );
+			if ( ! $allowed ) {
+				wpt_mail( 'Media upload mime type not accepted by Bluesky', get_post_mime_type( $attachment ), $id );
+
+				return $request;
+			}
 			$alt_text = get_post_meta( $attachment, '_wp_attachment_image_alt', true );
 			/**
 			 * Add alt attributes to uploaded images.

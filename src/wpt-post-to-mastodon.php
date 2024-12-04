@@ -29,6 +29,12 @@ require_once plugin_dir_path( __FILE__ ) . 'classes/class-wpt-mastodon-api.php';
 function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id ) {
 	if ( $connection ) {
 		if ( $attachment ) {
+			$allowed  = wpt_check_mime_type( $attachment, 'mastodon' );
+			if ( ! $allowed ) {
+				wpt_mail( 'Media upload mime type not accepted by Mastodon', get_post_mime_type( $attachment ), $id );
+
+				return $request;
+			}
 			$alt_text = get_post_meta( $attachment, '_wp_attachment_image_alt', true );
 			/**
 			 * Add alt attributes to uploaded images.
