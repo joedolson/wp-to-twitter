@@ -68,6 +68,9 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Bug fix: Avoid JS errors if metabox not enqueued.
 * Encode backup title in same manner as primary title.
 * Improve coverage of documented filters.
+* Removed some unused functions.
+* Simplified publishing logic.
+* Only upload images to service if is one of that service's supported mime types.
 
 = 4.2.6 =
 
