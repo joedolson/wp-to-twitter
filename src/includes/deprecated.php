@@ -48,7 +48,7 @@ function jd_remote_json( $url, $query_args = true ) {
  * @return int $post_ID
  */
 function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, $post_before = null ) {
-	wpt_post_update( $post_ID, $type, $post, $updated, $post_before );
+	return wpt_post_update( $post_ID, $type, $post, $updated, $post_before );
 }
 
 /**
