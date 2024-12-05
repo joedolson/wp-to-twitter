@@ -37,6 +37,21 @@ function jd_remote_json( $url, $query_args = true ) {
 }
 
 /**
+ * Deprecated - alias for `wpt_post_update`.
+ *
+ * @param int     $post_ID Post ID.
+ * @param string  $type Publishing context: instant, future, xmlrpc.
+ * @param object  $post Post object.
+ * @param boolean $updated True if updated, false if inserted.
+ * @param object  $post_before The post prior to this update, or null for new posts.
+ *
+ * @return int $post_ID
+ */
+function wpt_tweet( $post_ID, $type = 'instant', $post = null, $updated = null, $post_before = null ) {
+	wpt_post_update( $post_ID, $type, $post, $updated, $post_before );
+}
+
+/**
  * Send a status update for a new link.
  *
  * @param int $link_id Link ID.
