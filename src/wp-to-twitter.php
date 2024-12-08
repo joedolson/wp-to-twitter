@@ -8,7 +8,7 @@
  * @license     GPL-2.0+
  *
  * @wordpress-plugin
- * Plugin Name: XPoster - Share to X and Mastodon
+ * Plugin Name: XPoster - Share to Bluesky and Mastodon
  * Plugin URI:  https://www.joedolson.com/wp-to-twitter/
  * Description: Posts a status update when you update your WordPress blog or post a link, using your URL shortener. Many options to customize and promote your statuses.
  * Author:      Joe Dolson
