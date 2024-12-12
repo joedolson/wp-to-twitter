@@ -1454,10 +1454,8 @@ function wpt_add_twitter_inner_box( $post ) {
 		?>
 		<div class='wp-to-twitter <?php echo $is_pro; ?>'>
 		<?php
-		$tweet_status = '';
-		$options      = get_option( 'wpt_post_types' );
-		$type         = $post->post_type;
-		$status       = $post->post_status;
+		$options = get_option( 'wpt_post_types' );
+		$status  = $post->post_status;
 		wpt_show_metabox_message( $post, $options );
 		// Show switch to flip update status.
 		$switch = wpt_show_post_switch( $post, $options );
@@ -1476,10 +1474,11 @@ function wpt_add_twitter_inner_box( $post ) {
 			echo $buttons;
 		}
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
+			$custom_update = get_post_meta( $post->ID, '_jd_twitter', true );
 			?>
 			<p class='jtw'>
 				<label for="wpt_custom_tweet"><?php _e( 'Custom Status Update', 'wp-to-twitter' ); ?></label><br/>
-				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"></textarea>
+				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_update ) ); ?></textarea>
 				<?php echo apply_filters( 'wpt_custom_box', '', $template, $post->ID ); ?>
 			</p>
 			<div class="wpt-template-resources wpt-flex">
