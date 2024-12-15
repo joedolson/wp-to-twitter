@@ -24,7 +24,6 @@
 			image_holder.style.display = 'none';
 		}
 		el.addEventListener( 'change', function() {
-			console.log( el.value );
 			if ( el.checked && el.value == '0' ) {
 				image_holder.style.display = 'block';
 			} else {
@@ -39,28 +38,32 @@
 	// add custom retweets
 	$('.wp-to-twitter .expandable').hide();
 	$('.wp-to-twitter .tweet-toggle').on('click', function (e) {
-		e.preventDefault();
+		let dashicon = $( '.wp-to-twitter .tweet-toggle span ');
 		if ( $( '.wp-to-twitter .expandable' ).is( ':visible' ) ) {
-			$( '.wp-to-twitter .tweet-toggle span ').addClass( 'dashicons-plus' );
-			$( '.wp-to-twitter .tweet-toggle span' ).removeClass( 'dashicons-minus' );
+			dashicon.addClass( 'dashicons-plus' );
+			dashicon.removeClass( 'dashicons-minus' );
+			dashicon.parent('button').attr( 'aria-expanded', 'false' );
 		} else {
-			$( '.wp-to-twitter .tweet-toggle span ').removeClass( 'dashicons-plus' );
-			$( '.wp-to-twitter .tweet-toggle span' ).addClass( 'dashicons-minus' );
+			dashicon.removeClass( 'dashicons-plus' );
+			dashicon.addClass( 'dashicons-minus' );
+			dashicon.parent('button').attr( 'aria-expanded', 'true' );
 		}
 		$('.wp-to-twitter .expandable').toggle('slow');
 	});
 	// tweet history log
 	$('.wp-to-twitter .history').hide();
 	$('.wp-to-twitter .history-toggle').on('click', function (e) {
-		e.preventDefault();
+		let dashicon = $( '.wp-to-twitter .history-toggle span ');
 		if ( $( '.wp-to-twitter .history' ).is( ':visible' ) ) {
-			$( '.wp-to-twitter .history-toggle span ').addClass( 'dashicons-plus' );
-			$( '.wp-to-twitter .history-toggle span' ).removeClass( 'dashicons-minus' );
+			dashicon.addClass( 'dashicons-plus' );
+			dashicon.removeClass( 'dashicons-minus' );
+			dashicon.parent( 'button' ).attr( 'aria-expanded', 'false' );
 		} else {
-			$( '.wp-to-twitter .history-toggle span ').removeClass( 'dashicons-plus' );
-			$( '.wp-to-twitter .history-toggle span' ).addClass( 'dashicons-minus' );
+			dashicon.removeClass( 'dashicons-plus' );
+			dashicon.addClass( 'dashicons-minus' );
+			dashicon.parent( 'button' ).attr( 'aria-expanded', 'true' );
 		}
-		$('.wp-to-twitter .history').toggle('slow');
+		$('.wp-to-twitter .history').toggle( 300 );
 	});
 
 	const templateTags = document.querySelectorAll( '#wp2t .inline-list button' );
@@ -70,6 +73,7 @@
 	let   templateText = ( null !== template ) ? template.innerText : '';
 	templateTags.forEach((el) => {
 		el.addEventListener( 'click', function(e) {
+			customText   = ( null !== custom ) ? custom.value : '';
 			let pressed  = el.getAttribute( 'aria-pressed' );
 			let tag      = el.innerText;
 			templateText = ( customText ) ? customText : templateText;

@@ -1575,7 +1575,7 @@ function wpt_show_history( $post_id ) {
 	if ( ! empty( $previous_tweets ) || ! empty( $failed_tweets ) ) {
 		?>
 	<p class='panel-toggle'>
-		<button type="button" class='history-toggle button-secondary'><span class='dashicons dashicons-plus' aria-hidden="true"></span><?php _e( 'View Update History', 'wp-to-twitter' ); ?></button>
+		<button type="button" aria-expanded="false" class='history-toggle button-secondary'><span class='dashicons dashicons-plus' aria-hidden="true"></span><?php _e( 'View Update History', 'wp-to-twitter' ); ?></button>
 	</p>
 	<div class='history'>
 	<h4 class='wpt-past-updates'><em><?php _e( 'Previous Updates', 'wp-to-twitter' ); ?>:</em></h4>
