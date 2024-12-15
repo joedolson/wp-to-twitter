@@ -21,7 +21,7 @@ function wpt_meta_box_support( $is_pro = 'free' ) {
 	if ( 'pro' === $is_pro ) {
 		?>
 		<p>
-			<a class="button-secondary" href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php _e( 'Get Support', 'wp-to-twitter' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php _e( 'Get Support', 'wp-to-twitter' ); ?></a>
 		</p>
 		<?php
 	} else {
@@ -146,6 +146,7 @@ function wpt_display_status_template( $post, $options ) {
  * @return string
  */
 function wpt_display_metabox_status_buttons( $is_pro ) {
+	echo 'here';
 	$buttons = "<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-share' aria-hidden='true'></span>" . __( 'Share Now', 'wp-to-twitter' ) . '</button>';
 	$fields  = '';
 	if ( 'pro' === $is_pro ) {
