@@ -418,6 +418,10 @@ label[for='wpt_prepend_rt'], label[for='wpt_prepend_rt2'], label[for='wpt_prepen
 	color: #fff;
 }
 
+.free .postbox .github path {
+	fill: #fff;
+}
+
 .jcd-narrow .free .postbox .cta a {
 	font-size: 1.4em;
 }
