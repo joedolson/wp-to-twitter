@@ -1601,7 +1601,7 @@ function wpt_show_history( $post_id ) {
 	if ( ! empty( $previous_tweets ) || ! empty( $failed_tweets ) ) {
 		?>
 	&lt;p class='panel-toggle'>
-		&lt;button type="button" class='history-toggle button-secondary'>&lt;span class='dashicons dashicons-plus' aria-hidden="true">&lt;/span>&lt;?php _e( 'View Update History', 'wp-to-twitter' ); ?>&lt;/button>
+		&lt;button type="button" aria-expanded="false" class='history-toggle button-secondary'>&lt;span class='dashicons dashicons-plus' aria-hidden="true">&lt;/span>&lt;?php _e( 'View Update History', 'wp-to-twitter' ); ?>&lt;/button>
 	&lt;/p>
 	&lt;div class='history'>
 	&lt;h4 class='wpt-past-updates'>&lt;em>&lt;?php _e( 'Previous Updates', 'wp-to-twitter' ); ?>:&lt;/em>&lt;/h4>
