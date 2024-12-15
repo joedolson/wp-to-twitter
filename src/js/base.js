@@ -7,7 +7,6 @@
 			wrapper.style.display = 'none';
 		}
 		el.addEventListener( 'change', function() {
-			console.log( el.value );
 			if ( el.checked && el.value == 'yes' ) {
 				wrapper.style.display = 'block';
 			} else {
@@ -34,21 +33,6 @@
 	$('#wpt_custom_tweet, #wpt_retweet_0, #wpt_retweet_1, #wpt_retweet_3').charCount({
 		allowed: wptSettings.allowed,
 		counterText: wptSettings.text
-	});
-	// add custom retweets
-	$('.wp-to-twitter .expandable').hide();
-	$('.wp-to-twitter .tweet-toggle').on('click', function (e) {
-		let dashicon = $( '.wp-to-twitter .tweet-toggle span ');
-		if ( $( '.wp-to-twitter .expandable' ).is( ':visible' ) ) {
-			dashicon.addClass( 'dashicons-plus' );
-			dashicon.removeClass( 'dashicons-minus' );
-			dashicon.parent('button').attr( 'aria-expanded', 'false' );
-		} else {
-			dashicon.removeClass( 'dashicons-plus' );
-			dashicon.addClass( 'dashicons-minus' );
-			dashicon.parent('button').attr( 'aria-expanded', 'true' );
-		}
-		$('.wp-to-twitter .expandable').toggle('slow');
 	});
 	// tweet history log
 	$('.wp-to-twitter .history').hide();
