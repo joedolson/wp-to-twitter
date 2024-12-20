@@ -479,28 +479,28 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						echo $form_start;
 						?>
 						<p>
-							<label for="joturllogin"><?php _e( "Your jotURL public <abbr title='application programming interface'>API</abbr> key:", 'wp-to-twitter' ); ?></label>
+							<label for="joturllogin"><?php _e( "Your jotURL public <abbr title='application programming interface'>API</abbr> key:", 'wp-to-twitter' ); ?></label><br>
 							<input type="text" name="joturllogin" id="joturllogin" value="<?php echo esc_attr( get_option( 'joturllogin' ) ); ?>"/>
 						</p>
 						<p>
-							<label for="joturlapi"><?php _e( "Your jotURL private <abbr title='application programming interface'>API</abbr> key:", 'wp-to-twitter' ); ?></label>
+							<label for="joturlapi"><?php _e( "Your jotURL private <abbr title='application programming interface'>API</abbr> key:", 'wp-to-twitter' ); ?></label><br>
 							<input type="text" name="joturlapi" id="joturlapi" size="40" value="<?php echo esc_attr( get_option( 'joturlapi' ) ); ?>"/>
 						</p>
 						<p>
-							<label for="joturl_domain"><?php _e( 'Your jotURL custom domain:', 'wp-to-twitter' ); ?></label>
+							<label for="joturl_domain"><?php _e( 'Your jotURL custom domain:', 'wp-to-twitter' ); ?></label><br>
 							<input type="text" name="joturl_domain" id="joturl_domain" size="40" value="<?php echo esc_attr( get_option( 'joturl_domain' ) ); ?>"/>
 						</p>
 						<p>
-							<label for="joturl_longurl_params"><?php _e( 'Parameters to add to the long URL (before shortening):', 'wp-to-twitter' ); ?></label>
+							<label for="joturl_longurl_params"><?php _e( 'Parameters to add to the long URL (before URL shortening):', 'wp-to-twitter' ); ?></label><br>
 							<input type="text" name="joturl_longurl_params" id="joturl_longurl_params" size="40" value="<?php echo esc_attr( get_option( 'joturl_longurl_params' ) ); ?>"/>
 						</p>
 
 						<p>
-							<label for="joturl_shorturl_params"><?php _e( 'Parameters to add to the short URL (after shortening):', 'wp-to-twitter' ); ?></label>
+							<label for="joturl_shorturl_params"><?php _e( 'Parameters to add to the short URL (after URL shortening):', 'wp-to-twitter' ); ?></label><br>
 							<input type="text" name="joturl_shorturl_params" id="joturl_shorturl_params" size="40" value="<?php echo esc_attr( get_option( 'joturl_shorturl_params' ) ); ?>"/>
 						</p>
 						<p>
-							<a href="https://www.joturl.com/reserved/api.html"><?php _e( 'View your jotURL public and private API key', 'wp-to-twitter' ); ?></a>
+							<a href="https://joturl.com/reserved/settings.html#tools-api"><?php _e( 'View your jotURL public and private API key', 'wp-to-twitter' ); ?></a>
 						</p>
 						<div><input type="hidden" name="submit-type" value="joturlapi"/></div>
 						<?php
