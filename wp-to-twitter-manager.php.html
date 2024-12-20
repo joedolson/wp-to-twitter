@@ -514,7 +514,7 @@ function wpt_update_settings() {
 								&lt;legend class="screen-reader-text">&lt;span>&lt;?php _e( 'Links', 'wp-to-twitter' ); ?>&lt;/span>&lt;/legend>
 								&lt;p>
 									&lt;input type="checkbox" name="jd_twit_blogroll" id="jd_twit_blogroll" value="1" &lt;?php echo wpt_checkbox( 'jd_twit_blogroll' ); ?> />
-									&lt;label for="jd_twit_blogroll">&lt;strong>&lt;?php _e( 'Update X.com when you post a Blogroll link', 'wp-to-twitter' ); ?>&lt;/strong>&lt;/label>&lt;br/>
+									&lt;label for="jd_twit_blogroll">&lt;strong>&lt;?php _e( 'Send status update when you post a link', 'wp-to-twitter' ); ?>&lt;/strong>&lt;/label>&lt;br/>
 									&lt;label for="newlink-published-text">&lt;?php _e( 'Text for new link updates:', 'wp-to-twitter' ); ?>&lt;/label>
 									&lt;input aria-describedby="newlink-published-text-label" type="text" class="wpt-template" name="newlink-published-text" id="newlink-published-text" class="widefat" maxlength="120" value="&lt;?php echo esc_attr( stripslashes( get_option( 'newlink-published-text' ) ) ); ?>"/>&lt;br/>&lt;span id="newlink-published-text-label">&lt;?php _e( 'Available shortcodes: &lt;code>#url#&lt;/code>, &lt;code>#title#&lt;/code>, and &lt;code>#description#&lt;/code>.', 'wp-to-twitter' ); ?>&lt;/span>
 								&lt;/p>
