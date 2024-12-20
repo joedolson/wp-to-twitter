@@ -441,7 +441,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						<p>
 							<label for="yourlsurl"><?php _e( 'URI to the YOURLS API', 'wp-to-twitter' ); ?></label><br/>
 							<input type="text" id="yourlsurl" name="yourlsurl" class="widefat" value="<?php echo esc_attr( get_option( 'yourlsurl' ) ); ?>"/><br/>
-							<small><?php _e( 'Example:', 'wp-to-twitter' ); ?> <code>http://domain.com/yourls-api.php</code>
+							<small><?php _e( 'Example:', 'wp-to-twitter' ); ?> <code>https://domain.com/yourls-api.php</code>
 							</small>
 						</p>
 							<?php
@@ -683,7 +683,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					<?php
 				}
 				?>
-				<option value="6" <?php selected( $shortener, '6' ); ?>><?php _e( 'YOURLS (remote server)', 'wp-to-twitter' ); ?></option>
+				<option value="6" <?php selected( $shortener, '6' ); ?>><?php _e( 'YOURLS', 'wp-to-twitter' ); ?></option>
 				<option value="10" <?php selected( $shortener, '10' ); ?>>jotURL</option>
 				<option value="11" <?php selected( $shortener, '11' ); ?>>Hum</option>
 				<?php
