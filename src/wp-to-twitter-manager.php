@@ -488,7 +488,7 @@ function wpt_update_settings() {
 								<legend class="screen-reader-text"><span><?php _e( 'Links', 'wp-to-twitter' ); ?></span></legend>
 								<p>
 									<input type="checkbox" name="jd_twit_blogroll" id="jd_twit_blogroll" value="1" <?php echo wpt_checkbox( 'jd_twit_blogroll' ); ?> />
-									<label for="jd_twit_blogroll"><strong><?php _e( 'Update X.com when you post a Blogroll link', 'wp-to-twitter' ); ?></strong></label><br/>
+									<label for="jd_twit_blogroll"><strong><?php _e( 'Send status update when you post a link', 'wp-to-twitter' ); ?></strong></label><br/>
 									<label for="newlink-published-text"><?php _e( 'Text for new link updates:', 'wp-to-twitter' ); ?></label>
 									<input aria-describedby="newlink-published-text-label" type="text" class="wpt-template" name="newlink-published-text" id="newlink-published-text" class="widefat" maxlength="120" value="<?php echo esc_attr( stripslashes( get_option( 'newlink-published-text' ) ) ); ?>"/><br/><span id="newlink-published-text-label"><?php _e( 'Available shortcodes: <code>#url#</code>, <code>#title#</code>, and <code>#description#</code>.', 'wp-to-twitter' ); ?></span>
 								</p>
