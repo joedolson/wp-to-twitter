@@ -2201,7 +2201,7 @@ function wpt_check_connections( $auth = false, $get_connections = false ) {
 		$connected = ( wtt_oauth_test( $auth, 'verify' ) || wpt_mastodon_connection( $auth ) || wpt_bluesky_connection( $auth ) ) ? true : false;
 	} else {
 		$connected = array(
-			'twitter'  => wtt_oauth_test( $auth, 'verify' ),
+			'x'        => wtt_oauth_test( $auth, 'verify' ),
 			'mastodon' => wpt_mastodon_connection( $auth ),
 			'bluesky'  => wpt_bluesky_connection( $auth ),
 		);
