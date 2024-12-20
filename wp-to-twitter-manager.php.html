@@ -746,8 +746,8 @@ function wpt_update_settings() {
 								$roles          = $wp_roles->get_names();
 								$caps           = array(
 									'wpt_can_tweet'      => __( 'Can send Status updates', 'wp-to-twitter' ),
-									'wpt_twitter_custom' => __( 'See Custom Status Update Field when creating a Post', 'wp-to-twitter' ),
-									'wpt_twitter_switch' => __( 'Toggle the Update/Don\'t Update option', 'wp-to-twitter' ),
+									'wpt_twitter_custom' => __( 'Set Custom Status Update input when creating a Post', 'wp-to-twitter' ),
+									'wpt_twitter_switch' => __( 'Toggle the Post/Don\'t Post option', 'wp-to-twitter' ),
 									'wpt_tweet_now'      => __( 'Can see Update Now button', 'wp-to-twitter' ),
 									'wpt_twitter_oauth'  => __( 'Allow user to authenticate with services', 'wp-to-twitter' ),
 								);
@@ -840,13 +840,13 @@ function wpt_update_settings() {
 			?>
 			&lt;div class="ui-sortable meta-box-sortables">
 				&lt;div class="postbox">
-					&lt;h3>&lt;span>&lt;?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?>&lt;/span>&lt;/h3>
+					&lt;h3>&lt;span>&lt;?php _e( 'Debugging', 'wp-to-twitter' ); ?>&lt;/span>&lt;/h3>
 					&lt;div class="inside">
 						&lt;fieldset>
 							&lt;legend class='screen-reader-text'>&lt;?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?>&lt;/legend>
 							&lt;ul>
 								&lt;li>
-									&lt;input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" &lt;?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> &lt;label for="wp_debug_oauth">&lt;?php _e( 'Get Debugging Data for OAuth Connection', 'wp-to-twitter' ); ?>&lt;/label>
+									&lt;input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" &lt;?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> &lt;label for="wp_debug_oauth">&lt;?php _e( 'Get Debugging Data for Service Connections', 'wp-to-twitter' ); ?>&lt;/label>
 								&lt;/li>
 								&lt;li>
 									&lt;input type="checkbox" name="wpt_debug_tweets" id="wpt_debug_tweets" value="1" &lt;?php echo wpt_checkbox( 'wpt_debug_tweets' ); ?> /> &lt;label for="wpt_debug_tweets">&lt;?php _e( 'Enable XPoster Debugging', 'wp-to-twitter' ); ?>&lt;/label>
