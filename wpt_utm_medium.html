@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_upload_media - XPoster Hook Doumentation</title>
+    <title>Filter: wpt_utm_medium - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_upload_media</h1></header>
+    <header><h1 class="page-title">Filter: wpt_utm_medium</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_upload_media">apply_filters( 'wpt_upload_media', <span class="signature">$upload, $post_ID )</span><span class="type-signature"> &rarr; {bool}</span></h4>
+    <h4 class="name" id="wpt_utm_medium">apply_filters( 'wpt_utm_medium', <span class="signature">$medium )</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Filter whether this post should upload media.</p>
+    <p>Filter the default utm_medium argument in link analytics.</p>
 </div>
 
 
@@ -77,13 +77,13 @@
 
         <tr>
             
-                <td class="name"><code>$upload</code></td>
+                <td class="name"><code>$medium</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">bool</span>
+<span class="param-type">string</span>
 
 
             
@@ -93,30 +93,7 @@
 
             
 
-            <td class="description last"><p>True to allow this post to upload media.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$post_ID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Post ID.</p></td>
+            <td class="description last"><p>Default 'twitter'.</p></td>
         </tr>
 
     
@@ -157,7 +134,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line889">line 889</a>
+        <a href="wp-to-twitter-shorteners.php.html">wp-to-twitter-shorteners.php</a>, <a href="wp-to-twitter-shorteners.php.html#line76">line 76</a>
     </li></ul></dd>
     
 
@@ -191,7 +168,7 @@
     </dt>
     <dd>
         
-<span class="param-type">bool</span>
+<span class="param-type">string</span>
 
 
     </dd>
