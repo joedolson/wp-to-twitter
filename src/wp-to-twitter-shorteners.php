@@ -73,7 +73,25 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				} else {
 					$campaign = get_option( 'twitter-analytics-campaign' );
 				}
-				$medium   = urlencode( trim( apply_filters( 'wpt_utm_medium', 'twitter' ) ) );
+				/**
+				 * Filter the default utm_medium argument in link analytics.
+				 *
+				 * @hook wpt_utm_medium
+				 *
+				 * @param {string} $medium Default 'twitter'.
+				 *
+				 * @return {string}
+				 */
+				$medium = urlencode( trim( apply_filters( 'wpt_utm_medium', 'twitter' ) ) );
+				/**
+				 * Filter the default utm_source argument in link analytics.
+				 *
+				 * @hook wpt_utm_source
+				 *
+				 * @param {string} $source Default 'twitter'.
+				 *
+				 * @return {string}
+				 */
 				$source   = urlencode( trim( apply_filters( 'wpt_utm_source', 'twitter' ) ) );
 				$tracking = apply_filters(
 					'wpt_analytics_arguments',
