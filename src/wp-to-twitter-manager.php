@@ -720,8 +720,8 @@ function wpt_update_settings() {
 								$roles          = $wp_roles->get_names();
 								$caps           = array(
 									'wpt_can_tweet'      => __( 'Can send Status updates', 'wp-to-twitter' ),
-									'wpt_twitter_custom' => __( 'See Custom Status Update Field when creating a Post', 'wp-to-twitter' ),
-									'wpt_twitter_switch' => __( 'Toggle the Update/Don\'t Update option', 'wp-to-twitter' ),
+									'wpt_twitter_custom' => __( 'Set Custom Status Update input when creating a Post', 'wp-to-twitter' ),
+									'wpt_twitter_switch' => __( 'Toggle the Post/Don\'t Post option', 'wp-to-twitter' ),
 									'wpt_tweet_now'      => __( 'Can see Update Now button', 'wp-to-twitter' ),
 									'wpt_twitter_oauth'  => __( 'Allow user to authenticate with services', 'wp-to-twitter' ),
 								);
@@ -814,13 +814,13 @@ function wpt_update_settings() {
 			?>
 			<div class="ui-sortable meta-box-sortables">
 				<div class="postbox">
-					<h3><span><?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?></span></h3>
+					<h3><span><?php _e( 'Debugging', 'wp-to-twitter' ); ?></span></h3>
 					<div class="inside">
 						<fieldset>
 							<legend class='screen-reader-text'><?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?></legend>
 							<ul>
 								<li>
-									<input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" <?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> <label for="wp_debug_oauth"><?php _e( 'Get Debugging Data for OAuth Connection', 'wp-to-twitter' ); ?></label>
+									<input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" <?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> <label for="wp_debug_oauth"><?php _e( 'Get Debugging Data for Service Connections', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
 									<input type="checkbox" name="wpt_debug_tweets" id="wpt_debug_tweets" value="1" <?php echo wpt_checkbox( 'wpt_debug_tweets' ); ?> /> <label for="wpt_debug_tweets"><?php _e( 'Enable XPoster Debugging', 'wp-to-twitter' ); ?></label>
