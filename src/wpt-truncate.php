@@ -534,7 +534,7 @@ function wpt_custom_shortcodes( $sentence, $post_ID ) {
 		foreach ( $matches[0] as $value ) {
 			$shortcode = "$value";
 			$field     = str_replace( $params, '', $shortcode );
-			$value     = strip_tags( get_post_meta( $post_ID, $field, true ) );
+			$value     = wp_strip_all_tags( get_post_meta( $post_ID, $field, true ) );
 			/**
 			 * Filter the output of a custom field template tag. Custom field tags are marked with `[[$field]]`.
 			 *
@@ -584,7 +584,7 @@ function wpt_user_meta_shortcodes( $sentence, $auth_id ) {
 			 *
 			 * @return {string}
 			 */
-			$custom   = apply_filters( 'wpt_user_meta_shortcode', strip_tags( get_user_meta( $auth_id, $field, true ) ), $auth_id, $field );
+			$custom   = apply_filters( 'wpt_user_meta_shortcode', wp_strip_all_tags( get_user_meta( $auth_id, $field, true ) ), $auth_id, $field );
 			$sentence = str_replace( $shortcode, $custom, $sentence );
 		}
 	}
