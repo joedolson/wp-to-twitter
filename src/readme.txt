@@ -7,7 +7,7 @@ Tested up to: 6.7
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.3.1
+Stable tag: 4.3.2
 
 Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -58,6 +58,15 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 4.3.2 =
+
+* Bug fix: Failed to update one version number.
+* Bug fix: Github icon should be white.
+* Accessibility: toggle buttons were not buttons.
+* Compat: Move Pro-only JS & Styles into pro.
+* Docs: Document UTM filters.
+* Docs: Update language to match documentation & expectation.
 
 = 4.3.1 =
 
