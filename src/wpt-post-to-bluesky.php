@@ -29,6 +29,11 @@ require_once plugin_dir_path( __FILE__ ) . 'classes/class-wpt-bluesky-api.php';
 function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type = 'upload' ) {
 	$request = array();
 	if ( $connection ) {
+		$card = ( function_exists( 'wpt_card_data' ) ) ? wpt_card_data( $id, 'og' ) : false;
+		if ( ! $card ) {
+			// If there's no card data, return early.
+			return $request;
+		}
 		if ( $attachment ) {
 			$allowed = wpt_check_mime_type( $attachment, 'bluesky' );
 			if ( ! $allowed ) {
@@ -99,7 +104,6 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 			wpt_mail( 'Media Uploaded (Bluesky)', "$auth, $attachment" . PHP_EOL . print_r( $blob, 1 ), $id );
 		}
 		if ( ! $attachment && 'card' === $request_type ) {
-			$card    = wpt_card_data( $id, 'og' );
 			$request = array(
 				'$type'    => 'app.bsky.embed.external',
 				'external' => array(
