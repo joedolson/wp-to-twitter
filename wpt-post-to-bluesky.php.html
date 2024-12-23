@@ -52,7 +52,7 @@ require_once plugin_dir_path( __FILE__ ) . 'classes/class-wpt-bluesky-api.php';
  *
  * @return array Image blob array to be posted with status.
  */
-function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id ) {
+function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type = 'upload' ) {
 	$request = array();
 	if ( $connection ) {
 		if ( $attachment ) {
@@ -91,17 +91,49 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 				'content-type' => $mimetype,
 			);
 			$blob    = $connection->call_api( 'https://bsky.social/xrpc/com.atproto.repo.uploadBlob', $request );
-			$request = array(
-				'$type'  => 'app.bsky.embed.images',
-				'images' => array(
-					array(
-						'alt'   => $alt_text,
-						'image' => $blob['blob'],
+			if ( 'upload' === $request_type ) {
+				$request = array(
+					'$type'  => 'app.bsky.embed.images',
+					'images' => array(
+						array(
+							'alt'   => $alt_text,
+							'image' => $blob['blob'],
+						),
 					),
+				);
+			} else {
+				$card    = wpt_card_data( $id, 'og' );
+				$request = array(
+					'$type'    => 'app.bsky.embed.external',
+					'external' => array(
+						'uri'         => get_the_permalink( $id ),
+						'title'       => $card['title'],
+						'description' => $card['description'],
+						'thumb'       => $blob['blob'],
+					),
+				);
+				$request = array(
+					'$type'  => 'app.bsky.embed.external',
+					'external' => array(
+						array(
+							'alt'   => $alt_text,
+							'image' => $blob['blob'],
+						),
+					),
+				);
+			}
+			wpt_mail( 'Media Uploaded (Bluesky)', "$auth, $attachment" . PHP_EOL . print_r( $blob, 1 ), $id );
+		}
+		if ( ! $attachment &amp;&amp; 'card' === $request_type ) {
+			$card    = wpt_card_data( $id, 'og' );
+			$request = array(
+				'$type'    => 'app.bsky.embed.external',
+				'external' => array(
+					'uri'         => get_the_permalink( $id ),
+					'title'       => $card['title'],
+					'description' => $card['description'],
 				),
 			);
-			wpt_mail( 'Media Uploaded (Bluesky)', "$auth, $attachment" . PHP_EOL . print_r( $blob, 1 ), $id );
-
 		}
 	}
 
