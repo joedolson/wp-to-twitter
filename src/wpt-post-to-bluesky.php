@@ -23,6 +23,7 @@ require_once plugin_dir_path( __FILE__ ) . 'classes/class-wpt-bluesky-api.php';
  * @param int      $attachment Attachment ID.
  * @param array    $status Array of posting information.
  * @param int      $id Post ID.
+ * @param string   $request_type Whether an upload or card should be added to Bluesky request.
  *
  * @return array Image blob array to be posted with status.
  */
@@ -92,7 +93,7 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 					),
 				);
 				$request = array(
-					'$type'  => 'app.bsky.embed.external',
+					'$type'    => 'app.bsky.embed.external',
 					'external' => array(
 						array(
 							'alt'   => $alt_text,
