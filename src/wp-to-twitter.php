@@ -437,9 +437,10 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$return['mastodon'] = $response;
 		}
 		if ( wpt_bluesky_connection( $auth ) ) {
-			$connection = wpt_bluesky_connection( $auth );
-			$image      = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id );
-			$response   = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
+			$connection   = wpt_bluesky_connection( $auth );
+			$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
+			$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
+			$response     = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
 			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
 			$return['bluesky'] = $response;
 		}
