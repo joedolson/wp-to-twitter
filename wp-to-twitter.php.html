@@ -424,9 +424,10 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		return false;
 	}
 
-	$check_twitter  = wpt_check_oauth( $auth );
-	$check_mastodon = wpt_mastodon_connection( $auth );
-	$check_bluesky  = wpt_bluesky_connection( $auth );
+	$connections    = wpt_check_connections( $auth, true );
+	$check_twitter  = $connections['x'];
+	$check_mastodon = $connections['mastodon'];
+	$check_bluesky  = $connections['bluesky'];
 	if ( ! $check_twitter &amp;&amp; ! $check_mastodon &amp;&amp; ! $check_bluesky ) {
 		$error = __( 'This account is not authorized to post to any services.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '401', time() );
@@ -477,22 +478,22 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		);
 
 		$connection = false;
-		if ( wtt_oauth_test( $auth ) &amp;&amp; wpt_send_to_service( $id, 'x' ) ) {
-			$connection = wpt_oauth_connection( $auth );
+		if ( $check_twitter &amp;&amp; wpt_send_to_service( $id, 'x' ) ) {
+			$connection = $check_twitter;
 			$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
 			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
 			$return['xcom'] = $response;
 		}
-		if ( wpt_mastodon_connection( $auth ) &amp;&amp; wpt_send_to_service( $id, 'mastodon' ) ) {
-			$connection = wpt_mastodon_connection( $auth );
+		if ( $check_mastodon &amp;&amp; wpt_send_to_service( $id, 'mastodon' ) ) {
+			$connection = $check_mastodon;
 			$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
 			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
 			$return['mastodon'] = $response;
 		}
-		if ( wpt_bluesky_connection( $auth ) &amp;&amp; wpt_send_to_service( $id, 'bluesky' ) ) {
-			$connection   = wpt_bluesky_connection( $auth );
+		if ( $check_bluesky &amp;&amp; wpt_send_to_service( $id, 'bluesky' ) ) {
+			$connection   = $check_bluesky;
 			$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
 			$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
 			$response     = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
