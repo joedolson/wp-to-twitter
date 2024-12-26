@@ -18,10 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Function to test validity of credentials
  *
- * @param mixed int/boolean $auth Current author.
- * @param string            $context Use context.
+ * @param int|boolean $auth Current author.
+ * @param string      $context Use context.
  *
- * @return Is authenticated.
+ * @return bool Is authenticated.
  */
 function wtt_oauth_test( $auth = false, $context = '' ) {
 	if ( ! $auth ) {
