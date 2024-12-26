@@ -311,6 +311,34 @@ function wpt_check_recent_tweet( $id, $auth ) {
 	return false;
 }
 
+/**
+ * Check whether the current post should be sent to a given service.
+ *
+ * @param int    $post_ID Post ID.
+ * @param string $service Service ID.
+ *
+ * @return bool
+ */
+function wpt_send_to_service( $post_ID, $service ) {
+	$omit    = get_post_meta( $post_ID, '_wpt_omit_services', true );
+	$send_to = true;
+	if ( in_array( $service, $omit, true ) ) {
+		$send_to = false;
+	}
+
+	/**
+	 * Filter whether a given post should be sent to a specific service.
+	 *
+	 * @hook wpt_send_to_service
+	 *
+	 * @param {bool}   $send_to True to send to a service.
+	 * @param {int}    $post_ID Post ID.
+	 * @param {string} $service Service ID.
+	 *
+	 * @return {bool}
+	 */
+	return apply_filters( $send_to, 'wpt_send_to_service', $post_ID, $service );
+}
 
 /**
  * Performs the API post to target services. Alias for wpt_post_to_twitter.
@@ -422,21 +450,21 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		);
 
 		$connection = false;
-		if ( wtt_oauth_test( $auth ) ) {
+		if ( wtt_oauth_test( $auth ) && wpt_send_to_service( $id, 'x' ) ) {
 			$connection = wpt_oauth_connection( $auth );
 			$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
 			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
 			$return['xcom'] = $response;
 		}
-		if ( wpt_mastodon_connection( $auth ) ) {
+		if ( wpt_mastodon_connection( $auth ) && wpt_send_to_service( $id, 'mastodon' ) ) {
 			$connection = wpt_mastodon_connection( $auth );
 			$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
 			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
 			$return['mastodon'] = $response;
 		}
-		if ( wpt_bluesky_connection( $auth ) ) {
+		if ( wpt_bluesky_connection( $auth ) && wpt_send_to_service( $id, 'bluesky' ) ) {
 			$connection   = wpt_bluesky_connection( $auth );
 			$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
 			$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
