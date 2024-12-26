@@ -424,7 +424,7 @@ function wtt_connect_oauth( $auth = false ) {
 			$bt_form = '';
 			if ( ! $auth ) {
 				$disabled = get_option( 'wpt_disabled_services', array() );
-				$checked  = ( in_array( 'x', array_keys( $disabled ), true ) ) ? ' checked="checked"' : '';				
+				$checked  = ( in_array( 'x', array_keys( $disabled ), true ) ) ? ' checked="checked"' : '';
 				$disable  = '<form action="" method="post" class="wpt-connection-form"><p class="checkboxes"><input' . $checked . ' type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_x" value="x"><label for="wpt_disable_x">' . __( 'Disable Posting to X', 'wp-to-twitter' ) . '</label></p>
 				<input type="hidden" name="oauth_settings" value="wtt_x_update"><input type="submit" name="wtt_x_update" class="button-secondary" value="' . __( 'Save Changes', 'wp-to-twitter' ) . '" />' . $nonce;
 
