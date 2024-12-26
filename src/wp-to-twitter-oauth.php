@@ -257,6 +257,19 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 
 				return $message;
 				break;
+			case 'wtt_x_update':
+				if ( ! wp_verify_nonce( $post['_wpnonce'], 'wp-to-twitter-nonce' ) && ! $auth ) {
+					wp_die( 'Oops, please try again.' );
+				}
+				$option  = get_option( 'wpt_disabled_services', array() );
+				$disable = isset( $post['wpt_disabled_services'] ) ? true : false;
+				if ( $disable ) {
+					$option['x'] = 'true';
+				} else {
+					unset( $option['x'] );
+				}
+				update_option( 'wpt_disabled_services', $option );
+				break;
 			case 'wtt_twitter_disconnect':
 				if ( ! wp_verify_nonce( $post['_wpnonce'], 'wp-to-twitter-nonce' ) && ! $auth ) {
 					wp_die( 'Oops, please try again.' );
@@ -388,6 +401,7 @@ function wtt_connect_oauth( $auth = false ) {
 		$nonce = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
 		$site  = get_bloginfo( 'name' );
 
+		$disable = '';
 		if ( ! $bt ) {
 			$information = '
 			<p>' . __( 'The X.com version 2 API requires an additional API setting in your connection settings.', 'wp-to-twitter' ) . '</p>
@@ -409,6 +423,11 @@ function wtt_connect_oauth( $auth = false ) {
 		} else {
 			$bt_form = '';
 			if ( ! $auth ) {
+				$disabled = get_option( 'wpt_disabled_services', array() );
+				$checked  = ( in_array( 'x', array_keys( $disabled ), true ) ) ? ' checked="checked"' : '';				
+				$disable  = '<form action="" method="post" class="wpt-connection-form"><p class="checkboxes"><input' . $checked . ' type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_x" value="x"><label for="wpt_disable_x">' . __( 'Disable Posting to X', 'wp-to-twitter' ) . '</label></p>
+				<input type="hidden" name="oauth_settings" value="wtt_x_update"><input type="submit" name="wtt_x_update" class="button-secondary" value="' . __( 'Save Changes', 'wp-to-twitter' ) . '" />' . $nonce;
+
 				// Translators: Name of the current site.
 				$submit = '<input type="submit" name="submit" class="button-primary" value="' . sprintf( __( 'Disconnect %s from X.com', 'wp-to-twitter' ), $site ) . '" />
 						<input type="hidden" name="oauth_settings" value="wtt_twitter_disconnect" class="hidden" />';
@@ -436,7 +455,7 @@ function wtt_connect_oauth( $auth = false ) {
 					' . $submit . '
 					</div>
 				</div>
-				' . $nonce . '
+				' . $nonce . $disable . '
 			</div>' );
 
 	}

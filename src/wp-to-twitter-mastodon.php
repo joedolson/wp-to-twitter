@@ -72,6 +72,19 @@ function wpt_update_mastodon_settings( $auth = false, $post = false ) {
 
 				return $message;
 				break;
+			case 'wtt_mastodon_update':
+				if ( ! wp_verify_nonce( $post['_wpnonce'], 'wp-to-twitter-nonce' ) && ! $auth ) {
+					wp_die( 'Oops, please try again.' );
+				}
+				$option  = get_option( 'wpt_disabled_services', array() );
+				$disable = isset( $post['wpt_disabled_services'] ) ? true : false;
+				if ( $disable ) {
+					$option['mastodon'] = 'true';
+				} else {
+					unset( $option['mastodon'] );
+				}
+				update_option( 'wpt_disabled_services', $option );
+				break;
 			case 'wtt_mastodon_disconnect':
 				if ( ! wp_verify_nonce( $post['_wpnonce'], 'wp-to-twitter-nonce' ) && ! $auth ) {
 					wp_die( 'Oops, please try again.' );
@@ -114,6 +127,7 @@ function wtt_connect_mastodon( $auth = false ) {
 	$form    = ( ! $auth ) ? '<form action="" method="post" class="wpt-connection-form">' : '';
 	$nonce   = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
 	$connect = wpt_mastodon_connection( $auth );
+	$disable = '';
 	if ( ! $connect ) {
 		$ack = ( ! $auth ) ? get_option( 'wpt_mastodon_token' ) : get_user_meta( $auth, 'wpt_mastodon_token', true );
 		$acs = ( ! $auth ) ? get_option( 'wpt_mastodon_instance' ) : get_user_meta( $auth, 'wpt_mastodon_instance', true );
@@ -156,6 +170,11 @@ function wtt_connect_mastodon( $auth = false ) {
 		$site  = get_bloginfo( 'name' );
 
 		if ( ! $auth ) {
+			$disabled = get_option( 'wpt_disabled_services', array() );
+			$checked  = ( in_array( 'mastodon', array_keys( $disabled ), true ) ) ? ' checked="checked"' : '';				
+			$disable  = '<form action="" method="post" class="wpt-connection-form"><p class="checkboxes"><input' . $checked . ' type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_mastodon" value="mastodon"><label for="wpt_disable_mastodon">' . __( 'Disable Posting to Mastodon', 'wp-to-twitter' ) . '</label></p>
+			<input type="hidden" name="mastodon_settings" value="wtt_mastodon_update"><input type="submit" name="wtt_mastodon_update" class="button-secondary" value="' . __( 'Save Changes', 'wp-to-twitter' ) . '" />' . $nonce;
+
 			// Translators: Name of the current site.
 			$submit = '<input type="submit" name="submit" class="button-primary" value="' . sprintf( __( 'Disconnect %s from Mastodon', 'wp-to-twitter' ), $site ) . '" />
 					<input type="hidden" name="mastodon_settings" value="wtt_mastodon_disconnect" class="hidden" />';
@@ -177,7 +196,7 @@ function wtt_connect_mastodon( $auth = false ) {
 					' . $submit . '
 					</div>
 				</div>
-				' . $nonce . '
+				' . $nonce . $disable . '
 			</div>' );
 
 	}

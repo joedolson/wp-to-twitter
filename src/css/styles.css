@@ -36,6 +36,11 @@ aside.xposter-sales {
 	display: block;
 }
 
+.wpt-connection-form .checkboxes label {
+	font-weight: 400;
+	display: inline-block;
+}
+
 .xposter-highlight {
 	background: #fcb000;
 	color: #000;
