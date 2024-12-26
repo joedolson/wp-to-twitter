@@ -12,8 +12,8 @@
 /**
  * Update Mastodon settings.
  *
- * @param mixed int/boolean   $auth Author.
- * @param mixed array/boolean $post POST data.
+ * @param int|boolean   $auth Author.
+ * @param array|boolean $post POST data.
  */
 function wpt_update_mastodon_settings( $auth = false, $post = false ) {
 	if ( isset( $post['mastodon_settings'] ) ) {
