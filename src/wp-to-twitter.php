@@ -79,6 +79,8 @@ require_once plugin_dir_path( __FILE__ ) . 'wpt-truncate.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php';
 
 define( 'XPOSTER_VERSION', '4.3.2' );
+
+register_activation_hook( __FILE__, 'wpt_check_version' );
 /**
  * Check whether version requires activation.
  */
@@ -87,6 +89,15 @@ function wpt_check_version() {
 	if ( version_compare( $prev_version, XPOSTER_VERSION, '<' ) ) {
 		xposter_activate();
 	}
+}
+
+register_deactivation_hook( __FILE__, 'wpt_deactivate' );
+/**
+ * Deactivate Plugin.
+ */
+function wpt_deactivate() {
+	// Remove rate limits cron if enabled.
+	wp_clear_scheduled_hook( 'wptratelimits' );
 }
 
 /**
@@ -653,7 +664,6 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	if ( wp_is_post_autosave( $post_ID ) || wp_is_post_revision( $post_ID ) ) {
 		return $post_ID;
 	}
-	wpt_check_version();
 	$post_this      = get_post_meta( $post_ID, '_wpt_post_this', true );
 	$newpost        = false;
 	$oldpost        = false;
@@ -970,7 +980,6 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
  * @return mixed boolean/integer link ID if successful, false if failure.
  */
 function wpt_post_update_link( $link_id ) {
-	wpt_check_version();
 	$thislinkprivate = sanitize_text_field( $_POST['link_visible'] );
 	if ( 'N' !== $thislinkprivate ) {
 		$thislinkname        = stripslashes( sanitize_text_field( $_POST['link_name'] ) );
@@ -1024,7 +1033,6 @@ add_action( 'admin_menu', 'wpt_add_twitter_debug_box' );
  */
 function wpt_add_twitter_debug_box() {
 	if ( WPT_DEBUG && current_user_can( 'manage_options' ) ) {
-		wpt_check_version();
 		// add X.com panel to post types where it's enabled.
 		$wpt_post_types = wpt_allowed_post_types();
 		foreach ( $wpt_post_types as $type ) {
