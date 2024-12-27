@@ -178,13 +178,8 @@ function xposter_activate() {
 	}
 
 	global $wpt_version;
-	$prev_version  = get_option( 'wp_to_twitter_version' );
-	$administrator = get_role( 'administrator' );
-	$upgrade       = version_compare( $prev_version, '2.9.0', '<' );
-	if ( $upgrade ) {
-		$administrator->add_cap( 'wpt_tweet_now' );
-	}
-	$upgrade = version_compare( $prev_version, '3.4.4', '<' );
+	$prev_version = get_option( 'wp_to_twitter_version' );
+	$upgrade      = version_compare( $prev_version, '3.4.4', '<' );
 	if ( $upgrade ) {
 		delete_option( 'bitlyapi' );
 		delete_option( 'bitlylogin' );
