@@ -489,7 +489,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		if ( $check_bluesky &amp;&amp; wpt_service_enabled( $id, 'bluesky' ) ) {
 			$connection   = $check_bluesky;
 			$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
-			$attachment   = ( $attachment ) ? $attachment: wpt_post_attachment( $id );
+			$attachment   = ( $attachment ) ? $attachment : wpt_post_attachment( $id );
 			$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
 			$response     = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
 			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
