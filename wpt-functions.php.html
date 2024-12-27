@@ -726,6 +726,14 @@ function wpt_post_attachment( $post_ID ) {
 			$attachment_id = false;
 		}
 	}
+	$meta = wp_get_attachment_metadata( $attaattachment_idchment );
+	if ( ! isset( $meta['width'], $meta['height'] ) ) {
+		wpt_mail( "Image Data Does not Exist for #$attachment_id", print_r( $meta, 1 ), $post_ID );
+		$attachment_id = false;
+	}
+	if ( $attachment_id ) {
+		wpt_mail( 'Post has upload', "Attachment ID: $attachment_id", $post_ID );
+	}
 	/**
 	 * Filter the attachment ID to post with a status update.
 	 *
