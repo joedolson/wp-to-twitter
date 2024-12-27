@@ -80,23 +80,6 @@ global $wpt_version;
 $wpt_version = '4.3.2';
 
 /**
- * Check for OAuth configuration
- *
- * @param mixed int/boolean $auth Which account to check.
- *
- * @return boolean Whether authorized.
- */
-function wpt_check_oauth( $auth = false ) {
-	if ( ! function_exists( 'wtt_oauth_test' ) ) {
-		$oauth = false;
-	} else {
-		$oauth = wtt_oauth_test( $auth );
-	}
-
-	return $oauth;
-}
-
-/**
  * Check whether version requires activation.
  */
 function wpt_check_version() {

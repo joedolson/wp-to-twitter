@@ -16,6 +16,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Check for OAuth configuration
+ *
+ * @param int|boolean $auth Which user ID to check. False for main account.
+ *
+ * @return boolean True if authorized.
+ */
+function wpt_check_oauth( $auth = false ) {
+	if ( ! function_exists( 'wtt_oauth_test' ) ) {
+		$oauth = false;
+	} else {
+		$oauth = wtt_oauth_test( $auth );
+	}
+
+	return $oauth;
+}
+
+/**
  * Function to test validity of credentials
  *
  * @param int|boolean $auth Current author.
