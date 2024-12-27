@@ -146,7 +146,6 @@ function wpt_display_status_template( $post, $options ) {
  * @return string
  */
 function wpt_display_metabox_status_buttons( $is_pro ) {
-	echo 'here';
 	$buttons = "<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-share' aria-hidden='true'></span>" . __( 'Share Now', 'wp-to-twitter' ) . '</button>';
 	$fields  = '';
 	if ( 'pro' === $is_pro ) {
