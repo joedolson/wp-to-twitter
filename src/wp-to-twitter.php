@@ -319,7 +319,7 @@ function wpt_check_recent_tweet( $id, $auth ) {
  *
  * @return bool
  */
-function wpt_send_to_service( $post_ID, $service ) {
+function wpt_service_enabled( $post_ID, $service ) {
 	$omit     = get_post_meta( $post_ID, '_wpt_omit_services', true );
 	$omit     = ( $omit ) ? $omit : array();
 	$disabled = get_option( 'wpt_disabled_services', array() );
@@ -327,7 +327,7 @@ function wpt_send_to_service( $post_ID, $service ) {
 	if ( in_array( $service, $omit, true ) || in_array( $service, array_keys( $disabled ), true ) ) {
 		$send_to = false;
 	}
-	wpt_mail( 'Test ' . $service . ' is enabled: ' . $send_to, print_r( $disabled, 1 ), $post_ID );
+	wpt_mail( 'Test that ' . $service . ' is enabled: ' . $send_to, print_r( $disabled, 1 ), $post_ID );
 	/**
 	 * Filter whether a given post should be sent to a specific service.
 	 *
@@ -453,7 +453,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		);
 
 		$connection = false;
-		if ( $check_twitter && wpt_send_to_service( $id, 'x' ) ) {
+		if ( $check_twitter && wpt_service_enabled( $id, 'x' ) ) {
 			$connection = $check_twitter;
 			$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
@@ -461,7 +461,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$return['xcom'] = $response;
 			wpt_mail( 'Share Connection Status: X', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
 		}
-		if ( $check_mastodon && wpt_send_to_service( $id, 'mastodon' ) ) {
+		if ( $check_mastodon && wpt_service_enabled( $id, 'mastodon' ) ) {
 			$connection = $check_mastodon;
 			$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
 			$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
@@ -469,7 +469,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 			$return['mastodon'] = $response;
 			wpt_mail( 'Share Connection Status: Mastodon', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
 		}
-		if ( $check_bluesky && wpt_send_to_service( $id, 'bluesky' ) ) {
+		if ( $check_bluesky && wpt_service_enabled( $id, 'bluesky' ) ) {
 			$connection   = $check_bluesky;
 			$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
 			$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
