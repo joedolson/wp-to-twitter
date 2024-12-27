@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_recent_tweet_threshold - XPoster Hook Doumentation</title>
+    <title>Filter: wpt_service_enabled - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_recent_tweet_threshold</h1></header>
+    <header><h1 class="page-title">Filter: wpt_service_enabled</h1></header>
 	<main>
     
 
@@ -36,15 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_recent_tweet_threshold">apply_filters( 'wpt_recent_tweet_threshold', <span class="signature">$expire )</span><span class="type-signature"> &rarr; {int}</span></h4>
+    <h4 class="name" id="wpt_service_enabled">apply_filters( 'wpt_service_enabled', <span class="signature">$send_to, $post_ID, $service )</span><span class="type-signature"> &rarr; {bool}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Modify the expiration window for recent status updates.
-This value does flood control, to prevent a runaway process from sending multiple status updates. Default <code>30</code> seconds.</p>
+    <p>Filter whether a given post should be sent to a specific service.</p>
 </div>
 
 
@@ -78,7 +77,30 @@ This value does flood control, to prevent a runaway process from sending multipl
 
         <tr>
             
-                <td class="name"><code>$expire</code></td>
+                <td class="name"><code>$send_to</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>True to send to a service.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$post_ID</code></td>
             
 
             <td class="type">
@@ -94,7 +116,30 @@ This value does flood control, to prevent a runaway process from sending multipl
 
             
 
-            <td class="description last"><p>Integer representing seconds. How long the transient will exist.</p></td>
+            <td class="description last"><p>Post ID.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$service</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Service ID.</p></td>
         </tr>
 
     
@@ -135,7 +180,7 @@ This value does flood control, to prevent a runaway process from sending multipl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line289">line 289</a>
+        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line331">line 331</a>
     </li></ul></dd>
     
 
@@ -169,7 +214,7 @@ This value does flood control, to prevent a runaway process from sending multipl
     </dt>
     <dd>
         
-<span class="param-type">int</span>
+<span class="param-type">bool</span>
 
 
     </dd>
