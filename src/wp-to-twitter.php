@@ -1522,11 +1522,11 @@ function wpt_admin_style() {
  * @return link new array.
  */
 function wpt_plugin_action( $links, $file ) {
-	if ( plugin_basename( __DIR__ . '/wp-to-twitter.php' ) === $file ) {
+	if ( plugin_basename( __DIR__ . '/wp-to-twitter.php' ) === $file || 'wp-to-twitter/init.php' === $file ) {
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 		$links[]   = "<a href='$admin_url'>" . __( 'XPoster Settings', 'wp-to-twitter' ) . '</a>';
 		if ( ! function_exists( 'wpt_pro_exists' ) ) {
-			$link[] = "<a href='https://xposterpro.com/awesome/xposter-pro/'>Get XPoster Pro</a>";
+			$links[] = "<strong><a href='https://xposterpro.com/awesome/xposter-pro/'>Get XPoster Pro</a></strong>";
 		}
 	}
 
