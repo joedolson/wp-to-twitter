@@ -49,7 +49,6 @@ if ( ! defined( 'ABSPATH' ) && ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	delete_option( 'wpt_inline_edits' );
 
 	// Note that default options are set.
-	delete_option( 'twitterInitialised' );
 	delete_option( 'wpt_twitter_setup' );
 	delete_option( 'wp_twitter_failure' );
 	delete_option( 'twitterlogin' );

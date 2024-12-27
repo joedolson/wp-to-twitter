@@ -105,7 +105,7 @@ function wpt_deactivate() {
  */
 function xposter_activate() {
 	// If this has never run before, do the initial setup.
-	$new_install = ( '1' === get_option( 'wpt_twitter_setup' ) || '1' === get_option( 'twitterInitialised' ) ) ? false : true;
+	$new_install = '1' === get_option( 'wpt_twitter_setup' ) ? false : true;
 	if ( $new_install ) {
 		$initial_settings = array(
 			'post' => array(
