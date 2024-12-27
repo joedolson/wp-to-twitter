@@ -23,7 +23,7 @@ function wpt_ajax_tweet() {
 	$current_user = wp_get_current_user();
 	if ( function_exists( 'wpt_pro_exists' ) && wpt_pro_exists() ) {
 		$acct     = $current_user->ID;
-		$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
+		$verified = wpt_check_connections( $acct, true );
 		if ( $verified ) {
 			$auth    = $current_user->ID;
 			$user_ID = $current_user->ID;
