@@ -439,16 +439,7 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 	} else {
 		// must be designated as media and have a valid attachment.
 		$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
-		if ( $attachment ) {
-			wpt_mail( 'Post has upload', "$auth, $attachment", $id );
-			$meta = wp_get_attachment_metadata( $attachment );
-			if ( ! isset( $meta['width'], $meta['height'] ) ) {
-				wpt_mail( "Image Data Does not Exist for #$attachment", print_r( $meta, 1 ), $id );
-				$attachment = false;
-			}
-		}
-
-		$status = array(
+		$status     = array(
 			'text' => $twit,
 		);
 
