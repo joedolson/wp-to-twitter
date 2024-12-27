@@ -157,7 +157,7 @@ function xposter_activate() {
 			$contributor->add_cap( 'wpt_can_tweet' );
 		}
 
-		update_option( 'jd_post_excerpt', 60 );
+		update_option( 'jd_post_excerpt', 90 );
 		// Use Google Analytics.
 		update_option( 'twitter-analytics-campaign', 'twitter' );
 		update_option( 'use-twitter-analytics', '0' );
