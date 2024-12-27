@@ -771,7 +771,7 @@ function wpt_pro_is_valid() {
  * Show support form. Note: text in the message body should not be translatable.
  */
 function wpt_get_support_form() {
-	global $current_user, $wpt_version;
+	global $current_user;
 	$current_user   = wp_get_current_user();
 	$request        = '';
 	$response_email = $current_user->user_email;
@@ -779,7 +779,7 @@ function wpt_get_support_form() {
 	$license = wpt_pro_is_valid();
 	if ( $license ) {
 		$license_key          = 'License Key: ' . $license;
-		$version              = $wpt_version;
+		$version              = XPOSTER_VERSION;
 		$wtt_twitter_username = get_option( 'wtt_twitter_username' );
 		// send fields for all plugins.
 		$wp_version = get_bloginfo( 'version' );

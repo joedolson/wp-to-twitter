@@ -86,6 +86,8 @@ if ( function_exists( 'wp_get_environment_type' ) ) {
 require_once plugin_dir_path( __FILE__ ) . 'vendor_prefixed/vendor/scoper-autoload.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/metabox.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/deprecated.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/media.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/post-info.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-functions.php';
 // Service post handlers.
 require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-twitter.php';
@@ -102,33 +104,13 @@ require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-truncate.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php';
 
-global $wpt_version;
-$wpt_version = '4.3.2';
-
-/**
- * Check for OAuth configuration
- *
- * @param mixed int/boolean $auth Which account to check.
- *
- * @return boolean Whether authorized.
- */
-function wpt_check_oauth( $auth = false ) {
-	if ( ! function_exists( 'wtt_oauth_test' ) ) {
-		$oauth = false;
-	} else {
-		$oauth = wtt_oauth_test( $auth );
-	}
-
-	return $oauth;
-}
-
+define( 'XPOSTER_VERSION', '4.3.2' );
 /**
  * Check whether version requires activation.
  */
 function wpt_check_version() {
-	global $wpt_version;
 	$prev_version = ( '' !== get_option( 'wp_to_twitter_version', '' ) ) ? get_option( 'wp_to_twitter_version' ) : '1.0.0';
-	if ( version_compare( $prev_version, $wpt_version, '&lt;' ) ) {
+	if ( version_compare( $prev_version, XPOSTER_VERSION, '&lt;' ) ) {
 		xposter_activate();
 	}
 }
@@ -183,7 +165,7 @@ function xposter_activate() {
 			$contributor->add_cap( 'wpt_can_tweet' );
 		}
 
-		update_option( 'jd_post_excerpt', 60 );
+		update_option( 'jd_post_excerpt', 90 );
 		// Use Google Analytics.
 		update_option( 'twitter-analytics-campaign', 'twitter' );
 		update_option( 'use-twitter-analytics', '0' );
@@ -203,38 +185,14 @@ function xposter_activate() {
 		update_option( 'jd_keyword_format', '0' );
 	}
 
-	global $wpt_version;
-	$prev_version  = get_option( 'wp_to_twitter_version' );
-	$administrator = get_role( 'administrator' );
-	$upgrade       = version_compare( $prev_version, '2.9.0', '&lt;' );
-	if ( $upgrade ) {
-		$administrator->add_cap( 'wpt_tweet_now' );
-	}
-	$upgrade = version_compare( $prev_version, '3.4.4', '&lt;' );
+	$prev_version = get_option( 'wp_to_twitter_version' );
+	$upgrade      = version_compare( $prev_version, '3.4.4', '&lt;' );
 	if ( $upgrade ) {
 		delete_option( 'bitlyapi' );
 		delete_option( 'bitlylogin' );
 	}
 
-	update_option( 'wp_to_twitter_version', $wpt_version );
-}
-
-/**
- * Function checks for an alternate URL to be updated. Contribution by Bill Berry.
- *
- * @param int $post_ID Post ID.
- *
- * @return Link to use for this URL.
- */
-function wpt_link( $post_ID ) {
-	$ex_link       = false;
-	$external_link = get_option( 'jd_twit_custom_url', '' );
-	$permalink     = get_permalink( $post_ID );
-	if ( '' !== $external_link ) {
-		$ex_link = get_post_meta( $post_ID, $external_link, true );
-	}
-
-	return ( $ex_link ) ? $ex_link : $permalink;
+	update_option( 'wp_to_twitter_version', XPOSTER_VERSION );
 }
 
 /**
@@ -648,105 +606,6 @@ function wpt_get_response_message( $http_code, $notice, $auth ) {
 }
 
 /**
- * Get image binary for passing to API.
- *
- * @param int    $attachment Attachment ID.
- * @param string $service Which service needs the binary.
- *
- * @return string|object;
- */
-function wpt_image_binary( $attachment, $service = 'twitter' ) {
-	$image_sizes = get_intermediate_image_sizes();
-	if ( in_array( 'large', $image_sizes, true ) ) {
-		$size = 'large';
-	} else {
-		$size = array_pop( $image_sizes );
-	}
-	/**
-	 * Filter the uploaded image size.
-	 *
-	 * @hook wpt_upload_image_size
-	 *
-	 * @param string $size Name of size targeted for upload. Default 'large' if exists.
-	 *
-	 * @return string
-	 */
-	$size   = apply_filters( 'wpt_upload_image_size', $size );
-	$parent = get_post_ancestors( $attachment );
-	$parent = ( is_array( $parent ) &amp;&amp; isset( $parent[0] ) ) ? $parent[0] : false;
-	if ( 'mastodon' === $service ) {
-		$path      = wpt_attachment_path( $attachment, $size );
-		$mime      = wp_get_image_mime( $path );
-		$name      = basename( $path );
-		$file      = curl_file_create( $path, $mime, $name );
-		$transport = 'curl';
-		wpt_mail( 'XPoster: media binary fetched', 'Path: ' . $path . 'Transport: ' . $transport . PHP_EOL . $attachment, $parent );
-		if ( ! $file ) {
-			return false;
-		}
-
-		return $file;
-
-	} elseif ( 'bluesky' === $service ) {
-		$path = wpt_attachment_path( $attachment, $size );
-		global $wp_filesystem;
-		require_once ABSPATH . '/wp-admin/includes/file.php';
-		WP_Filesystem();
-		$file = $wp_filesystem->get_contents( $path );
-
-		return $file;
-	} else {
-		$upload    = wp_get_attachment_image_src( $attachment, $size );
-		$image_url = $upload[0];
-		$remote    = wp_remote_get( $image_url );
-		if ( is_wp_error( $remote ) ) {
-			$transport = 'curl';
-			$binary    = wp_get_curl( $image_url );
-		} else {
-			$transport = 'wp_http';
-			$binary    = wp_remote_retrieve_body( $remote );
-		}
-		wpt_mail( 'XPoster: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . print_r( $remote, 1 ), $parent );
-		if ( ! $binary ) {
-			return false;
-		}
-		// TODO: should this be encoded or not?
-		return base64_encode( $binary );
-	}
-}
-
-/**
- * Fetch an attachment's file path. Recurses to fetch full sized path if an invalid size is passed.
- *
- * @param int    $attachment_id Attachment ID.
- * @param string $size Requested size.
- *
- * @return string|false
- */
-function wpt_attachment_path( $attachment_id, $size = '' ) {
-	$file = get_attached_file( $attachment_id, true );
-	if ( empty( $size ) || 'full' === $size ) {
-		// for the original size get_attached_file is fine.
-		return realpath( $file );
-	}
-	if ( ! wp_attachment_is_image( $attachment_id ) ) {
-		return false; // the id is not referring to a media.
-	}
-	$info = image_get_intermediate_size( $attachment_id, $size );
-	if ( ! is_array( $info ) || ! isset( $info['file'] ) ) {
-		// If this is invalid due to an invalid size, recurse to fetch full size.
-		if ( '' !== $size ) {
-			$path = wpt_attachment_path( $attachment_id );
-
-			return $path;
-		}
-		return false; // probably a bad size argument.
-	}
-
-	return realpath( str_replace( wp_basename( $file ), $info['file'], $file ) );
-}
-
-/**
  * For servers without PEAR normalize installed, approximates normalization. With normalizer, executes normalization on string.
  *
  * @param string $text Text to normalize.
@@ -783,162 +642,6 @@ function wpt_is_ssl( $url ) {
 	} else {
 		return false;
 	}
-}
-
-/**
- * Builds array of post info for use in status update functions.
- *
- * @param integer $post_ID Post ID.
- *
- * @return array Post data used in status update functions.
- */
-function wpt_post_info( $post_ID ) {
-	$encoding     = get_option( 'blog_charset', 'UTF-8' );
-	$post         = get_post( $post_ID );
-	$category_ids = array();
-	$values       = array();
-	$values['id'] = $post_ID;
-	// get post author.
-	$values['postinfo']      = $post;
-	$values['postContent']   = $post->post_content;
-	$values['authId']        = $post->post_author;
-	$postdate                = $post->post_date;
-	$dateformat              = ( '' === get_option( 'jd_date_format', '' ) ) ? get_option( 'date_format' ) : get_option( 'jd_date_format' );
-	$thisdate                = mysql2date( $dateformat, $postdate );
-	$altdate                 = mysql2date( 'Y-m-d H:i:s', $postdate );
-	$values['_postDate']     = $altdate;
-	$values['postDate']      = $thisdate;
-	$moddate                 = $post->post_modified;
-	$values['_postModified'] = mysql2date( 'Y-m-d H:i:s', $moddate );
-	$values['postModified']  = mysql2date( $dateformat, $moddate );
-	// get first category.
-	$category   = '';
-	$cat_desc   = '';
-	$categories = get_the_category( $post_ID );
-	$cats       = array();
-	$cat_descs  = array();
-	if ( is_array( $categories ) ) {
-		if ( count( $categories ) > 0 ) {
-			$category = $categories[0]->cat_name;
-			$cat_desc = $categories[0]->description;
-		}
-		foreach ( $categories as $cat ) {
-			$category_ids[] = $cat->term_id;
-			$cats[]         = $cat->cat_name;
-			$cat_descs[]    = $cat->description;
-		}
-		/**
-		 * Filter the space separated list of category names in #cats#.
-		 *
-		 * @hook wpt_twitter_category_names
-		 * @param {array} $cats Array of category names attached to this status update.
-		 *
-		 * @return {array}
-		 */
-		$cat_names = implode( ' ', apply_filters( 'wpt_twitter_category_names', $cats ) );
-		/**
-		 * Filter the space separated list of category descriptions in #cat_descs#.
-		 *
-		 * @hook wpt_twitter_category_descs
-		 * @param {array} $cats Array of category descriptions attached to this status update.
-		 *
-		 * @return {array}
-		 */
-		$cat_descs = implode( ' ', apply_filters( 'wpt_twitter_category_descs', $cat_descs ) );
-	} else {
-		$category     = '';
-		$cat_desc     = '';
-		$category_ids = array();
-	}
-	$values['cats']        = $cat_names;
-	$values['cat_descs']   = $cat_descs;
-	$values['categoryIds'] = $category_ids;
-	$values['category']    = ( $category ) ? html_entity_decode( $category, ENT_COMPAT, $encoding ) : '';
-	$values['cat_desc']    = ( $cat_desc ) ? html_entity_decode( $cat_desc, ENT_COMPAT, $encoding ) : '';
-	$excerpt_length        = get_option( 'jd_post_excerpt' );
-	$post_excerpt          = ( '' === trim( $post->post_excerpt ) ) ? mb_substr( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ), 0, $excerpt_length ) : mb_substr( wp_strip_all_tags( strip_shortcodes( $post->post_excerpt ) ), 0, $excerpt_length );
-	$values['postExcerpt'] = ( $post_excerpt ) ? html_entity_decode( $post_excerpt, ENT_COMPAT, $encoding ) : '';
-	$thisposttitle         = $post->post_title;
-	if ( '' === $thisposttitle &amp;&amp; isset( $_POST['title'] ) ) {
-		$thisposttitle = wp_kses_post( $_POST['title'] );
-	}
-	$thisposttitle = wp_strip_all_tags( apply_filters( 'the_title', stripcslashes( $thisposttitle ), $post_ID ) );
-	// These are common sequences that may not be fixed by html_entity_decode due to double encoding.
-	$search               = array( '&amp;apos;', '&amp;#039;', '&amp;quot;', '&amp;#034;', '&amp;amp;', '&amp;#038;' );
-	$replace              = array( "'", "'", '"', '"', '&amp;', '&amp;' );
-	$thisposttitle        = str_replace( $search, $replace, $thisposttitle );
-	$values['postTitle']  = html_entity_decode( $thisposttitle, ENT_QUOTES, $encoding );
-	$values['postLink']   = wpt_link( $post_ID );
-	$values['blogTitle']  = get_bloginfo( 'name' );
-	$values['shortUrl']   = wpt_short_url( $post_ID );
-	$values['postStatus'] = $post->post_status;
-	$values['postType']   = $post->post_type;
-	/**
-	 * Filters post array to insert custom data that can be used in status update process.
-	 *
-	 * @param array   $values Existing values.
-	 * @param integer $post_ID Post ID.
-	 * @return array  $values
-	 */
-	$values = apply_filters( 'wpt_post_info', $values, $post_ID );
-
-	return $values;
-}
-
-/**
- * Retrieve stored short URL.
- *
- * @param int $post_id Post ID.
- *
- * @return string|bool False if no stored URL.
- */
-function wpt_short_url( $post_id ) {
-	global $post_ID;
-	if ( ! $post_id ) {
-		$post_id = $post_ID;
-	}
-	$use_urls = ( get_option( 'wpt_use_stored_urls' ) === 'false' ) ? false : true;
-	$short    = ( $use_urls ) ? get_post_meta( $post_id, '_wpt_short_url', true ) : false;
-	$short    = ( '' === $short ) ? false : $short;
-
-	return $short;
-}
-
-/**
- * Identify whether a post should be uploading media. Test settings and verify whether post has images that can be uploaded.
- *
- * @param int   $post_ID Post ID.
- * @param array $post_info Array of post data.
- *
- * @return boolean
- */
-function wpt_post_with_media( $post_ID, $post_info = array() ) {
-	$return = false;
-	if ( ! function_exists( 'wpt_pro_exists' ) ) {
-		return $return;
-	}
-	if ( isset( $post_info['wpt_image'] ) &amp;&amp; 1 === (int) $post_info['wpt_image'] ) {
-		// Post settings win over filters.
-		return $return;
-	}
-	if ( ! get_option( 'wpt_media' ) ) {
-		// Don't return immediately, this needs to be overrideable for posts.
-		$return = false;
-	} else {
-		if ( has_post_thumbnail( $post_ID ) || wpt_post_attachment( $post_ID ) ) {
-			$return = true;
-		}
-	}
-	/**
-	 * Filter whether this post should upload media.
-	 *
-	 * @hook wpt_upload_media
-	 * @param {bool} $upload True to allow this post to upload media.
-	 * @param {int}  $post_ID Post ID.
-	 *
-	 * @return {bool}
-	 */
-	return apply_filters( 'wpt_upload_media', $return, $post_ID );
 }
 
 /**
@@ -1341,110 +1044,6 @@ function wpt_post_update_link( $link_id ) {
 	}
 }
 
-/**
- * Generate hash tags from tags set on post.
- *
- * @param int $post_ID Post ID.
- *
- * @return string $hashtags Hashtags in format needed for status updates.
- */
-function wpt_generate_hash_tags( $post_ID ) {
-	$hashtags       = '';
-	$term_meta      = false;
-	$t_id           = false;
-	$max_tags       = get_option( 'jd_max_tags', '3' );
-	$max_characters = get_option( 'jd_max_characters', '20' );
-	$max_characters = ( '0' === $max_characters || '' === $max_characters ) ? 100 : $max_characters + 1;
-	if ( '0' === $max_tags || '' === $max_tags ) {
-		$max_tags = 100;
-	}
-	$use_cats = ( '1' === get_option( 'wpt_use_cats' ) ) ? true : false;
-	$tags     = ( true === $use_cats ) ? wp_get_post_categories( $post_ID, array( 'fields' => 'all' ) ) : get_the_tags( $post_ID );
-	/**
-	 * Change the taxonomy used by default to generate post tags. Array of terms attached to post.
-	 *
-	 * @hook wpt_hash_source
-	 * @param {array} $tags Array of post terms.
-	 * @param {int}   $post_ID Post ID.
-	 *
-	 * @return {array}
-	 */
-	$tags = apply_filters( 'wpt_hash_source', $tags, $post_ID );
-	if ( $tags &amp;&amp; count( $tags ) > 0 ) {
-		$i = 1;
-		foreach ( $tags as $value ) {
-			if ( function_exists( 'wpt_pro_exists' ) ) {
-				$t_id      = $value->term_id;
-				$term_meta = get_option( "wpt_taxonomy_$t_id" );
-			}
-			$source = get_option( 'wpt_tag_source' );
-			if ( 'slug' === $source ) {
-				// If the tag has an '@' symbol as the first character, assume it is a mention unless set.
-				if ( 0 === stripos( $value->name, '@' ) &amp;&amp; ! $term_meta ) {
-					$term_meta = 5;
-				}
-				$tag = $value->slug;
-			} else {
-				$tag = $value->name;
-				// If the tag has an '@' symbol as the first character, assume it is a mention unless set.
-				if ( 0 === stripos( $value->name, '@' ) &amp;&amp; ! $term_meta ) {
-					$term_meta = 4;
-				}
-			}
-			$strip   = get_option( 'jd_strip_nonan' );
-			$search  = '/[^\p{L}\p{N}\s]/u';
-			$replace = get_option( 'jd_replace_character' );
-			$replace = ( '[ ]' === $replace || '' === $replace ) ? '' : $replace;
-			if ( false !== strpos( $tag, ' ' ) ) {
-				// If multiple words, camelcase tag.
-				$tag = ucwords( $tag );
-			}
-			$tag = str_ireplace( ' ', $replace, trim( $tag ) );
-			$tag = preg_replace( '/[\/]/', $replace, $tag ); // remove forward slashes.
-			$tag = ( '1' === $strip ) ? preg_replace( $search, $replace, $tag ) : $tag;
-
-			switch ( $term_meta ) {
-				case 1:
-					$newtag = "#$tag";
-					break;
-				case 2:
-					$newtag = "$$tag";
-					break;
-				case 3:
-					$newtag = '';
-					break;
-				case 4:
-					$newtag = $tag;
-					break;
-				case 5:
-					$newtag = "@$tag";
-					break;
-				default:
-					/**
-					 * Change the default tag character. Default '#'.
-					 *
-					 * @hook wpt_tag_default
-					 * @param {string} $char Character used to convert tags into hashtags.
-					 * @param {int}    $t_id Term ID.
-					 *
-					 * @return {string}
-					 */
-					$newtag = apply_filters( 'wpt_tag_default', '#', $t_id ) . $tag;
-			}
-			if ( mb_strlen( $newtag ) > 2 &amp;&amp; ( mb_strlen( $newtag ) &lt;= $max_characters ) &amp;&amp; ( $i &lt;= $max_tags ) ) {
-				$hashtags .= "$newtag ";
-				++$i;
-			}
-		}
-	}
-	$hashtags = trim( $hashtags );
-	if ( mb_strlen( $hashtags ) &lt;= 1 ) {
-		$hashtags = '';
-	}
-
-	return $hashtags;
-}
-
 add_action( 'admin_menu', 'wpt_add_twitter_outer_box' );
 /**
  * Set up post meta box.
@@ -1697,7 +1296,8 @@ add_action( 'admin_enqueue_scripts', 'wpt_admin_scripts', 10, 1 );
  * Enqueue admin scripts for XPoster and XPoster PRO.
  */
 function wpt_admin_scripts() {
-	global $current_screen, $wpt_version;
+	global $current_screen;
+	$wpt_version = XPOSTER_VERSION;
 	if ( SCRIPT_DEBUG ) {
 		$wpt_version .= '-' . wp_rand( 10000, 99999 );
 	}
@@ -1928,7 +1528,7 @@ add_action( 'admin_head', 'wpt_admin_style' );
  * Add stylesheets to XPoster pages.
  */
 function wpt_admin_style() {
-	global $wpt_version;
+	$wpt_version = XPOSTER_VERSION;
 	if ( SCRIPT_DEBUG ) {
 		$wpt_version .= '-' . wp_rand( 10000, 99999 );
 	}
@@ -1963,10 +1563,9 @@ add_action( 'in_plugin_update_message-wp-to-twitter/wp-to-twitter.php', 'wpt_plu
  * Parse plugin update info to display in update list.
  */
 function wpt_plugin_update_message() {
-	global $wpt_version;
 	$note = '';
 	define( 'WPT_PLUGIN_README_URL', 'http://svn.wp-plugins.org/wp-to-twitter/trunk/readme.txt' );
-	$response = wp_remote_get( WPT_PLUGIN_README_URL, array( 'user-agent' => 'WordPress/XPoster' . $wpt_version . '; ' . get_bloginfo( 'url' ) ) );
+	$response = wp_remote_get( WPT_PLUGIN_README_URL, array( 'user-agent' => 'WordPress/XPoster ' . XPOSTER_VERSION . '; ' . get_bloginfo( 'url' ) ) );
 	if ( ! is_wp_error( $response ) || is_array( $response ) ) {
 		$data   = $response['body'];
 		$bits   = explode( '== Upgrade Notice ==', $data );
@@ -2236,6 +1835,7 @@ function wpt_dismiss_connection() {
 	}
 }
 add_action( 'admin_init', 'wpt_dismiss_connection' );
+
 /**
  * Display notices if update services are not connected.
  */
