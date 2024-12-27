@@ -92,15 +92,6 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 						'thumb'       => $blob['blob'],
 					),
 				);
-				$request = array(
-					'$type'    => 'app.bsky.embed.external',
-					'external' => array(
-						array(
-							'alt'   => $alt_text,
-							'image' => $blob['blob'],
-						),
-					),
-				);
 			}
 			wpt_mail( 'Media Uploaded (Bluesky)', "$auth, $attachment" . PHP_EOL . print_r( $blob, 1 ), $id );
 		}
@@ -113,6 +104,8 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 					'description' => $card['description'],
 				),
 			);
+			wpt_mail( 'Bluesky Card without media', "$auth, $attachment" . PHP_EOL . print_r( $blob, 1 ), $id );
+
 		}
 	}
 
