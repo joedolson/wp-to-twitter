@@ -9,7 +9,7 @@
  * @link     https://www.joedolson.com/wp-to-twitter/
  */
 
- /**
+/**
  * Get image binary for passing to API.
  *
  * @param int    $attachment Attachment ID.
