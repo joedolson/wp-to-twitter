@@ -30,7 +30,7 @@
  *
  * @package     XPoster
  * @author      Joe Dolson
- * @copyright   2008-2024 Joe Dolson
+ * @copyright   2008-2025 Joe Dolson
  * @license     GPL-2.0+
  *
  * @wordpress-plugin
@@ -47,7 +47,7 @@
  */
 
 /*
-	Copyright 2008-2024  Joe Dolson (email : joe@joedolson.com)
+	Copyright 2008-2025  Joe Dolson (email : joe@joedolson.com)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -1112,7 +1112,7 @@ function wpt_admin_scripts() {
 			)
 		);
 	}
-	if ( 'settings_page_wp-to-twitter/wp-to-twitter' === $current_screen->id || 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
+	if ( 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
 		wp_enqueue_script( 'wpt.tabs', plugins_url( 'js/tabs.js', __FILE__ ), array( 'jquery' ), $wpt_version );
 		wp_localize_script(
 			'wpt.tabs',
