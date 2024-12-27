@@ -1086,7 +1086,7 @@ function wpt_admin_scripts() {
 			)
 		);
 	}
-	if ( 'settings_page_wp-to-twitter/wp-to-twitter' === $current_screen->id || 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
+	if ( 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
 		wp_enqueue_script( 'wpt.tabs', plugins_url( 'js/tabs.js', __FILE__ ), array( 'jquery' ), $wpt_version );
 		wp_localize_script(
 			'wpt.tabs',
