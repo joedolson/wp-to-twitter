@@ -720,11 +720,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	if ( $default ) { // default switch: depend on default settings.
 		$post_info = wpt_post_info( $post_ID );
 		$media     = wpt_post_with_media( $post_ID, $post_info );
-		if ( function_exists( 'wpt_pro_exists' ) &amp;&amp; true === wpt_pro_exists() ) {
-			$auth = ( 'false' === get_option( 'wpt_cotweet_lock' ) || ! get_option( 'wpt_cotweet_lock' ) ) ? $post_info['authId'] : get_option( 'wpt_cotweet_lock' );
-		} else {
-			$auth = $post_info['authId'];
-		}
+		$auth      = $post_info['authId'];
 		$debug_post_info = $post_info;
 		unset( $debug_post_info['post_content'] );
 		unset( $debug_post_info['postContent'] );
@@ -822,176 +818,20 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				$template = ( '' !== $custom_tweet ) ? $custom_tweet : $nptext;
 				$sentence = wpt_truncate_status( $template, $post_info, $post_ID );
 				wpt_mail( '5: Status Update Template Processed', "Template: $template; Status: $sentence", $post_ID ); // DEBUG.
-				if ( function_exists( 'wpt_pro_exists' ) &amp;&amp; true === wpt_pro_exists() ) {
-					$sentence2 = wpt_truncate_status( $template, $post_info, $post_ID, false, $auth );
-				}
 			}
 			if ( '' !== $sentence ) {
-				// WPT PRO.
-				if ( function_exists( 'wpt_pro_exists' ) &amp;&amp; true === wpt_pro_exists() ) {
-					$wpt_selected_users = $post_info['wpt_authorized_users'];
-					// set up basic author/main account values.
-					$auth_verified = ( wtt_oauth_test( $auth, 'verify' ) || wpt_mastodon_connection( $auth ) || wpt_bluesky_connection( $auth ) ) ? true : false;
-					if ( empty( $wpt_selected_users ) &amp;&amp; '1' === get_option( 'jd_individual_twitter_users' ) ) {
-						$wpt_selected_users = ( $auth_verified ) ? array( $auth ) : array( false );
-					}
-					if ( 1 === (int) $post_info['wpt_cotweet'] || '1' !== get_option( 'jd_individual_twitter_users' ) || in_array( 'main', $wpt_selected_users, true ) ) {
-						$wpt_selected_users['main'] = false;
-					}
-					// filter selected users before using.
-					$wpt_selected_users = apply_filters( 'wpt_filter_users', $wpt_selected_users, $post_info );
-					if ( '0' === (string) $post_info['wpt_delay_tweet'] || '' === $post_info['wpt_delay_tweet'] || 'on' === $post_info['wpt_no_delay'] ) {
-						foreach ( $wpt_selected_users as $acct ) {
-							$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
-							if ( $verified ) {
-								wpt_post_to_service( $sentence2, $acct, $post_ID, $media );
-							}
-						}
-					} else {
-						foreach ( $wpt_selected_users as $acct ) {
-							$acct = ( 'main' === $acct ) ? false : $acct;
-							/**
-							 * Filter the delay between posting and sending status updates.
-							 *
-							 * @hook wpt_random_delay
-							 *
-							 * @param {int} $rand Random integer between 60 and 480.
-							 *
-							 * @return {int}
-							 */
-							$delay    = apply_filters( 'wpt_random_delay', wp_rand( 60, 480 ) );
-							$offset   = ( $auth !== $acct ) ? $delay : 0;
-							$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
-							if ( $verified ) {
-								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
-
-								/**
-								 * Render the template of a scheduled status update only at the time it's sent.
-								 *
-								 * @hook wpt_postpone_rendering
-								 * @param {bool} $postpone True to postpone rendering.
-								 *
-								 * @return {bool}
-								 */
-								$postpone_rendering = apply_filters( 'wpt_postpone_rendering', get_option( 'wpt_postpone_rendering', 'false' ) );
-								if ( 'false' !== $postpone_rendering ) {
-									$sentence = $template;
-								}
-								wp_schedule_single_event(
-									time() + $time + $offset,
-									'wpt_schedule_tweet_action',
-									array(
-										'id'       => $acct,
-										'sentence' => $sentence,
-										'rt'       => 0,
-										'post_id'  => $post_ID,
-									)
-								);
-								if ( WPT_DEBUG ) {
-									$author_id = ( $acct ) ? "#$acct" : 'Main';
-									wpt_mail(
-										"7a: Status update Scheduled for author: $author_id",
-										print_r(
-											array(
-												'id'       => $acct,
-												'sentence' => $sentence,
-												'rt'       => 0,
-												'post_id'  => $post_ID,
-												'timestamp' => time() + $time + $offset . ', ' . gmdate( 'Y-m-d H:i:s', time() + $time + $offset ),
-												'current_time' => time() . ', ' . gmdate( 'Y-m-d H:i:s', time() ),
-												'timezone' => get_option( 'gmt_offset' ),
-												'users'    => $wpt_selected_users,
-											),
-											1
-										),
-										$post_ID
-									);
-									// DEBUG.
-								}
-							}
-						}
-					}
-					// This cycle handles scheduling the automatic retweets.
-					if ( 0 !== (int) $post_info['wpt_retweet_after'] &amp;&amp; 'on' !== $post_info['wpt_no_repost'] ) {
-						$repeat = $post_info['wpt_retweet_repeat'];
-						$first  = true;
-						foreach ( $wpt_selected_users as $acct ) {
-							$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
-							if ( $verified ) {
-								for ( $i = 1; $i &lt;= $repeat; $i++ ) {
-									$continue = apply_filters( 'wpt_allow_reposts', true, $i, $post_ID, $acct );
-									if ( $continue ) {
-										$retweet = apply_filters( 'wpt_set_retweet_text', $template, $i, $post_ID );
-
-										/**
-										 * Render the template of a scheduled status only at the time it's sent.
-										 *
-										 * @hook wpt_postpone_rendering
-										 * @param {bool} $postpone True to postpone rendering.
-										 *
-										 * @return {bool}
-										 */
-										$postpone_rendering = apply_filters( 'wpt_postpone_rendering', get_option( 'wpt_postpone_rendering', 'false' ) );
-										if ( 'false' !== $postpone_rendering ) {
-											$retweet = $retweet;
-										} else {
-											$retweet = wpt_truncate_status( $retweet, $post_info, $post_ID, true, $acct );
-										}
-										if ( '' === $retweet ) {
-											// If a filter sets this value to empty, exit without scheduling.
-											return $post_ID;
-										}
-										// add original delay to schedule.
-										$delay = ( isset( $post_info['wpt_delay_tweet'] ) ) ? ( (int) $post_info['wpt_delay_tweet'] ) * 60 : 0;
-										// Don't delay the first status update of the group.
-										$offset = ( true === $first ) ? 0 : wp_rand( 60, 240 ); // delay each co-tweet by 1-4 minutes.
-										$time   = apply_filters( 'wpt_schedule_retweet', ( $post_info['wpt_retweet_after'] ) * ( 60 * 60 ) * $i, $acct, $i, $post_info );
-										wp_schedule_single_event(
-											time() + $time + $offset + $delay,
-											'wpt_schedule_tweet_action',
-											array(
-												'id'       => $acct,
-												'sentence' => $retweet,
-												'rt'       => $i,
-												'post_id'  => $post_ID,
-											)
-										);
-										if ( WPT_DEBUG ) {
-											if ( $acct ) {
-												$author_id = "#$acct";
-											} else {
-												$author_id = 'Main';
-											}
-											wpt_mail(
-												"7b: Retweet Scheduled for author $author_id",
-												print_r(
-													array(
-														'id'         => $acct,
-														'sentence'   => array( $retweet, $i, $post_ID ),
-														'timestamp'  => time() + $time + $offset + $delay,
-														'time'       => array( $time, $offset, $delay, get_option( 'gmt_offset' ), time() ),
-														'timestring' => gmdate( 'Y-m-d H:i:s', time() + $time + $offset + $delay ),
-														'current_ts' => gmdate( 'Y-m-d H:i:s', time() ),
-													),
-													1
-												),
-												$post_ID
-											); // DEBUG.
-										}
-										$tweet_limit = (int) apply_filters( 'wpt_tweet_repeat_limit', 4, $post_ID );
-										if ( $i === $tweet_limit ) {
-											break;
-										}
-									}
-								}
-							}
-							$first = false;
-						}
-					}
-				} else {
-					wpt_post_to_service( $sentence, false, $post_ID, $media );
-				}
-				// END WPT PRO.
+				/**
+				 * Execute an action when a status update is executed.
+				 *
+				 * @hook wpt_post_to_service
+				 *
+				 * @param {int}      $post_ID Post ID.
+				 * @param {array}    $post_info Array of post info for templates.
+				 * @param {string}   $template Template in use.
+				 * @param {bool}     $media Whether media should be included.
+				 */
+				do_action( 'wpt_post_to_service', $post_ID, $post_info, $template, $media );
+				wpt_post_to_service( $sentence, false, $post_ID, $media );
 			}
 		}
 	}
@@ -1597,7 +1437,7 @@ add_action( 'admin_notices', 'wpt_needs_connection' );
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_postpone_rendering.html">wpt_postpone_rendering</a></li><li><a href="wpt_random_delay.html">wpt_random_delay</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_post_to_service.html">wpt_post_to_service</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
 </nav>
 
 <br class="clear">

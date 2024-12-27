@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_twitter_category_descs - XPoster Hook Doumentation</title>
+    <title>Action: wpt_post_to_service - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_twitter_category_descs</h1></header>
+    <header><h1 class="page-title">Action: wpt_post_to_service</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_twitter_category_descs">apply_filters( 'wpt_twitter_category_descs', <span class="signature">$cats )</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="wpt_post_to_service">do_action( 'wpt_post_to_service', <span class="signature">$post_ID, $post_info, $template, $media )</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Filter the space separated list of category descriptions in #cat_descs#.</p>
+    <p>Execute an action when a status update is executed.</p>
 </div>
 
 
@@ -77,7 +77,30 @@
 
         <tr>
             
-                <td class="name"><code>$cats</code></td>
+                <td class="name"><code>$post_ID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Post ID.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$post_info</code></td>
             
 
             <td class="type">
@@ -93,7 +116,53 @@
 
             
 
-            <td class="description last"><p>Array of category descriptions attached to this status update.</p></td>
+            <td class="description last"><p>Array of post info for templates.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$template</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Template in use.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$media</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Whether media should be included.</p></td>
         </tr>
 
     
@@ -134,7 +203,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="includes_post-info.php.html">includes/post-info.php</a>, <a href="includes_post-info.php.html#line63">line 63</a>
+        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line797">line 797</a>
     </li></ul></dd>
     
 
@@ -157,24 +226,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
