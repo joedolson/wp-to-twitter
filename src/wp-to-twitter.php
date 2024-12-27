@@ -325,13 +325,13 @@ function wpt_service_enabled( $post_ID, $service ) {
 	$disabled = get_option( 'wpt_disabled_services', array() );
 	$send_to  = true;
 	if ( in_array( $service, $omit, true ) || in_array( $service, array_keys( $disabled ), true ) ) {
+		wpt_mail( ucfirst( $service ) . ' is disabled.', print_r( $disabled, 1 ), $post_ID );
 		$send_to = false;
 	}
-	wpt_mail( 'Test that ' . $service . ' is enabled: ' . $send_to, print_r( $disabled, 1 ), $post_ID );
 	/**
 	 * Filter whether a given post should be sent to a specific service.
 	 *
-	 * @hook wpt_send_to_service
+	 * @hook wpt_service_enabled
 	 *
 	 * @param {bool}   $send_to True to send to a service.
 	 * @param {int}    $post_ID Post ID.
@@ -339,7 +339,7 @@ function wpt_service_enabled( $post_ID, $service ) {
 	 *
 	 * @return {bool}
 	 */
-	return apply_filters( $send_to, 'wpt_send_to_service', $post_ID, $service );
+	return apply_filters( 'wpt_service_enabled', $send_to, $post_ID, $service );
 }
 
 /**
