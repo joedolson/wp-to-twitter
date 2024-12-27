@@ -13,7 +13,6 @@
  * Set up post meta box.
 */
 function wpt_add_twitter_outer_box() {
-	wpt_check_version();
 	// add X.com panel to post types where it's enabled.
 	$wpt_post_types = get_option( 'wpt_post_types' );
 	if ( is_array( $wpt_post_types ) ) {

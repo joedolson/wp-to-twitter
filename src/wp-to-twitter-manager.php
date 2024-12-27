@@ -17,7 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Update XPoster settings.
  */
 function wpt_updated_settings() {
-	wpt_check_version();
 
 	if ( empty( $_POST ) ) {
 		return;
