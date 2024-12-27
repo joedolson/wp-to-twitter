@@ -694,11 +694,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	if ( $default ) { // default switch: depend on default settings.
 		$post_info = wpt_post_info( $post_ID );
 		$media     = wpt_post_with_media( $post_ID, $post_info );
-		if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
-			$auth = ( 'false' === get_option( 'wpt_cotweet_lock' ) || ! get_option( 'wpt_cotweet_lock' ) ) ? $post_info['authId'] : get_option( 'wpt_cotweet_lock' );
-		} else {
-			$auth = $post_info['authId'];
-		}
+		$auth      = $post_info['authId'];
 		$debug_post_info = $post_info;
 		unset( $debug_post_info['post_content'] );
 		unset( $debug_post_info['postContent'] );
@@ -796,176 +792,20 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				$template = ( '' !== $custom_tweet ) ? $custom_tweet : $nptext;
 				$sentence = wpt_truncate_status( $template, $post_info, $post_ID );
 				wpt_mail( '5: Status Update Template Processed', "Template: $template; Status: $sentence", $post_ID ); // DEBUG.
-				if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
-					$sentence2 = wpt_truncate_status( $template, $post_info, $post_ID, false, $auth );
-				}
 			}
 			if ( '' !== $sentence ) {
-				// WPT PRO.
-				if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
-					$wpt_selected_users = $post_info['wpt_authorized_users'];
-					// set up basic author/main account values.
-					$auth_verified = ( wtt_oauth_test( $auth, 'verify' ) || wpt_mastodon_connection( $auth ) || wpt_bluesky_connection( $auth ) ) ? true : false;
-					if ( empty( $wpt_selected_users ) && '1' === get_option( 'jd_individual_twitter_users' ) ) {
-						$wpt_selected_users = ( $auth_verified ) ? array( $auth ) : array( false );
-					}
-					if ( 1 === (int) $post_info['wpt_cotweet'] || '1' !== get_option( 'jd_individual_twitter_users' ) || in_array( 'main', $wpt_selected_users, true ) ) {
-						$wpt_selected_users['main'] = false;
-					}
-					// filter selected users before using.
-					$wpt_selected_users = apply_filters( 'wpt_filter_users', $wpt_selected_users, $post_info );
-					if ( '0' === (string) $post_info['wpt_delay_tweet'] || '' === $post_info['wpt_delay_tweet'] || 'on' === $post_info['wpt_no_delay'] ) {
-						foreach ( $wpt_selected_users as $acct ) {
-							$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
-							if ( $verified ) {
-								wpt_post_to_service( $sentence2, $acct, $post_ID, $media );
-							}
-						}
-					} else {
-						foreach ( $wpt_selected_users as $acct ) {
-							$acct = ( 'main' === $acct ) ? false : $acct;
-							/**
-							 * Filter the delay between posting and sending status updates.
-							 *
-							 * @hook wpt_random_delay
-							 *
-							 * @param {int} $rand Random integer between 60 and 480.
-							 *
-							 * @return {int}
-							 */
-							$delay    = apply_filters( 'wpt_random_delay', wp_rand( 60, 480 ) );
-							$offset   = ( $auth !== $acct ) ? $delay : 0;
-							$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
-							if ( $verified ) {
-								$time = apply_filters( 'wpt_schedule_delay', ( (int) $post_info['wpt_delay_tweet'] ) * 60, $acct );
-
-								/**
-								 * Render the template of a scheduled status update only at the time it's sent.
-								 *
-								 * @hook wpt_postpone_rendering
-								 * @param {bool} $postpone True to postpone rendering.
-								 *
-								 * @return {bool}
-								 */
-								$postpone_rendering = apply_filters( 'wpt_postpone_rendering', get_option( 'wpt_postpone_rendering', 'false' ) );
-								if ( 'false' !== $postpone_rendering ) {
-									$sentence = $template;
-								}
-								wp_schedule_single_event(
-									time() + $time + $offset,
-									'wpt_schedule_tweet_action',
-									array(
-										'id'       => $acct,
-										'sentence' => $sentence,
-										'rt'       => 0,
-										'post_id'  => $post_ID,
-									)
-								);
-								if ( WPT_DEBUG ) {
-									$author_id = ( $acct ) ? "#$acct" : 'Main';
-									wpt_mail(
-										"7a: Status update Scheduled for author: $author_id",
-										print_r(
-											array(
-												'id'       => $acct,
-												'sentence' => $sentence,
-												'rt'       => 0,
-												'post_id'  => $post_ID,
-												'timestamp' => time() + $time + $offset . ', ' . gmdate( 'Y-m-d H:i:s', time() + $time + $offset ),
-												'current_time' => time() . ', ' . gmdate( 'Y-m-d H:i:s', time() ),
-												'timezone' => get_option( 'gmt_offset' ),
-												'users'    => $wpt_selected_users,
-											),
-											1
-										),
-										$post_ID
-									);
-									// DEBUG.
-								}
-							}
-						}
-					}
-					// This cycle handles scheduling the automatic retweets.
-					if ( 0 !== (int) $post_info['wpt_retweet_after'] && 'on' !== $post_info['wpt_no_repost'] ) {
-						$repeat = $post_info['wpt_retweet_repeat'];
-						$first  = true;
-						foreach ( $wpt_selected_users as $acct ) {
-							$verified = ( wtt_oauth_test( $acct, 'verify' ) || wpt_mastodon_connection( $acct ) || wpt_bluesky_connection( $acct ) ) ? true : false;
-							if ( $verified ) {
-								for ( $i = 1; $i <= $repeat; $i++ ) {
-									$continue = apply_filters( 'wpt_allow_reposts', true, $i, $post_ID, $acct );
-									if ( $continue ) {
-										$retweet = apply_filters( 'wpt_set_retweet_text', $template, $i, $post_ID );
-
-										/**
-										 * Render the template of a scheduled status only at the time it's sent.
-										 *
-										 * @hook wpt_postpone_rendering
-										 * @param {bool} $postpone True to postpone rendering.
-										 *
-										 * @return {bool}
-										 */
-										$postpone_rendering = apply_filters( 'wpt_postpone_rendering', get_option( 'wpt_postpone_rendering', 'false' ) );
-										if ( 'false' !== $postpone_rendering ) {
-											$retweet = $retweet;
-										} else {
-											$retweet = wpt_truncate_status( $retweet, $post_info, $post_ID, true, $acct );
-										}
-										if ( '' === $retweet ) {
-											// If a filter sets this value to empty, exit without scheduling.
-											return $post_ID;
-										}
-										// add original delay to schedule.
-										$delay = ( isset( $post_info['wpt_delay_tweet'] ) ) ? ( (int) $post_info['wpt_delay_tweet'] ) * 60 : 0;
-										// Don't delay the first status update of the group.
-										$offset = ( true === $first ) ? 0 : wp_rand( 60, 240 ); // delay each co-tweet by 1-4 minutes.
-										$time   = apply_filters( 'wpt_schedule_retweet', ( $post_info['wpt_retweet_after'] ) * ( 60 * 60 ) * $i, $acct, $i, $post_info );
-										wp_schedule_single_event(
-											time() + $time + $offset + $delay,
-											'wpt_schedule_tweet_action',
-											array(
-												'id'       => $acct,
-												'sentence' => $retweet,
-												'rt'       => $i,
-												'post_id'  => $post_ID,
-											)
-										);
-										if ( WPT_DEBUG ) {
-											if ( $acct ) {
-												$author_id = "#$acct";
-											} else {
-												$author_id = 'Main';
-											}
-											wpt_mail(
-												"7b: Retweet Scheduled for author $author_id",
-												print_r(
-													array(
-														'id'         => $acct,
-														'sentence'   => array( $retweet, $i, $post_ID ),
-														'timestamp'  => time() + $time + $offset + $delay,
-														'time'       => array( $time, $offset, $delay, get_option( 'gmt_offset' ), time() ),
-														'timestring' => gmdate( 'Y-m-d H:i:s', time() + $time + $offset + $delay ),
-														'current_ts' => gmdate( 'Y-m-d H:i:s', time() ),
-													),
-													1
-												),
-												$post_ID
-											); // DEBUG.
-										}
-										$tweet_limit = (int) apply_filters( 'wpt_tweet_repeat_limit', 4, $post_ID );
-										if ( $i === $tweet_limit ) {
-											break;
-										}
-									}
-								}
-							}
-							$first = false;
-						}
-					}
-				} else {
-					wpt_post_to_service( $sentence, false, $post_ID, $media );
-				}
-				// END WPT PRO.
+				/**
+				 * Execute an action when a status update is executed.
+				 *
+				 * @hook wpt_post_to_service
+				 *
+				 * @param {int}      $post_ID Post ID.
+				 * @param {array}    $post_info Array of post info for templates.
+				 * @param {string}   $template Template in use.
+				 * @param {bool}     $media Whether media should be included.
+				 */
+				do_action( 'wpt_post_to_service', $post_ID, $post_info, $template, $media );
+				wpt_post_to_service( $sentence, false, $post_ID, $media );
 			}
 		}
 	}
