@@ -78,16 +78,13 @@ require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-truncate.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php';
 
-global $wpt_version;
-$wpt_version = '4.3.2';
-
+define( 'XPOSTER_VERSION', '4.3.2' );
 /**
  * Check whether version requires activation.
  */
 function wpt_check_version() {
-	global $wpt_version;
 	$prev_version = ( '' !== get_option( 'wp_to_twitter_version', '' ) ) ? get_option( 'wp_to_twitter_version' ) : '1.0.0';
-	if ( version_compare( $prev_version, $wpt_version, '<' ) ) {
+	if ( version_compare( $prev_version, XPOSTER_VERSION, '<' ) ) {
 		xposter_activate();
 	}
 }
@@ -162,7 +159,6 @@ function xposter_activate() {
 		update_option( 'jd_keyword_format', '0' );
 	}
 
-	global $wpt_version;
 	$prev_version = get_option( 'wp_to_twitter_version' );
 	$upgrade      = version_compare( $prev_version, '3.4.4', '<' );
 	if ( $upgrade ) {
@@ -170,7 +166,7 @@ function xposter_activate() {
 		delete_option( 'bitlylogin' );
 	}
 
-	update_option( 'wp_to_twitter_version', $wpt_version );
+	update_option( 'wp_to_twitter_version', XPOSTER_VERSION );
 }
 
 /**
@@ -1274,7 +1270,8 @@ add_action( 'admin_enqueue_scripts', 'wpt_admin_scripts', 10, 1 );
  * Enqueue admin scripts for XPoster and XPoster PRO.
  */
 function wpt_admin_scripts() {
-	global $current_screen, $wpt_version;
+	global $current_screen;
+	$wpt_version = XPOSTER_VERSION;
 	if ( SCRIPT_DEBUG ) {
 		$wpt_version .= '-' . wp_rand( 10000, 99999 );
 	}
@@ -1505,7 +1502,7 @@ add_action( 'admin_head', 'wpt_admin_style' );
  * Add stylesheets to XPoster pages.
  */
 function wpt_admin_style() {
-	global $wpt_version;
+	$wpt_version = XPOSTER_VERSION;
 	if ( SCRIPT_DEBUG ) {
 		$wpt_version .= '-' . wp_rand( 10000, 99999 );
 	}
@@ -1540,10 +1537,9 @@ add_action( 'in_plugin_update_message-wp-to-twitter/wp-to-twitter.php', 'wpt_plu
  * Parse plugin update info to display in update list.
  */
 function wpt_plugin_update_message() {
-	global $wpt_version;
 	$note = '';
 	define( 'WPT_PLUGIN_README_URL', 'http://svn.wp-plugins.org/wp-to-twitter/trunk/readme.txt' );
-	$response = wp_remote_get( WPT_PLUGIN_README_URL, array( 'user-agent' => 'WordPress/XPoster' . $wpt_version . '; ' . get_bloginfo( 'url' ) ) );
+	$response = wp_remote_get( WPT_PLUGIN_README_URL, array( 'user-agent' => 'WordPress/XPoster ' . XPOSTER_VERSION . '; ' . get_bloginfo( 'url' ) ) );
 	if ( ! is_wp_error( $response ) || is_array( $response ) ) {
 		$data   = $response['body'];
 		$bits   = explode( '== Upgrade Notice ==', $data );
