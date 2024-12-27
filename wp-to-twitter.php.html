@@ -433,15 +433,6 @@ function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false 
 		$error = __( 'This account is not authorized to post to any services.', 'wp-to-twitter' );
 		wpt_save_error( $id, $auth, $twit, $error, '401', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error, '401' );
-		if ( ! $check_twitter ) {
-			wpt_mail( 'Account not authorized with X.com API.', 'Post ID: ' . $id );
-		}
-		if ( ! $check_mastodon ) {
-			wpt_mail( 'Account not authorized with Mastodon.', 'Post ID: ' . $id );
-		}
-		if ( ! $check_bluesky ) {
-			wpt_mail( 'Account not authorized with Bluesky.', 'Post ID: ' . $id );
-		}
 
 		return false;
 	} // exit silently if not authorized.
