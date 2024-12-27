@@ -726,7 +726,7 @@ function wpt_post_attachment( $post_ID ) {
 			$attachment_id = false;
 		}
 	}
-	$meta = wp_get_attachment_metadata( $attaattachment_idchment );
+	$meta = wp_get_attachment_metadata( $attachment_id );
 	if ( ! isset( $meta['width'], $meta['height'] ) ) {
 		wpt_mail( "Image Data Does not Exist for #$attachment_id", print_r( $meta, 1 ), $post_ID );
 		$attachment_id = false;
