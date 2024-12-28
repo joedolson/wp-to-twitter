@@ -692,9 +692,8 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	}
 	wpt_mail( '1: Status Update should send: ' . $post_this, "Default: $text_default; Publication method: $type", $post_ID ); // DEBUG.
 	if ( $default ) { // default switch: depend on default settings.
-		$post_info = wpt_post_info( $post_ID );
-		$media     = wpt_post_with_media( $post_ID, $post_info );
-		$auth      = $post_info['authId'];
+		$post_info       = wpt_post_info( $post_ID );
+		$media           = wpt_post_with_media( $post_ID, $post_info );
 		$debug_post_info = $post_info;
 		unset( $debug_post_info['post_content'] );
 		unset( $debug_post_info['postContent'] );
