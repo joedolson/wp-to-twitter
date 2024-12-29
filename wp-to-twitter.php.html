@@ -962,17 +962,12 @@ function wpt_admin_scripts() {
 		wp_enqueue_script( 'wpt.charcount' );
 		wp_register_style( 'wpt-post-styles', plugins_url( 'css/post-styles.css', __FILE__ ), array(), $wpt_version );
 		wp_enqueue_style( 'wpt-post-styles' );
-		$config = wpt_max_length();
+		$config = wpt_max_length( false );
 		// add one; character count starts from 1.
 		if ( 'post' === $current_screen->base ) {
 			$allowed = $config['base_length'] - mb_strlen( stripslashes( get_option( 'jd_twit_prepend' ) . get_option( 'jd_twit_append' ) ) ) + 1;
 		} else {
 			$allowed = $config['base_length'] + 1;
-		}
-		if ( function_exists( 'wpt_pro_exists' ) ) {
-			$first = '#custom';
-		} else {
-			$first = '#notes';
 		}
 		wp_register_script( 'wpt-base-js', plugins_url( 'js/base.js', __FILE__ ), array( 'jquery', 'wpt.charcount' ), $wpt_version, true );
 		wp_enqueue_script( 'wpt-base-js' );
@@ -980,11 +975,13 @@ function wpt_admin_scripts() {
 			'wpt-base-js',
 			'wptSettings',
 			array(
-				'allowed' => $allowed,
-				'first'   => $first,
-				'is_ssl'  => ( wpt_is_ssl( home_url() ) ) ? 'true' : 'false',
-				'text'    => __( 'Characters left: ', 'wp-to-twitter' ),
-				'updated' => __( 'Custom status template updated', 'wp-to-twitter' ),
+				'allowed'        => $allowed,
+				'x_limit'        => $config['x'],
+				'mastodon_limit' => $config['mastodon'],
+				'bluesky_limit'  => $config['bluesky'],
+				'is_ssl'         => ( wpt_is_ssl( home_url() ) ) ? 'true' : 'false',
+				'text'           => __( 'Characters left: ', 'wp-to-twitter' ),
+				'updated'        => __( 'Custom status template updated', 'wp-to-twitter' ),
 			)
 		);
 	}

@@ -46,14 +46,20 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array of URL lengths and params.
  */
-function wpt_max_length( $service ) {
+function wpt_max_length( $service = false ) {
 	$values = array(
 		'http_length'    => 23,
 		'https_length'   => 23,
 		'reserved_chars' => 24,
 	);
 
-	$values['base_length'] = intval( ( get_option( 'wpt_' . $service . '_length' ) ) ? get_option( 'wpt_' . $service . '_length' ) : 140 ) - 1;
+	$values['base_length'] = intval( ( get_option( 'wpt_' . $service . '_length' ) ) ? get_option( 'wpt_' . $service . '_length' ) : 280 ) - 1;
+
+	if ( ! $service ) {
+		$values['x']        = absint( get_option( 'wpt_x_length', $values['base_length'] ) );
+		$values['mastodon'] = absint( get_option( 'wpt_mastodon_length', $values['base_length'] ) );
+		$values['bluesky']  = absint( get_option( 'wpt_bluesky_length', $values['base_length'] ) );
+	}
 
 	/**
 	 * Filter the max length array used for calculating status update truncation.
