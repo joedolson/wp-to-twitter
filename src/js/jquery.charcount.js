@@ -33,13 +33,15 @@
 
         function calculate(obj) {
             var count   = $(obj).val().length;
+			console.log( count );
 			var allowed = options.allowed;
 			// Service specific limits.
 			var xAllowed        = options.x_limit;
 			var mastodonAllowed = options.mastodon_limit;
 			var blueskyAllowed  = options.bluesky_limit;
-
+			// Set allowed length to highest of available options.
 			allowed = Math.max( allowed, xAllowed, mastodonAllowed, blueskyAllowed );
+			var minimum = Math.min( allowed, xAllowed, mastodonAllowed, blueskyAllowed );
             // supported shortcodes
             var urlcount     = $(obj).val().indexOf('#url#') > -1 ? 18 : 0;
             var longurlcount = $(obj).val().indexOf('#longurl#') > -1 ? 14 : 0;
@@ -70,7 +72,12 @@
 			} else {
 				$( '.bluesky-notification' ).hide();
 			}
-
+			// Add aria-live when approaching first benchmark.
+			if ( length >= ( minimum - options.warning ) ) {
+				$(obj).next().attr( 'aria-live', 'polite' );
+			} else {
+				$(obj).next().removeAttr( 'aria-live', 'polite' );
+			}
             if ( available <= options.warning && available >= 0 ) {
                 $(obj).next().addClass(options.cssWarning);
             } else {
@@ -85,12 +92,11 @@
         };
 
         this.each(function () {
-            $(this).after('<' + options.counterElement + ' aria-live="polite" aria-atomic="true" class="' + options.css + '">' + options.counterText + '</' + options.counterElement + '>');
-            calculate(this);
-			$(this).on( 'keyup', function(e) {
+            $(this).after('<' + options.counterElement + ' aria-atomic="true" class="' + options.css + '">' + options.counterText + '</' + options.counterElement + '>');
+			$(this).on( 'keyup', function() {
 				setTimeout( calculate(this), 200 );
 			});
-			$(this).on( 'change', function(e) {
+			$(this).on( 'change', function() {
 				setTimeout( calculate(this), 200 );
 			});
         });

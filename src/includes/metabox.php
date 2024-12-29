@@ -72,9 +72,9 @@ function wpt_add_twitter_inner_box( $post ) {
 				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_update ) ); ?></textarea>
 				<?php echo apply_filters( 'wpt_custom_box', '', $template, $post->ID ); ?>
 			</p>
-			<div class="x-notification notice inline notice-info hidden"><p><?php _e( 'X length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
-			<div class="bluesky-notification notice inline notice-info hidden"><p><?php _e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
-			<div class="mastodon-notification notice inline notice-info hidden"><p><?php _e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
+			<div role="alert" class="x-notification notice inline notice-info hidden"><p><?php _e( 'X length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
+			<div role="alert" class="bluesky-notification notice inline notice-info hidden"><p><?php _e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
+			<div role="alert" class="mastodon-notification notice inline notice-info hidden"><p><?php _e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
 			<div class="wpt-template-resources wpt-flex">
 				<p class='wpt-template'>
 					<?php _e( 'Default template:', 'wp-to-twitter' ); ?><br /><code><?php echo stripcslashes( $template ); ?></code>
