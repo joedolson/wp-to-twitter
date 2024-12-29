@@ -341,14 +341,14 @@ function wpt_service_enabled( $post_ID, $service ) {
 /**
  * Performs the API post to target services. Alias for wpt_post_to_twitter.
  *
- * @param string  $template Template for status update to be sent to service.
- * @param int     $auth Author ID.
- * @param int     $id Post ID.
- * @param boolean $media Whether to upload media attached to the post specified in $id.
+ * @param string       $template Template for status update to be sent to service.
+ * @param int          $auth Author ID.
+ * @param int          $id Post ID.
+ * @param null|boolean $media Whether to upload media attached to the post specified in $id. Default null, using default post settings.
  *
  * @return boolean|array False if blocked, array of statuses if attempted.
  */
-function wpt_post_to_service( $template, $auth = false, $id = false, $media = false ) {
+function wpt_post_to_service( $template, $auth = false, $id = false, $media = null ) {
 	$return = wpt_post_to_twitter( $template, $auth, $id, $media );
 
 	return $return;
@@ -357,14 +357,14 @@ function wpt_post_to_service( $template, $auth = false, $id = false, $media = fa
 /**
  * Performs the API post to target services.
  *
- * @param string  $template Template for status update to be sent to service.
- * @param int     $auth Author ID.
- * @param int     $id Post ID.
- * @param boolean $media Whether to upload media attached to the post specified in $id.
+ * @param string       $template Template for status update to be sent to service.
+ * @param int          $auth Author ID.
+ * @param int          $id Post ID.
+ * @param null|boolean $media Whether to upload media attached to the post specified in $id. Default null, using default post settings.
  *
  * @return boolean|array False if blocked, array of statuses if attempted.
  */
-function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = false ) {
+function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = null ) {
 	// If an ID is set but the post is not currently present or published, ignore.
 	$return = array();
 	if ( $id ) {
@@ -411,6 +411,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = fa
 	$check = wpt_check_service_history( $id, $auth, $template, $connections );
 
 	// if has media, must have a valid attachment.
+	$media      = ( null === $media ) ? wpt_post_with_media( $id ) : $media;
 	$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
 	$connection = false;
 	if ( $check['x'] &amp;&amp; $check_twitter &amp;&amp; wpt_service_enabled( $id, 'x' ) ) {
@@ -859,7 +860,6 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				$template = ( '' !== $custom_tweet ) ? $custom_tweet : $nptext;
 			}
 			if ( '' !== $template ) {
-				$media = wpt_post_with_media( $post_ID );
 				/**
 				 * Execute an action when a status update is executed.
 				 *
@@ -870,8 +870,8 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				 * @param {string}   $template Template in use.
 				 * @param {bool}     $media Whether media should be included.
 				 */
-				do_action( 'wpt_post_to_service', $post_ID, $post_info, $template, $media );
-				wpt_post_to_service( $template, false, $post_ID, $media );
+				do_action( 'wpt_post_to_service', $post_ID, $post_info, $template );
+				wpt_post_to_service( $template, false, $post_ID );
 			}
 		}
 	}
