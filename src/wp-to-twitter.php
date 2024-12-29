@@ -762,7 +762,18 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			if ( 0 === $new || true === $is_inline_edit ) {
 				// if this is an old post and editing updates are enabled.
 				if ( '1' === get_option( 'jd_tweet_default_edit' ) ) {
-					$post_this = apply_filters( 'wpt_tweet_this_edit', $post_this, $_POST );
+					/**
+					 * Filter whether a post defaults to send updates on edit.
+					 *
+					 * @hook wpt_tweet_this_edit
+					 *
+					 * @param {string} $post_this 'yes' or 'no'.
+					 * @param {array}  $_POST POST global.
+					 * @param {int}    $post_ID Post ID.
+					 *
+					 * @return {string} 'yes' to continue with posting.
+					 */
+					$post_this = apply_filters( 'wpt_tweet_this_edit', $post_this, $_POST, $post_ID );
 					if ( 'yes' !== $post_this ) {
 						return false;
 					}
