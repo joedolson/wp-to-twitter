@@ -17,17 +17,18 @@
  * @return array Post data used in status update functions.
  */
 function wpt_post_info( $post_ID ) {
-	$encoding     = get_option( 'blog_charset', 'UTF-8' );
-	$post         = get_post( $post_ID );
-	$category_ids = array();
-	$values       = array();
-	$values['id'] = $post_ID;
+	$encoding       = get_option( 'blog_charset', 'UTF-8' );
+	$excerpt_length = get_option( 'jd_post_excerpt' );
+	$dateformat     = ( '' === get_option( 'jd_date_format', '' ) ) ? get_option( 'date_format' ) : get_option( 'jd_date_format' );
+	$post           = get_post( $post_ID );
+	$category_ids   = array();
+	$values         = array();
+	$values['id']   = $post_ID;
 	// get post author.
 	$values['postinfo']      = $post;
 	$values['postContent']   = $post->post_content;
 	$values['authId']        = $post->post_author;
 	$postdate                = $post->post_date;
-	$dateformat              = ( '' === get_option( 'jd_date_format', '' ) ) ? get_option( 'date_format' ) : get_option( 'jd_date_format' );
 	$thisdate                = mysql2date( $dateformat, $postdate );
 	$altdate                 = mysql2date( 'Y-m-d H:i:s', $postdate );
 	$values['_postDate']     = $altdate;
@@ -55,6 +56,7 @@ function wpt_post_info( $post_ID ) {
 		 * Filter the space separated list of category names in #cats#.
 		 *
 		 * @hook wpt_twitter_category_names
+		 *
 		 * @param {array} $cats Array of category names attached to this status update.
 		 *
 		 * @return {array}
@@ -64,6 +66,7 @@ function wpt_post_info( $post_ID ) {
 		 * Filter the space separated list of category descriptions in #cat_descs#.
 		 *
 		 * @hook wpt_twitter_category_descs
+		 *
 		 * @param {array} $cats Array of category descriptions attached to this status update.
 		 *
 		 * @return {array}
@@ -79,7 +82,6 @@ function wpt_post_info( $post_ID ) {
 	$values['categoryIds'] = $category_ids;
 	$values['category']    = ( $category ) ? html_entity_decode( $category, ENT_COMPAT, $encoding ) : '';
 	$values['cat_desc']    = ( $cat_desc ) ? html_entity_decode( $cat_desc, ENT_COMPAT, $encoding ) : '';
-	$excerpt_length        = get_option( 'jd_post_excerpt' );
 	$post_excerpt          = ( '' === trim( $post->post_excerpt ) ) ? mb_substr( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ), 0, $excerpt_length ) : mb_substr( wp_strip_all_tags( strip_shortcodes( $post->post_excerpt ) ), 0, $excerpt_length );
 	$values['postExcerpt'] = ( $post_excerpt ) ? html_entity_decode( $post_excerpt, ENT_COMPAT, $encoding ) : '';
 	$thisposttitle         = $post->post_title;
@@ -100,9 +102,12 @@ function wpt_post_info( $post_ID ) {
 	/**
 	 * Filters post array to insert custom data that can be used in status update process.
 	 *
-	 * @param array   $values Existing values.
-	 * @param integer $post_ID Post ID.
-	 * @return array  $values
+	 * @hook wpt_post_info
+	 *
+	 * @param {array}   $values Existing values.
+	 * @param {integer} $post_ID Post ID.
+	 *
+	 * @return {array}  $values
 	 */
 	$values = apply_filters( 'wpt_post_info', $values, $post_ID );
 
@@ -169,6 +174,7 @@ function wpt_generate_hash_tags( $post_ID ) {
 	 * Change the taxonomy used by default to generate post tags. Array of terms attached to post.
 	 *
 	 * @hook wpt_hash_source
+	 *
 	 * @param {array} $tags Array of post terms.
 	 * @param {int}   $post_ID Post ID.
 	 *
@@ -229,6 +235,7 @@ function wpt_generate_hash_tags( $post_ID ) {
 					 * Change the default tag character. Default '#'.
 					 *
 					 * @hook wpt_tag_default
+					 *
 					 * @param {string} $char Character used to convert tags into hashtags.
 					 * @param {int}    $t_id Term ID.
 					 *
