@@ -365,19 +365,13 @@ function wpt_post_to_service( $template, $auth = false, $id = false, $media = fa
  * @return boolean|array False if blocked, array of statuses if attempted.
  */
 function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = false ) {
-	$sentence = wpt_truncate_status( $template, array(), $id );
-	wpt_mail( '5: Status Update Template Processed', "Template: $template; Status: $sentence", $id ); // DEBUG.
-	if ( ! $sentence ) {
-		return false;
-	}
-
 	// If an ID is set but the post is not currently present or published, ignore.
 	$return = array();
 	if ( $id ) {
 		$status = get_post_status( $id );
 		if ( ! $status || 'publish' !== $status ) {
 			$error = __( 'This post is no longer published or has been deleted', 'wp-to-twitter' );
-			wpt_save_error( $id, $auth, $twit, $error, '404', time() );
+			wpt_save_error( $id, $auth, $template, $error, '404', time() );
 			wpt_set_log( 'wpt_status_message', $id, $error, '404' );
 
 			return false;
@@ -407,71 +401,99 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = fa
 	$check_bluesky  = $connections['bluesky'];
 	if ( ! $check_twitter &amp;&amp; ! $check_mastodon &amp;&amp; ! $check_bluesky ) {
 		$error = __( 'This account is not authorized to post to any services.', 'wp-to-twitter' );
-		wpt_save_error( $id, $auth, $twit, $error, '401', time() );
+		wpt_save_error( $id, $auth, $template, $error, '401', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error, '401' );
 
 		return false;
 	} // exit silently if not authorized.
 
-	$check = ( ! $auth ) ? get_option( 'jd_last_tweet', '' ) : get_user_meta( $auth, 'wpt_last_tweet', true ); // get user's last tweet.
-	// prevent duplicate status updates. Checks whether this text has already been sent.
-	if ( $check === $twit &amp;&amp; '' !== $twit ) {
-		wpt_mail( 'Matched: status update identical', "This Update: $twit; Check Update: $check; $auth, $id, $media", $id ); // DEBUG.
-		$error = __( 'This status update is identical to another update recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'All status updates are expected to be unique.', 'wp-to-twitter' );
-		wpt_save_error( $id, $auth, $twit, $error, '403-1', time() );
-		wpt_set_log( 'wpt_status_message', $id, $error, '403' );
+	// Check if this update has already been sent to a given service.
+	$check = wpt_check_service_history( $id, $auth, $template, $connections );
 
-		return false;
-	} elseif ( '' === $twit || ! $twit ) {
-		wpt_mail( 'Status update check: empty sentence', "$twit, $auth, $id, $media", $id ); // DEBUG.
-		$error = __( 'This status update was blank and could not be sent to the API.', 'wp-to-twitter' );
-		wpt_save_error( $id, $auth, $twit, $error, '403-2', time() );
-		wpt_set_log( 'wpt_status_message', $id, $error, '403' );
-
-		return false;
-	} else {
-		// must be designated as media and have a valid attachment.
-		$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
+	// if has media, must have a valid attachment.
+	$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
+	$connection = false;
+	if ( $check['x'] &amp;&amp; $check_twitter &amp;&amp; wpt_service_enabled( $id, 'x' )) {
 		$status     = array(
-			'text' => $twit,
+			'text' => $check['x'],
 		);
-
-		$connection = false;
-		if ( $check_twitter &amp;&amp; wpt_service_enabled( $id, 'x' ) ) {
-			$connection = $check_twitter;
-			$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
-			$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
-			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
-			$return['xcom'] = $response;
-			wpt_mail( 'Share Connection Status: X', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
-		}
-		if ( $check_mastodon &amp;&amp; wpt_service_enabled( $id, 'mastodon' ) ) {
-			$connection = $check_mastodon;
-			$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
-			$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
-			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
-			$return['mastodon'] = $response;
-			wpt_mail( 'Share Connection Status: Mastodon', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
-		}
-		if ( $check_bluesky &amp;&amp; wpt_service_enabled( $id, 'bluesky' ) ) {
-			$connection   = $check_bluesky;
-			$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
-			$attachment   = ( $attachment ) ? $attachment : wpt_post_attachment( $id );
-			$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
-			$response     = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
-			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
-			$return['bluesky'] = $response;
-			wpt_mail( 'Share Connection Status: Bluesky', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
-		}
-		if ( ! empty( $return ) ) {
-
-			return $return;
-		} else {
-			wpt_set_log( 'wpt_status_message', $id, __( 'No API connection found.', 'wp-to-twitter' ), '404' );
-
-			return false;
-		}
+		$connection = $check_twitter;
+		$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
+		$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
+		wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
+		$return['xcom'] = $response;
+		wpt_mail( 'Share Connection Status: X', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
 	}
+	if ( $check['mastodon'] &amp;&amp; $check_mastodon &amp;&amp; wpt_service_enabled( $id, 'mastodon' ) ) {
+		$status     = array(
+			'text' => $check['mastodon'],
+		);
+		$connection = $check_mastodon;
+		$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
+		$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
+		wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
+		$return['mastodon'] = $response;
+		wpt_mail( 'Share Connection Status: Mastodon', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
+	}
+	if ( $check['bluesky'] &amp;&amp; $check_bluesky &amp;&amp; wpt_service_enabled( $id, 'bluesky' ) ) {
+		$status     = array(
+			'text' => $check['bluesky'],
+		);
+		$connection   = $check_bluesky;
+		$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
+		$attachment   = ( $attachment ) ? $attachment : wpt_post_attachment( $id );
+		$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
+		$response     = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
+		wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
+		$return['bluesky'] = $response;
+		wpt_mail( 'Share Connection Status: Bluesky', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
+	}
+	if ( ! empty( $return ) ) {
+
+		return $return;
+	} else {
+		wpt_set_log( 'wpt_status_message', $id, __( 'No API connection found.', 'wp-to-twitter' ), '404' );
+
+		return false;
+	}
+}
+
+/**
+ * Check whether a status update has already been sent.
+ *
+ * @param int      $post_ID Post ID.
+ * @param int|bool $auth Author ID or false.
+ * @param string   $template Status template.
+ *
+ * @return array Array of statuses by service or false, if blocked.
+ */
+function wpt_check_service_history( $post_ID, $auth, $template, $connections ) {
+	$checks   = array();
+	foreach( $connections as $service => $connected ) {
+		if ( ! $connected ) {
+			continue;
+		}
+		$status = wpt_truncate_status( $template, array(), $post_ID, false, $auth, $service );
+		// Get last sent to this service.
+		$check  = ( ! $auth ) ? get_option( 'wpt_last_' . $service, '' ) : get_user_meta( $auth, 'wpt_last_' . $service, true );
+		// prevent duplicate status updates. Checks whether this text has already been sent.
+		if ( $check === $status &amp;&amp; '' !== $status ) {
+			wpt_mail( 'Matched: status update identical', "This Update: $status; Check Update: $check; $auth, $post_ID", $post_ID ); // DEBUG.
+			$error = __( 'This status update is identical to another update recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'All status updates are expected to be unique.', 'wp-to-twitter' );
+			wpt_save_error( $post_ID, $auth, $status, $error, '403-1', time() );
+			wpt_set_log( 'wpt_status_message', $post_ID, $error, '403' );
+			$status = false;
+		} elseif ( '' === $status || ! $status ) {
+			wpt_mail( 'Status update check: empty sentence', "$status, $auth, $post_ID", $post_ID ); // DEBUG.
+			$error = __( 'This status update was blank and could not be sent to the API.', 'wp-to-twitter' );
+			wpt_save_error( $post_ID, $auth, $status, $error, '403-2', time() );
+			wpt_set_log( 'wpt_status_message', $post_ID, $error, '403' );
+			$status = false;
+		}
+		$checks[ $service ] = $status;
+	}
+
+	return $checks;
 }
 
 /**
@@ -494,10 +516,13 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 	wpt_mail( "Status Update Response: $http_code / $service", $notice, $id ); // DEBUG.
 	// only save last status if successful.
 	if ( 200 === $http_code ) {
-		if ( ! $auth ) {
-			update_option( 'jd_last_tweet', $twit );
-		} else {
-			update_user_meta( $auth, 'wpt_last_tweet', $twit );
+		$services = array( 'x', 'mastodon', 'bluesky' );
+		foreach ( $services as $service ) {
+			if ( ! $auth ) {
+				update_option( 'wpt_last_' . $service, $twit );
+			} else {
+				update_user_meta( $auth, 'wpt_last_' . $service, $twit );
+			}
 		}
 	}
 	wpt_save_error( $id, $auth, $twit, $notice, $http_code, time() );
@@ -1457,7 +1482,7 @@ add_action( 'admin_notices', 'wpt_needs_connection' );
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_post_to_service.html">wpt_post_to_service</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_tweet_this_edit.html">wpt_tweet_this_edit</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_post_to_service.html">wpt_post_to_service</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_post_info.html">wpt_post_info</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_tweet_this_edit.html">wpt_tweet_this_edit</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
 </nav>
 
 <br class="clear">

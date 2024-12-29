@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_do_tweet - XPoster Hook Doumentation</title>
+    <title>Filter: wpt_post_info - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_do_tweet</h1></header>
+    <header><h1 class="page-title">Filter: wpt_post_info</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_do_tweet">apply_filters( 'wpt_do_tweet', <span class="signature">$do_tweet, $auth, $id, $twit )</span><span class="type-signature"> &rarr; {bool}</span></h4>
+    <h4 class="name" id="wpt_post_info">apply_filters( 'wpt_post_info', <span class="signature">$values, $post_ID )</span><span class="type-signature"> &rarr; {array}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Filter the approval to send a Tweet.</p>
+    <p>Filters post array to insert custom data that can be used in status update process.</p>
 </div>
 
 
@@ -77,13 +77,13 @@
 
         <tr>
             
-                <td class="name"><code>$do_tweet</code></td>
+                <td class="name"><code>$values</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">bool</span>
+<span class="param-type">array</span>
 
 
             
@@ -93,46 +93,20 @@
 
             
 
-            <td class="description last"><p>Return false to cancel this Tweet.</p></td>
+            <td class="description last"><p>Existing values.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$auth</code></td>
+                <td class="name"><code>$post_ID</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">int</span>
-|
-
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Author.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
+<span class="param-type">integer</span>
 
 
             
@@ -143,29 +117,6 @@
             
 
             <td class="description last"><p>Post ID.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$twit</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Tweet text.</p></td>
         </tr>
 
     
@@ -206,7 +157,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wpt-post-to-twitter.php.html">wpt-post-to-twitter.php</a>, <a href="wpt-post-to-twitter.php.html#line99">line 99</a>
+        <a href="includes_post-info.php.html">includes/post-info.php</a>, <a href="includes_post-info.php.html#line98">line 98</a>
     </li></ul></dd>
     
 
@@ -232,6 +183,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <p>$values</p>
+</div>
+
 
 
 <dl>
@@ -240,7 +195,7 @@
     </dt>
     <dd>
         
-<span class="param-type">bool</span>
+<span class="param-type">array</span>
 
 
     </dd>

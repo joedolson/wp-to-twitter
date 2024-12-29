@@ -43,24 +43,21 @@
  * @return array Post data used in status update functions.
  */
 function wpt_post_info( $post_ID ) {
-	$encoding     = get_option( 'blog_charset', 'UTF-8' );
-	$post         = get_post( $post_ID );
-	$category_ids = array();
-	$values       = array();
-	$values['id'] = $post_ID;
-	// get post author.
+	$encoding       = get_option( 'blog_charset', 'UTF-8' );
+	$excerpt_length = get_option( 'jd_post_excerpt' );
+	$dateformat     = ( '' === get_option( 'jd_date_format', '' ) ) ? get_option( 'date_format' ) : get_option( 'jd_date_format' );
+	$post           = get_post( $post_ID );
+	$category_ids   = array();
+	$values         = array();
+	$values['id']   = $post_ID;
+
 	$values['postinfo']      = $post;
 	$values['postContent']   = $post->post_content;
 	$values['authId']        = $post->post_author;
-	$postdate                = $post->post_date;
-	$dateformat              = ( '' === get_option( 'jd_date_format', '' ) ) ? get_option( 'date_format' ) : get_option( 'jd_date_format' );
-	$thisdate                = mysql2date( $dateformat, $postdate );
-	$altdate                 = mysql2date( 'Y-m-d H:i:s', $postdate );
-	$values['_postDate']     = $altdate;
-	$values['postDate']      = $thisdate;
-	$moddate                 = $post->post_modified;
-	$values['_postModified'] = mysql2date( 'Y-m-d H:i:s', $moddate );
-	$values['postModified']  = mysql2date( $dateformat, $moddate );
+	$values['_postDate']     = mysql2date( 'Y-m-d H:i:s', $post->post_date );
+	$values['postDate']      = mysql2date( $dateformat, $post->post_date );
+	$values['_postModified'] = mysql2date( 'Y-m-d H:i:s', $post->post_modified );
+	$values['postModified']  = mysql2date( $dateformat, $post->post_modified );
 	// get first category.
 	$category   = '';
 	$cat_desc   = '';
@@ -81,6 +78,7 @@ function wpt_post_info( $post_ID ) {
 		 * Filter the space separated list of category names in #cats#.
 		 *
 		 * @hook wpt_twitter_category_names
+		 *
 		 * @param {array} $cats Array of category names attached to this status update.
 		 *
 		 * @return {array}
@@ -90,22 +88,22 @@ function wpt_post_info( $post_ID ) {
 		 * Filter the space separated list of category descriptions in #cat_descs#.
 		 *
 		 * @hook wpt_twitter_category_descs
+		 *
 		 * @param {array} $cats Array of category descriptions attached to this status update.
 		 *
 		 * @return {array}
 		 */
-		$cat_descs = implode( ' ', apply_filters( 'wpt_twitter_category_descs', $cat_descs ) );
+		$category_descriptions = implode( ' ', apply_filters( 'wpt_twitter_category_descs', $cat_descs ) );
 	} else {
 		$category     = '';
 		$cat_desc     = '';
 		$category_ids = array();
 	}
 	$values['cats']        = $cat_names;
-	$values['cat_descs']   = $cat_descs;
+	$values['cat_descs']   = $category_descriptions;
 	$values['categoryIds'] = $category_ids;
 	$values['category']    = ( $category ) ? html_entity_decode( $category, ENT_COMPAT, $encoding ) : '';
 	$values['cat_desc']    = ( $cat_desc ) ? html_entity_decode( $cat_desc, ENT_COMPAT, $encoding ) : '';
-	$excerpt_length        = get_option( 'jd_post_excerpt' );
 	$post_excerpt          = ( '' === trim( $post->post_excerpt ) ) ? mb_substr( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ), 0, $excerpt_length ) : mb_substr( wp_strip_all_tags( strip_shortcodes( $post->post_excerpt ) ), 0, $excerpt_length );
 	$values['postExcerpt'] = ( $post_excerpt ) ? html_entity_decode( $post_excerpt, ENT_COMPAT, $encoding ) : '';
 	$thisposttitle         = $post->post_title;
@@ -126,9 +124,12 @@ function wpt_post_info( $post_ID ) {
 	/**
 	 * Filters post array to insert custom data that can be used in status update process.
 	 *
-	 * @param array   $values Existing values.
-	 * @param integer $post_ID Post ID.
-	 * @return array  $values
+	 * @hook wpt_post_info
+	 *
+	 * @param {array}   $values Existing values.
+	 * @param {integer} $post_ID Post ID.
+	 *
+	 * @return {array}  $values
 	 */
 	$values = apply_filters( 'wpt_post_info', $values, $post_ID );
 
@@ -195,6 +196,7 @@ function wpt_generate_hash_tags( $post_ID ) {
 	 * Change the taxonomy used by default to generate post tags. Array of terms attached to post.
 	 *
 	 * @hook wpt_hash_source
+	 *
 	 * @param {array} $tags Array of post terms.
 	 * @param {int}   $post_ID Post ID.
 	 *
@@ -255,6 +257,7 @@ function wpt_generate_hash_tags( $post_ID ) {
 					 * Change the default tag character. Default '#'.
 					 *
 					 * @hook wpt_tag_default
+					 *
 					 * @param {string} $char Character used to convert tags into hashtags.
 					 * @param {int}    $t_id Term ID.
 					 *
@@ -293,7 +296,7 @@ function wpt_generate_hash_tags( $post_ID ) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_post_to_service.html">wpt_post_to_service</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_tweet_this_edit.html">wpt_tweet_this_edit</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_post_to_service.html">wpt_post_to_service</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_post_info.html">wpt_post_info</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_tweet_this_edit.html">wpt_tweet_this_edit</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
 </nav>
 
 <br class="clear">
