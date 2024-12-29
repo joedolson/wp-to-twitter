@@ -387,7 +387,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = fa
 	// if has media, must have a valid attachment.
 	$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
 	$connection = false;
-	if ( $check['x'] && $check_twitter && wpt_service_enabled( $id, 'x' )) {
+	if ( $check['x'] && $check_twitter && wpt_service_enabled( $id, 'x' ) ) {
 		$status     = array(
 			'text' => $check['x'],
 		);
@@ -410,7 +410,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = fa
 		wpt_mail( 'Share Connection Status: Mastodon', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
 	}
 	if ( $check['bluesky'] && $check_bluesky && wpt_service_enabled( $id, 'bluesky' ) ) {
-		$status     = array(
+		$status       = array(
 			'text' => $check['bluesky'],
 		);
 		$connection   = $check_bluesky;
@@ -438,18 +438,19 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = fa
  * @param int      $post_ID Post ID.
  * @param int|bool $auth Author ID or false.
  * @param string   $template Status template.
+ * @param array    $connections Array of active connection information.
  *
  * @return array Array of statuses by service or false, if blocked.
  */
 function wpt_check_service_history( $post_ID, $auth, $template, $connections ) {
-	$checks   = array();
-	foreach( $connections as $service => $connected ) {
+	$checks = array();
+	foreach ( $connections as $service => $connected ) {
 		if ( ! $connected ) {
 			continue;
 		}
 		$status = wpt_truncate_status( $template, array(), $post_ID, false, $auth, $service );
 		// Get last sent to this service.
-		$check  = ( ! $auth ) ? get_option( 'wpt_last_' . $service, '' ) : get_user_meta( $auth, 'wpt_last_' . $service, true );
+		$check = ( ! $auth ) ? get_option( 'wpt_last_' . $service, '' ) : get_user_meta( $auth, 'wpt_last_' . $service, true );
 		// prevent duplicate status updates. Checks whether this text has already been sent.
 		if ( $check === $status && '' !== $status ) {
 			wpt_mail( 'Matched: status update identical', "This Update: $status; Check Update: $check; $auth, $post_ID", $post_ID ); // DEBUG.
