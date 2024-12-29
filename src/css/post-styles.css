@@ -23,6 +23,15 @@
 	margin-bottom: 1rem;
 }
 
+.wpt-options-metabox .notice.inline {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.wpt-options-metabox .notice.inline p {
+	margin-bottom: 0;
+}
+
 .wp-to-twitter .history ul li em {
 	margin-top: .5rem;
 	display: block;

@@ -19,6 +19,9 @@
         // default configuration properties
         var defaults = {
             allowed: 140,
+			x_limit: 280,
+			mastodon_limit: 500,
+			bluesky_limit: 300,
             warning: 25,
             css: 'counter',
             counterElement: 'span',
@@ -29,7 +32,14 @@
         var options = $.extend(defaults, options);
 
         function calculate(obj) {
-            var count = $(obj).val().length;
+            var count   = $(obj).val().length;
+			var allowed = options.allowed;
+			// Service specific limits.
+			var xAllowed        = options.x_limit;
+			var mastodonAllowed = options.mastodon_limit;
+			var blueskyAllowed  = options.bluesky_limit;
+
+			allowed = Math.max( allowed, xAllowed, mastodonAllowed, blueskyAllowed );
             // supported shortcodes
             var urlcount     = $(obj).val().indexOf('#url#') > -1 ? 18 : 0;
             var longurlcount = $(obj).val().indexOf('#longurl#') > -1 ? 14 : 0;
@@ -39,8 +49,27 @@
 				var titlecount = 0;
 			}
             var namecount = $(obj).val().indexOf('#blog#') > -1 ? ($('#wp-admin-bar-site-name a').val().length - 6) : 0;
-			var imgcount  = ( $('#wpt_image_yes:checked').length && $( '#remove-post-thumbnail' ).length ) ? 22 : 0;
-            var available = options.allowed - ( count + urlcount + longurlcount + titlecount + namecount + imgcount );
+			var length    = ( count + urlcount + longurlcount + titlecount + namecount )
+            var available = allowed - length;
+
+			if ( length >= xAllowed ) {
+				$( '.x-notification' ).show();
+				$( '.x-notification span' ).text( xAllowed );
+			} else {
+				$( '.x-notification' ).hide();
+			}
+			if ( length >= mastodonAllowed ) {
+				$( '.mastodon-notification' ).show();
+				$( '.mastodon-notification span' ).text( mastodonAllowed );
+			} else {
+				$( '.mastodon-notification' ).hide();
+			}
+			if ( length >= blueskyAllowed ) {
+				$( '.bluesky-notification' ).show();
+				$( '.bluesky-notification span' ).text( blueskyAllowed );
+			} else {
+				$( '.bluesky-notification' ).hide();
+			}
 
             if ( available <= options.warning && available >= 0 ) {
                 $(obj).next().addClass(options.cssWarning);

@@ -1041,6 +1041,8 @@ function wpt_service_length( $service ) {
 			$default = 280;
 	}
 	$max_warning = '';
+	$service_max = $default;
+	$field_max   = $default;
 	switch ( $service ) {
 		case 'x':
 			$service_max = $default;
@@ -1054,6 +1056,7 @@ function wpt_service_length( $service ) {
 		case 'bluesky':
 			$service_max = 300;
 			$field_max   = 300;
+			break;
 	}
 	if ( ! get_option( 'wpt_' . $service . '_length' ) ) {
 		// If not set, save as option so character counter works correctly.
