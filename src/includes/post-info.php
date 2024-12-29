@@ -24,18 +24,14 @@ function wpt_post_info( $post_ID ) {
 	$category_ids   = array();
 	$values         = array();
 	$values['id']   = $post_ID;
-	// get post author.
+
 	$values['postinfo']      = $post;
 	$values['postContent']   = $post->post_content;
 	$values['authId']        = $post->post_author;
-	$postdate                = $post->post_date;
-	$thisdate                = mysql2date( $dateformat, $postdate );
-	$altdate                 = mysql2date( 'Y-m-d H:i:s', $postdate );
-	$values['_postDate']     = $altdate;
-	$values['postDate']      = $thisdate;
-	$moddate                 = $post->post_modified;
-	$values['_postModified'] = mysql2date( 'Y-m-d H:i:s', $moddate );
-	$values['postModified']  = mysql2date( $dateformat, $moddate );
+	$values['_postDate']     = mysql2date( 'Y-m-d H:i:s', $post->post_date );
+	$values['postDate']      = mysql2date( $dateformat, $post->post_date );
+	$values['_postModified'] = mysql2date( 'Y-m-d H:i:s', $post->post_modified );
+	$values['postModified']  = mysql2date( $dateformat, $post->post_modified );
 	// get first category.
 	$category   = '';
 	$cat_desc   = '';
@@ -71,14 +67,14 @@ function wpt_post_info( $post_ID ) {
 		 *
 		 * @return {array}
 		 */
-		$cat_descs = implode( ' ', apply_filters( 'wpt_twitter_category_descs', $cat_descs ) );
+		$category_descriptions = implode( ' ', apply_filters( 'wpt_twitter_category_descs', $cat_descs ) );
 	} else {
 		$category     = '';
 		$cat_desc     = '';
 		$category_ids = array();
 	}
 	$values['cats']        = $cat_names;
-	$values['cat_descs']   = $cat_descs;
+	$values['cat_descs']   = $category_descriptions;
 	$values['categoryIds'] = $category_ids;
 	$values['category']    = ( $category ) ? html_entity_decode( $category, ENT_COMPAT, $encoding ) : '';
 	$values['cat_desc']    = ( $cat_desc ) ? html_entity_decode( $cat_desc, ENT_COMPAT, $encoding ) : '';
