@@ -74,6 +74,9 @@ function wpt_update_bluesky_settings( $auth = false, $post = false ) {
 				} else {
 					unset( $option['bluesky'] );
 				}
+				if ( isset( $_POST['wpt_bluesky_length'] ) ) {
+					update_option( 'wpt_bluesky_length', intval( $_POST['wpt_bluesky_length'] ) );
+				}
 				update_option( 'wpt_disabled_services', $option );
 				break;
 			case 'wtt_bluesky_disconnect':
@@ -156,7 +159,7 @@ function wtt_connect_bluesky( $auth = false ) {
 		if ( ! $auth ) {
 			$disabled = get_option( 'wpt_disabled_services', array() );
 			$checked  = ( in_array( 'bluesky', array_keys( $disabled ), true ) ) ? ' checked="checked"' : '';
-			$disable  = '<form action="" method="post" class="wpt-connection-form"><p class="checkboxes"><input' . $checked . ' type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_bluesky" value="bluesky"><label for="wpt_disable_bluesky">' . __( 'Disable Posting to Bluesky', 'wp-to-twitter' ) . '</label></p>
+			$disable  = '<form action="" method="post" class="wpt-connection-form">' . wpt_service_length( 'bluesky' ) . '<p class="checkboxes"><input' . $checked . ' type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_bluesky" value="bluesky"><label for="wpt_disable_bluesky">' . __( 'Disable Posting to Bluesky', 'wp-to-twitter' ) . '</label></p>
 			<input type="hidden" name="bluesky_settings" value="wtt_bluesky_update"><input type="submit" name="wtt_bluesky_update" class="button-secondary" value="' . __( 'Save Changes', 'wp-to-twitter' ) . '" />' . $nonce;
 
 			// Translators: Name of the current site.

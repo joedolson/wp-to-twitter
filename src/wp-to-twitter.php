@@ -339,19 +339,13 @@ function wpt_post_to_service( $template, $auth = false, $id = false, $media = fa
  * @return boolean|array False if blocked, array of statuses if attempted.
  */
 function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = false ) {
-	$sentence = wpt_truncate_status( $template, array(), $id );
-	wpt_mail( '5: Status Update Template Processed', "Template: $template; Status: $sentence", $id ); // DEBUG.
-	if ( ! $sentence ) {
-		return false;
-	}
-
 	// If an ID is set but the post is not currently present or published, ignore.
 	$return = array();
 	if ( $id ) {
 		$status = get_post_status( $id );
 		if ( ! $status || 'publish' !== $status ) {
 			$error = __( 'This post is no longer published or has been deleted', 'wp-to-twitter' );
-			wpt_save_error( $id, $auth, $twit, $error, '404', time() );
+			wpt_save_error( $id, $auth, $template, $error, '404', time() );
 			wpt_set_log( 'wpt_status_message', $id, $error, '404' );
 
 			return false;
@@ -381,71 +375,99 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = fa
 	$check_bluesky  = $connections['bluesky'];
 	if ( ! $check_twitter && ! $check_mastodon && ! $check_bluesky ) {
 		$error = __( 'This account is not authorized to post to any services.', 'wp-to-twitter' );
-		wpt_save_error( $id, $auth, $twit, $error, '401', time() );
+		wpt_save_error( $id, $auth, $template, $error, '401', time() );
 		wpt_set_log( 'wpt_status_message', $id, $error, '401' );
 
 		return false;
 	} // exit silently if not authorized.
 
-	$check = ( ! $auth ) ? get_option( 'jd_last_tweet', '' ) : get_user_meta( $auth, 'wpt_last_tweet', true ); // get user's last tweet.
-	// prevent duplicate status updates. Checks whether this text has already been sent.
-	if ( $check === $twit && '' !== $twit ) {
-		wpt_mail( 'Matched: status update identical', "This Update: $twit; Check Update: $check; $auth, $id, $media", $id ); // DEBUG.
-		$error = __( 'This status update is identical to another update recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'All status updates are expected to be unique.', 'wp-to-twitter' );
-		wpt_save_error( $id, $auth, $twit, $error, '403-1', time() );
-		wpt_set_log( 'wpt_status_message', $id, $error, '403' );
+	// Check if this update has already been sent to a given service.
+	$check = wpt_check_service_history( $id, $auth, $template, $connections );
 
-		return false;
-	} elseif ( '' === $twit || ! $twit ) {
-		wpt_mail( 'Status update check: empty sentence', "$twit, $auth, $id, $media", $id ); // DEBUG.
-		$error = __( 'This status update was blank and could not be sent to the API.', 'wp-to-twitter' );
-		wpt_save_error( $id, $auth, $twit, $error, '403-2', time() );
-		wpt_set_log( 'wpt_status_message', $id, $error, '403' );
-
-		return false;
-	} else {
-		// must be designated as media and have a valid attachment.
-		$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
+	// if has media, must have a valid attachment.
+	$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
+	$connection = false;
+	if ( $check['x'] && $check_twitter && wpt_service_enabled( $id, 'x' )) {
 		$status     = array(
-			'text' => $twit,
+			'text' => $check['x'],
 		);
-
-		$connection = false;
-		if ( $check_twitter && wpt_service_enabled( $id, 'x' ) ) {
-			$connection = $check_twitter;
-			$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
-			$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
-			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
-			$return['xcom'] = $response;
-			wpt_mail( 'Share Connection Status: X', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
-		}
-		if ( $check_mastodon && wpt_service_enabled( $id, 'mastodon' ) ) {
-			$connection = $check_mastodon;
-			$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
-			$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
-			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
-			$return['mastodon'] = $response;
-			wpt_mail( 'Share Connection Status: Mastodon', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
-		}
-		if ( $check_bluesky && wpt_service_enabled( $id, 'bluesky' ) ) {
-			$connection   = $check_bluesky;
-			$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
-			$attachment   = ( $attachment ) ? $attachment : wpt_post_attachment( $id );
-			$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
-			$response     = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
-			wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
-			$return['bluesky'] = $response;
-			wpt_mail( 'Share Connection Status: Bluesky', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
-		}
-		if ( ! empty( $return ) ) {
-
-			return $return;
-		} else {
-			wpt_set_log( 'wpt_status_message', $id, __( 'No API connection found.', 'wp-to-twitter' ), '404' );
-
-			return false;
-		}
+		$connection = $check_twitter;
+		$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
+		$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
+		wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
+		$return['xcom'] = $response;
+		wpt_mail( 'Share Connection Status: X', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
 	}
+	if ( $check['mastodon'] && $check_mastodon && wpt_service_enabled( $id, 'mastodon' ) ) {
+		$status     = array(
+			'text' => $check['mastodon'],
+		);
+		$connection = $check_mastodon;
+		$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
+		$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
+		wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
+		$return['mastodon'] = $response;
+		wpt_mail( 'Share Connection Status: Mastodon', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
+	}
+	if ( $check['bluesky'] && $check_bluesky && wpt_service_enabled( $id, 'bluesky' ) ) {
+		$status     = array(
+			'text' => $check['bluesky'],
+		);
+		$connection   = $check_bluesky;
+		$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
+		$attachment   = ( $attachment ) ? $attachment : wpt_post_attachment( $id );
+		$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
+		$response     = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
+		wpt_post_submit_handler( $connection, $response, $id, $auth, $twit );
+		$return['bluesky'] = $response;
+		wpt_mail( 'Share Connection Status: Bluesky', "$twit, $auth, $id, $media, " . print_r( $response, 1 ), $id );
+	}
+	if ( ! empty( $return ) ) {
+
+		return $return;
+	} else {
+		wpt_set_log( 'wpt_status_message', $id, __( 'No API connection found.', 'wp-to-twitter' ), '404' );
+
+		return false;
+	}
+}
+
+/**
+ * Check whether a status update has already been sent.
+ *
+ * @param int      $post_ID Post ID.
+ * @param int|bool $auth Author ID or false.
+ * @param string   $template Status template.
+ *
+ * @return array Array of statuses by service or false, if blocked.
+ */
+function wpt_check_service_history( $post_ID, $auth, $template, $connections ) {
+	$checks   = array();
+	foreach( $connections as $service => $connected ) {
+		if ( ! $connected ) {
+			continue;
+		}
+		$status = wpt_truncate_status( $template, array(), $post_ID, false, $auth, $service );
+		// Get last sent to this service.
+		$check  = ( ! $auth ) ? get_option( 'wpt_last_' . $service, '' ) : get_user_meta( $auth, 'wpt_last_' . $service, true );
+		// prevent duplicate status updates. Checks whether this text has already been sent.
+		if ( $check === $status && '' !== $status ) {
+			wpt_mail( 'Matched: status update identical', "This Update: $status; Check Update: $check; $auth, $post_ID", $post_ID ); // DEBUG.
+			$error = __( 'This status update is identical to another update recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'All status updates are expected to be unique.', 'wp-to-twitter' );
+			wpt_save_error( $post_ID, $auth, $status, $error, '403-1', time() );
+			wpt_set_log( 'wpt_status_message', $post_ID, $error, '403' );
+			$status = false;
+		} elseif ( '' === $status || ! $status ) {
+			wpt_mail( 'Status update check: empty sentence', "$status, $auth, $post_ID", $post_ID ); // DEBUG.
+			$error = __( 'This status update was blank and could not be sent to the API.', 'wp-to-twitter' );
+			wpt_save_error( $post_ID, $auth, $status, $error, '403-2', time() );
+			wpt_set_log( 'wpt_status_message', $post_ID, $error, '403' );
+			$status = false;
+		}
+		$checks[ $service ] = $status;
+	}
+
+	return $checks;
 }
 
 /**
@@ -468,10 +490,13 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 	wpt_mail( "Status Update Response: $http_code / $service", $notice, $id ); // DEBUG.
 	// only save last status if successful.
 	if ( 200 === $http_code ) {
-		if ( ! $auth ) {
-			update_option( 'jd_last_tweet', $twit );
-		} else {
-			update_user_meta( $auth, 'wpt_last_tweet', $twit );
+		$services = array( 'x', 'mastodon', 'bluesky' );
+		foreach ( $services as $service ) {
+			if ( ! $auth ) {
+				update_option( 'wpt_last_' . $service, $twit );
+			} else {
+				update_user_meta( $auth, 'wpt_last_' . $service, $twit );
+			}
 		}
 	}
 	wpt_save_error( $id, $auth, $twit, $notice, $http_code, time() );

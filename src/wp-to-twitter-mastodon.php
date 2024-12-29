@@ -83,6 +83,9 @@ function wpt_update_mastodon_settings( $auth = false, $post = false ) {
 				} else {
 					unset( $option['mastodon'] );
 				}
+				if ( isset( $_POST['wpt_mastodon_length'] ) ) {
+					update_option( 'wpt_mastodon_length', intval( $_POST['wpt_mastodon_length'] ) );
+				}
 				update_option( 'wpt_disabled_services', $option );
 				break;
 			case 'wtt_mastodon_disconnect':
@@ -172,7 +175,7 @@ function wtt_connect_mastodon( $auth = false ) {
 		if ( ! $auth ) {
 			$disabled = get_option( 'wpt_disabled_services', array() );
 			$checked  = ( in_array( 'mastodon', array_keys( $disabled ), true ) ) ? ' checked="checked"' : '';
-			$disable  = '<form action="" method="post" class="wpt-connection-form"><p class="checkboxes"><input' . $checked . ' type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_mastodon" value="mastodon"><label for="wpt_disable_mastodon">' . __( 'Disable Posting to Mastodon', 'wp-to-twitter' ) . '</label></p>
+			$disable  = '<form action="" method="post" class="wpt-connection-form">' . wpt_service_length( 'mastodon' ) . '<p class="checkboxes"><input' . $checked . ' type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_mastodon" value="mastodon"><label for="wpt_disable_mastodon">' . __( 'Disable Posting to Mastodon', 'wp-to-twitter' ) . '</label></p>
 			<input type="hidden" name="mastodon_settings" value="wtt_mastodon_update"><input type="submit" name="wtt_mastodon_update" class="button-secondary" value="' . __( 'Save Changes', 'wp-to-twitter' ) . '" />' . $nonce;
 
 			// Translators: Name of the current site.

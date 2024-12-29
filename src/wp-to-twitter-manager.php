@@ -79,12 +79,6 @@ function wpt_updated_settings() {
 					<p>' . __( 'OAuth Authentication Failed. XPoster was unable to complete a connection with those credentials.', 'wp-to-twitter' ) . '</p>
 				</div>
 			' );
-		} else {
-			print( '
-				<div id="message" class="error fade">
-					<p>' . __( 'OAuth Authentication response not understood.', 'wp-to-twitter' ) . '</p>
-				</div>
-			' );
 		}
 	}
 
@@ -114,12 +108,6 @@ function wpt_updated_settings() {
 			print( '
 				<div id="message" class="error fade">
 					<p>' . __( 'Mastodon authentication Failed. XPoster was unable to complete a connection with those credentials.', 'wp-to-twitter' ) . '</p>
-				</div>
-			' );
-		} else {
-			print( '
-				<div id="message" class="error fade">
-					<p>' . __( 'Mastodon authentication response not understood.', 'wp-to-twitter' ) . '</p>
 				</div>
 			' );
 		}
@@ -152,13 +140,6 @@ function wpt_updated_settings() {
 		} elseif ( 'noconnection' === $bluesky_message ) {
 			wp_admin_notice(
 				__( 'Bluesky authentication Failed. XPoster was unable to complete a connection with those credentials.', 'wp-to-twitter' ),
-				array(
-					'type' => 'error',
-				)
-			);
-		} else {
-			wp_admin_notice(
-				__( 'Bluesky authentication response not understood.', 'wp-to-twitter' ),
 				array(
 					'type' => 'error',
 				)
@@ -345,8 +326,6 @@ function wpt_update_settings() {
 	?>
 	<h1><?php _e( 'XPoster Options', 'wp-to-twitter' ); ?></h1>
 
-	<?php wpt_max_length(); ?>
-
 	<nav class='nav-tab-wrapper' aria-labelledby="wpt-nav">
 		<h2 id="wpt-nav" class="screen-reader-text"><?php _e( 'XPoster Settings', 'wp-to-twitter' ); ?></h2>
 		<?php wpt_settings_tabs(); ?>
@@ -416,7 +395,6 @@ function wpt_update_settings() {
 					?>
 					<div>
 						<?php
-						echo apply_filters( 'wpt_tweet_length', '' );
 						echo apply_filters( 'wpt_auto_tweet', '' );
 						echo apply_filters( 'wpt_pick_shortener', '' );
 						$post_types   = wpt_possible_post_types();
@@ -1044,13 +1022,12 @@ function wpt_do_server_check( $test = false ) {
 	echo $wpt_server_string;
 }
 
-add_filter( 'wpt_tweet_length', 'wpt_tweet_length' );
 /**
  * Add control to set maximum length for a status update.
  *
  * @return string HTML control.
  */
-function wpt_tweet_length() {
+function wpt_service_length( $service ) {
 	$language = get_locale();
 	switch ( $language ) {
 		case 'zh_CN':
@@ -1063,30 +1040,34 @@ function wpt_tweet_length() {
 		default:
 			$default = 280;
 	}
-	if ( ! get_option( 'wpt_tweet_length' ) ) {
-		// If not set, save as option so character counter works correctly.
-		update_option( 'wpt_tweet_length', $default );
+	$max_warning = '';
+	switch ( $service ) {
+		case 'x':
+			$service_max = $default;
+			$field_max   = 25000;
+			$max_warning = "<span id='maxlengthwarning'>" . __( 'X.com Statuses longer than 280 characters require an <a href="https://help.twitter.com/en/using-x/x-premium">X Premium</a> subscription.', 'wp-to-twitter' ) . '</span>';
+			break;
+		case 'mastodon':
+			$service_max = 500;
+			$field_max   = 500;
+			break;
+		case 'bluesky':
+			$service_max = 300;
+			$field_max   = 300;
 	}
-	$update_length = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : $default );
+	if ( ! get_option( 'wpt_' . $service . '_length' ) ) {
+		// If not set, save as option so character counter works correctly.
+		update_option( 'wpt_' . $service . '_length', $service_max );
+	}
+	$update_length = intval( ( get_option( 'wpt_' . $service . '_length' ) ) ? get_option( 'wpt_' . $service . '_length' ) : $default );
 	$control       = "<p class='tweet_length_control'>
-					<label for='wpt_tweet_length'>" . __( 'Maximum Status Length', 'wp-to-twitter' ) . "</label>
-					<input type='number' min='0' max='25000' step='1' value='$update_length' id='wpt_tweet_length' aria-describedby='maxlengthwarning' name='wpt_tweet_length' />
-					<span id='maxlengthwarning'>" . __( 'X.com Statuses longer than 280 characters require an <a href="https://help.twitter.com/en/using-x/x-premium">X Premium</a> subscription.', 'wp-to-twitter' ) . ' ' . __( 'Most Mastodon servers have a 500 character limit.', 'wp-to-twitter' ) . '</span>
-				</p>';
+					<label for='wpt_" . $service . "_length'>" . __( 'Maximum Status Length', 'wp-to-twitter' ) . "</label>
+					<input type='number' min='0' max='$field_max' step='1' value='$update_length' id='wpt_" . $service . "_length' aria-describedby='maxlengthwarning' name='wpt_" . $service . "_length' />
+					$max_warning
+				</p>";
 
 	return $control;
 }
-
-add_filter( 'wpt_settings', 'wpt_set_tweet_length' );
-/**
- * Set the maximum length for a status update.
- */
-function wpt_set_tweet_length() {
-	if ( isset( $_POST['wpt_tweet_length'] ) ) {
-		update_option( 'wpt_tweet_length', intval( $_POST['wpt_tweet_length'] ) );
-	}
-}
-
 
 add_filter( 'wpt_auto_tweet', 'wpt_auto_tweet' );
 /**

@@ -285,6 +285,9 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 				} else {
 					unset( $option['x'] );
 				}
+				if ( isset( $_POST['wpt_x_length'] ) ) {
+					update_option( 'wpt_x_length', intval( $_POST['wpt_x_length'] ) );
+				}
 				update_option( 'wpt_disabled_services', $option );
 				break;
 			case 'wtt_twitter_disconnect':
@@ -442,7 +445,7 @@ function wtt_connect_oauth( $auth = false ) {
 			if ( ! $auth ) {
 				$disabled = get_option( 'wpt_disabled_services', array() );
 				$checked  = ( in_array( 'x', array_keys( $disabled ), true ) ) ? ' checked="checked"' : '';
-				$disable  = '<form action="" method="post" class="wpt-connection-form"><p class="checkboxes"><input' . $checked . ' type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_x" value="x"><label for="wpt_disable_x">' . __( 'Disable Posting to X', 'wp-to-twitter' ) . '</label></p>
+				$disable  = '<form action="" method="post" class="wpt-connection-form">' . wpt_service_length( 'x' ) . '<p class="checkboxes"><input' . $checked . ' type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_x" value="x"><label for="wpt_disable_x">' . __( 'Disable Posting to X', 'wp-to-twitter' ) . '</label></p>
 				<input type="hidden" name="oauth_settings" value="wtt_x_update"><input type="submit" name="wtt_x_update" class="button-secondary" value="' . __( 'Save Changes', 'wp-to-twitter' ) . '" />' . $nonce;
 
 				// Translators: Name of the current site.

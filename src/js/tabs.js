@@ -27,7 +27,7 @@ jQuery(document).ready(function ($) {
 		});
 	};
 
-	var maxLength = $( '#wpt_tweet_length' );
+	var maxLength = $( '#wpt_x_length' );
 	if ( maxLength.val() <= 280 ) {
 		$( '#maxlengthwarning' ).hide();
 	}

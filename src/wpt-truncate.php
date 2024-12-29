@@ -16,16 +16,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Check the current allowed max lengths.
  *
+ * @param string $service Service to get values for.
+ *
  * @return array of URL lengths and params.
  */
-function wpt_max_length() {
+function wpt_max_length( $service ) {
 	$values = array(
 		'http_length'    => 23,
 		'https_length'   => 23,
 		'reserved_chars' => 24,
 	);
 
-	$values['base_length'] = intval( ( get_option( 'wpt_tweet_length' ) ) ? get_option( 'wpt_tweet_length' ) : 140 ) - 1;
+	$values['base_length'] = intval( ( get_option( 'wpt_' . $service . '_length' ) ) ? get_option( 'wpt_' . $service . '_length' ) : 140 ) - 1;
 
 	/**
 	 * Filter the max length array used for calculating status update truncation.
@@ -36,7 +38,7 @@ function wpt_max_length() {
 	 *
 	 * @return {array}
 	 */
-	return apply_filters( 'wpt_max_length', $values );
+	return apply_filters( 'wpt_max_length', $values, $service );
 }
 
 add_filter( 'wpt_tweet_sentence', 'wpt_filter_urls', 10, 2 );
@@ -75,15 +77,16 @@ function wpt_filter_urls( $update, $post_ID ) {
  * @param int     $post_ID Post ID.
  * @param boolean $repost Is this a repost.
  * @param boolean $ref X.com author Reference.
+ * @param string  $service Service being generated for.
  *
  * @return string New text.
  */
-function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = false ) {
+function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = false, $service = 'x' ) {
 	if ( empty( $post ) ) {
 		$post = wpt_post_info( $post_ID );
 	}
 	// media file no longer needs accounting in shortening. 9/22/2016.
-	$maxlength = wpt_max_length();
+	$maxlength = wpt_max_length( $service );
 	$length    = $maxlength['base_length'];
 	/**
 	 * Filter a template prior to parsing tags.
