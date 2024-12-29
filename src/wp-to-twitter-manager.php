@@ -1025,6 +1025,8 @@ function wpt_do_server_check( $test = false ) {
 /**
  * Add control to set maximum length for a status update.
  *
+ * @param string $service Name of service.
+ *
  * @return string HTML control.
  */
 function wpt_service_length( $service ) {
