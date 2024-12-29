@@ -315,15 +315,15 @@ function wpt_service_enabled( $post_ID, $service ) {
 /**
  * Performs the API post to target services. Alias for wpt_post_to_twitter.
  *
- * @param string  $text Text of post to be sent to service.
+ * @param string  $template Template for status update to be sent to service.
  * @param int     $auth Author ID.
  * @param int     $id Post ID.
  * @param boolean $media Whether to upload media attached to the post specified in $id.
  *
  * @return boolean|array False if blocked, array of statuses if attempted.
  */
-function wpt_post_to_service( $text, $auth = false, $id = false, $media = false ) {
-	$return = wpt_post_to_twitter( $text, $auth, $id, $media );
+function wpt_post_to_service( $template, $auth = false, $id = false, $media = false ) {
+	$return = wpt_post_to_twitter( $template, $auth, $id, $media );
 
 	return $return;
 }
@@ -331,14 +331,20 @@ function wpt_post_to_service( $text, $auth = false, $id = false, $media = false 
 /**
  * Performs the API post to target services.
  *
- * @param string  $twit Text of post to be sent to service.
+ * @param string  $template Template for status update to be sent to service.
  * @param int     $auth Author ID.
  * @param int     $id Post ID.
  * @param boolean $media Whether to upload media attached to the post specified in $id.
  *
  * @return boolean|array False if blocked, array of statuses if attempted.
  */
-function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false ) {
+function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = false ) {
+	$sentence = wpt_truncate_status( $template, array(), $id );
+	wpt_mail( '5: Status Update Template Processed', "Template: $template; Status: $sentence", $id ); // DEBUG.
+	if ( ! $sentence ) {
+		return false;
+	}
+
 	// If an ID is set but the post is not currently present or published, ignore.
 	$return = array();
 	if ( $id ) {
@@ -693,7 +699,6 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	wpt_mail( '1: Status Update should send: ' . $post_this, "Default: $text_default; Publication method: $type", $post_ID ); // DEBUG.
 	if ( $send_update ) {
 		$post_info       = wpt_post_info( $post_ID );
-		$media           = wpt_post_with_media( $post_ID, $post_info );
 		$debug_post_info = $post_info;
 		unset( $debug_post_info['post_content'] );
 		unset( $debug_post_info['postContent'] );
@@ -749,7 +754,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			// identify whether limited by category/taxonomy.
 			$continue = wpt_category_limit( $post_type, $post_info, $post_ID );
 			if ( false === $continue ) {
-				wpt_mail( '4b: XPoster Pro: Limited by term filters', 'This post was rejected by a taxonomy/term filter', $post_ID );
+				wpt_mail( '4b: XPoster Pro: Limited by term filters', 'This post was limited by a taxonomy/term filter', $post_ID );
 				return false;
 			}
 			// create status update and ID whether current action is edit or new.
@@ -800,10 +805,9 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			}
 			if ( $newpost || $oldpost ) {
 				$template = ( '' !== $custom_tweet ) ? $custom_tweet : $nptext;
-				$sentence = wpt_truncate_status( $template, $post_info, $post_ID );
-				wpt_mail( '5: Status Update Template Processed', "Template: $template; Status: $sentence", $post_ID ); // DEBUG.
 			}
-			if ( '' !== $sentence ) {
+			if ( '' !== $template ) {
+				$media = wpt_post_with_media( $post_ID );
 				/**
 				 * Execute an action when a status update is executed.
 				 *
@@ -815,7 +819,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				 * @param {bool}     $media Whether media should be included.
 				 */
 				do_action( 'wpt_post_to_service', $post_ID, $post_info, $template, $media );
-				wpt_post_to_service( $sentence, false, $post_ID, $media );
+				wpt_post_to_service( $template, false, $post_ID, $media );
 			}
 		}
 	}

@@ -79,6 +79,9 @@ function wpt_filter_urls( $update, $post_ID ) {
  * @return string New text.
  */
 function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = false ) {
+	if ( empty( $post ) ) {
+		$post = wpt_post_info( $post_ID );
+	}
 	// media file no longer needs accounting in shortening. 9/22/2016.
 	$maxlength = wpt_max_length();
 	$length    = $maxlength['base_length'];
