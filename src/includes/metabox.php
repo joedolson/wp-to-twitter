@@ -396,8 +396,8 @@ function wpt_display_metabox_status_buttons( $is_pro ) {
 	<div class='wpt_log' aria-live='assertive'></div>
 	<?php
 	if ( 'pro' === $is_pro ) {
-		$datavalue  = gmdate( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
-		$timevalue  = date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
+		$datavalue = gmdate( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
+		$timevalue = date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
 		?>
 		<div id="wpt_set_tweet_time">
 			<div class="wpt-date-field">

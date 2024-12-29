@@ -479,11 +479,11 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 						echo $form_start;
 						?>
 						<p>
-							<label for="joturllogin"><?php esc_html_e( "Your jotURL public API key:", 'wp-to-twitter' ); ?></label><br>
+							<label for="joturllogin"><?php esc_html_e( 'Your jotURL public API key:', 'wp-to-twitter' ); ?></label><br>
 							<input type="text" name="joturllogin" id="joturllogin" value="<?php echo esc_attr( get_option( 'joturllogin' ) ); ?>"/>
 						</p>
 						<p>
-							<label for="joturlapi"><?php esc_html_e( "Your jotURL private API key:", 'wp-to-twitter' ); ?></label><br>
+							<label for="joturlapi"><?php esc_html_e( 'Your jotURL private API key:', 'wp-to-twitter' ); ?></label><br>
 							<input type="text" name="joturlapi" id="joturlapi" size="40" value="<?php echo esc_attr( get_option( 'joturlapi' ) ); ?>"/>
 						</p>
 						<p>
