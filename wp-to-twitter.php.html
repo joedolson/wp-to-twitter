@@ -341,15 +341,15 @@ function wpt_service_enabled( $post_ID, $service ) {
 /**
  * Performs the API post to target services. Alias for wpt_post_to_twitter.
  *
- * @param string  $text Text of post to be sent to service.
+ * @param string  $template Template for status update to be sent to service.
  * @param int     $auth Author ID.
  * @param int     $id Post ID.
  * @param boolean $media Whether to upload media attached to the post specified in $id.
  *
  * @return boolean|array False if blocked, array of statuses if attempted.
  */
-function wpt_post_to_service( $text, $auth = false, $id = false, $media = false ) {
-	$return = wpt_post_to_twitter( $text, $auth, $id, $media );
+function wpt_post_to_service( $template, $auth = false, $id = false, $media = false ) {
+	$return = wpt_post_to_twitter( $template, $auth, $id, $media );
 
 	return $return;
 }
@@ -357,14 +357,20 @@ function wpt_post_to_service( $text, $auth = false, $id = false, $media = false 
 /**
  * Performs the API post to target services.
  *
- * @param string  $twit Text of post to be sent to service.
+ * @param string  $template Template for status update to be sent to service.
  * @param int     $auth Author ID.
  * @param int     $id Post ID.
  * @param boolean $media Whether to upload media attached to the post specified in $id.
  *
  * @return boolean|array False if blocked, array of statuses if attempted.
  */
-function wpt_post_to_twitter( $twit, $auth = false, $id = false, $media = false ) {
+function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = false ) {
+	$sentence = wpt_truncate_status( $template, array(), $id );
+	wpt_mail( '5: Status Update Template Processed', "Template: $template; Status: $sentence", $id ); // DEBUG.
+	if ( ! $sentence ) {
+		return false;
+	}
+
 	// If an ID is set but the post is not currently present or published, ignore.
 	$return = array();
 	if ( $id ) {
@@ -709,17 +715,16 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	}
 	if ( '0' === get_option( 'jd_tweet_default' ) ) {
 		// If post this value is not set or equals 'yes'.
-		$default      = ( 'no' !== $post_this ) ? true : false;
+		$send_update  = ( 'no' !== $post_this ) ? true : false;
 		$text_default = 'no';
 	} else {
 		// If post this is set and is equal to yes.
-		$default      = ( 'yes' === $post_this ) ? true : false;
+		$send_update  = ( 'yes' === $post_this ) ? true : false;
 		$text_default = 'yes';
 	}
 	wpt_mail( '1: Status Update should send: ' . $post_this, "Default: $text_default; Publication method: $type", $post_ID ); // DEBUG.
-	if ( $default ) { // default switch: depend on default settings.
+	if ( $send_update ) {
 		$post_info       = wpt_post_info( $post_ID );
-		$media           = wpt_post_with_media( $post_ID, $post_info );
 		$debug_post_info = $post_info;
 		unset( $debug_post_info['post_content'] );
 		unset( $debug_post_info['postContent'] );
@@ -741,9 +746,10 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			return false;
 		}
 		/**
-		 * Return true to ignore this post based on POST data. Default false.
+		 * Return true to block this post based on POST data. Default false.
 		 *
 		 * @hook wpt_filter_post_data
+		 *
 		 * @param {bool} $filter True if this post should not have a status update sent.
 		 * @param {array} $post POST global.
 		 *
@@ -753,7 +759,6 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 		if ( $filter ) {
 			return false;
 		}
-		$post_type = $post_info['postType'];
 		if ( 'future' === $type || 'future' === get_post_meta( $post_ID, 'wpt_publishing', true ) ) {
 			$new = 1; // if this is a future action, then it should be published regardless of relationship.
 			wpt_mail( '4a: Post is a scheduled post', 'See Post Info data', $post_ID );
@@ -769,13 +774,13 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			$new = 1;
 		}
 		// can't catch posts that were set to a past date as a draft, then published.
+		$post_type          = $post_info['postType'];
 		$post_type_settings = get_option( 'wpt_post_types' );
-		$post_types         = array_keys( $post_type_settings );
-		if ( in_array( $post_type, $post_types, true ) ) {
+		if ( wpt_allowed_post_types( $post_type ) ) {
 			// identify whether limited by category/taxonomy.
 			$continue = wpt_category_limit( $post_type, $post_info, $post_ID );
 			if ( false === $continue ) {
-				wpt_mail( '4b: XPoster Pro: Limited by term filters', 'This post was rejected by a taxonomy/term filter', $post_ID );
+				wpt_mail( '4b: XPoster Pro: Limited by term filters', 'This post was limited by a taxonomy/term filter', $post_ID );
 				return false;
 			}
 			// create status update and ID whether current action is edit or new.
@@ -788,7 +793,18 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			if ( 0 === $new || true === $is_inline_edit ) {
 				// if this is an old post and editing updates are enabled.
 				if ( '1' === get_option( 'jd_tweet_default_edit' ) ) {
-					$post_this = apply_filters( 'wpt_tweet_this_edit', $post_this, $_POST );
+					/**
+					 * Filter whether a post defaults to send updates on edit.
+					 *
+					 * @hook wpt_tweet_this_edit
+					 *
+					 * @param {string} $post_this 'yes' or 'no'.
+					 * @param {array}  $_POST POST global.
+					 * @param {int}    $post_ID Post ID.
+					 *
+					 * @return {string} 'yes' to continue with posting.
+					 */
+					$post_this = apply_filters( 'wpt_tweet_this_edit', $post_this, $_POST, $post_ID );
 					if ( 'yes' !== $post_this ) {
 						return false;
 					}
@@ -815,10 +831,9 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			}
 			if ( $newpost || $oldpost ) {
 				$template = ( '' !== $custom_tweet ) ? $custom_tweet : $nptext;
-				$sentence = wpt_truncate_status( $template, $post_info, $post_ID );
-				wpt_mail( '5: Status Update Template Processed', "Template: $template; Status: $sentence", $post_ID ); // DEBUG.
 			}
-			if ( '' !== $sentence ) {
+			if ( '' !== $template ) {
+				$media = wpt_post_with_media( $post_ID );
 				/**
 				 * Execute an action when a status update is executed.
 				 *
@@ -830,7 +845,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				 * @param {bool}     $media Whether media should be included.
 				 */
 				do_action( 'wpt_post_to_service', $post_ID, $post_info, $template, $media );
-				wpt_post_to_service( $sentence, false, $post_ID, $media );
+				wpt_post_to_service( $template, false, $post_ID, $media );
 			}
 		}
 	}
@@ -1158,11 +1173,17 @@ function wpt_in_post_type( $id ) {
 /**
  * Get array of post types that can be updated.
  *
- * @return array
+ * @param string|bool $post_type Name of post type to check if a specific type is allowed or false to return array.
+ *
+ * @return array|bool
  */
-function wpt_allowed_post_types() {
+function wpt_allowed_post_types( $post_type = false ) {
 	$post_type_settings = get_option( 'wpt_post_types' );
-	$allowed_types      = array();
+	$post_types         = array_keys( $post_type_settings );
+	if ( $post_type ) {
+		return in_array( $post_type, $post_types, true ) ? true : false;
+	}
+	$allowed_types = array();
 	if ( is_array( $post_type_settings ) &amp;&amp; ! empty( $post_type_settings ) ) {
 		foreach ( $post_type_settings as $type => $settings ) {
 			if ( '1' === (string) $settings['post-edited-update'] || '1' === (string) $settings['post-published-update'] ) {
@@ -1436,7 +1457,7 @@ add_action( 'admin_notices', 'wpt_needs_connection' );
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_post_to_service.html">wpt_post_to_service</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_post_to_service.html">wpt_post_to_service</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_tweet_this_edit.html">wpt_tweet_this_edit</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
 </nav>
 
 <br class="clear">
