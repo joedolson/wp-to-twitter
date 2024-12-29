@@ -683,15 +683,15 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	}
 	if ( '0' === get_option( 'jd_tweet_default' ) ) {
 		// If post this value is not set or equals 'yes'.
-		$default      = ( 'no' !== $post_this ) ? true : false;
+		$send_update  = ( 'no' !== $post_this ) ? true : false;
 		$text_default = 'no';
 	} else {
 		// If post this is set and is equal to yes.
-		$default      = ( 'yes' === $post_this ) ? true : false;
+		$send_update  = ( 'yes' === $post_this ) ? true : false;
 		$text_default = 'yes';
 	}
 	wpt_mail( '1: Status Update should send: ' . $post_this, "Default: $text_default; Publication method: $type", $post_ID ); // DEBUG.
-	if ( $default ) { // default switch: depend on default settings.
+	if ( $send_update ) {
 		$post_info       = wpt_post_info( $post_ID );
 		$media           = wpt_post_with_media( $post_ID, $post_info );
 		$debug_post_info = $post_info;
@@ -715,9 +715,10 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			return false;
 		}
 		/**
-		 * Return true to ignore this post based on POST data. Default false.
+		 * Return true to block this post based on POST data. Default false.
 		 *
 		 * @hook wpt_filter_post_data
+		 *
 		 * @param {bool} $filter True if this post should not have a status update sent.
 		 * @param {array} $post POST global.
 		 *
@@ -727,7 +728,6 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 		if ( $filter ) {
 			return false;
 		}
-		$post_type = $post_info['postType'];
 		if ( 'future' === $type || 'future' === get_post_meta( $post_ID, 'wpt_publishing', true ) ) {
 			$new = 1; // if this is a future action, then it should be published regardless of relationship.
 			wpt_mail( '4a: Post is a scheduled post', 'See Post Info data', $post_ID );
@@ -743,9 +743,9 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			$new = 1;
 		}
 		// can't catch posts that were set to a past date as a draft, then published.
+		$post_type          = $post_info['postType'];
 		$post_type_settings = get_option( 'wpt_post_types' );
-		$post_types         = array_keys( $post_type_settings );
-		if ( in_array( $post_type, $post_types, true ) ) {
+		if ( wpt_allowed_post_types( $post_type ) ) {
 			// identify whether limited by category/taxonomy.
 			$continue = wpt_category_limit( $post_type, $post_info, $post_ID );
 			if ( false === $continue ) {
@@ -1132,11 +1132,17 @@ function wpt_in_post_type( $id ) {
 /**
  * Get array of post types that can be updated.
  *
- * @return array
+ * @param string|bool $post_type Name of post type to check if a specific type is allowed or false to return array.
+ *
+ * @return array|bool
  */
-function wpt_allowed_post_types() {
+function wpt_allowed_post_types( $post_type = false ) {
 	$post_type_settings = get_option( 'wpt_post_types' );
-	$allowed_types      = array();
+	$post_types         = array_keys( $post_type_settings );
+	if ( $post_type ) {
+		return in_array( $post_type, $post_types, true ) ? true : false;
+	}
+	$allowed_types = array();
 	if ( is_array( $post_type_settings ) && ! empty( $post_type_settings ) ) {
 		foreach ( $post_type_settings as $type => $settings ) {
 			if ( '1' === (string) $settings['post-edited-update'] || '1' === (string) $settings['post-published-update'] ) {
