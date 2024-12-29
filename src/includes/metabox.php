@@ -36,21 +36,20 @@ function wpt_add_twitter_inner_box( $post ) {
 	$nonce = wp_create_nonce( 'wp-to-twitter-nonce' );
 	?>
 	<div>
-		<input type="hidden" name="wp_to_twitter_nonce" value="<?php echo $nonce; ?>">
+		<input type="hidden" name="wp_to_twitter_nonce" value="<?php echo esc_attr( $nonce ); ?>">
 		<input type="hidden" name="wp_to_twitter_meta" value="true">
 	</div>
 	<?php
 	if ( current_user_can( 'wpt_can_tweet' ) ) {
 		$is_pro = ( function_exists( 'wpt_pro_exists' ) ) ? 'pro' : 'free';
 		?>
-		<div class='wp-to-twitter <?php echo $is_pro; ?>'>
+		<div class='wp-to-twitter <?php echo esc_attr( $is_pro ); ?>'>
 		<?php
 		$options = get_option( 'wpt_post_types' );
 		$status  = $post->post_status;
 		wpt_show_metabox_message( $post, $options );
 		// Show switch to flip update status.
 		$switch = wpt_show_post_switch( $post, $options );
-		echo $switch;
 		echo '<div class="wpt-options-metabox">';
 		$user_tweet = apply_filters( 'wpt_user_text', '', $status );
 		// Formulate Template display.
@@ -68,20 +67,20 @@ function wpt_add_twitter_inner_box( $post ) {
 			$custom_update = get_post_meta( $post->ID, '_jd_twitter', true );
 			?>
 			<p class='jtw'>
-				<label for="wpt_custom_tweet"><?php _e( 'Custom Status Update', 'wp-to-twitter' ); ?></label><br/>
+				<label for="wpt_custom_tweet"><?php esc_html_e( 'Custom Status Update', 'wp-to-twitter' ); ?></label><br/>
 				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_update ) ); ?></textarea>
 				<?php echo apply_filters( 'wpt_custom_box', '', $template, $post->ID ); ?>
 			</p>
-			<div role="alert" class="x-notification notice inline notice-info hidden"><p><?php _e( 'X length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
-			<div role="alert" class="bluesky-notification notice inline notice-info hidden"><p><?php _e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
-			<div role="alert" class="mastodon-notification notice inline notice-info hidden"><p><?php _e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
+			<div role="alert" class="x-notification notice inline notice-info hidden"><p><?php esc_html_e( 'X length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
+			<div role="alert" class="bluesky-notification notice inline notice-info hidden"><p><?php esc_html_e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
+			<div role="alert" class="mastodon-notification notice inline notice-info hidden"><p><?php esc_html_e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
 			<div class="wpt-template-resources wpt-flex">
 				<p class='wpt-template'>
-					<?php _e( 'Default template:', 'wp-to-twitter' ); ?><br /><code><?php echo stripcslashes( $template ); ?></code>
+					<?php esc_html_e( 'Default template:', 'wp-to-twitter' ); ?><br /><code><?php echo stripcslashes( esc_html( $template ) ); ?></code>
 					<?php echo apply_filters( 'wpt_template_block', '', $template, $post->ID ); ?>
 				</p>
 				<div class='wptab' id='notes'>
-					<h3><?php _e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
+					<h3><?php esc_html_e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
 					<ul class="inline-list">
 					<?php
 					$tags = wpt_tags();
@@ -105,7 +104,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			?>
 			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $template ); ?>' />
 			<p class='wpt-template'>
-				<?php _e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo stripcslashes( $template ); ?></code>
+				<?php esc_html_e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo stripcslashes( $template ); ?></code>
 				<?php echo apply_filters( 'wpt_template_block', '', $template, $post->ID ); ?>
 			</p>
 			<?php
@@ -130,7 +129,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			}
 			if ( ! current_user_can( 'wpt_twitter_custom' ) && ! current_user_can( 'manage_options' ) ) {
 				?>
-				<p><?php _e( 'Customizing XPoster options is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
+				<p><?php esc_html_e( 'Customizing XPoster options is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
 				<?php
 				if ( 'pro' === $is_pro ) {
 					wpt_schedule_values( $post->ID, 'hidden' );
@@ -169,10 +168,10 @@ function wpt_show_history( $post_id ) {
 	if ( ! empty( $previous_tweets ) || ! empty( $failed_tweets ) ) {
 		?>
 	<p class='panel-toggle'>
-		<button type="button" aria-expanded="false" class='history-toggle button-secondary'><span class='dashicons dashicons-plus' aria-hidden="true"></span><?php _e( 'View Update History', 'wp-to-twitter' ); ?></button>
+		<button type="button" aria-expanded="false" class='history-toggle button-secondary'><span class='dashicons dashicons-plus' aria-hidden="true"></span><?php esc_html_e( 'View Update History', 'wp-to-twitter' ); ?></button>
 	</p>
 	<div class='history'>
-	<h4 class='wpt-past-updates'><em><?php _e( 'Previous Updates', 'wp-to-twitter' ); ?>:</em></h4>
+	<h4 class='wpt-past-updates'><em><?php esc_html_e( 'Previous Updates', 'wp-to-twitter' ); ?>:</em></h4>
 	<ul>
 		<?php
 		$has_history   = false;
@@ -255,13 +254,13 @@ function wpt_meta_box_support( $is_pro = 'free' ) {
 	if ( 'pro' === $is_pro ) {
 		?>
 		<p>
-			<a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php _e( 'Get Support', 'wp-to-twitter' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php esc_html_e( 'Get Support', 'wp-to-twitter' ); ?></a>
 		</p>
 		<?php
 	} else {
 		?>
 		<p class="link-highlight">
-			<a href="https://xposterpro.com/awesome/xposter-pro/"><?php _e( 'Buy XPoster Pro', 'wp-to-twitter' ); ?></a>
+			<a href="https://xposterpro.com/awesome/xposter-pro/"><?php esc_html_e( 'Buy XPoster Pro', 'wp-to-twitter' ); ?></a>
 		</p>
 		<?php
 	}
@@ -328,8 +327,6 @@ function wpt_get_post_update_status( $post, $options ) {
  *
  * @param WP_Post $post Post object.
  * @param array   $options Status update options.
- *
- * @return string
  */
 function wpt_show_post_switch( $post, $options ) {
 	$post_this = wpt_get_post_update_status( $post, $options );
@@ -338,15 +335,17 @@ function wpt_show_post_switch( $post, $options ) {
 		// "no" means 'Don't Post' (is checked)
 		$nochecked  = ( 'no' === $post_this ) ? ' checked="checked"' : '';
 		$yeschecked = ( 'yes' === $post_this ) ? ' checked="checked"' : '';
-		$toggle     = "<p class='toggle-btn-group'>
-			<input type='radio' name='_wpt_post_this' value='no' id='jtn'$nochecked /><label for='jtn'>" . __( "Don't Post", 'wp-to-twitter' ) . "</label>
-			<input type='radio' name='_wpt_post_this' value='yes' id='jty'$yeschecked /><label for='jty'>" . __( 'Post', 'wp-to-twitter' ) . '</label>
-		</p>';
+		?>
+		<p class='toggle-btn-group'>
+			<input type='radio' name='_wpt_post_this' value='no' id='jtn'><?php echo esc_attr( $nochecked ); ?> /><label for='jtn'><?php esc_html_e( "Don't Post", 'wp-to-twitter' ); ?></label>
+			<input type='radio' name='_wpt_post_this' value='yes' id='jty'<?php echo esc_attr( $yeschecked ); ?> /><label for='jty'><?php esc_html_e( 'Post', 'wp-to-twitter' ); ?></label>
+		</p>
+		<?php
 	} else {
-		$toggle = "<input type='hidden' name='_wpt_post_this' value='$post_this' />";
+		?>
+		<input type='hidden' name='_wpt_post_this' value='<?php echo esc_attr( $post_this ); ?>' />
+		<?php
 	}
-
-	return $toggle;
 }
 
 /**

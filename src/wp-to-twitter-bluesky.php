@@ -127,7 +127,7 @@ function wtt_connect_bluesky( $auth = false ) {
 		$submit = ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . __( 'Connect to Bluesky', 'wp-to-twitter' ) . '" /></p>' : '';
 		print( '
 			<h3 class="wpt-has-link"><span>' . __( 'Connect to Bluesky', 'wp-to-twitter' ) . '</span> <a href="https://xposterpro.com/connecting-xposter-and-bluesky/" class="button button-secondary">' . __( 'Instructions', 'wp-to-twitter' ) . '</a></h3>
-			<div class="inside ' . $class . '">
+			<div class="inside ' . esc_attr( $class ) . '">
 			' . $form . '
 				<ol class="wpt-oauth-settings">
 					<li>' . __( 'Navigate to Settings > Privacy and Security > App passwords in your Bluesky account.', 'wp-to-twitter' ) . '</li>

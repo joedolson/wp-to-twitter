@@ -324,10 +324,10 @@ function wpt_update_settings() {
 		<?php
 	}
 	?>
-	<h1><?php _e( 'XPoster Options', 'wp-to-twitter' ); ?></h1>
+	<h1><?php esc_html_e( 'XPoster Options', 'wp-to-twitter' ); ?></h1>
 
 	<nav class='nav-tab-wrapper' aria-labelledby="wpt-nav">
-		<h2 id="wpt-nav" class="screen-reader-text"><?php _e( 'XPoster Settings', 'wp-to-twitter' ); ?></h2>
+		<h2 id="wpt-nav" class="screen-reader-text"><?php esc_html_e( 'XPoster Settings', 'wp-to-twitter' ); ?></h2>
 		<?php wpt_settings_tabs(); ?>
 	</nav>
 	<div id="wpt_settings_page" class="postbox-container jcd-wide">
@@ -363,7 +363,7 @@ function wpt_update_settings() {
 				<div class="ui-sortable meta-box-sortables">
 					<div class="postbox">
 						<div class="inside purchase">
-							<h3><strong><?php _e( 'XPoster Pro', 'wp-to-twitter' ); ?></strong></h3>
+							<h3><strong><?php esc_html_e( 'XPoster Pro', 'wp-to-twitter' ); ?></strong></h3>
 							<p>
 								Are you wasting time switching between social media and WordPress to promote your posts? Do you have to delete updates because you accidentally published a post? Do you want to be able to schedule your post to send next week, directly from your post editor? XPoster Pro will help you out!
 							</p>
@@ -385,7 +385,7 @@ function wpt_update_settings() {
 		?>
 	<div class="ui-sortable meta-box-sortables">
 		<div class="postbox">
-			<h3><span><?php _e( 'Status Update Templates', 'wp-to-twitter' ); ?></span></h3>
+			<h3><span><?php esc_html_e( 'Status Update Templates', 'wp-to-twitter' ); ?></span></h3>
 
 			<div class="inside wpt-settings">
 				<form method="post" action="">
@@ -416,7 +416,7 @@ function wpt_update_settings() {
 							?>
 							<div class='wptab wpt_types wpt_<?php echo esc_attr( $slug ); ?>' aria-labelledby='tab_wpt_<?php echo esc_attr( $slug ); ?>' role="tabpanel" id='wpt_<?php echo esc_attr( $slug ); ?>'>
 							<fieldset>
-								<legend class="screen-reader-text"><?php _e( 'Status Templates', 'wp-to-twitter' ); ?></legend>
+								<legend class="screen-reader-text"><?php esc_html_e( 'Status Templates', 'wp-to-twitter' ); ?></legend>
 								<p>
 									<input type="checkbox" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-published-update]" id="<?php echo esc_attr( $slug ); ?>-post-published-update" value="1" <?php echo wpt_checkbox( 'wpt_post_types', $slug, 'post-published-update' ); ?> />
 									<label for="<?php echo esc_attr( $slug ); ?>-post-published-update"><strong>
@@ -461,12 +461,12 @@ function wpt_update_settings() {
 							?>
 						<div class='wptab wpt_types wpt_links' id="wpt_links">
 							<fieldset>
-								<legend class="screen-reader-text"><span><?php _e( 'Links', 'wp-to-twitter' ); ?></span></legend>
+								<legend class="screen-reader-text"><span><?php esc_html_e( 'Links', 'wp-to-twitter' ); ?></span></legend>
 								<p>
 									<input type="checkbox" name="jd_twit_blogroll" id="jd_twit_blogroll" value="1" <?php echo wpt_checkbox( 'jd_twit_blogroll' ); ?> />
-									<label for="jd_twit_blogroll"><strong><?php _e( 'Send status update when you post a link', 'wp-to-twitter' ); ?></strong></label><br/>
-									<label for="newlink-published-text"><?php _e( 'Text for new link updates:', 'wp-to-twitter' ); ?></label>
-									<input aria-describedby="newlink-published-text-label" type="text" class="wpt-template" name="newlink-published-text" id="newlink-published-text" class="widefat" maxlength="120" value="<?php echo esc_attr( stripslashes( get_option( 'newlink-published-text' ) ) ); ?>"/><br/><span id="newlink-published-text-label"><?php _e( 'Available shortcodes: <code>#url#</code>, <code>#title#</code>, and <code>#description#</code>.', 'wp-to-twitter' ); ?></span>
+									<label for="jd_twit_blogroll"><strong><?php esc_html_e( 'Send status update when you post a link', 'wp-to-twitter' ); ?></strong></label><br/>
+									<label for="newlink-published-text"><?php esc_html_e( 'Text for new link updates:', 'wp-to-twitter' ); ?></label>
+									<input aria-describedby="newlink-published-text-label" type="text" class="wpt-template" name="newlink-published-text" id="newlink-published-text" class="widefat" maxlength="120" value="<?php echo esc_attr( stripslashes( get_option( 'newlink-published-text' ) ) ); ?>"/><br/><span id="newlink-published-text-label"><?php echo wp_kses_post( 'Available shortcodes: <code>#url#</code>, <code>#title#</code>, and <code>#description#</code>.', 'wp-to-twitter' ); ?></span>
 								</p>
 							</fieldset>
 						</div>
@@ -485,40 +485,40 @@ function wpt_update_settings() {
 
 	<div class="ui-sortable meta-box-sortables">
 			<div class="postbox">
-				<h3><span><?php _e( 'Status Template Tags', 'wp-to-twitter' ); ?></span></h3>
+				<h3><span><?php esc_html_e( 'Status Template Tags', 'wp-to-twitter' ); ?></span></h3>
 				<div class="inside">
 					<ul>
-						<li><?php _e( '<code>#title#</code>: the title of your blog post', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#blog#</code>: the title of your blog', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#post#</code>: a short excerpt of the post content', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#category#</code>: the first selected category for the post', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#cat_desc#</code>: custom value from the category description field', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#date#</code>: the post date', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#modified#</code>: the post modified date', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#url#</code>: the post URL', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#longurl#</code>: the unshortened post URL', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#author#</code>: the post author (@reference if available, otherwise display name)', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#displayname#</code>: post author\'s display name', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#account#</code>: the twitter @reference for the account (or the author, if author settings are enabled and set.)', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#@#</code>: the twitter @reference for the author or blank, if not set', 'wp-to-twitter' ); ?></li>
-						<li><?php _e( '<code>#tags#</code>: your tags modified into hashtags.', 'wp-to-twitter' ); ?></li>
+						<li><code>#title#</code>: <?php esc_html_e( 'the title of your blog post', 'wp-to-twitter' ); ?></li>
+						<li><code>#blog#</code>: <?php esc_html_e( 'the title of your blog', 'wp-to-twitter' ); ?></li>
+						<li><code>#post#</code>: <?php esc_html_e( 'a short excerpt of the post content', 'wp-to-twitter' ); ?></li>
+						<li><code>#category#</code>: <?php esc_html_e( 'the first selected category for the post', 'wp-to-twitter' ); ?></li>
+						<li><code>#cat_desc#</code>: <?php esc_html_e( 'custom value from the category description field', 'wp-to-twitter' ); ?></li>
+						<li><code>#date#</code>: <?php esc_html_e( 'the post date', 'wp-to-twitter' ); ?></li>
+						<li><code>#modified#</code>: <?php esc_html_e( 'the post modified date', 'wp-to-twitter' ); ?></li>
+						<li><code>#url#</code>: <?php esc_html_e( 'the post URL', 'wp-to-twitter' ); ?></li>
+						<li><code>#longurl#</code>: <?php esc_html_e( 'the unshortened post URL', 'wp-to-twitter' ); ?></li>
+						<li><code>#author#</code>: <?php esc_html_e( 'the post author (@reference if available, otherwise display name)', 'wp-to-twitter' ); ?></li>
+						<li><code>#displayname#</code>: <?php esc_html_e( 'post author\'s display name', 'wp-to-twitter' ); ?></li>
+						<li><code>#account#</code>: <?php esc_html_e( 'the twitter @reference for the account (or the author, if author settings are enabled and set.)', 'wp-to-twitter' ); ?></li>
+						<li><code>#@#</code>: <?php esc_html_e( 'the twitter @reference for the author or blank, if not set', 'wp-to-twitter' ); ?></li>
+						<li><code>#tags#</code>: <?php esc_html_e( 'your tags modified into hashtags.', 'wp-to-twitter' ); ?></li>
 						<?php
 						if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 							?>
-						<li><?php _e( '<code>#reference#</code>: Used only in co-tweeting. @reference to main account when posted to author account, @reference to author account in post to main account.', 'wp-to-twitter' ); ?></li>
+						<li><code>#reference#</code>: <?php esc_html_e( 'Used only in co-tweeting. @reference to main account when posted to author account, @reference to author account in post to main account.', 'wp-to-twitter' ); ?></li>
 							<?php
 						}
 						?>
 					</ul>
 					<p>
-					<?php _e( 'Create custom shortcodes and access WordPress custom fields by using square brackets and the name of your custom field.', 'wp-to-twitter' ); ?>
+					<?php esc_html_e( 'Create custom shortcodes and access WordPress custom fields by using square brackets and the name of your custom field.', 'wp-to-twitter' ); ?>
 					<br />
-					<?php _e( '<strong>Example:</strong> <code>[[custom_field]]</code>', 'wp-to-twitter' ); ?>
+					<strong><?php esc_html_e( 'Example:', 'wp-to-twitter' ); ?></strong> <code>[[custom_field]]</code>
 					</p>
 					<p>
-					<?php _e( 'Create custom shortcodes and access the post author\'s custom user meta fields by using curly brackets and the name of the custom field.', 'wp-to-twitter' ); ?>
+					<?php esc_html_e( 'Create custom shortcodes and access the post author\'s custom user meta fields by using curly brackets and the name of the custom field.', 'wp-to-twitter' ); ?>
 					<br />
-					<?php _e( '<strong>Example:</strong> <code>{{user_meta}}</code>', 'wp-to-twitter' ); ?>
+					<strong><?php esc_html_e( 'Example: ', 'wp-to-twitter' ); ?></strong><code>{{user_meta}}</code>
 					</p>
 				</div>
 			</div>
@@ -534,7 +534,7 @@ function wpt_update_settings() {
 	<form method="post" action="">
 	<div class="ui-sortable meta-box-sortables">
 		<div class="postbox">
-			<h3><span><?php _e( 'Tag Settings', 'wp-to-twitter' ); ?></span></h3>
+			<h3><span><?php esc_html_e( 'Tag Settings', 'wp-to-twitter' ); ?></span></h3>
 			<div class="inside">
 					<div>
 						<?php
@@ -543,34 +543,34 @@ function wpt_update_settings() {
 						?>
 
 						<fieldset>
-							<legend class='screen-reader-text'><?php _e( 'Hashtags', 'wp-to-twitter' ); ?></legend>
+							<legend class='screen-reader-text'><?php esc_html_e( 'Hashtags', 'wp-to-twitter' ); ?></legend>
 							<p>
-								<input type="checkbox" name="jd_strip_nonan" id="jd_strip_nonan" value="1" <?php echo checked( get_option( 'jd_strip_nonan' ), 1 ); ?> /> <label for="jd_strip_nonan"><?php _e( 'Strip nonalphanumeric characters from tags', 'wp-to-twitter' ); ?></label>
+								<input type="checkbox" name="jd_strip_nonan" id="jd_strip_nonan" value="1" <?php echo checked( get_option( 'jd_strip_nonan' ), 1 ); ?> /> <label for="jd_strip_nonan"><?php esc_html_e( 'Strip nonalphanumeric characters from tags', 'wp-to-twitter' ); ?></label>
 							</p>
 							<p>
 								<input type="checkbox" name="wpt_tag_source" id="wpt_tag_source" value="slug" <?php checked( get_option( 'wpt_tag_source' ), 'slug' ); ?> />
-								<label for="wpt_tag_source"><?php _e( 'Use tag slug as hashtag value', 'wp-to-twitter' ); ?></label><br/>
+								<label for="wpt_tag_source"><?php esc_html_e( 'Use tag slug as hashtag value', 'wp-to-twitter' ); ?></label><br/>
 							</p>
 							<p>
 								<input type="checkbox" name="wpt_use_cats" id="wpt_use_cats" value="1" <?php checked( get_option( 'wpt_use_cats' ), '1' ); ?> />
-								<label for="wpt_use_cats"><?php _e( 'Use categories instead of tags', 'wp-to-twitter' ); ?></label><br/>
+								<label for="wpt_use_cats"><?php esc_html_e( 'Use categories instead of tags', 'wp-to-twitter' ); ?></label><br/>
 							</p>
 							<?php
 							if ( ! ( '[ ]' === get_option( 'jd_replace_character' ) || '' === get_option( 'jd_replace_character', '' ) ) ) {
 								?>
 							<p>
-								<label for="jd_replace_character"><?php _e( 'Spaces in tags replaced with:', 'wp-to-twitter' ); ?></label>
+								<label for="jd_replace_character"><?php esc_html_e( 'Spaces in tags replaced with:', 'wp-to-twitter' ); ?></label>
 								<input type="text" name="jd_replace_character" id="jd_replace_character" value="<?php echo esc_attr( get_option( 'jd_replace_character' ) ); ?>" size="3"/>
 							</p>
 								<?php
 							}
 							?>
 							<p>
-								<label for="jd_max_tags"><?php _e( 'Maximum number of tags to include:', 'wp-to-twitter' ); ?></label>
+								<label for="jd_max_tags"><?php esc_html_e( 'Maximum number of tags to include:', 'wp-to-twitter' ); ?></label>
 								<input aria-describedby="jd_max_characters_label" type="text" name="jd_max_tags" id="jd_max_tags" value="<?php echo esc_attr( get_option( 'jd_max_tags' ) ); ?>" size="3" />
 							</p>
 							<p>
-								<label for="jd_max_characters"><?php _e( 'Maximum length in characters for included tags:', 'wp-to-twitter' ); ?></label>
+								<label for="jd_max_characters"><?php esc_html_e( 'Maximum length in characters for included tags:', 'wp-to-twitter' ); ?></label>
 								<input type="text" name="jd_max_characters" id="jd_max_characters" value="<?php echo esc_attr( get_option( 'jd_max_characters' ) ); ?>" size="3"/>
 							</p>
 						</fieldset>
@@ -579,12 +579,12 @@ function wpt_update_settings() {
 			</div>
 			<div class="ui-sortable meta-box-sortables">
 				<div class="postbox">
-					<h3><span><?php _e( 'Template Settings', 'wp-to-twitter' ); ?></span></h3>
+					<h3><span><?php esc_html_e( 'Template Settings', 'wp-to-twitter' ); ?></span></h3>
 						<div class="inside">
 						<fieldset>
-							<legend class='screen-reader-text'><?php _e( 'Template Settings', 'wp-to-twitter' ); ?></legend>
+							<legend class='screen-reader-text'><?php esc_html_e( 'Template Settings', 'wp-to-twitter' ); ?></legend>
 							<p>
-								<label for="jd_post_excerpt"><?php _e( 'Post excerpt length in characters', 'wp-to-twitter' ); ?></label><br />
+								<label for="jd_post_excerpt"><?php esc_html_e( 'Post excerpt length in characters', 'wp-to-twitter' ); ?></label><br />
 								<input type="text" name="jd_post_excerpt" id="jd_post_excerpt" size="3" maxlength="3" value="<?php echo( esc_attr( get_option( 'jd_post_excerpt' ) ) ); ?>" />
 							</p>
 							<?php
@@ -595,22 +595,22 @@ function wpt_update_settings() {
 							}
 							?>
 							<p>
-								<label for="jd_date_format"><?php _e( 'Date Format:', 'wp-to-twitter' ); ?></label><br />
+								<label for="jd_date_format"><?php esc_html_e( 'Date Format:', 'wp-to-twitter' ); ?></label><br />
 								<input type="text" aria-describedby="date_format_label" name="jd_date_format" id="jd_date_format" size="12" maxlength="12" value="<?php echo trim( esc_attr( $format ) ); ?>" />
-								<span id="date_format_label"><?php _e( 'Currently:', 'wp-to-twitter' ); ?> <?php echo date_i18n( $format ); ?> <a href='https://wordpress.org/support/article/formatting-date-and-time/'><?php _e( 'Date Formatting', 'wp-to-twitter' ); ?></a>
+								<span id="date_format_label"><?php esc_html_e( 'Currently:', 'wp-to-twitter' ); ?> <?php echo date_i18n( $format ); ?> <a href='https://wordpress.org/support/article/formatting-date-and-time/'><?php esc_html_e( 'Date Formatting', 'wp-to-twitter' ); ?></a>
 								</span>
 							</p>
 
 							<p>
-								<label for="jd_twit_prepend"><?php _e( 'Custom text before status:', 'wp-to-twitter' ); ?></label><br />
+								<label for="jd_twit_prepend"><?php esc_html_e( 'Custom text before status:', 'wp-to-twitter' ); ?></label><br />
 								<input type="text" name="jd_twit_prepend" id="jd_twit_prepend" size="20" value="<?php echo esc_attr( stripslashes( get_option( 'jd_twit_prepend' ) ) ); ?>"/>
 							</p>
 							<p>
-								<label for="jd_twit_append"><?php _e( 'Custom text after status:', 'wp-to-twitter' ); ?></label><br />
+								<label for="jd_twit_append"><?php esc_html_e( 'Custom text after status:', 'wp-to-twitter' ); ?></label><br />
 								<input type="text" name="jd_twit_append" id="jd_twit_append" size="20" value="<?php echo esc_attr( stripslashes( get_option( 'jd_twit_append' ) ) ); ?>"/>
 							</p>
 							<p>
-								<label for="jd_twit_custom_url"><?php _e( 'Custom field for alternate post URL:', 'wp-to-twitter' ); ?></label><br />
+								<label for="jd_twit_custom_url"><?php esc_html_e( 'Custom field for alternate post URL:', 'wp-to-twitter' ); ?></label><br />
 								<input type="text" name="jd_twit_custom_url" id="jd_twit_custom_url" size="30" maxlength="120" value="<?php echo esc_attr( stripslashes( get_option( 'jd_twit_custom_url' ) ) ); ?>"/>
 							</p>
 						</fieldset>
@@ -619,31 +619,31 @@ function wpt_update_settings() {
 			</div>
 			<div class="ui-sortable meta-box-sortables">
 				<div class="postbox">
-					<h3><span><?php _e( 'Status update controls', 'wp-to-twitter' ); ?></span></h3>
+					<h3><span><?php esc_html_e( 'Status update controls', 'wp-to-twitter' ); ?></span></h3>
 					<div class="inside">
 						<fieldset>
-							<legend id="special_cases" class='screen-reader-text'><?php _e( 'Special Cases', 'wp-to-twitter' ); ?></legend>
+							<legend id="special_cases" class='screen-reader-text'><?php esc_html_e( 'Special Cases', 'wp-to-twitter' ); ?></legend>
 							<ul>
 								<li>
 									<input type="checkbox" name="jd_tweet_default" id="jd_tweet_default" value="1" <?php echo wpt_checkbox( 'jd_tweet_default' ); ?> />
-									<label for="jd_tweet_default"><?php _e( 'Do not post statuses by default', 'wp-to-twitter' ); ?></label>
+									<label for="jd_tweet_default"><?php esc_html_e( 'Do not post statuses by default', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
 									<input type="checkbox" name="jd_tweet_default_edit" id="jd_tweet_default_edit" value="1" <?php echo wpt_checkbox( 'jd_tweet_default_edit' ); ?> />
-									<label for="jd_tweet_default_edit"><?php _e( 'Do not post statuses by default when editing', 'wp-to-twitter' ); ?></label>
+									<label for="jd_tweet_default_edit"><?php esc_html_e( 'Do not post statuses by default when editing', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
 									<input type="checkbox" name="wpt_inline_edits" id="wpt_inline_edits" value="1" <?php echo wpt_checkbox( 'wpt_inline_edits' ); ?> />
-									<label for="wpt_inline_edits"><?php _e( 'Allow status updates from Quick Edit', 'wp-to-twitter' ); ?></label>
+									<label for="wpt_inline_edits"><?php esc_html_e( 'Allow status updates from Quick Edit', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
 								<input type="checkbox" name="wpt_rate_limiting" id="wpt_rate_limiting" value="1" <?php echo wpt_checkbox( 'wpt_rate_limiting' ); ?> />
-								<label for="wpt_rate_limiting"><?php _e( 'Enable Rate Limiting', 'wp-to-twitter' ); ?></label>
+								<label for="wpt_rate_limiting"><?php esc_html_e( 'Enable Rate Limiting', 'wp-to-twitter' ); ?></label>
 								<?php
 								if ( '1' === get_option( 'wpt_rate_limiting' ) ) {
 									?>
 								<input type="number" name="wpt_default_rate_limit" min="1" id="wpt_default_rate_limit" value="<?php echo wpt_default_rate_limit(); ?>" />
-								<label for="wpt_default_rate_limit"><?php _e( 'Default Rate Limit per category per hour', 'wp-to-twitter' ); ?></label>
+								<label for="wpt_default_rate_limit"><?php esc_html_e( 'Default Rate Limit per category per hour', 'wp-to-twitter' ); ?></label>
 									<?php
 								}
 								?>
@@ -655,29 +655,29 @@ function wpt_update_settings() {
 			</div>
 			<div class="ui-sortable meta-box-sortables">
 				<div class="postbox">
-					<h3><span><?php _e( 'Google Analytics Settings', 'wp-to-twitter' ); ?></span></h3>
+					<h3><span><?php esc_html_e( 'Google Analytics Settings', 'wp-to-twitter' ); ?></span></h3>
 					<div class="inside">
 						<fieldset>
-							<legend class='screen-reader-text'><?php _e( 'Google Analytics Settings', 'wp-to-twitter' ); ?></legend>
+							<legend class='screen-reader-text'><?php esc_html_e( 'Google Analytics Settings', 'wp-to-twitter' ); ?></legend>
 							<p>
 								<input type="radio" name="twitter-analytics" id="use-twitter-analytics" value="1" <?php echo wpt_checkbox( 'use-twitter-analytics' ); ?> />
-								<label for="use-twitter-analytics"><?php _e( 'Use a Static Identifier', 'wp-to-twitter' ); ?></label><br/>
-								<label for="twitter-analytics-campaign"><?php _e( 'Static Campaign identifier', 'wp-to-twitter' ); ?></label>
+								<label for="use-twitter-analytics"><?php esc_html_e( 'Use a Static Identifier', 'wp-to-twitter' ); ?></label><br/>
+								<label for="twitter-analytics-campaign"><?php esc_html_e( 'Static Campaign identifier', 'wp-to-twitter' ); ?></label>
 								<input type="text" name="twitter-analytics-campaign" id="twitter-analytics-campaign" size="40" maxlength="120" value="<?php echo esc_attr( get_option( 'twitter-analytics-campaign' ) ); ?>"/><br/>
 							</p>
 							<p>
 								<input type="radio" name="twitter-analytics" id="use-dynamic-analytics" value="2" <?php echo wpt_checkbox( 'use_dynamic_analytics' ); ?> />
-								<label for="use-dynamic-analytics"><?php _e( 'Use a dynamic identifier', 'wp-to-twitter' ); ?></label><br/>
-								<label for="jd-dynamic-analytics"><?php _e( 'What dynamic identifier would you like to use?', 'wp-to-twitter' ); ?></label>
+								<label for="use-dynamic-analytics"><?php esc_html_e( 'Use a dynamic identifier', 'wp-to-twitter' ); ?></label><br/>
+								<label for="jd-dynamic-analytics"><?php esc_html_e( 'What dynamic identifier would you like to use?', 'wp-to-twitter' ); ?></label>
 								<select name="jd-dynamic-analytics" id="jd-dynamic-analytics">
-									<option value="post_category"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_category' ); ?>><?php _e( 'Category', 'wp-to-twitter' ); ?></option>
-									<option value="post_ID"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_ID' ); ?>><?php _e( 'Post ID', 'wp-to-twitter' ); ?></option>
-									<option value="post_title"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_title' ); ?>><?php _e( 'Post Title', 'wp-to-twitter' ); ?></option>
-									<option value="post_author"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_author' ); ?>><?php _e( 'Author', 'wp-to-twitter' ); ?></option>
+									<option value="post_category"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_category' ); ?>><?php esc_html_e( 'Category', 'wp-to-twitter' ); ?></option>
+									<option value="post_ID"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_ID' ); ?>><?php esc_html_e( 'Post ID', 'wp-to-twitter' ); ?></option>
+									<option value="post_title"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_title' ); ?>><?php esc_html_e( 'Post Title', 'wp-to-twitter' ); ?></option>
+									<option value="post_author"<?php checked( get_option( 'jd_dynamic_analytics' ), 'post_author' ); ?>><?php esc_html_e( 'Author', 'wp-to-twitter' ); ?></option>
 								</select><br/>
 							</p>
 							<p>
-								<input type="radio" name="twitter-analytics" id="no-analytics" value="3" <?php echo wpt_checkbox( 'no-analytics' ); ?> /> <label for="no-analytics"><?php _e( 'No Analytics', 'wp-to-twitter' ); ?></label>
+								<input type="radio" name="twitter-analytics" id="no-analytics" value="3" <?php echo wpt_checkbox( 'no-analytics' ); ?> /> <label for="no-analytics"><?php esc_html_e( 'No Analytics', 'wp-to-twitter' ); ?></label>
 							</p>
 						</fieldset>
 					</div>
@@ -685,12 +685,12 @@ function wpt_update_settings() {
 			</div>
 			<div class="ui-sortable meta-box-sortables">
 				<div class="postbox">
-					<h3><span><?php _e( 'Permissions', 'wp-to-twitter' ); ?></span></h3>
+					<h3><span><?php esc_html_e( 'Permissions', 'wp-to-twitter' ); ?></span></h3>
 					<div class="inside">
 
 						<div class='wpt-permissions'>
 							<fieldset>
-								<legend class="screen-reader-text"><?php _e( 'Permissions', 'wp-to-twitter' ); ?></legend>
+								<legend class="screen-reader-text"><?php esc_html_e( 'Permissions', 'wp-to-twitter' ); ?></legend>
 								<?php
 								global $wp_roles;
 								$roles          = $wp_roles->get_names();
@@ -747,7 +747,7 @@ function wpt_update_settings() {
 				?>
 			<div class="ui-sortable meta-box-sortables">
 				<div class="postbox">
-					<h3><span><?php _e( 'Template tag priority order', 'wp-to-twitter' ); ?></span></h3>
+					<h3><span><?php esc_html_e( 'Template tag priority order', 'wp-to-twitter' ); ?></span></h3>
 					<div class="inside">
 						<?php
 						$inputs = '';
@@ -771,7 +771,7 @@ function wpt_update_settings() {
 						}
 						?>
 						<fieldset>
-							<legend class='screen-reader-text'><?php _e( 'Template tag priority order', 'wp-to-twitter' ); ?></legend>
+							<legend class='screen-reader-text'><?php esc_html_e( 'Template tag priority order', 'wp-to-twitter' ); ?></legend>
 							<p>
 							<?php
 							_e( 'The order in which items will be abbreviated or removed from your status if the status is too long to send.', 'wp-to-twitter' );
@@ -790,23 +790,23 @@ function wpt_update_settings() {
 			?>
 			<div class="ui-sortable meta-box-sortables">
 				<div class="postbox">
-					<h3><span><?php _e( 'Debugging', 'wp-to-twitter' ); ?></span></h3>
+					<h3><span><?php esc_html_e( 'Debugging', 'wp-to-twitter' ); ?></span></h3>
 					<div class="inside">
 						<fieldset>
-							<legend class='screen-reader-text'><?php _e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?></legend>
+							<legend class='screen-reader-text'><?php esc_html_e( 'Miscellaneous Settings', 'wp-to-twitter' ); ?></legend>
 							<ul>
 								<li>
-									<input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" <?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> <label for="wp_debug_oauth"><?php _e( 'Get Debugging Data for Service Connections', 'wp-to-twitter' ); ?></label>
+									<input type="checkbox" name="wp_debug_oauth" id="wp_debug_oauth" value="1" <?php echo wpt_checkbox( 'wp_debug_oauth' ); ?> /> <label for="wp_debug_oauth"><?php esc_html_e( 'Get Debugging Data for Service Connections', 'wp-to-twitter' ); ?></label>
 								</li>
 								<li>
-									<input type="checkbox" name="wpt_debug_tweets" id="wpt_debug_tweets" value="1" <?php echo wpt_checkbox( 'wpt_debug_tweets' ); ?> /> <label for="wpt_debug_tweets"><?php _e( 'Enable XPoster Debugging', 'wp-to-twitter' ); ?></label>
+									<input type="checkbox" name="wpt_debug_tweets" id="wpt_debug_tweets" value="1" <?php echo wpt_checkbox( 'wpt_debug_tweets' ); ?> /> <label for="wpt_debug_tweets"><?php esc_html_e( 'Enable XPoster Debugging', 'wp-to-twitter' ); ?></label>
 								</li>
 							</ul>
 						</fieldset>
 						<div>
 							<input type="hidden" name="submit-type" value="advanced"/>
 						</div>
-						<input type="submit" name="submit" value="<?php _e( 'Save Advanced XPoster Options', 'wp-to-twitter' ); ?>" class="button-primary"/>
+						<input type="submit" name="submit" value="<?php esc_html_e( 'Save Advanced XPoster Options', 'wp-to-twitter' ); ?>" class="button-primary"/>
 					</div>
 				</form>
 			</div>
@@ -817,7 +817,7 @@ function wpt_update_settings() {
 	if ( 'support' === $current ) {
 		?>
 		<div class="postbox" id="get-support">
-			<h3><span><?php _e( 'Get Plug-in Support', 'wp-to-twitter' ); ?></span></h3>
+			<h3><span><?php esc_html_e( 'Get Plug-in Support', 'wp-to-twitter' ); ?></span></h3>
 
 			<div class="inside">
 			<?php wpt_get_support_form(); ?>
@@ -847,11 +847,11 @@ function wpt_sidebar() {
 				<?php
 				if ( 'free' === $context ) {
 					?>
-					<h3><span><strong><?php _e( 'Buy XPoster Pro', 'wp-to-twitter' ); ?></strong></span></h3>
+					<h3><span><strong><?php esc_html_e( 'Buy XPoster Pro', 'wp-to-twitter' ); ?></strong></span></h3>
 					<?php
 				} else {
 					?>
-					<h3><span><strong><?php _e( 'XPoster Support', 'wp-to-twitter' ); ?></strong></span></h3>
+					<h3><span><strong><?php esc_html_e( 'XPoster Support', 'wp-to-twitter' ); ?></strong></span></h3>
 					<?php
 				}
 				?>
@@ -893,7 +893,7 @@ function wpt_sidebar() {
 						$support     = '';
 					}
 					?>
-					<p><?php echo $support; ?><a href="https://docs.xposterpro.com/"><?php _e( 'Documentation', 'wp-to-twitter' ); ?></a></p>
+					<p><?php echo $support; ?><a href="https://docs.xposterpro.com/"><?php esc_html_e( 'Documentation', 'wp-to-twitter' ); ?></a></p>
 					</div>
 				</div>
 			</div>
@@ -905,7 +905,7 @@ function wpt_sidebar() {
 				$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&amp;refresh_wpt_server_string=true' );
 				$link      = "<a href='" . $admin_url . "'>" . __( 'Test again', 'wp-to-twitter' ) . '</a>';
 				?>
-				<h3><?php _e( 'X.com Time Check', 'wp-to-twitter' ); ?> &bull; <?php echo $link; ?></h3>
+				<h3><?php esc_html_e( 'X.com Time Check', 'wp-to-twitter' ); ?> &bull; <?php echo $link; ?></h3>
 
 				<div class="inside server">
 				<?php wpt_do_server_check(); ?>
@@ -915,11 +915,11 @@ function wpt_sidebar() {
 
 		<div class="ui-sortable meta-box-sortables">
 			<div class="postbox">
-				<h3><?php _e( 'Test Status Updates', 'wp-to-twitter' ); ?></h3>
+				<h3><?php esc_html_e( 'Test Status Updates', 'wp-to-twitter' ); ?></h3>
 
 				<div class="inside test">
 				<p>
-				<?php _e( 'Check whether XPoster is set up for your connected services and URL Shortener. The test sends a status update to each connected service and shortens a URL.', 'wp-to-twitter' ); ?>
+				<?php esc_html_e( 'Check whether XPoster is set up for your connected services and URL Shortener. The test sends a status update to each connected service and shortens a URL.', 'wp-to-twitter' ); ?>
 				</p>
 				<form method="post" action="">
 					<input type="hidden" name="submit-type" value="check-support" />
@@ -940,7 +940,7 @@ function wpt_sidebar() {
 			?>
 		<div class="ui-sortable meta-box-sortables">
 			<div class="postbox">
-				<h3><?php _e( 'Monitor Rate Limiting', 'wp-to-twitter' ); ?></h3>
+				<h3><?php esc_html_e( 'Monitor Rate Limiting', 'wp-to-twitter' ); ?></h3>
 
 				<div class="inside server">
 					<?php echo wpt_view_rate_limits(); ?>
