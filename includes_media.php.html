@@ -138,15 +138,15 @@ function wpt_attachment_path( $attachment_id, $size = '' ) {
  * Identify whether a post should be uploading media. Test settings and verify whether post has images that can be uploaded.
  *
  * @param int   $post_ID Post ID.
- * @param array $post_info Array of post data.
  *
  * @return boolean
  */
-function wpt_post_with_media( $post_ID, $post_info = array() ) {
+function wpt_post_with_media( $post_ID ) {
 	$return = false;
 	if ( ! function_exists( 'wpt_pro_exists' ) ) {
 		return $return;
 	}
+	$post_info = wpt_post_info( $post_ID );
 	if ( isset( $post_info['wpt_image'] ) &amp;&amp; 1 === (int) $post_info['wpt_image'] ) {
 		// Post settings win over filters.
 		return $return;
