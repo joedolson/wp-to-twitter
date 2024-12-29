@@ -49,7 +49,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		$status  = $post->post_status;
 		wpt_show_metabox_message( $post, $options );
 		// Show switch to flip update status.
-		$switch = wpt_show_post_switch( $post, $options );
+		wpt_show_post_switch( $post, $options );
 		echo '<div class="wpt-options-metabox">';
 		$user_tweet = apply_filters( 'wpt_user_text', '', $status );
 		// Formulate Template display.
@@ -60,8 +60,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		if ( 'publish' === $status && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 			// Show metabox status buttons.
-			$buttons = wpt_display_metabox_status_buttons( $is_pro );
-			echo $buttons;
+			wpt_display_metabox_status_buttons( $is_pro );
 		}
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			$custom_update = get_post_meta( $post->ID, '_jd_twitter', true );
@@ -69,15 +68,13 @@ function wpt_add_twitter_inner_box( $post ) {
 			<p class='jtw'>
 				<label for="wpt_custom_tweet"><?php esc_html_e( 'Custom Status Update', 'wp-to-twitter' ); ?></label><br/>
 				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_update ) ); ?></textarea>
-				<?php echo apply_filters( 'wpt_custom_box', '', $template, $post->ID ); ?>
 			</p>
 			<div role="alert" class="x-notification notice inline notice-info hidden"><p><?php esc_html_e( 'X length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
 			<div role="alert" class="bluesky-notification notice inline notice-info hidden"><p><?php esc_html_e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
 			<div role="alert" class="mastodon-notification notice inline notice-info hidden"><p><?php esc_html_e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
 			<div class="wpt-template-resources wpt-flex">
 				<p class='wpt-template'>
-					<?php esc_html_e( 'Default template:', 'wp-to-twitter' ); ?><br /><code><?php echo stripcslashes( esc_html( $template ) ); ?></code>
-					<?php echo apply_filters( 'wpt_template_block', '', $template, $post->ID ); ?>
+					<?php esc_html_e( 'Default template:', 'wp-to-twitter' ); ?><br /><code><?php echo esc_html( stripcslashes( $template ) ); ?></code>
 				</p>
 				<div class='wptab' id='notes'>
 					<h3><?php esc_html_e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
@@ -86,7 +83,7 @@ function wpt_add_twitter_inner_box( $post ) {
 					$tags = wpt_tags();
 					foreach ( $tags as $tag ) {
 						$pressed = ( false === stripos( $template, '#' . $tag . '#' ) ) ? 'false' : 'true';
-						echo '<li><button type="button" class="button-secondary" aria-pressed="' . $pressed . '">#' . $tag . '#</button></li>';
+						echo '<li><button type="button" class="button-secondary" aria-pressed="' . esc_attr( $pressed ) . '">#' . esc_html( $tag ) . '#</button></li>';
 					}
 					do_action( 'wpt_notes_tab', $post->ID );
 					?>
@@ -94,18 +91,23 @@ function wpt_add_twitter_inner_box( $post ) {
 				</div>
 			</div>
 			<?php
-			$retweet_fields = apply_filters( 'wpt_custom_retweet_fields', '', $post->ID );
-			echo $retweet_fields;
+			/**
+			 * Generate fields after the custom template box in the meta box.
+			 *
+			 * @hook wpt_after_meta_template_box
+			 *
+			 * @param {int} $post_ID Post ID.
+			 */
+			do_action( 'wpt_after_meta_template_box', $post->ID );
 			if ( get_option( 'jd_keyword_format' ) === '2' ) {
 				$custom_keyword = get_post_meta( $post->ID, '_yourls_keyword', true );
-				echo "<label for='yourls_keyword'>" . __( 'YOURLS Custom Keyword', 'wp-to-twitter' ) . "</label> <input type='text' name='_yourls_keyword' id='yourls_keyword' value='$custom_keyword' />";
+				echo "<label for='yourls_keyword'>" . __( 'YOURLS Custom Keyword', 'wp-to-twitter' ) . "</label> <input type='text' name='_yourls_keyword' id='yourls_keyword' value='" . esc_attr( $custom_keyword ) . "' />";
 			}
 		} else {
 			?>
 			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $template ); ?>' />
 			<p class='wpt-template'>
-				<?php esc_html_e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo stripcslashes( $template ); ?></code>
-				<?php echo apply_filters( 'wpt_template_block', '', $template, $post->ID ); ?>
+				<?php esc_html_e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo esc_html( stripcslashes( $template ) ); ?></code>
 			</p>
 			<?php
 		}
@@ -121,7 +123,7 @@ function wpt_add_twitter_inner_box( $post ) {
 					if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
 						$selected = ( get_post_meta( $post->ID, '_wpt_authorized_users', true ) ) ? get_post_meta( $post->ID, '_wpt_authorized_users', true ) : array();
 						if ( function_exists( 'wpt_authorized_users' ) ) {
-							echo wpt_authorized_users( $selected );
+							wpt_authorized_users( $selected );
 							do_action( 'wpt_authors_tab', $post->ID, $selected );
 						}
 					}
@@ -375,33 +377,38 @@ function wpt_display_status_template( $post, $options ) {
  * Generate post now and schedule update buttons.
  *
  * @param string $is_pro 'pro' if Pro.
- *
- * @return string
  */
 function wpt_display_metabox_status_buttons( $is_pro ) {
-	$buttons = "<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-share' aria-hidden='true'></span>" . __( 'Share Now', 'wp-to-twitter' ) . '</button>';
-	$fields  = '';
-	if ( 'pro' === $is_pro ) {
-		$buttons .= "<button type='button' class='tweet schedule button-secondary' data-action='schedule' disabled>" . __( 'Schedule', 'wp-to-twitter' ) . '</button>';
-		$buttons .= "<button type='button' class='time button-secondary'><span class='dashicons dashicons-clock' aria-hidden='true'></span><span class='screen-reader-text'>" . __( 'Set Date/Time', 'wp-to-twitter' ) . '</span></button>';
-	}
-	$buttons = '<div class="wpt-buttons">' . $buttons . '</div>';
+	?>
+	<div class='tweet-buttons'>
+		<div class="wpt-buttons">
+			<button type='button' class='tweet button-primary' data-action='tweet'><span class='dashicons dashicons-share' aria-hidden='true'></span><?php esc_html_e( 'Share Now', 'wp-to-twitter' ); ?></button>
+		<?php
+		if ( 'pro' === $is_pro ) {
+			?>
+			<button type='button' class='tweet schedule button-secondary' data-action='schedule' disabled><?php esc_html_e( 'Schedule', 'wp-to-twitter' ); ?></button>';
+			<button type='button' class='time button-secondary'><span class='dashicons dashicons-clock' aria-hidden='true'></span><span class='screen-reader-text'><?php esc_html_e( 'Set Date/Time', 'wp-to-twitter' ); ?></span></button>
+			<?php
+		}
+		?>
+		</div>
+	</div>
+	<div class='wpt_log' aria-live='assertive'></div>
+	<?php
 	if ( 'pro' === $is_pro ) {
 		$datavalue  = gmdate( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
 		$timevalue  = date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
-		$date_field = '<div class="wpt-date-field">
-			<label for="wpt_date">' . __( 'Date', 'wp-to-twitter' ) . '</label>
-			<input type="date" value="" class="wpt_date date" name="wpt_datetime" id="wpt_date" data-value="' . $datavalue . '" /><br/>
-		</div>';
-		$time_field = '<div class="wpt-time-field">
-			<label for="wpt_time">' . __( 'Time', 'wp-to-twitter' ) . '</label>
-			<input type="time" value="' . $timevalue . '" class="wpt_time time" name="wpt_datetime" id="wpt_time" />
-		</div>';
-		$fields     = '<div id="wpt_set_tweet_time">' . $date_field . $time_field . '</div>';
+		?>
+		<div id="wpt_set_tweet_time">
+			<div class="wpt-date-field">
+				<label for="wpt_date"><?php esc_html_e( 'Date', 'wp-to-twitter' ); ?></label>
+				<input type="date" value="" class="wpt_date date" name="wpt_datetime" id="wpt_date" data-value="<?php echo esc_attr( $datavalue ); ?>" /><br/>
+			</div>
+			<div class="wpt-time-field">
+				<label for="wpt_time"><?php esc_html_e( 'Time', 'wp-to-twitter' ); ?></label>
+				<input type="time" value="<?php echo esc_attr( $timevalue ); ?>" class="wpt_time time" name="wpt_datetime" id="wpt_time" />
+			</div>
+		</div>
+		<?php
 	}
-	$buttons  = "<div class='tweet-buttons'>" . $buttons . '</div>';
-	$buttons .= "<div class='wpt_log' aria-live='assertive'></div>";
-	$buttons .= $fields;
-
-	return $buttons;
 }
