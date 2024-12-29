@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: includes/metabox.php - XPoster Hook Doumentation</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles-docs.css?v=0.1.1">
+</head>
+
+<body>
+
+<div id="main">
+
+    <header><h1 class="page-title">Source: includes/metabox.php</h1></header>
+	<main>
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;?php
+/**
+ * Metabox rendering functions XPoster
+ *
+ * @category Metabox
+ * @package  XPoster
+ * @author   Joe Dolson
+ * @license  GPLv2 or later
+ * @link     https://www.joedolson.com/wp-to-twitter/
+ */
+
+/**
+ * Set up post meta box.
+ */
+function wpt_add_twitter_outer_box() {
+	// add X.com panel to post types where it's enabled.
+	$wpt_post_types = get_option( 'wpt_post_types' );
+	if ( is_array( $wpt_post_types ) ) {
+		foreach ( $wpt_post_types as $key => $value ) {
+			if ( '1' === (string) $value['post-published-update'] || '1' === (string) $value['post-edited-update'] ) {
+				if ( current_user_can( 'wpt_can_tweet' ) ) {
+					add_meta_box( 'wp2t', 'XPoster', 'wpt_add_twitter_inner_box', $key, 'side' );
+				}
+			}
+		}
+	}
+}
+add_action( 'admin_menu', 'wpt_add_twitter_outer_box' );
+
+/**
+ * Print post meta box
+ *
+ * @param  object $post Post object.
+ */
+function wpt_add_twitter_inner_box( $post ) {
+	$nonce = wp_create_nonce( 'wp-to-twitter-nonce' );
+	?>
+	&lt;div>
+		&lt;input type="hidden" name="wp_to_twitter_nonce" value="&lt;?php echo esc_attr( $nonce ); ?>">
+		&lt;input type="hidden" name="wp_to_twitter_meta" value="true">
+	&lt;/div>
+	&lt;?php
+	if ( current_user_can( 'wpt_can_tweet' ) ) {
+		$is_pro = ( function_exists( 'wpt_pro_exists' ) ) ? 'pro' : 'free';
+		?>
+		&lt;div class='wp-to-twitter &lt;?php echo esc_attr( $is_pro ); ?>'>
+		&lt;?php
+		$options = get_option( 'wpt_post_types' );
+		$status  = $post->post_status;
+		wpt_show_metabox_message( $post, $options );
+		// Show switch to flip update status.
+		wpt_show_post_switch( $post, $options );
+		echo '&lt;div class="wpt-options-metabox">';
+		$user_tweet = apply_filters( 'wpt_user_text', '', $status );
+		// Formulate Template display.
+		$template = wpt_display_status_template( $post, $options );
+		if ( $user_tweet ) {
+			// If a user template is defined, replace the existing template.
+			$template = $user_tweet;
+		}
+		if ( 'publish' === $status &amp;&amp; ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
+			// Show metabox status buttons.
+			wpt_display_metabox_status_buttons( $is_pro );
+		}
+		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
+			$custom_update = get_post_meta( $post->ID, '_jd_twitter', true );
+			?>
+			&lt;p class='jtw'>
+				&lt;label for="wpt_custom_tweet">&lt;?php esc_html_e( 'Custom Status Update', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
+				&lt;textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="&lt;?php echo esc_attr( $template ); ?>" rows="2" cols="60">&lt;?php echo esc_textarea( stripslashes( $custom_update ) ); ?>&lt;/textarea>
+			&lt;/p>
+			&lt;div role="alert" class="x-notification notice inline notice-info hidden">&lt;p>&lt;?php esc_html_e( 'X length limit reached:', 'wp-to-twitter' ); ?> &lt;span>&lt;/span>&lt;/p>&lt;/div>
+			&lt;div role="alert" class="bluesky-notification notice inline notice-info hidden">&lt;p>&lt;?php esc_html_e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> &lt;span>&lt;/span>&lt;/p>&lt;/div>
+			&lt;div role="alert" class="mastodon-notification notice inline notice-info hidden">&lt;p>&lt;?php esc_html_e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> &lt;span>&lt;/span>&lt;/p>&lt;/div>
+			&lt;div class="wpt-template-resources wpt-flex">
+				&lt;p class='wpt-template'>
+					&lt;?php esc_html_e( 'Default template:', 'wp-to-twitter' ); ?>&lt;br />&lt;code>&lt;?php echo esc_html( stripcslashes( $template ) ); ?>&lt;/code>
+				&lt;/p>
+				&lt;div class='wptab' id='notes'>
+					&lt;h3>&lt;?php esc_html_e( 'Template Tags', 'wp-to-twitter' ); ?>&lt;/h3>
+					&lt;ul class="inline-list">
+					&lt;?php
+					$tags = wpt_tags();
+					foreach ( $tags as $tag ) {
+						$pressed = ( false === stripos( $template, '#' . $tag . '#' ) ) ? 'false' : 'true';
+						echo '&lt;li>&lt;button type="button" class="button-secondary" aria-pressed="' . esc_attr( $pressed ) . '">#' . esc_html( $tag ) . '#&lt;/button>&lt;/li>';
+					}
+					do_action( 'wpt_notes_tab', $post->ID );
+					?>
+					&lt;/ul>
+				&lt;/div>
+			&lt;/div>
+			&lt;?php
+			/**
+			 * Generate fields after the custom template box in the meta box.
+			 *
+			 * @hook wpt_after_meta_template_box
+			 *
+			 * @param {int} $post_ID Post ID.
+			 */
+			do_action( 'wpt_after_meta_template_box', $post->ID );
+			if ( get_option( 'jd_keyword_format' ) === '2' ) {
+				$custom_keyword = get_post_meta( $post->ID, '_yourls_keyword', true );
+				echo "&lt;label for='yourls_keyword'>" . __( 'YOURLS Custom Keyword', 'wp-to-twitter' ) . "&lt;/label> &lt;input type='text' name='_yourls_keyword' id='yourls_keyword' value='" . esc_attr( $custom_keyword ) . "' />";
+			}
+		} else {
+			?>
+			&lt;input type="hidden" name='_jd_twitter' value='&lt;?php echo esc_attr( $template ); ?>' />
+			&lt;p class='wpt-template'>
+				&lt;?php esc_html_e( 'Template:', 'wp-to-twitter' ); ?> &lt;code>&lt;?php echo esc_html( stripcslashes( $template ) ); ?>&lt;/code>
+			&lt;/p>
+			&lt;?php
+		}
+		?>
+		&lt;div class='wpt-options'>
+			&lt;div class='wptab' id='custom'>
+			&lt;?php
+			// XPoster Pro.
+			if ( 'pro' === $is_pro &amp;&amp; ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
+				wpt_schedule_values( $post->ID );
+				do_action( 'wpt_custom_tab', $post->ID, 'visible' );
+				if ( current_user_can( 'edit_others_posts' ) ) {
+					if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
+						$selected = ( get_post_meta( $post->ID, '_wpt_authorized_users', true ) ) ? get_post_meta( $post->ID, '_wpt_authorized_users', true ) : array();
+						if ( function_exists( 'wpt_authorized_users' ) ) {
+							wpt_authorized_users( $selected );
+							do_action( 'wpt_authors_tab', $post->ID, $selected );
+						}
+					}
+				}
+			}
+			if ( ! current_user_can( 'wpt_twitter_custom' ) &amp;&amp; ! current_user_can( 'manage_options' ) ) {
+				?>
+				&lt;p>&lt;?php esc_html_e( 'Customizing XPoster options is not allowed for your user role.', 'wp-to-twitter' ); ?>&lt;/p>
+				&lt;?php
+				if ( 'pro' === $is_pro ) {
+					wpt_schedule_values( $post->ID, 'hidden' );
+					do_action( 'wpt_custom_tab', $post->ID, 'hidden' );
+				}
+			}
+			?>
+			&lt;/div>
+		&lt;/div>
+		&lt;?php wpt_show_history( $post->ID ); ?>
+		&lt;?php wpt_meta_box_support( $is_pro ); ?>
+		&lt;/div>
+		&lt;/div>
+		&lt;?php
+	} else {
+		// permissions: this user isn't allowed to post status updates.
+		_e( 'Your role does not have the ability to post status updates from this site.', 'wp-to-twitter' );
+		?>
+		&lt;input type='hidden' name='_wpt_post_this' value='no'/>
+		&lt;?php
+	}
+}
+
+/**
+ * Format history of status updates attempted on current post.
+ *
+ * @param array $post_id Post ID to fetch status updates on.
+ */
+function wpt_show_history( $post_id ) {
+	$previous_tweets = get_post_meta( $post_id, '_jd_wp_twitter', true );
+	$failed_tweets   = get_post_meta( $post_id, '_wpt_failed' );
+
+	if ( ! is_array( $previous_tweets ) &amp;&amp; '' !== $previous_tweets ) {
+		$previous_tweets = array( 0 => $previous_tweets );
+	}
+	if ( ! empty( $previous_tweets ) || ! empty( $failed_tweets ) ) {
+		?>
+	&lt;p class='panel-toggle'>
+		&lt;button type="button" aria-expanded="false" class='history-toggle button-secondary'>&lt;span class='dashicons dashicons-plus' aria-hidden="true">&lt;/span>&lt;?php esc_html_e( 'View Update History', 'wp-to-twitter' ); ?>&lt;/button>
+	&lt;/p>
+	&lt;div class='history'>
+	&lt;h4 class='wpt-past-updates'>&lt;em>&lt;?php esc_html_e( 'Previous Updates', 'wp-to-twitter' ); ?>:&lt;/em>&lt;/h4>
+	&lt;ul>
+		&lt;?php
+		$has_history   = false;
+		$hidden_fields = '';
+		if ( is_array( $previous_tweets ) ) {
+			foreach ( $previous_tweets as $previous_tweet ) {
+				if ( '' !== $previous_tweet ) {
+					$has_history     = true;
+					$twitter_intent  = '';
+					$mastodon_intent = '';
+					$bluesky_intent  = '';
+					if ( wtt_oauth_test() ) {
+						$twitter_intent = "&lt;a href='https://x.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Repost on X.com', 'wp-to-twitter' ) . '&lt;/a>';
+					}
+					if ( wpt_mastodon_connection() ) {
+						$mastodon        = get_option( 'wpt_mastodon_instance' );
+						$mastodon_intent = "&lt;a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $previous_tweet ) . "'>" . __( 'Repost on Mastodon', 'wp-to-twitter' ) . '&lt;/a>';
+					}
+					if ( wpt_bluesky_connection() ) {
+						$bluesky_intent = "&lt;a href='https://bsky.app/intent/compose?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Repost on Bluesky', 'wp-to-twitter' ) . '&lt;/a>';
+					}
+					$hidden_fields .= "&lt;input type='hidden' name='_jd_wp_twitter[]' value='" . esc_attr( $previous_tweet ) . "' />";
+					echo "&lt;li>$previous_tweet $twitter_intent $mastodon_intent $bluesky_intent&lt;/li>";
+				}
+			}
+		}
+		?>
+	&lt;/ul>
+		&lt;?php
+		$list       = false;
+		$error_list = '';
+		if ( is_array( $failed_tweets ) ) {
+			foreach ( $failed_tweets as $failed_tweet ) {
+				if ( ! empty( $failed_tweet ) ) {
+					$ft     = $failed_tweet['sentence'];
+					$reason = $failed_tweet['code'];
+					$error  = $failed_tweet['error'];
+					$list   = true;
+
+					$twitter_intent  = '';
+					$mastodon_intent = '';
+					$bluesky_intent  = '';
+					if ( wtt_oauth_test() ) {
+						$twitter_intent = "&lt;a href='https://x.com/intent/tweet?text=" . urlencode( $ft ) . "'>" . __( 'Send to X.com', 'wp-to-twitter' ) . '&lt;/a>';
+					}
+					if ( wpt_mastodon_connection() ) {
+						$mastodon        = get_option( 'wpt_mastodon_instance' );
+						$mastodon_intent = "&lt;a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $ft ) . "'>" . __( 'Send to Mastodon', 'wp-to-twitter' ) . '&lt;/a>';
+					}
+					if ( wpt_bluesky_connection() ) {
+						$bluesky_intent = "&lt;a href='https://bsky.app/intent/compose?text=" . urlencode( $ft ) . "'>" . __( 'Send to Bluesky', 'wp-to-twitter' ) . '&lt;/a>';
+					}
+					$error_list .= "&lt;li>&lt;code>Error: $reason&lt;/code> $ft $twitter_intent $mastodon_intent $bluesky_intent &lt;br />&lt;em>$error&lt;/em>&lt;/li>";
+				}
+			}
+			if ( true === $list ) {
+				echo "&lt;h4 class='wpt-failed-updates'>&lt;em>" . __( 'Failed Status Updates', 'wp-to-twitter' ) . ":&lt;/em>&lt;/h4>
+				&lt;ul>$error_list&lt;/ul>";
+			}
+		}
+		echo '&lt;div>' . $hidden_fields . '&lt;/div>';
+		if ( $has_history || $list ) {
+			echo "&lt;p>&lt;input type='checkbox' name='wpt_clear_history' id='wptch' value='clear' /> &lt;label for='wptch'>" . __( 'Delete Status History', 'wp-to-twitter' ) . '&lt;/label>&lt;/p>';
+		}
+		?>
+	&lt;/div>
+		&lt;?php
+	}
+}
+
+/**
+ * Render support link or sales link inside metabox.
+ *
+ * @param string $is_pro 'pro' if is pro.
+ */
+function wpt_meta_box_support( $is_pro = 'free' ) {
+	?>
+	&lt;div class="wpt-support">
+	&lt;?php
+	if ( 'pro' === $is_pro ) {
+		?>
+		&lt;p>
+			&lt;a href="&lt;?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support">&lt;?php esc_html_e( 'Get Support', 'wp-to-twitter' ); ?>&lt;/a>
+		&lt;/p>
+		&lt;?php
+	} else {
+		?>
+		&lt;p class="link-highlight">
+			&lt;a href="https://xposterpro.com/awesome/xposter-pro/">&lt;?php esc_html_e( 'Buy XPoster Pro', 'wp-to-twitter' ); ?>&lt;/a>
+		&lt;/p>
+		&lt;?php
+	}
+	?>
+	&lt;/div>
+	&lt;?php
+}
+
+/**
+ * Display metabox status messages when page is loaded.
+ *
+ * @param WP_Post $post Post object.
+ * @param array   $options Posting options.
+ */
+function wpt_show_metabox_message( $post, $options ) {
+	$type      = $post->post_type;
+	$status    = $post->post_status;
+	$post_this = wpt_get_post_update_status( $post, $options );
+	if ( isset( $_REQUEST['message'] ) &amp;&amp; '10' !== $_REQUEST['message'] ) {
+		// don't display when draft is updated or if no message.
+		if ( ! ( ( '1' === $_REQUEST['message'] ) &amp;&amp; ( 'publish' === $status &amp;&amp; '1' !== $options[ $type ]['post-edited-update'] ) ) &amp;&amp; 'no' !== $post_this ) {
+			$log = wpt_get_log( 'wpt_status_message', $post->ID );
+			if ( is_array( $log ) ) {
+				$message = $log['message'];
+				$http    = $log['http'];
+			} else {
+				$message = $log;
+				$http    = '200';
+			}
+			$class = ( '200' !== (string) $http ) ? 'error' : 'success';
+			if ( '' !== trim( $message ) ) {
+				echo "&lt;div class='notice notice-$class'>&lt;p>$message&lt;/p>&lt;/div>";
+			}
+		}
+	}
+}
+
+/**
+ * Check whether a post is supposed to be posted based on settings.
+ *
+ * @param WP_Post $post Post object.
+ * @param array   $options Status update options.
+ *
+ * @return string
+ */
+function wpt_get_post_update_status( $post, $options ) {
+	$status    = $post->post_status;
+	$type      = $post->post_type;
+	$post_this = get_post_meta( $post->ID, '_wpt_post_this', true );
+	if ( ! $post_this ) {
+		$post_this = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
+	}
+	$is_edit               = ( 'publish' === $status ) ? true : false;
+	$status_update_on_edit = ( '1' === $options[ $type ]['post-edited-update'] &amp;&amp; '1' !== get_option( 'jd_tweet_default_edit' ) ) ? true : false;
+	if ( $is_edit &amp;&amp; ! $status_update_on_edit ) {
+		$post_this = 'no';
+	}
+
+	return $post_this;
+}
+
+/**
+ * Test whether the metabox should load with a 'yes' or 'no' preset for posting status and display toggle to update.
+ *
+ * @param WP_Post $post Post object.
+ * @param array   $options Status update options.
+ */
+function wpt_show_post_switch( $post, $options ) {
+	$post_this = wpt_get_post_update_status( $post, $options );
+
+	if ( current_user_can( 'wpt_twitter_switch' ) || current_user_can( 'manage_options' ) ) {
+		// "no" means 'Don't Post' (is checked)
+		$nochecked  = ( 'no' === $post_this ) ? ' checked="checked"' : '';
+		$yeschecked = ( 'yes' === $post_this ) ? ' checked="checked"' : '';
+		?>
+		&lt;p class='toggle-btn-group'>
+			&lt;input type='radio' name='_wpt_post_this' value='no' id='jtn'>&lt;?php echo esc_attr( $nochecked ); ?> />&lt;label for='jtn'>&lt;?php esc_html_e( "Don't Post", 'wp-to-twitter' ); ?>&lt;/label>
+			&lt;input type='radio' name='_wpt_post_this' value='yes' id='jty'&lt;?php echo esc_attr( $yeschecked ); ?> />&lt;label for='jty'>&lt;?php esc_html_e( 'Post', 'wp-to-twitter' ); ?>&lt;/label>
+		&lt;/p>
+		&lt;?php
+	} else {
+		?>
+		&lt;input type='hidden' name='_wpt_post_this' value='&lt;?php echo esc_attr( $post_this ); ?>' />
+		&lt;?php
+	}
+}
+
+/**
+ * Generate a status update template for display.
+ *
+ * @param WP_Post $post Post object.
+ * @param array   $options Post status options.
+ *
+ * @return string
+ */
+function wpt_display_status_template( $post, $options ) {
+	$status   = $post->post_status;
+	$type     = $post->post_type;
+	$template = ( 'publish' === $status ) ? $options[ $type ]['post-edited-text'] : $options[ $type ]['post-published-text'];
+	$expanded = $template;
+	if ( '' !== get_option( 'jd_twit_prepend', '' ) ) {
+		$expanded = '&lt;em>' . stripslashes( get_option( 'jd_twit_prepend' ) ) . '&lt;/em> ' . $expanded;
+	}
+	if ( '' !== get_option( 'jd_twit_append', '' ) ) {
+		$expanded = $expanded . ' &lt;em>' . stripslashes( get_option( 'jd_twit_append' ) ) . '&lt;/em>';
+	}
+
+	return $expanded;
+}
+
+/**
+ * Generate post now and schedule update buttons.
+ *
+ * @param string $is_pro 'pro' if Pro.
+ */
+function wpt_display_metabox_status_buttons( $is_pro ) {
+	?>
+	&lt;div class='tweet-buttons'>
+		&lt;div class="wpt-buttons">
+			&lt;button type='button' class='tweet button-primary' data-action='tweet'>&lt;span class='dashicons dashicons-share' aria-hidden='true'>&lt;/span>&lt;?php esc_html_e( 'Share Now', 'wp-to-twitter' ); ?>&lt;/button>
+		&lt;?php
+		if ( 'pro' === $is_pro ) {
+			?>
+			&lt;button type='button' class='tweet schedule button-secondary' data-action='schedule' disabled>&lt;?php esc_html_e( 'Schedule', 'wp-to-twitter' ); ?>&lt;/button>';
+			&lt;button type='button' class='time button-secondary'>&lt;span class='dashicons dashicons-clock' aria-hidden='true'>&lt;/span>&lt;span class='screen-reader-text'>&lt;?php esc_html_e( 'Set Date/Time', 'wp-to-twitter' ); ?>&lt;/span>&lt;/button>
+			&lt;?php
+		}
+		?>
+		&lt;/div>
+	&lt;/div>
+	&lt;div class='wpt_log' aria-live='assertive'>&lt;/div>
+	&lt;?php
+	if ( 'pro' === $is_pro ) {
+		$datavalue  = gmdate( 'Y-m-d', current_time( 'timestamp' ) ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
+		$timevalue  = date_i18n( 'h:s a', current_time( 'timestamp' ) + 3600 ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested
+		?>
+		&lt;div id="wpt_set_tweet_time">
+			&lt;div class="wpt-date-field">
+				&lt;label for="wpt_date">&lt;?php esc_html_e( 'Date', 'wp-to-twitter' ); ?>&lt;/label>
+				&lt;input type="date" value="" class="wpt_date date" name="wpt_datetime" id="wpt_date" data-value="&lt;?php echo esc_attr( $datavalue ); ?>" />&lt;br/>
+			&lt;/div>
+			&lt;div class="wpt-time-field">
+				&lt;label for="wpt_time">&lt;?php esc_html_e( 'Time', 'wp-to-twitter' ); ?>&lt;/label>
+				&lt;input type="time" value="&lt;?php echo esc_attr( $timevalue ); ?>" class="wpt_time time" name="wpt_datetime" id="wpt_time" />
+			&lt;/div>
+		&lt;/div>
+		&lt;?php
+	}
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+	</main>
+    <footer>
+		<a href="https://docs.joedolson.com/">XPoster User Documentation</a> &bull;
+		<a href="https://github.com/joedolson/wp-to-twiter/">XPoster on GitHub</a> &bull;
+		<a href="https://www.xposterpro.com/">Buy XPoster Pro</a>
+	</footer>
+
+	
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_after_meta_template_box.html">wpt_after_meta_template_box</a></li><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_post_to_service.html">wpt_post_to_service</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_post_info.html">wpt_post_info</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_tweet_this_edit.html">wpt_tweet_this_edit</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
