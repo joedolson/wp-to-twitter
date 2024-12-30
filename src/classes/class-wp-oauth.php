@@ -823,7 +823,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				$version = '1.0';
 			}
 			if ( $version !== $this->version ) {
-				throw new WPOAuthException( "OAuth version '$version' not supported" );
+				throw new WPOAuthException( 'OAuth version "' . esc_html( $version ) . '" not supported' );
 			}
 
 			return $version;
@@ -848,9 +848,9 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 
 			if ( ! in_array( $signature_method, array_keys( $this->signature_methods ), true ) ) {
 				throw new WPOAuthException(
-					"Signature method '$signature_method' not supported " .
+					'Signature method "' . esc_html( $signature_method ) . '" not supported ' .
 					'try one of the following: ' .
-					implode( ', ', array_keys( $this->signature_methods ) )
+					implode( ', ', array_map( 'esc_html', array_keys( $this->signature_methods ) ) )
 				);
 			}
 
@@ -893,7 +893,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			$token_field = $request->get_parameter( 'oauth_token' );
 			$token       = $this->data_store->lookup_token( $consumer, $token_type, $token_field );
 			if ( ! $token ) {
-				throw new WPOAuthException( "Invalid $token_type token: $token_field" );
+				throw new WPOAuthException( 'Invalid ' . esc_html( $token_type ) . ' token: ' . esc_html( $token_field ) );
 			}
 
 			return $token;
@@ -948,7 +948,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 			$now = time();
 			if ( abs( $now - $timestamp ) > $this->timestamp_threshold ) {
 				throw new WPOAuthException(
-					"Expired timestamp, yours $timestamp, ours $now"
+					'Expired timestamp, yours: ' . esc_html( $timestamp ) . ', ours: ' . esc_html( $now )
 				);
 			}
 		}
@@ -975,7 +975,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				$timestamp
 			);
 			if ( $found ) {
-				throw new WPOAuthException( "Nonce already used: $nonce" );
+				throw new WPOAuthException( 'Nonce already used: ' . esc_html( $nonce ) );
 			}
 		}
 
