@@ -209,31 +209,31 @@ function wpt_view_rate_limits() {
 		<ul>
 		<?php
 		foreach ( $limits as $auth => $term ) {
-			$author  = ( 0 === (int) $auth ) ? get_option( 'wtt_twitter_username' ) : get_user_meta( $auth, 'wtt_twitter_username', true );
+			$author = ( 0 === (int) $auth ) ? get_option( 'wtt_twitter_username' ) : get_user_meta( $auth, 'wtt_twitter_username', true );
 			?>
 			<li><h4><a href='https://x.com/$author'>@<?php echo esc_html( $author ); ?></a>:</h4><ul>
 				<?php
-			foreach ( $term as $id => $value ) {
-				$count         = count( $value );
-				$term_array    = explode( '+', $id );
-				$t             = $term_array[0];
-				$x             = $term_array[1];
-				$limit         = wpt_get_rate_limit( $t );
-				$term_object   = get_term( $t, $x );
-				$term_label    = $term_object->name;
-				$rate_limiting = ( $count >= $limit ) ? 'rate-limited' : 'active';
-				$dashicon      = ( $count >= $limit ) ? "<span class='dashicons dashicons-no' aria-hidden='true'></span>" : "<span class='dashicons dashicons-yes' aria-hidden='true'></span>";
+				foreach ( $term as $id => $value ) {
+					$count         = count( $value );
+					$term_array    = explode( '+', $id );
+					$t             = $term_array[0];
+					$x             = $term_array[1];
+					$limit         = wpt_get_rate_limit( $t );
+					$term_object   = get_term( $t, $x );
+					$term_label    = $term_object->name;
+					$rate_limiting = ( $count >= $limit ) ? 'rate-limited' : 'active';
+					$dashicon      = ( $count >= $limit ) ? "<span class='dashicons dashicons-no' aria-hidden='true'></span>" : "<span class='dashicons dashicons-yes' aria-hidden='true'></span>";
+					?>
+					<li class='<?php echo esc_attr( $rate_limiting ); ?>'>
+						<?php wp_kses_post( $dashicon . $term_label ); ?>:
+					<?php
+					// Translators: Number of tweets sent, number allowed.
+					echo wp_kses_post( sprintf( _n( '%1$s update sent, %2$s allowed.', '%1$s updates sent, %2$s allowed.', $count, 'wp-to-twitter' ), "<strong>$count</strong>", "<strong>$limit</strong>" ) );
+					?>
+					</li>
+					<?php
+				}
 				?>
-				<li class='<?php echo esc_attr( $rate_limiting ); ?>'>
-					<?php wp_kses_post( $dashicon . $term_label ); ?>:
-				<?php
-				// Translators: Number of tweets sent, number allowed.
-				echo wp_kses_post( sprintf( _n( '%1$s update sent, %2$s allowed.', '%1$s updates sent, %2$s allowed.', $count, 'wp-to-twitter' ), "<strong>$count</strong>", "<strong>$limit</strong>" ) );
-				?>
-				</li>
-				<?php
-			}
-			?>
 			</ul>
 			<?php
 		}
