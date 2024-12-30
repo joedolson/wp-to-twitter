@@ -15,7 +15,7 @@ add_action( 'wp_ajax_wpt_post_update', 'wpt_ajax_tweet' );
  */
 function wpt_ajax_tweet() {
 	if ( ! check_ajax_referer( 'wpt-tweet-nonce', 'security', false ) ) {
-		wp_die( __( 'XPoster: Invalid Security Check', 'wp-to-twitter' ) );
+		wp_die( esc_html__( 'XPoster: Invalid Security Check', 'wp-to-twitter' ) );
 	}
 	$action       = ( 'tweet' === $_REQUEST['tweet_action'] ) ? 'tweet' : 'schedule';
 	$authors      = ( isset( $_REQUEST['tweet_auth'] ) && null !== $_REQUEST['tweet_auth'] ) ? map_deep( $_REQUEST['tweet_auth'], 'sanitize_text_field' ) : false;
@@ -74,13 +74,13 @@ function wpt_ajax_tweet() {
 			$message = is_array( $log ) ? $log['message'] : $log;
 			// Translators: Full text of Update, time scheduled for.
 			$return = ( 'tweet' === $action ) ? $message : sprintf( __( 'Update scheduled: %1$s for %2$s', 'wp-to-twitter' ), '"' . $sentence . '"', $print_schedule );
-			echo $return;
+			echo esc_html( $return );
 			if ( count( $authors ) > 1 ) {
 				echo '<br />';
 			}
 		}
 	} else {
-		echo __( 'You are not authorized to perform this action', 'wp-to-twitter' );
+		echo esc_html__( 'You are not authorized to perform this action', 'wp-to-twitter' );
 	}
 	die;
 }
