@@ -207,10 +207,14 @@ function wpt_view_rate_limits() {
 	}
 	$next_scheduled = human_time_diff( wp_next_scheduled( 'wptratelimits' ), time() );
 	if ( is_array( $limits ) ) {
-		$output = '<ul>';
+		?>
+		<ul>
+			<?php
 		foreach ( $limits as $auth => $term ) {
 			$author  = ( 0 === (int) $auth ) ? get_option( 'wtt_twitter_username' ) : get_user_meta( $auth, 'wtt_twitter_username', true );
-			$output .= "<li><h4><a href='https://twitter.com/$author'>@$author</a>:</h4><ul>";
+			?>
+			<li><h4><a href='https://x.com/$author'>@<?php echo esc_html( $author ); ?></a>:</h4><ul>
+				<?php
 			foreach ( $term as $id => $value ) {
 				$count         = count( $value );
 				$term_array    = explode( '+', $id );
@@ -221,18 +225,31 @@ function wpt_view_rate_limits() {
 				$term_label    = $term_object->name;
 				$rate_limiting = ( $count >= $limit ) ? 'rate-limited' : 'active';
 				$dashicon      = ( $count >= $limit ) ? "<span class='dashicons dashicons-no' aria-hidden='true'></span>" : "<span class='dashicons dashicons-yes' aria-hidden='true'></span>";
-				$output       .= "<li class='$rate_limiting'>$dashicon<strong>$term_label</strong>: ";
+				?>
+				<li class='<?php echo esc_attr( $rate_limiting ); ?>'>
+					<?php wp_kses_post( $dashicon . $term_label ); ?>:
+				<?php
 				// Translators: Number of tweets sent, number allowed.
-				$output .= sprintf( _n( '%1$s update sent, %2$s allowed.', '%1$s updates sent, %2$s allowed.', $count, 'wp-to-twitter' ), "<strong>$count</strong>", "<strong>$limit</strong>" ) . '</li>';
+				echo wp_kses_post( sprintf( _n( '%1$s update sent, %2$s allowed.', '%1$s updates sent, %2$s allowed.', $count, 'wp-to-twitter' ), "<strong>$count</strong>", "<strong>$limit</strong>" ) );
+				?>
+				</li>
+				<?php
 			}
-			$output .= '</ul>';
+			?>
+			</ul>
+			<?php
 		}
-		$output .= '</ul>';
+		?>
+		</ul>
+		<?php
 	} else {
-		$output = __( 'No updates have been sent this hour.', 'wp-to-twitter' );
+		?>
+		<p><?php esc_html_e( 'No updates have been sent this hour.', 'wp-to-twitter' ); ?></p>
+		<?php
 	}
 	// Translators: Time until next scheduled rate limiting reset.
-	$next = wpautop( sprintf( __( ' Next reset in %s.', 'wp-to-twitter' ), $next_scheduled ) );
-
-	return $output . $next;
+	$next = sprintf( __( 'Next reset in %s.', 'wp-to-twitter' ), $next_scheduled );
+	?>
+	<p><?php echo esc_html( $next ); ?></p>
+	<?php
 }
