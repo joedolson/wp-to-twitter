@@ -451,13 +451,13 @@ function wpt_update_settings() {
 									&lt;label for="&lt;?php echo esc_attr( $slug ); ?>-post-published-update">&lt;strong>
 									&lt;?php
 									// Translators: post type.
-									printf( esc_html__( 'Update when %s are published', 'wp-to-twitter' ), $name );
+									echo esc_html( sprintf( __( 'Update when %s are published', 'wp-to-twitter' ), $name ) );
 									?>
 									&lt;/strong>&lt;/label>
 									&lt;label for="&lt;?php echo esc_attr( $slug ); ?>-post-published-text">&lt;br/>
 									&lt;?php
 									// Translators: post type.
-									printf( esc_html__( 'Template for new %s', 'wp-to-twitter' ), $name );
+									echo esc_html( sprintf( __( 'Template for new %s', 'wp-to-twitter' ), $name ) );
 									?>
 									&lt;/label>&lt;br/>
 									&lt;textarea class="wpt-template widefat" name="wpt_post_types[&lt;?php echo esc_attr( $slug ); ?>][post-published-text]" id="&lt;?php echo esc_attr( $slug ); ?>-post-published-text" cols="60" rows="3">&lt;?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-published-text'] ) ) : ''; ?>&lt;/textarea>
@@ -467,12 +467,12 @@ function wpt_update_settings() {
 									&lt;label for="&lt;?php echo esc_attr( $slug ); ?>-post-edited-update">&lt;strong>
 									&lt;?php
 									// Translators: post type name.
-									printf( esc_html__( 'Update when %s are edited', 'wp-to-twitter' ), $name );
+									echo esc_html( sprintf( __( 'Update when %s are edited', 'wp-to-twitter' ), $name ) );
 									?>
 									&lt;/strong>&lt;/label>&lt;br/>&lt;label for="&lt;?php echo esc_attr( $slug ); ?>-post-edited-text">
 									&lt;?php
 									// Translators: post type name.
-									printf( esc_html__( 'Template for %s edits', 'wp-to-twitter' ), $name );
+									echo esc_html( sprintf( __( 'Template for %s edits', 'wp-to-twitter' ), $name ) );
 									?>
 									&lt;/label>&lt;br/>
 									&lt;textarea class="wpt-template widefat" name="wpt_post_types[&lt;?php echo esc_attr( $slug ); ?>][post-edited-text]" id="&lt;?php echo esc_attr( $slug ); ?>-post-edited-text" cols="60" rows="3">&lt;?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-edited-text'] ) ) : ''; ?>&lt;/textarea>
@@ -567,8 +567,7 @@ function wpt_update_settings() {
 			&lt;div class="inside">
 					&lt;div>
 						&lt;?php
-							$nonce = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
-							echo "&lt;div>$nonce&lt;/div>";
+							wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true );
 						?>
 
 						&lt;fieldset>
@@ -625,8 +624,8 @@ function wpt_update_settings() {
 							?>
 							&lt;p>
 								&lt;label for="jd_date_format">&lt;?php esc_html_e( 'Date Format:', 'wp-to-twitter' ); ?>&lt;/label>&lt;br />
-								&lt;input type="text" aria-describedby="date_format_label" name="jd_date_format" id="jd_date_format" size="12" maxlength="12" value="&lt;?php echo trim( esc_attr( $format ) ); ?>" />
-								&lt;span id="date_format_label">&lt;?php esc_html_e( 'Currently:', 'wp-to-twitter' ); ?> &lt;?php echo date_i18n( $format ); ?> &lt;a href='https://wordpress.org/support/article/formatting-date-and-time/'>&lt;?php esc_html_e( 'Date Formatting', 'wp-to-twitter' ); ?>&lt;/a>
+								&lt;input type="text" aria-describedby="date_format_label" name="jd_date_format" id="jd_date_format" size="12" maxlength="12" value="&lt;?php echo esc_attr( trim( $format ) ); ?>" />
+								&lt;span id="date_format_label">&lt;?php esc_html_e( 'Currently:', 'wp-to-twitter' ); ?> &lt;?php echo esc_html( date_i18n( $format ) ); ?> &lt;a href='https://wordpress.org/support/article/formatting-date-and-time/'>&lt;?php esc_html_e( 'Date Formatting', 'wp-to-twitter' ); ?>&lt;/a>
 								&lt;/span>
 							&lt;/p>
 
@@ -671,7 +670,7 @@ function wpt_update_settings() {
 								&lt;?php
 								if ( '1' === get_option( 'wpt_rate_limiting' ) ) {
 									?>
-								&lt;input type="number" name="wpt_default_rate_limit" min="1" id="wpt_default_rate_limit" value="&lt;?php echo wpt_default_rate_limit(); ?>" />
+								&lt;input type="number" name="wpt_default_rate_limit" min="1" id="wpt_default_rate_limit" value="&lt;?php echo absint( wpt_default_rate_limit() ); ?>" />
 								&lt;label for="wpt_default_rate_limit">&lt;?php esc_html_e( 'Default Rate Limit per category per hour', 'wp-to-twitter' ); ?>&lt;/label>
 									&lt;?php
 								}
@@ -803,8 +802,8 @@ function wpt_update_settings() {
 							&lt;legend class='screen-reader-text'>&lt;?php esc_html_e( 'Template tag priority order', 'wp-to-twitter' ); ?>&lt;/legend>
 							&lt;p>
 							&lt;?php
-							_e( 'The order in which items will be abbreviated or removed from your status if the status is too long to send.', 'wp-to-twitter' );
-							_e( 'Tags with lower values will be modified first.', 'wp-to-twitter' );
+							esc_html_e( 'The order in which items will be abbreviated or removed from your status if the status is too long to send.', 'wp-to-twitter' );
+							esc_html_e( 'Tags with lower values will be modified first.', 'wp-to-twitter' );
 							?>
 							&lt;/p>
 							&lt;p>
@@ -871,7 +870,7 @@ function wpt_sidebar() {
 	?>
 	&lt;div class="postbox-container jcd-narrow">
 	&lt;div class="metabox-holder">
-		&lt;div class="ui-sortable meta-box-sortables&lt;?php echo ' ' . $context; ?>">
+		&lt;div class="ui-sortable meta-box-sortables &lt;?php esc_attr( $context ); ?>">
 			&lt;div class="postbox">
 				&lt;?php
 				if ( 'free' === $context ) {
@@ -922,7 +921,7 @@ function wpt_sidebar() {
 						$support     = '';
 					}
 					?>
-					&lt;p>&lt;?php echo $support; ?>&lt;a href="https://docs.xposterpro.com/">&lt;?php esc_html_e( 'Documentation', 'wp-to-twitter' ); ?>&lt;/a>&lt;/p>
+					&lt;p>&lt;?php echo wp_kses_post( $support ); ?>&lt;a href="https://docs.xposterpro.com/">&lt;?php esc_html_e( 'Documentation', 'wp-to-twitter' ); ?>&lt;/a>&lt;/p>
 					&lt;/div>
 				&lt;/div>
 			&lt;/div>
@@ -932,9 +931,8 @@ function wpt_sidebar() {
 			&lt;div class="postbox">
 				&lt;?php
 				$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&amp;amp;refresh_wpt_server_string=true' );
-				$link      = "&lt;a href='" . $admin_url . "'>" . esc_html__( 'Test again', 'wp-to-twitter' ) . '&lt;/a>';
 				?>
-				&lt;h3>&lt;?php esc_html_e( 'X.com Time Check', 'wp-to-twitter' ); ?> &amp;bull; &lt;?php echo $link; ?>&lt;/h3>
+				&lt;h3>&lt;?php esc_html_e( 'X.com Time Check', 'wp-to-twitter' ); ?> &amp;bull; &lt;a href='&lt;?php echo esc_url( $admin_url ); ?>'>&lt;?php esc_html_e( 'Test again', 'wp-to-twitter' ); ?>&lt;/a>&lt;/h3>
 
 				&lt;div class="inside server">
 				&lt;?php wpt_do_server_check(); ?>
@@ -953,8 +951,7 @@ function wpt_sidebar() {
 				&lt;form method="post" action="">
 					&lt;input type="hidden" name="submit-type" value="check-support" />
 					&lt;?php
-					$nonce = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
-					echo "&lt;div>$nonce&lt;/div>";
+					wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true );
 					?>
 					&lt;p>
 						&lt;input type="submit" name="status-update" value="&lt;?php esc_attr_e( 'Test Updates', 'wp-to-twitter' ); ?>" class="button-secondary" />
@@ -1147,7 +1144,7 @@ function wpt_set_auto_tweet_allowed() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_after_meta_template_box.html">wpt_after_meta_template_box</a></li><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_post_to_service.html">wpt_post_to_service</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_post_info.html">wpt_post_info</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_tweet_this_edit.html">wpt_tweet_this_edit</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_after_meta_template_box.html">wpt_after_meta_template_box</a></li><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_post_to_service.html">wpt_post_to_service</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_default_rate_limit.html">wpt_default_rate_limit</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_skeet.html">wpt_do_skeet</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_post_info.html">wpt_post_info</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_tweet_this_edit.html">wpt_tweet_this_edit</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
 </nav>
 
 <br class="clear">

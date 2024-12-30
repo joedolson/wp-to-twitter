@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Action: wpt_tweet_posted - XPoster Hook Doumentation</title>
+    <title>Filter: wpt_default_rate_limit - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Action: wpt_tweet_posted</h1></header>
+    <header><h1 class="page-title">Filter: wpt_default_rate_limit</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_tweet_posted">do_action( 'wpt_tweet_posted', <span class="signature">$connection, $id )</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="wpt_default_rate_limit">apply_filters( 'wpt_default_rate_limit', <span class="signature">$limit, $term )</span><span class="type-signature"> &rarr; {int}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Executes an action after a status is posted successfully.</p>
+    <p>Filter the default rate limit.</p>
 </div>
 
 
@@ -77,30 +77,7 @@
 
         <tr>
             
-                <td class="name"><code>$connection</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The current OAuth connection.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$id</code></td>
+                <td class="name"><code>$limit</code></td>
             
 
             <td class="type">
@@ -116,7 +93,33 @@
 
             
 
-            <td class="description last"><p>Post ID for status update.</p></td>
+            <td class="description last"><p>Integer number of posts allowed.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$term</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+|
+
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Term ID or false for default value.</p></td>
         </tr>
 
     
@@ -157,7 +160,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wp-to-twitter.php.html">wp-to-twitter.php</a>, <a href="wp-to-twitter.php.html#line520">line 520</a>
+        <a href="wpt-rate-limiting.php.html">wpt-rate-limiting.php</a>, <a href="wpt-rate-limiting.php.html#line106">line 106</a>
     </li></ul></dd>
     
 
@@ -180,6 +183,24 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">int</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
