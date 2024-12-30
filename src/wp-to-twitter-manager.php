@@ -425,13 +425,13 @@ function wpt_update_settings() {
 									<label for="<?php echo esc_attr( $slug ); ?>-post-published-update"><strong>
 									<?php
 									// Translators: post type.
-									printf( esc_html__( 'Update when %s are published', 'wp-to-twitter' ), $name );
+									echo esc_html( sprintf( __( 'Update when %s are published', 'wp-to-twitter' ), $name ) );
 									?>
 									</strong></label>
 									<label for="<?php echo esc_attr( $slug ); ?>-post-published-text"><br/>
 									<?php
 									// Translators: post type.
-									printf( esc_html__( 'Template for new %s', 'wp-to-twitter' ), $name );
+									echo esc_html( sprintf( __( 'Template for new %s', 'wp-to-twitter' ), $name ) );
 									?>
 									</label><br/>
 									<textarea class="wpt-template widefat" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-published-text]" id="<?php echo esc_attr( $slug ); ?>-post-published-text" cols="60" rows="3"><?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-published-text'] ) ) : ''; ?></textarea>
@@ -441,12 +441,12 @@ function wpt_update_settings() {
 									<label for="<?php echo esc_attr( $slug ); ?>-post-edited-update"><strong>
 									<?php
 									// Translators: post type name.
-									printf( esc_html__( 'Update when %s are edited', 'wp-to-twitter' ), $name );
+									echo esc_html( sprintf( __( 'Update when %s are edited', 'wp-to-twitter' ), $name ) );
 									?>
 									</strong></label><br/><label for="<?php echo esc_attr( $slug ); ?>-post-edited-text">
 									<?php
 									// Translators: post type name.
-									printf( esc_html__( 'Template for %s edits', 'wp-to-twitter' ), $name );
+									echo esc_html( sprintf( __( 'Template for %s edits', 'wp-to-twitter' ), $name ) );
 									?>
 									</label><br/>
 									<textarea class="wpt-template widefat" name="wpt_post_types[<?php echo esc_attr( $slug ); ?>][post-edited-text]" id="<?php echo esc_attr( $slug ); ?>-post-edited-text" cols="60" rows="3"><?php echo ( isset( $wpt_settings[ $slug ] ) ) ? esc_attr( stripslashes( $wpt_settings[ $slug ]['post-edited-text'] ) ) : ''; ?></textarea>
@@ -541,8 +541,7 @@ function wpt_update_settings() {
 			<div class="inside">
 					<div>
 						<?php
-							$nonce = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
-							echo "<div>$nonce</div>";
+							wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true );
 						?>
 
 						<fieldset>
@@ -599,8 +598,8 @@ function wpt_update_settings() {
 							?>
 							<p>
 								<label for="jd_date_format"><?php esc_html_e( 'Date Format:', 'wp-to-twitter' ); ?></label><br />
-								<input type="text" aria-describedby="date_format_label" name="jd_date_format" id="jd_date_format" size="12" maxlength="12" value="<?php echo trim( esc_attr( $format ) ); ?>" />
-								<span id="date_format_label"><?php esc_html_e( 'Currently:', 'wp-to-twitter' ); ?> <?php echo date_i18n( $format ); ?> <a href='https://wordpress.org/support/article/formatting-date-and-time/'><?php esc_html_e( 'Date Formatting', 'wp-to-twitter' ); ?></a>
+								<input type="text" aria-describedby="date_format_label" name="jd_date_format" id="jd_date_format" size="12" maxlength="12" value="<?php echo esc_attr( trim( $format ) ); ?>" />
+								<span id="date_format_label"><?php esc_html_e( 'Currently:', 'wp-to-twitter' ); ?> <?php echo esc_html( date_i18n( $format ) ); ?> <a href='https://wordpress.org/support/article/formatting-date-and-time/'><?php esc_html_e( 'Date Formatting', 'wp-to-twitter' ); ?></a>
 								</span>
 							</p>
 
@@ -645,7 +644,7 @@ function wpt_update_settings() {
 								<?php
 								if ( '1' === get_option( 'wpt_rate_limiting' ) ) {
 									?>
-								<input type="number" name="wpt_default_rate_limit" min="1" id="wpt_default_rate_limit" value="<?php echo wpt_default_rate_limit(); ?>" />
+								<input type="number" name="wpt_default_rate_limit" min="1" id="wpt_default_rate_limit" value="<?php echo absint( wpt_default_rate_limit() ); ?>" />
 								<label for="wpt_default_rate_limit"><?php esc_html_e( 'Default Rate Limit per category per hour', 'wp-to-twitter' ); ?></label>
 									<?php
 								}
@@ -777,8 +776,8 @@ function wpt_update_settings() {
 							<legend class='screen-reader-text'><?php esc_html_e( 'Template tag priority order', 'wp-to-twitter' ); ?></legend>
 							<p>
 							<?php
-							_e( 'The order in which items will be abbreviated or removed from your status if the status is too long to send.', 'wp-to-twitter' );
-							_e( 'Tags with lower values will be modified first.', 'wp-to-twitter' );
+							esc_html_e( 'The order in which items will be abbreviated or removed from your status if the status is too long to send.', 'wp-to-twitter' );
+							esc_html_e( 'Tags with lower values will be modified first.', 'wp-to-twitter' );
 							?>
 							</p>
 							<p>
@@ -845,7 +844,7 @@ function wpt_sidebar() {
 	?>
 	<div class="postbox-container jcd-narrow">
 	<div class="metabox-holder">
-		<div class="ui-sortable meta-box-sortables<?php echo ' ' . $context; ?>">
+		<div class="ui-sortable meta-box-sortables <?php esc_attr( $context ); ?>">
 			<div class="postbox">
 				<?php
 				if ( 'free' === $context ) {
@@ -896,7 +895,7 @@ function wpt_sidebar() {
 						$support     = '';
 					}
 					?>
-					<p><?php echo $support; ?><a href="https://docs.xposterpro.com/"><?php esc_html_e( 'Documentation', 'wp-to-twitter' ); ?></a></p>
+					<p><?php echo wp_kses_post( $support ); ?><a href="https://docs.xposterpro.com/"><?php esc_html_e( 'Documentation', 'wp-to-twitter' ); ?></a></p>
 					</div>
 				</div>
 			</div>
@@ -906,9 +905,8 @@ function wpt_sidebar() {
 			<div class="postbox">
 				<?php
 				$admin_url = admin_url( 'admin.php?page=wp-tweets-pro&amp;refresh_wpt_server_string=true' );
-				$link      = "<a href='" . $admin_url . "'>" . esc_html__( 'Test again', 'wp-to-twitter' ) . '</a>';
 				?>
-				<h3><?php esc_html_e( 'X.com Time Check', 'wp-to-twitter' ); ?> &bull; <?php echo $link; ?></h3>
+				<h3><?php esc_html_e( 'X.com Time Check', 'wp-to-twitter' ); ?> &bull; <a href='<?php echo esc_url( $admin_url ); ?>'><?php esc_html_e( 'Test again', 'wp-to-twitter' ); ?></a></h3>
 
 				<div class="inside server">
 				<?php wpt_do_server_check(); ?>
@@ -927,8 +925,7 @@ function wpt_sidebar() {
 				<form method="post" action="">
 					<input type="hidden" name="submit-type" value="check-support" />
 					<?php
-					$nonce = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
-					echo "<div>$nonce</div>";
+					wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true );
 					?>
 					<p>
 						<input type="submit" name="status-update" value="<?php esc_attr_e( 'Test Updates', 'wp-to-twitter' ); ?>" class="button-secondary" />

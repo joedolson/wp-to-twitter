@@ -103,6 +103,16 @@ function wpt_default_rate_limit( $term = false ) {
 	$limit = ( '' !== get_option( 'wpt_default_rate_limit' ) ) ? get_option( 'wpt_default_rate_limit' ) : 10;
 	$limit = ( '0' === (string) $limit ) ? 1 : $limit;
 
+	/**
+	 * Filter the default rate limit.
+	 *
+	 * @hook wpt_default_rate_limit
+	 *
+	 * @param {int} $limit Integer number of posts allowed.
+	 * @param {int|bool} $term  Term ID or false for default value.
+	 *
+	 * @return {int}
+	 */
 	return apply_filters( 'wpt_default_rate_limit', $limit, $term );
 }
 
