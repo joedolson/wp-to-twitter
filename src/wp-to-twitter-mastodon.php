@@ -121,90 +121,109 @@ function wtt_connect_mastodon( $auth = false ) {
 		echo '<div class="ui-sortable meta-box-sortables">';
 		echo '<div class="postbox">';
 	}
-	$information = '';
 	if ( $auth ) {
 		wpt_update_authenticated_users();
 	}
 
 	$class   = ( $auth ) ? 'wpt-profile' : 'wpt-settings';
-	$form    = ( ! $auth ) ? '<form action="" method="post" class="wpt-connection-form">' : '';
-	$nonce   = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
 	$connect = wpt_mastodon_connection( $auth );
-	$disable = '';
 	if ( ! $connect ) {
 		$ack = ( ! $auth ) ? get_option( 'wpt_mastodon_token' ) : get_user_meta( $auth, 'wpt_mastodon_token', true );
 		$acs = ( ! $auth ) ? get_option( 'wpt_mastodon_instance' ) : get_user_meta( $auth, 'wpt_mastodon_instance', true );
-
-		$submit = ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . __( 'Connect to Mastodon', 'wp-to-twitter' ) . '" /></p>' : '';
-		print( '
-			<h3 class="wpt-has-link"><span>' . __( 'Connect to Mastodon', 'wp-to-twitter' ) . '</span> <a href="https://xposterpro.com/connecting-xposter-and-mastodon/" class="button button-secondary">' . __( 'Instructions', 'wp-to-twitter' ) . '</a></h3>
-			<div class="inside ' . $class . '">
-			' . $form . '
-				<ol class="wpt-oauth-settings">
-					<li>' . __( 'Navigate to Preferences > Settings > Development in your Mastodon account.', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Click on "New application".', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Name your application.', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Add your website URL', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Set the API Scopes for your application. Required: <code>read</code>, <code>write:statuses</code> and <code>write:media</code>.', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Submit your application.', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Select your application from the list of "Your Applications."', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Copy your Access Token', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Add your Mastodon server URL', 'wp-to-twitter' ) . '</li>
-					<div class="tokens auth-fields">
-					<p>
-						<label for="wpt_mastodon_token">' . __( 'Access Token', 'wp-to-twitter' ) . '</label>
-						<input type="text" size="45" name="wpt_mastodon_token" id="wpt_mastodon_token" value="' . esc_attr( wpt_mask_attr( $ack ) ) . '" />
-					</p>
-					<p>
-						<label for="wpt_mastodon_instance">' . __( 'Instance URL', 'wp-to-twitter' ) . '</label>
-						<input type="text" size="45" name="wpt_mastodon_instance" id="wpt_mastodon_instance" placeholder="https://toot.io" value="' . esc_attr( $acs ) . '" />
-					</p>
-					</div>
-				</ol>
-				' . $submit . '
-				<input type="hidden" name="mastodon_settings" value="wtt_oauth_test" class="hidden" />
-				' . $nonce . '
-			</div>' );
+		?>
+		<h3 class="wpt-has-link"><span><?php esc_html_e( 'Connect to Mastodon', 'wp-to-twitter' ); ?></span> <a href="https://xposterpro.com/connecting-xposter-and-mastodon/" class="button button-secondary"><?php esc_html_e( 'Instructions', 'wp-to-twitter' ); ?></a></h3>
+		<div class="inside <?php esc_attr( $class ); ?>">
+		<?php
+		echo ( ! $auth ) ? '<form action="" method="post" class="wpt-connection-form">' : '';
+		?>
+			<ol class="wpt-oauth-settings">
+				<li><?php echo esc_html_e( 'Navigate to Preferences > Settings > Development in your Mastodon account.', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Click on "New application".', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Name your application.', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Add your website URL', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Set the API Scopes for your application. Required: <code>read</code>, <code>write:statuses</code> and <code>write:media</code>.', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Submit your application.', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Select your application from the list of "Your Applications."', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Copy your Access Token', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Add your Mastodon server URL', 'wp-to-twitter' ); ?></li>
+				<div class="tokens auth-fields">
+				<p>
+					<label for="wpt_mastodon_token"><?php echo esc_html_e( 'Access Token', 'wp-to-twitter' ); ?></label>
+					<input type="text" size="45" name="wpt_mastodon_token" id="wpt_mastodon_token" value="<?php echo esc_attr( wpt_mask_attr( $ack ) ); ?>" />
+				</p>
+				<p>
+					<label for="wpt_mastodon_instance"><?php echo esc_html_e( 'Instance URL', 'wp-to-twitter' ); ?></label>
+					<input type="text" size="45" name="wpt_mastodon_instance" id="wpt_mastodon_instance" placeholder="https://toot.io" value="<?php echo esc_attr( $acs ); ?>" />
+				</p>
+				</div>
+			</ol>
+			<?php
+			echo ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . esc_attr_e( 'Connect to Mastodon', 'wp-to-twitter' ) . '" /></p>' : '';
+			?>
+			<input type="hidden" name="mastodon_settings" value="wtt_oauth_test" class="hidden" />
+			<?php
+			if ( ! $auth ) {
+				wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true );
+				echo '</form>';
+			}
+			?>
+		</div>
+		<?php
 	} elseif ( $connect ) {
 		$ack   = ( ! $auth ) ? get_option( 'wpt_mastodon_token' ) : get_user_meta( $auth, 'wpt_mastodon_token', true );
 		$acs   = ( ! $auth ) ? get_option( 'wpt_mastodon_instance' ) : get_user_meta( $auth, 'wpt_mastodon_instance', true );
 		$uname = ( ! $auth ) ? get_option( 'wpt_mastodon_username' ) : get_user_meta( $auth, 'wpt_mastodon_username', true );
-		$nonce = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
 		$site  = get_bloginfo( 'name' );
-
-		if ( ! $auth ) {
-			$disabled = get_option( 'wpt_disabled_services', array() );
-			$checked  = ( in_array( 'mastodon', array_keys( $disabled ), true ) ) ? ' checked="checked"' : '';
-			$disable  = '<form action="" method="post" class="wpt-connection-form">' . wpt_service_length( 'mastodon' ) . '<p class="checkboxes"><input' . $checked . ' type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_mastodon" value="mastodon"><label for="wpt_disable_mastodon">' . __( 'Disable Posting to Mastodon', 'wp-to-twitter' ) . '</label></p>
-			<input type="hidden" name="mastodon_settings" value="wtt_mastodon_update"><input type="submit" name="wtt_mastodon_update" class="button-secondary" value="' . __( 'Save Changes', 'wp-to-twitter' ) . '" />' . $nonce;
-
-			// Translators: Name of the current site.
-			$submit = '<input type="submit" name="submit" class="button-primary" value="' . sprintf( __( 'Disconnect %s from Mastodon', 'wp-to-twitter' ), $site ) . '" />
-					<input type="hidden" name="mastodon_settings" value="wtt_mastodon_disconnect" class="hidden" />';
-		} else {
-			$submit = '<input type="checkbox" name="mastodon_settings" value="wtt_mastodon_disconnect" id="disconnect" /> <label for="disconnect">' . __( 'Disconnect Your Account from Mastodon', 'wp-to-twitter' ) . '</label>';
-		}
-
-		print( '
-			<h3>' . __( 'Mastodon Connection', 'wp-to-twitter' ) . '</h3>
-			<div class="inside ' . $class . '">
-			' . $information . $form . '
-				<div id="wtt_authentication_display">
-					<ul>
-						<li><strong class="auth_label">' . __( 'Username ', 'wp-to-twitter' ) . '</strong> <code class="auth_code"><a href="' . esc_url( $acs ) . '/@' . esc_attr( $uname ) . '">' . esc_attr( $uname ) . '</a></code></li>
-						<li><strong class="auth_label">' . __( 'Access Token ', 'wp-to-twitter' ) . '</strong> <code class="auth_code">' . esc_attr( wpt_mask_attr( $ack ) ) . '</code></li>
-						<li><strong class="auth_label">' . __( 'Mastodon Instance', 'wp-to-twitter' ) . '</strong> <code class="auth_code">' . esc_attr( $acs ) . '</code></li>
-					</ul>
-					<div>
-					' . $submit . '
-					</div>
+		?>
+		<h3><?php esc_html_e( 'Mastodon Connection', 'wp-to-twitter' ); ?></h3>
+		<div class="inside <?php echo esc_attr( $class ); ?>">
+		<?php
+		echo ( ! $auth ) ? '<form action="" method="post" class="wpt-connection-form">' : '';
+		?>
+			<div id="wtt_authentication_display">
+				<ul>
+					<li><strong class="auth_label"><?php echo esc_html_e( 'Username ', 'wp-to-twitter' ); ?></strong> <code class="auth_code"><a href="<?php echo esc_url( $acs ); ?>/@<?php echo esc_attr( $uname ); ?>"><?php echo esc_attr( $uname ); ?></a></code></li>
+					<li><strong class="auth_label"><?php echo esc_html_e( 'Access Token ', 'wp-to-twitter' ); ?></strong> <code class="auth_code"><?php echo esc_attr( wpt_mask_attr( $ack ) ); ?></code></li>
+					<li><strong class="auth_label"><?php echo esc_html_e( 'Mastodon Instance', 'wp-to-twitter' ); ?></strong> <code class="auth_code"><?php echo esc_attr( $acs ); ?></code></li>
+				</ul>
+				<div>
+			<?php
+			if ( ! $auth ) {
+				// Translators: Name of the current site.
+				$text = sprintf( __( 'Disconnect %s from Mastodon', 'wp-to-twitter' ), $site );
+				?>
+				<input type="submit" name="submit" class="button-primary" value="<?php echo esc_attr( $text ); ?>" />
+				<input type="hidden" name="mastodon_settings" value="wtt_mastodon_disconnect" class="hidden" />
+				<?php
+			} else {
+				?>
+				<input type="checkbox" name="mastodon_settings" value="wtt_mastodon_disconnect" id="disconnect" /> <label for="disconnect"><?php esc_html_e( 'Disconnect Your Account from Mastodon', 'wp-to-twitter' ); ?></label>
+				<?php
+			}
+			?>
 				</div>
-				' . $nonce . $disable . '
-			</div>' );
-
+			</div>
+			<?php
+			if ( ! $auth ) {
+				$disabled = get_option( 'wpt_disabled_services', array() );
+				$checked  = ( in_array( 'mastodon', array_keys( $disabled ), true ) ) ? 'checked' : '';
+				?>
+				<form action="" method="post" class="wpt-connection-form">
+					<?php wpt_service_length( 'mastodon' ); ?>
+					<p class="checkboxes"><input <?php checked( 'checked', $checked ); ?> type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_mastodon" value="mastodon"><label for="wpt_disable_mastodon"><?php esc_html_e( 'Disable Posting to Mastodon', 'wp-to-twitter' ); ?></label></p>
+					<input type="hidden" name="mastodon_settings" value="wtt_mastodon_update"><input type="submit" name="wtt_mastodon_update" class="button-secondary" value="<?php esc_html_e( 'Save Changes', 'wp-to-twitter' ); ?>" />
+					<?php wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true ); ?>
+				</form>
+				<?php
+			}
+			?>
+		</div>
+		<?php
 	}
 	if ( ! $auth ) {
-		echo '</div>
-		</div>';
+		?>
+	</div>
+</div>
+		<?php
 	}
 }
