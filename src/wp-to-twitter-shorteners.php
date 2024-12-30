@@ -660,15 +660,20 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		$shortener = (string) get_option( 'jd_shortener', false );
 		if ( '2' === $shortener && ! function_exists( 'wbitly_shorten_url' ) ) {
 			$install_bitly = admin_url( 'plugin-install.php?s=codehaveli+bitly+url+shortener&tab=search&type=term' );
+			$bitly_plugin  = 'https://wordpress.org/plugins/codehaveli-bitly-url-shortener/';
+			// translators: 1. plugin URL 2. admin plugin search URL.
+			$bitly_text = __( 'Bit.ly support is provided via the <a href="%1$s">Codehaveli Bitly URL Shortener</a> (<a href="%2$s">Install</a>) plug-in, available from WordPress.org', 'wp-to-twitter' );
 			?>
-			<p><?php echo wp_kses_post( sprintf( __( 'Bit.ly support is provided via the <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a> (<a href="%s">Install</a>) plug-in, available from WordPress.org', 'wp-to-twitter' ), $install_bitly ) ); ?></p>
+			<p><?php echo wp_kses_post( sprintf( $bitly_text, $bitly_plugin, $install_bitly ) ); ?></p>
 			<?php
 		}
 		if ( '11' === $shortener && ! class_exists( 'Hum' ) ) {
 			$install_hum = admin_url( 'plugin-install.php?s=hum+url+shortener+norris&tab=search&type=term' );
-			// Translators: search URL to find Hum plug-in.
+			$hum_plugin  = 'https://wordpress.org/plugins/hum/';
+			// translators: 1. plugin URL 2. admin plugin search URL.
+			$hum_text = __( 'Hum is a custom shortener plug-in. Support is provided via the <a href="%1$s">Hum URL Shortener</a> (<a href="%2$s">Install</a>) plug-in, available from WordPress.org', 'wp-to-twitter' );
 			?>
-			<p><?php echo wp_kses_post( sprintf( __( 'Hum is a custom shortener plug-in. Support is provided via the <a href="https://wordpress.org/plugins/hum/">Hum URL Shortener</a> (<a href="%s">Install</a>) plug-in, available from WordPress.org', 'wp-to-twitter' ), $install_hum ) ); ?></p>
+			<p><?php echo wp_kses_post( sprintf( $hum_text, $hum_plugin, $install_hum ) ); ?></p>
 			<?php
 		}
 		?>

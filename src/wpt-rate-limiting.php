@@ -197,8 +197,6 @@ function wpt_add_term_rate_limit( $term ) {
 
 /**
  * View rate limit status.
- *
- * @return string Rate limit info.
  */
 function wpt_view_rate_limits() {
 	$limits = get_option( 'wpt_rate_limits' );
@@ -209,7 +207,7 @@ function wpt_view_rate_limits() {
 	if ( is_array( $limits ) ) {
 		?>
 		<ul>
-			<?php
+		<?php
 		foreach ( $limits as $auth => $term ) {
 			$author  = ( 0 === (int) $auth ) ? get_option( 'wtt_twitter_username' ) : get_user_meta( $auth, 'wtt_twitter_username', true );
 			?>

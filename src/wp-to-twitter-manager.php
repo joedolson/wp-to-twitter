@@ -1027,8 +1027,6 @@ function wpt_do_server_check( $test = false ) {
  * Add control to set maximum length for a status update.
  *
  * @param string $service Name of service.
- *
- * @return string HTML control.
  */
 function wpt_service_length( $service ) {
 	$language = get_locale();
@@ -1077,11 +1075,9 @@ function wpt_service_length( $service ) {
 
 /**
  * Add control to allow auto status updates on imported posts.
- *
- * @return string HTML control.
  */
 function wpt_auto_tweet() {
-	$allow   = ( '0' === get_option( 'wpt_auto_tweet_allowed', '0' ) ) ? false : true;
+	$allow = ( '0' === get_option( 'wpt_auto_tweet_allowed', '0' ) ) ? false : true;
 	?>
 	<p class='wpt_auto_tweet_allowed'>
 		<input type='checkbox' value='1' <?php checked( $allow, true ); ?> id='wpt_auto_tweet_allowed' name='wpt_auto_tweet_allowed' aria-describedby='auto_tweet_note' /> <label for='wpt_auto_tweet_allowed'><?php esc_html_e( 'Allow status updates from Post Importers', 'wp-to-twitter' ); ?></label> 
