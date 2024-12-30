@@ -679,7 +679,6 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		return $message;
 	}
 
-	add_filter( 'wpt_pick_shortener', 'wpt_pick_shortener' );
 	/**
 	 * Form to select your shortener.
 	 */
@@ -687,13 +686,16 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		$shortener = (string) get_option( 'jd_shortener', false );
 		if ( '2' === $shortener &amp;&amp; ! function_exists( 'wbitly_shorten_url' ) ) {
 			$install_bitly = admin_url( 'plugin-install.php?s=codehaveli+bitly+url+shortener&amp;tab=search&amp;type=term' );
-			// Translators: search URL to find Bit.ly plug-in.
-			echo '&lt;p>' . sprintf( __( 'Bit.ly support is provided via the &lt;a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener&lt;/a> (&lt;a href="%s">Install&lt;/a>) plug-in, available from WordPress.org', 'wp-to-twitter' ), $install_bitly ) . '&lt;/p>';
+			?>
+			&lt;p>&lt;?php echo wp_kses_post( sprintf( __( 'Bit.ly support is provided via the &lt;a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener&lt;/a> (&lt;a href="%s">Install&lt;/a>) plug-in, available from WordPress.org', 'wp-to-twitter' ), $install_bitly ) ); ?>&lt;/p>
+			&lt;?php
 		}
 		if ( '11' === $shortener &amp;&amp; ! class_exists( 'Hum' ) ) {
 			$install_hum = admin_url( 'plugin-install.php?s=hum+url+shortener+norris&amp;tab=search&amp;type=term' );
 			// Translators: search URL to find Hum plug-in.
-			echo '&lt;p>' . sprintf( __( 'Hum is a custom shortener plug-in. Support is provided via the &lt;a href="https://wordpress.org/plugins/hum/">Hum URL Shortener&lt;/a> (&lt;a href="%s">Install&lt;/a>) plug-in, available from WordPress.org', 'wp-to-twitter' ), $install_hum ) . '&lt;/p>';
+			?>
+			&lt;p>&lt;?php echo wp_kses_post( sprintf( __( 'Hum is a custom shortener plug-in. Support is provided via the &lt;a href="https://wordpress.org/plugins/hum/">Hum URL Shortener&lt;/a> (&lt;a href="%s">Install&lt;/a>) plug-in, available from WordPress.org', 'wp-to-twitter' ), $install_hum ) ); ?>&lt;/p>
+			&lt;?php
 		}
 		?>
 		&lt;p>

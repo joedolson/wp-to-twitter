@@ -59,13 +59,13 @@ function wpt_checkbox( $field, $sub1 = false, $sub2 = '' ) {
 			$value = 0;
 		}
 		if ( $value &amp;&amp; 1 === (int) $value ) {
-			return 'checked="checked"';
+			return 'checked';
 		} else {
 			return '';
 		}
 	}
 	if ( 1 === (int) get_option( $field ) ) {
-		return 'checked="checked"';
+		return 'checked';
 	}
 
 	return '';
