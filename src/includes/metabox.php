@@ -101,7 +101,9 @@ function wpt_add_twitter_inner_box( $post ) {
 			do_action( 'wpt_after_meta_template_box', $post->ID );
 			if ( get_option( 'jd_keyword_format' ) === '2' ) {
 				$custom_keyword = get_post_meta( $post->ID, '_yourls_keyword', true );
-				echo "<label for='yourls_keyword'>" . __( 'YOURLS Custom Keyword', 'wp-to-twitter' ) . "</label> <input type='text' name='_yourls_keyword' id='yourls_keyword' value='" . esc_attr( $custom_keyword ) . "' />";
+				?>
+				<label for='yourls_keyword'><?php esc_html_e( 'YOURLS Custom Keyword', 'wp-to-twitter' ); ?></label> <input type='text' name='_yourls_keyword' id='yourls_keyword' value='<?php echo esc_attr( $custom_keyword ); ?>' />
+				<?php
 			}
 		} else {
 			?>
@@ -148,9 +150,9 @@ function wpt_add_twitter_inner_box( $post ) {
 		<?php
 	} else {
 		// permissions: this user isn't allowed to post status updates.
-		_e( 'Your role does not have the ability to post status updates from this site.', 'wp-to-twitter' );
+		esc_html_e( 'Your role does not have the ability to post status updates from this site.', 'wp-to-twitter' );
 		?>
-		<input type='hidden' name='_wpt_post_this' value='no'/>
+		<input type='hidden' name='_wpt_post_this' value='no' />
 		<?php
 	}
 }
@@ -173,30 +175,33 @@ function wpt_show_history( $post_id ) {
 		<button type="button" aria-expanded="false" class='history-toggle button-secondary'><span class='dashicons dashicons-plus' aria-hidden="true"></span><?php esc_html_e( 'View Update History', 'wp-to-twitter' ); ?></button>
 	</p>
 	<div class='history'>
-	<h4 class='wpt-past-updates'><em><?php esc_html_e( 'Previous Updates', 'wp-to-twitter' ); ?>:</em></h4>
-	<ul>
+	<h4 class='wpt-past-updates'><?php esc_html_e( 'Previous Updates', 'wp-to-twitter' ); ?>:</h4>
+	<ul class="striped">
 		<?php
-		$has_history   = false;
-		$hidden_fields = '';
+		$has_history = false;
 		if ( is_array( $previous_tweets ) ) {
 			foreach ( $previous_tweets as $previous_tweet ) {
 				if ( '' !== $previous_tweet ) {
-					$has_history     = true;
-					$twitter_intent  = '';
-					$mastodon_intent = '';
-					$bluesky_intent  = '';
+					$has_history = true;
+					$intents     = array();
 					if ( wtt_oauth_test() ) {
-						$twitter_intent = "<a href='https://x.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Repost on X.com', 'wp-to-twitter' ) . '</a>';
+						$intents['x'] = "<a class='wpt-x' href='https://x.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>" . __( 'X', 'wp-to-twitter' ) . '<span class="dashicons dashicons-external" aria-hidden="true"></span></a>';
 					}
 					if ( wpt_mastodon_connection() ) {
-						$mastodon        = get_option( 'wpt_mastodon_instance' );
-						$mastodon_intent = "<a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $previous_tweet ) . "'>" . __( 'Repost on Mastodon', 'wp-to-twitter' ) . '</a>';
+						$mastodon            = get_option( 'wpt_mastodon_instance' );
+						$intents['mastodon'] = "<a class='wpt-mastodon' href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $previous_tweet ) . "'>" . __( 'Mastodon', 'wp-to-twitter' ) . '<span class="dashicons dashicons-external" aria-hidden="true"></span></a>';
 					}
 					if ( wpt_bluesky_connection() ) {
-						$bluesky_intent = "<a href='https://bsky.app/intent/compose?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Repost on Bluesky', 'wp-to-twitter' ) . '</a>';
+						$intents['bluesky'] = "<a class='wpt-bluesky' href='https://bsky.app/intent/compose?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Bluesky', 'wp-to-twitter' ) . '<span class="dashicons dashicons-external" aria-hidden="true"></span></a>';
 					}
-					$hidden_fields .= "<input type='hidden' name='_jd_wp_twitter[]' value='" . esc_attr( $previous_tweet ) . "' />";
-					echo "<li>$previous_tweet $twitter_intent $mastodon_intent $bluesky_intent</li>";
+					$intent_links = implode( ', ', $intents );
+					?>
+					<li><input type='hidden' name='_jd_wp_twitter[]' value='<?php echo esc_attr( $previous_tweet ); ?>' />
+					<?php
+					echo wp_kses_post( "<p class='wpt-previous-tweet'>$previous_tweet</p>$intent_links" );
+					?>
+					</li>
+					<?php
 				}
 			}
 		}
@@ -230,13 +235,18 @@ function wpt_show_history( $post_id ) {
 				}
 			}
 			if ( true === $list ) {
-				echo "<h4 class='wpt-failed-updates'><em>" . __( 'Failed Status Updates', 'wp-to-twitter' ) . ":</em></h4>
-				<ul>$error_list</ul>";
+				?>
+				<h4 class='wpt-failed-updates'><?php esc_html_e( 'Failed Status Updates', 'wp-to-twitter' ); ?></h4>
+				<ul>
+					<?php echo wp_kses_post( $error_list ); ?>
+				</ul>
+				<?php
 			}
 		}
-		echo '<div>' . $hidden_fields . '</div>';
 		if ( $has_history || $list ) {
-			echo "<p><input type='checkbox' name='wpt_clear_history' id='wptch' value='clear' /> <label for='wptch'>" . __( 'Delete Status History', 'wp-to-twitter' ) . '</label></p>';
+			?>
+			<p><input type='checkbox' name='wpt_clear_history' id='wptch' value='clear' /> <label for='wptch'><?php esc_html_e( 'Delete Status History', 'wp-to-twitter' ); ?></label></p>
+			<?php
 		}
 		?>
 	</div>
@@ -294,7 +304,13 @@ function wpt_show_metabox_message( $post, $options ) {
 			}
 			$class = ( '200' !== (string) $http ) ? 'error' : 'success';
 			if ( '' !== trim( $message ) ) {
-				echo "<div class='notice notice-$class'><p>$message</p></div>";
+				wp_admin_notice(
+					$message,
+					array(
+						'type'               => $class,
+						'additional_classes' => 'inline',
+					)
+				);
 			}
 		}
 	}
@@ -339,7 +355,7 @@ function wpt_show_post_switch( $post, $options ) {
 		$yeschecked = ( 'yes' === $post_this ) ? ' checked="checked"' : '';
 		?>
 		<p class='toggle-btn-group'>
-			<input type='radio' name='_wpt_post_this' value='no' id='jtn'><?php echo esc_attr( $nochecked ); ?> /><label for='jtn'><?php esc_html_e( "Don't Post", 'wp-to-twitter' ); ?></label>
+			<input type='radio' name='_wpt_post_this' value='no' id='jtn'<?php echo esc_attr( $nochecked ); ?> /><label for='jtn'><?php esc_html_e( "Don't Post", 'wp-to-twitter' ); ?></label>
 			<input type='radio' name='_wpt_post_this' value='yes' id='jty'<?php echo esc_attr( $yeschecked ); ?> /><label for='jty'><?php esc_html_e( 'Post', 'wp-to-twitter' ); ?></label>
 		</p>
 		<?php
@@ -386,7 +402,7 @@ function wpt_display_metabox_status_buttons( $is_pro ) {
 		<?php
 		if ( 'pro' === $is_pro ) {
 			?>
-			<button type='button' class='tweet schedule button-secondary' data-action='schedule' disabled><?php esc_html_e( 'Schedule', 'wp-to-twitter' ); ?></button>';
+			<button type='button' class='tweet schedule button-secondary' data-action='schedule' disabled><?php esc_html_e( 'Schedule', 'wp-to-twitter' ); ?></button>
 			<button type='button' class='time button-secondary'><span class='dashicons dashicons-clock' aria-hidden='true'></span><span class='screen-reader-text'><?php esc_html_e( 'Set Date/Time', 'wp-to-twitter' ); ?></span></button>
 			<?php
 		}
