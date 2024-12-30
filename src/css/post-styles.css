@@ -20,7 +20,8 @@
 }
 
 .wp-to-twitter .history ul li {
-	margin-bottom: 1rem;
+	padding: 6px;
+	word-wrap: break-word;
 }
 
 .wpt-options-metabox .notice.inline {
