@@ -21,7 +21,7 @@ function wpt_updated_settings() {
 		return;
 	}
 
-	$nonce = $_REQUEST['_wpnonce'];
+	$nonce = ( isset( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : false;
 	if ( ! wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) {
 		wp_die( 'XPoster: Security check failed' );
 	}
@@ -148,8 +148,8 @@ function wpt_updated_settings() {
 	}
 
 	if ( isset( $_POST['submit-type'] ) && 'advanced' === $_POST['submit-type'] ) {
-		$default      = ( isset( $_POST['jd_tweet_default'] ) ) ? sanitize_textarea_field( $_POST['jd_tweet_default'] ) : 0;
-		$default_edit = ( isset( $_POST['jd_tweet_default_edit'] ) ) ? sanitize_textarea_field( $_POST['jd_tweet_default_edit'] ) : 0;
+		$default      = ( isset( $_POST['jd_tweet_default'] ) ) ? sanitize_textarea_field( wp_unslash( $_POST['jd_tweet_default'] ) ) : 0;
+		$default_edit = ( isset( $_POST['jd_tweet_default_edit'] ) ) ? sanitize_textarea_field( wp_unslash( $_POST['jd_tweet_default_edit'] ) ) : 0;
 		update_option( 'jd_tweet_default', $default );
 		update_option( 'jd_tweet_default_edit', $default_edit );
 
@@ -163,20 +163,20 @@ function wpt_updated_settings() {
 
 		update_option( 'wpt_rate_limiting', ( isset( $_POST['wpt_rate_limiting'] ) ) ? 1 : 0 );
 		update_option( 'wpt_inline_edits', ( isset( $_POST['wpt_inline_edits'] ) ) ? 1 : 0 );
-		update_option( 'jd_twit_custom_url', sanitize_text_field( $_POST['jd_twit_custom_url'] ) );
+		update_option( 'jd_twit_custom_url', sanitize_text_field( wp_unslash( $_POST['jd_twit_custom_url'] ) ) );
 		update_option( 'wpt_default_rate_limit', ( isset( $_POST['wpt_default_rate_limit'] ) ? intval( $_POST['wpt_default_rate_limit'] ) : false ) );
 		update_option( 'jd_strip_nonan', ( isset( $_POST['jd_strip_nonan'] ) ) ? 1 : 0 );
-		update_option( 'jd_twit_prepend', sanitize_text_field( $_POST['jd_twit_prepend'] ) );
-		update_option( 'jd_twit_append', sanitize_text_field( $_POST['jd_twit_append'] ) );
+		update_option( 'jd_twit_prepend', sanitize_text_field( wp_unslash( $_POST['jd_twit_prepend'] ) ) );
+		update_option( 'jd_twit_append', sanitize_text_field( wp_unslash( $_POST['jd_twit_append'] ) ) );
 		update_option( 'jd_post_excerpt', (int) $_POST['jd_post_excerpt'] );
 		update_option( 'jd_max_tags', (int) $_POST['jd_max_tags'] );
 		$use_cats = ( isset( $_POST['wpt_use_cats'] ) ) ? 1 : 0;
 		update_option( 'wpt_use_cats', $use_cats );
 		update_option( 'wpt_tag_source', ( ( isset( $_POST['wpt_tag_source'] ) && 'slug' === $_POST['wpt_tag_source'] ) ? 'slug' : '' ) );
 		update_option( 'jd_max_characters', (int) $_POST['jd_max_characters'] );
-		update_option( 'jd_replace_character', ( isset( $_POST['jd_replace_character'] ) ? sanitize_text_field( $_POST['jd_replace_character'] ) : '' ) );
-		update_option( 'jd_date_format', sanitize_text_field( $_POST['jd_date_format'] ) );
-		update_option( 'jd_dynamic_analytics', sanitize_text_field( $_POST['jd-dynamic-analytics'] ) );
+		update_option( 'jd_replace_character', ( isset( $_POST['jd_replace_character'] ) ? sanitize_text_field( wp_unslash( $_POST['jd_replace_character'] ) ) : '' ) );
+		update_option( 'jd_date_format', sanitize_text_field( wp_unslash( $_POST['jd_date_format'] ) ) );
+		update_option( 'jd_dynamic_analytics', sanitize_text_field( wp_unslash( $_POST['jd-dynamic-analytics'] ) ) );
 
 		$twitter_analytics = ( isset( $_POST['twitter-analytics'] ) ) ? absint( $_POST['twitter-analytics'] ) : 0;
 		if ( 1 === (int) $twitter_analytics ) {
@@ -193,10 +193,10 @@ function wpt_updated_settings() {
 			update_option( 'no-analytics', 1 );
 		}
 
-		update_option( 'twitter-analytics-campaign', sanitize_text_field( $_POST['twitter-analytics-campaign'] ) );
+		update_option( 'twitter-analytics-campaign', sanitize_text_field( wp_unslash( $_POST['twitter-analytics-campaign'] ) ) );
 
 		if ( isset( $_POST['wpt_caps'] ) ) {
-			$perms = map_deep( $_POST['wpt_caps'], 'sanitize_text_field' );
+			$perms = map_deep( wp_unslash( $_POST['wpt_caps'] ), 'sanitize_text_field' );
 			$caps  = array( 'wpt_twitter_oauth', 'wpt_twitter_custom', 'wpt_twitter_switch', 'wpt_can_tweet', 'wpt_tweet_now' );
 			foreach ( $perms as $key => $value ) {
 				$role = get_role( $key );
