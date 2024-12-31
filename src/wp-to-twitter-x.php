@@ -461,11 +461,11 @@ function wtt_connect_oauth( $auth = false ) {
 					<li><strong class="auth_label"><?php esc_html_e( 'Access Token Secret ', 'wp-to-twitter' ); ?></strong> <code class="auth_code"><?php echo esc_attr( wpt_mask_attr( $ots ) ); ?></code></li>
 					<?php
 					if ( $bt ) {
-					?>
+						?>
 					<li><strong class="auth_label"><?php esc_html_e( 'Bearer Token ', 'wp-to-twitter' ); ?></strong> <code class="auth_code"><?php echo esc_attr( wpt_mask_attr( $bt ) ); ?></code></li>
-					<?php
+						<?php
 					}
-					?>					
+					?>
 				</ul>
 			<div>
 			<?php
@@ -501,7 +501,7 @@ function wtt_connect_oauth( $auth = false ) {
 		}
 		?>
 	</div>
-	<?php
+		<?php
 	}
 	if ( ! $auth ) {
 		?>
