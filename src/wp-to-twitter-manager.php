@@ -696,8 +696,8 @@ function wpt_update_settings() {
 								<ul class='tabs'>
 								<?php
 								global $wp_roles;
-								$roles          = $wp_roles->get_names();
-								$caps           = array(
+								$roles = $wp_roles->get_names();
+								$caps  = array(
 									'wpt_can_tweet'      => __( 'Can send Status updates', 'wp-to-twitter' ),
 									'wpt_twitter_custom' => __( 'Set Custom Status Update input when creating a Post', 'wp-to-twitter' ),
 									'wpt_twitter_switch' => __( 'Toggle the Post/Don\'t Post option', 'wp-to-twitter' ),

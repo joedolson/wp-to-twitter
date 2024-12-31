@@ -117,8 +117,8 @@ function wtt_connect_bluesky( $auth = false ) {
 	$class   = ( $auth ) ? 'wpt-profile' : 'wpt-settings';
 	$connect = wpt_bluesky_connection( $auth );
 	if ( ! $connect ) {
-		$ack    = ( ! $auth ) ? get_option( 'wpt_bluesky_token' ) : get_user_meta( $auth, 'wpt_bluesky_token', true );
-		$user   = ( ! $auth ) ? get_option( 'wpt_bluesky_username' ) : get_user_meta( $auth, 'wpt_bluesky_username', true );
+		$ack  = ( ! $auth ) ? get_option( 'wpt_bluesky_token' ) : get_user_meta( $auth, 'wpt_bluesky_token', true );
+		$user = ( ! $auth ) ? get_option( 'wpt_bluesky_username' ) : get_user_meta( $auth, 'wpt_bluesky_username', true );
 		?>
 		<h3 class="wpt-has-link"><span><?php esc_html_e( 'Connect to Bluesky', 'wp-to-twitter' ); ?></span> <a href="https://xposterpro.com/connecting-xposter-and-bluesky/" class="button button-secondary"><?php esc_html_e( 'Instructions', 'wp-to-twitter' ); ?></a></h3>
 		<div class="inside <?php esc_attr( $class ); ?>">
@@ -171,19 +171,19 @@ function wtt_connect_bluesky( $auth = false ) {
 				</ul>
 				<div>
 				<?php
-			if ( ! $auth ) {
-				// Translators: Name of the current site.
-				$text = sprintf( __( 'Disconnect %s from Bluesky', 'wp-to-twitter' ), $site );
+				if ( ! $auth ) {
+					// Translators: Name of the current site.
+					$text = sprintf( __( 'Disconnect %s from Bluesky', 'wp-to-twitter' ), $site );
+					?>
+					<input type="submit" name="submit" class="button-primary" value="<?php echo esc_attr( $text ); ?>" />
+					<input type="hidden" name="bluesky_settings" value="wtt_bluesky_disconnect" class="hidden" />
+					<?php
+				} else {
+					?>
+					<input type="checkbox" name="bluesky_settings" value="wtt_bluesky_disconnect" id="disconnect" /> <label for="disconnect"><?php esc_html_e( 'Disconnect Your Account from Bluesky', 'wp-to-twitter' ); ?></label>
+					<?php
+				}
 				?>
-				<input type="submit" name="submit" class="button-primary" value="<?php echo esc_attr( $text ); ?>" />
-				<input type="hidden" name="bluesky_settings" value="wtt_bluesky_disconnect" class="hidden" />
-				<?php
-			} else {
-				?>
-				<input type="checkbox" name="bluesky_settings" value="wtt_bluesky_disconnect" id="disconnect" /> <label for="disconnect"><?php esc_html_e( 'Disconnect Your Account from Bluesky', 'wp-to-twitter' ); ?></label>
-				<?php
-			}
-			?>
 				</div>
 			</div>
 			<?php

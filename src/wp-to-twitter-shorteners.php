@@ -390,6 +390,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	/**
 	 * Get shorteners.
 	 *
+	 * @param int $shortener Selected shortener key.
+	 *
 	 * @return array
 	 */
 	function wpt_get_shorteners( $shortener ) {
@@ -400,8 +402,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				'callback' => 'wpt_bitly_form',
 			),
 			4  => array(
-				'label'    => 'WordPress',
-				'id'       => 'wordpress',
+				'label' => 'WordPress',
+				'id'    => 'wordpress',
 			),
 			5  => array(
 				'label'    => 'YOURLS (Local)',
@@ -421,7 +423,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			11 => array(
 				'label' => 'Hum',
 				'id'    => 'hum',
-			)
+			),
 		);
 		/**
 		 * Filter available shorteners.
@@ -502,7 +504,6 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		<?php
 	}
 
-	
 	/**
 	 * Remote YOURLS form.
 	 */
@@ -560,7 +561,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	}
 
 	/**
-	 * jotURL form.
+	 * Shortener: jotURL form.
 	 */
 	function wpt_joturl_form() {
 		?>
@@ -599,8 +600,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 * Controls for adding shortener relevant data.
 	 */
 	function wpt_shortener_controls() {
-		$shortener  = (int) get_option( 'jd_shortener' );
-		$admin_url  = admin_url( 'admin.php?page=wp-tweets-pro' );
+		$shortener = (int) get_option( 'jd_shortener' );
+		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 		?>
 		<div class="panel">
 			<form method="post" action="<?php echo esc_url( add_query_arg( 'tab', 'shortener', $admin_url ) ); ?>">

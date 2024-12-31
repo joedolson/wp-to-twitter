@@ -271,7 +271,7 @@ function wpt_show_last_update() {
 				$notice = __( 'Unrecognized error', 'wp-to-twitter' );
 				$code   = '';
 			}
-			$message = "<strong>" . __( 'Last Status Update', 'wp-to-twitter' ) . ": <code>$code</code></strong> $title &raquo; $notice";
+			$message = '<strong>' . __( 'Last Status Update', 'wp-to-twitter' ) . ": <code>$code</code></strong> $title &raquo; $notice";
 			wp_admin_notice(
 				$message,
 				array(
@@ -330,8 +330,6 @@ function wpt_check_caps( $role, $cap ) {
  * @param string $role Role name.
  * @param string $cap Capability name.
  * @param string $name Display name for capability.
- *
- * @return Checkbox HTML.
  */
 function wpt_cap_checkbox( $role, $cap, $name ) {
 	$id       = 'wpt_caps_' . $role . '_' . $cap;
@@ -404,9 +402,9 @@ function wpt_show_debug() {
 							} else {
 								$datetime = $date[0];
 							}
-							$date     = date_i18n( 'Y-m-d H:i:s', $datetime );
-							$subject  = $entry[1];
-							$body     = $entry[2];
+							$date    = date_i18n( 'Y-m-d H:i:s', $datetime );
+							$subject = $entry[1];
+							$body    = $entry[2];
 							?>
 							<li>
 								<button type='button' class='toggle-debug button-secondary' aria-expanded='false'>
