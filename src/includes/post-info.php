@@ -82,7 +82,7 @@ function wpt_post_info( $post_ID ) {
 	$values['postExcerpt'] = ( $post_excerpt ) ? html_entity_decode( $post_excerpt, ENT_COMPAT, $encoding ) : '';
 	$thisposttitle         = $post->post_title;
 	if ( '' === $thisposttitle && isset( $_POST['title'] ) ) {
-		$thisposttitle = wp_kses_post( $_POST['title'] );
+		$thisposttitle = wp_kses_post( wp_unslash( $_POST['title'] ) );
 	}
 	$thisposttitle = wp_strip_all_tags( apply_filters( 'the_title', stripcslashes( $thisposttitle ), $post_ID ) );
 	// These are common sequences that may not be fixed by html_entity_decode due to double encoding.
