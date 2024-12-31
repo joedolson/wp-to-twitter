@@ -1065,7 +1065,7 @@ function wpt_service_length( $service ) {
 		case 'x':
 			$service_max = $default;
 			$field_max   = 25000;
-			$max_warning = "<span id='maxlengthwarning'>" . __( 'X.com Statuses longer than 280 characters require an <a href="https://help.twitter.com/en/using-x/x-premium">X Premium</a> subscription.', 'wp-to-twitter' ) . '</span>';
+			$max_warning = "<span id='maxlengthwarning'>" . __( 'X.com Statuses longer than 280 characters require an <a href="https://help.x.com/en/using-x/x-premium">X Premium</a> subscription.', 'wp-to-twitter' ) . '</span>';
 			break;
 		case 'mastodon':
 			$service_max = 500;
@@ -1083,8 +1083,8 @@ function wpt_service_length( $service ) {
 	$update_length = intval( ( get_option( 'wpt_' . $service . '_length' ) ) ? get_option( 'wpt_' . $service . '_length' ) : $default );
 	?>
 	<p class='tweet_length_control'>
-		<label for='wpt_<?php esc_attr( $service ); ?>_length'><?php esc_html_e( 'Maximum Status Length', 'wp-to-twitter' ); ?></label>
-		<input type='number' min='0' max='<?php echo absint( $field_max ); ?>' step='1' value='<?php echo absint( $update_length ); ?>' id='wpt_<?php esc_attr( $service ); ?>_length' aria-describedby='maxlengthwarning' name='wpt_<?php esc_attr( $service ); ?>_length' />
+		<label for='wpt_<?php echo esc_attr( $service ); ?>_length'><?php esc_html_e( 'Maximum Status Length', 'wp-to-twitter' ); ?></label>
+		<input type='number' min='0' max='<?php echo absint( $field_max ); ?>' step='1' value='<?php echo absint( $update_length ); ?>' id='wpt_<?php echo esc_attr( $service ); ?>_length' aria-describedby='maxlengthwarning' name='wpt_<?php echo esc_attr( $service ); ?>_length' />
 		<?php echo wp_kses_post( $max_warning ); ?>
 	</p>
 	<?php
