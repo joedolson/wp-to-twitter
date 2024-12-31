@@ -34,6 +34,17 @@
 		allowed: wptSettings.allowed,
 		counterText: wptSettings.text
 	});
+	// debugging
+	$( 'button.toggle-debug' ).on( 'click', function() {
+		var next = $( this ).next( 'pre' );
+		if ( next.is( ':visible' ) ) {
+			next.hide();
+			$( this ).attr( 'aria-expanded', 'false' );
+		} else {
+			next.show();
+			$( this ).attr( 'aria-expanded', 'true' );
+		}
+	});
 	// tweet history log
 	$('.wp-to-twitter .history').hide();
 	$('.wp-to-twitter .history-toggle').on('click', function (e) {

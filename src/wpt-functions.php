@@ -176,7 +176,6 @@ function wpt_check_functions() {
  * Generate Settings links.
  */
 function wpt_settings_tabs() {
-	$output   = '';
 	$username = get_option( 'wtt_twitter_username' );
 	$default  = ( '' === $username || false === $username ) ? 'connection' : 'basic';
 	$current  = ( isset( $_GET['tab'] ) ) ? sanitize_text_field( $_GET['tab'] ) : $default;
@@ -213,14 +212,15 @@ function wpt_settings_tabs() {
 
 	foreach ( $pages as $key => $value ) {
 		$selected = ( $key === $current ) ? ' nav-tab-active' : '';
-		$url      = esc_url( add_query_arg( 'tab', $key, $admin_url ) );
+		$url      = add_query_arg( 'tab', $key, $admin_url );
 		if ( 'pro' === $key ) {
-			$output .= "<a class='wpt-pro-tab nav-tab$selected' href='$url'>$value</a>";
-		} else {
-			$output .= "<a class='nav-tab$selected' href='$url'>$value</a>";
+			$selected .= ' wpt-pro-tab';
 		}
+		?>
+		<a class='nav-tab<?php echo esc_attr( $selected ); ?>' href='<?php echo esc_url( $url ); ?>'><?php echo wp_kses_post( $value ); ?></a>
+		<?php
+
 	}
-	echo $output;
 }
 
 /**
@@ -271,7 +271,13 @@ function wpt_show_last_update() {
 				$notice = __( 'Unrecognized error', 'wp-to-twitter' );
 				$code   = '';
 			}
-			echo "<div class='notice notice-info'><p><strong>" . __( 'Last Status Update', 'wp-to-twitter' ) . ": <code>$code</code></strong> $title &raquo; $notice</p></div>";
+			$message = "<strong>" . __( 'Last Status Update', 'wp-to-twitter' ) . ": <code>$code</code></strong> $title &raquo; $notice";
+			wp_admin_notice(
+				$message,
+				array(
+					'type' => 'info',
+				)
+			);
 		}
 	}
 }
@@ -285,20 +291,20 @@ function wpt_handle_errors() {
 	}
 	if ( '1' === get_option( 'wp_url_failure' ) ) {
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
-		$nonce     = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false );
-		$error     = '<div class="error"><p>' . __( 'The query to the URL shortener API failed, and your URL was not shrunk. The full post URL was attached to your status update. Check with your URL shortening provider to see if there are any known issues.', 'wp-to-twitter' ) .
-			'</p><form method="post" action="' . $admin_url . '">
+		?>
+		<div class="error">
+			<p><?php esc_html_e( 'The query to the URL shortener API failed, and your URL was not shrunk. The full post URL was attached to your status update. Check with your URL shortening provider to see if there are any known issues.', 'wp-to-twitter' ); ?></p>
+			<form method="post" action="<?php esc_url( $admin_url ); ?>">
 				<div>
 					<input type="hidden" name="submit-type" value="clear-error"/>
-					' . $nonce . '
+					<?php wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true ); ?>
 				</div>
 				<p>
-					<input type="submit" name="submit" value="' . __( 'Clear Error Messages', 'wp-to-twitter' ) . '" class="button-primary" />
+					<input type="submit" name="submit" value="<?php esc_html_e( 'Clear Error Messages', 'wp-to-twitter' ); ?>" class="button-primary" />
 				</p>
 			</form>
-		</div>';
-
-		echo $error;
+		</div>
+		<?php
 	}
 }
 
@@ -382,44 +388,48 @@ function wpt_show_debug() {
 	if ( WPT_DEBUG ) {
 		$records   = '';
 		$debug_log = get_post_meta( $post_ID, '_wpt_debug_log' );
-		if ( is_array( $debug_log ) ) {
-			foreach ( $debug_log as $entry ) {
-				$microtime = $entry[0];
-				$date      = explode( ' ', $microtime );
-				if ( count( $date ) > 1 ) {
-					$datetime = $date[1];
-				} else {
-					$datetime = $date[0];
-				}
-				$date     = date_i18n( 'Y-m-d H:i:s', $datetime );
-				$subject  = $entry[1];
-				$body     = $entry[2];
-				$records .= "<li><button type='button' class='toggle-debug button-secondary' aria-expanded='false'><div><strong>$date</strong><br />" . esc_html( $subject ) . "</div><span class='dashicons dashicons-plus' aria-hidden='true'></span></button><pre class='wpt-debug-details'>" . esc_html( $body ) . '</pre></li>';
-			}
-		}
-		$script = "
-<script>
-(function ($) {
-	$(function() {
-		$( 'button.toggle-debug' ).on( 'click', function() {
-			var next = $( this ).next( 'pre' );
-			if ( $( this ).next( 'pre' ).is( ':visible' ) ) {
-				$( this ).next( 'pre' ).hide();
-				$( this ).attr( 'aria-expanded', 'false' );
-			} else {
-				$( this ).next( 'pre' ).show();
-				$( this ).attr( 'aria-expanded', 'true' );
-			}
-		});
-	})
-})(jQuery);
-</script>";
-		$delete = "<ul>
-		<li><input type='checkbox' name='wpt-delete-debug' value='true' id='wpt-delete-debug'> <label for='wpt-delete-debug'>" . __( 'Delete debugging logs on this post', 'wp-to-twitter' ) . "</label></li>
-		<li><input type='checkbox' name='wpt-delete-all-debug' value='true' id='wpt-delete-all-debug'> <label for='wpt-delete-all-debug'>" . __( 'Delete debugging logs for all posts', 'wp-to-twitter' ) . '</label></li>
-		</ul>';
 
-		echo ( '' !== $records ) ? "$script<div class='wpt-debug-log'><h3>Debugging Log:</h3><ul>$records</ul></div>$delete" : '';
+		if ( ! empty( $debug_log ) ) {
+			?>
+			<div class='wpt-debug-log'>
+				<h3>Debugging Log:</h3>
+				<ul>
+					<?php
+					if ( is_array( $debug_log ) && ! empty( $debug_log ) ) {
+						foreach ( $debug_log as $entry ) {
+							$microtime = $entry[0];
+							$date      = explode( ' ', $microtime );
+							if ( count( $date ) > 1 ) {
+								$datetime = $date[1];
+							} else {
+								$datetime = $date[0];
+							}
+							$date     = date_i18n( 'Y-m-d H:i:s', $datetime );
+							$subject  = $entry[1];
+							$body     = $entry[2];
+							?>
+							<li>
+								<button type='button' class='toggle-debug button-secondary' aria-expanded='false'>
+									<div>
+										<strong><?php echo esc_html( $date ); ?></strong><br />
+										<?php echo esc_html( $subject ); ?>
+									</div>
+									<span class='dashicons dashicons-plus' aria-hidden='true'></span>
+								</button>
+								<pre class='wpt-debug-details'><?php echo esc_html( $body ); ?></pre>
+							</li>
+							<?php
+						}
+					}
+					?>
+				</ul>
+			</div>
+			<ul>
+				<li><input type='checkbox' name='wpt-delete-debug' value='true' id='wpt-delete-debug'> <label for='wpt-delete-debug'><?php esc_html_e( 'Delete debugging logs on this post', 'wp-to-twitter' ); ?></label></li>
+				<li><input type='checkbox' name='wpt-delete-all-debug' value='true' id='wpt-delete-all-debug'> <label for='wpt-delete-all-debug'><?php esc_html_e( 'Delete debugging logs for all posts', 'wp-to-twitter' ); ?></label></li>
+			</ul>
+			<?php
+		}
 	}
 }
 
