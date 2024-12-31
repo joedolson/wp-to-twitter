@@ -413,135 +413,238 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		}
 	}
 
-	add_filter( 'wpt_shortener_controls', 'wpt_shortener_controls' );
+	/**
+	 * Get shorteners.
+	 *
+	 * @return array
+	 */
+	function wpt_get_shorteners() {
+		$shorteners = array(
+			2  => array(
+				'label'    => 'Bit.ly',
+				'id'       => 'bitly',
+				'callback' => 'wpt_bitly_form',
+			),
+			4  => array(
+				'label'    => 'WordPress',
+				'id'       => 'wordpress',
+			),
+			5  => array(
+				'label'    => 'YOURLS (Local)',
+				'id'       => 'yourls_local',
+				'callback' => 'wpt_local_yourls_form',
+			),
+			6  => array(
+				'label'    => 'YOURLS',
+				'id'       => 'yourls_remote',
+				'callback' => 'wpt_remote_yourls_form',
+			),
+			10 => array(
+				'label'    => 'jotURL',
+				'id'       => 'joturl',
+				'callback' => 'wpt_joturl_form',
+			),
+			11 => array(
+				'label' => 'Hum',
+				'id'    => 'hum',
+			)
+		);
+		/**
+		 * Filter available shorteners.
+		 *
+		 * @param {array} $shorteners Array of shorteners by ID.
+		 * @param {int}   $shortener Selected shortener.
+		 *
+		 * @return {array}
+		 */
+		$shorteners = apply_filters( 'wpt_shorteners', $shorteners, $shortener );
+
+		return $shorteners;
+	}
+
+	/**
+	 * Fetch a given shortener.
+	 *
+	 * @param int $shortener Shortener ID.
+	 */
+	function wpt_show_shortener( $shortener ) {
+		$shorteners = wpt_get_shorteners();
+		if ( isset( $shorteners[ $shortener ] ) ) {
+			$callback = $shorteners[ $shortener ]['callback'];
+		} else {
+			$callback = 'wpt_no_shortener_settings';
+		}
+
+		call_user_func( $callback );
+	}
+
+	/**
+	 * Default shortener no settings.
+	 */
+	function wpt_no_shortener_settings() {
+		?>
+		&lt;p>&lt;?php esc_html_e( 'Your selected shortener has no settings', 'wp-to-twitter' ); ?>&lt;/p>
+		&lt;?php
+	}
+
+	/**
+	 * Local YOURLS form.
+	 */
+	function wpt_local_yourls_form() {
+		?>
+		&lt;p>
+			&lt;label for="yourlspath">&lt;?php esc_html_e( 'Path to your YOURLS config file', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
+			&lt;input type="text" id="yourlspath" name="yourlspath" class="widefat" value="&lt;?php echo esc_attr( get_option( 'yourlspath' ) ); ?>"/>&lt;br/>
+			&lt;small>&lt;?php esc_html_e( 'Example:', 'wp-to-twitter' ); ?> &lt;code>/home/username/www/www/yourls/user/config.php&lt;/code>
+			&lt;/small>
+		&lt;/p>
+		&lt;p>
+			&lt;label for="yourlstoken">&lt;?php esc_html_e( 'YOURLS signature token:', 'wp-to-twitter' ); ?>&lt;/label>
+			&lt;input type="text" name="yourlstoken" id="yourlstoken" size="30" value="&lt;?php echo esc_attr( get_option( 'yourlstoken' ) ); ?>"/>
+		&lt;/p>
+		&lt;?php
+		if ( get_option( 'yourlsapi' ) &amp;&amp; get_option( 'yourlslogin' ) ) {
+			?>
+			&lt;p>
+				&lt;em>&lt;?php esc_html_e( 'Your YOURLS username and password are saved. If you add a signature token, that will be used for API calls and your username and password will be deleted from the database.', 'wp-to-twitter' ); ?>&lt;/em>
+			&lt;/p>
+			&lt;?php
+		}
+		?>
+		&lt;p>
+			&lt;input type="radio" name="jd_keyword_format" id="jd_keyword_id" value="1" &lt;?php checked( get_option( 'jd_keyword_format' ), 1 ); ?> />
+			&lt;label for="jd_keyword_id">&lt;?php esc_html_e( 'Post ID for YOURLS url slug.', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
+			&lt;input type="radio" name="jd_keyword_format" id="jd_keyword" value="2" &lt;?php checked( get_option( 'jd_keyword_format' ), 2 ); ?> />
+			&lt;label for="jd_keyword">&lt;?php esc_html_e( 'Custom keyword for YOURLS url slug.', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
+			&lt;input type="radio" name="jd_keyword_format" id="jd_keyword_default" value="0" &lt;?php checked( get_option( 'jd_keyword_format' ), 0 ); ?> />
+			&lt;label for="jd_keyword_default">&lt;?php esc_html_e( 'Default: sequential URL numbering.', 'wp-to-twitter' ); ?>&lt;/label>
+		&lt;/p>
+		&lt;div>
+			&lt;input type="hidden" name="submit-type" value="yourlsapi" />
+		&lt;/div>
+		&lt;p>
+			&lt;input type="submit" name="submit" value="&lt;?php esc_attr_e( 'Save URL Shortener Settings', 'wp-to-twitter' ); ?>" class="button-primary" />
+		&lt;/p>
+		&lt;?php
+	}
+
+	
+	/**
+	 * Remote YOURLS form.
+	 */
+	function wpt_remote_yourls_form() {
+		?>
+		&lt;p>
+			&lt;label for="yourlsurl">&lt;?php esc_html_e( 'URI to the YOURLS API', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
+			&lt;input type="text" id="yourlsurl" name="yourlsurl" class="widefat" value="&lt;?php echo esc_attr( get_option( 'yourlsurl' ) ); ?>"/>&lt;br/>
+			&lt;small>&lt;?php esc_html_e( 'Example:', 'wp-to-twitter' ); ?> &lt;code>https://domain.com/yourls-api.php&lt;/code>
+			&lt;/small>
+		&lt;/p>
+		&lt;p>
+			&lt;label for="yourlstoken">&lt;?php esc_html_e( 'YOURLS signature token:', 'wp-to-twitter' ); ?>&lt;/label>
+			&lt;input type="text" name="yourlstoken" id="yourlstoken" size="30" value="&lt;?php echo esc_attr( get_option( 'yourlstoken' ) ); ?>"/>
+		&lt;/p>
+		&lt;?php
+		if ( get_option( 'yourlsapi' ) &amp;&amp; get_option( 'yourlslogin' ) ) {
+			?>
+			&lt;p>
+				&lt;em>&lt;?php esc_html_e( 'Your YOURLS username and password are saved. If you add a signature token, that will be used for API calls and your username and password will be deleted from the database.', 'wp-to-twitter' ); ?>&lt;/em>
+			&lt;/p>
+			&lt;?php
+		}
+		?>
+		&lt;p>
+			&lt;input type="radio" name="jd_keyword_format" id="jd_keyword_id" value="1" &lt;?php checked( get_option( 'jd_keyword_format' ), 1 ); ?> />
+			&lt;label for="jd_keyword_id">&lt;?php esc_html_e( 'Post ID for YOURLS url slug.', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
+			&lt;input type="radio" name="jd_keyword_format" id="jd_keyword" value="2" &lt;?php checked( get_option( 'jd_keyword_format' ), 2 ); ?> />
+			&lt;label for="jd_keyword">&lt;?php esc_html_e( 'Custom keyword for YOURLS url slug.', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
+			&lt;input type="radio" name="jd_keyword_format" id="jd_keyword_default" value="0" &lt;?php checked( get_option( 'jd_keyword_format' ), 0 ); ?> />
+			&lt;label for="jd_keyword_default">&lt;?php esc_html_e( 'Default: sequential URL numbering.', 'wp-to-twitter' ); ?>&lt;/label>
+		&lt;/p>
+		&lt;div>
+			&lt;input type="hidden" name="submit-type" value="yourlsapi" />
+		&lt;/div>
+		&lt;p>
+			&lt;input type="submit" name="submit" value="&lt;?php esc_attr_e( 'Save URL Shortener Settings', 'wp-to-twitter' ); ?>" class="button-primary" />
+		&lt;/p>
+		&lt;?php
+	}
+
+	/**
+	 * Bitly form.
+	 */
+	function wpt_bitly_form() {
+		if ( function_exists( 'wbitly_shorten_url' ) ) {
+			?>
+			&lt;p>&lt;?php wp_kses_post( __( 'XPoster supports Bit.ly shortened links via &lt;a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener&lt;/a>. If you are having issues with Bit.ly URLs, please request support from &lt;a href="https://wordpress.org/support/plugin/codehaveli-bitly-url-shortener/">the plugin support forums&lt;/a>.', 'wp-to-twitter' ) ); ?>&lt;/p>
+			&lt;?php
+		} else {
+			?>
+			&lt;p>&lt;?php wp_kses_post( __( 'XPoster supports Bit.ly shortened links via &lt;a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener&lt;/a>. Install that plug-in to use Bit.ly', 'wp-to-twitter' ) ); ?>&lt;/p>
+			&lt;?php
+		}
+	}
+
+	/**
+	 * jotURL form.
+	 */
+	function wpt_joturl_form() {
+		?>
+		&lt;p>
+			&lt;label for="joturllogin">&lt;?php esc_html_e( 'Your jotURL public API key:', 'wp-to-twitter' ); ?>&lt;/label>&lt;br>
+			&lt;input type="text" name="joturllogin" id="joturllogin" value="&lt;?php echo esc_attr( get_option( 'joturllogin' ) ); ?>"/>
+		&lt;/p>
+		&lt;p>
+			&lt;label for="joturlapi">&lt;?php esc_html_e( 'Your jotURL private API key:', 'wp-to-twitter' ); ?>&lt;/label>&lt;br>
+			&lt;input type="text" name="joturlapi" id="joturlapi" size="40" value="&lt;?php echo esc_attr( get_option( 'joturlapi' ) ); ?>"/>
+		&lt;/p>
+		&lt;p>
+			&lt;label for="joturl_domain">&lt;?php esc_html_e( 'Your jotURL custom domain:', 'wp-to-twitter' ); ?>&lt;/label>&lt;br>
+			&lt;input type="text" name="joturl_domain" id="joturl_domain" size="40" value="&lt;?php echo esc_attr( get_option( 'joturl_domain' ) ); ?>"/>
+		&lt;/p>
+		&lt;p>
+			&lt;label for="joturl_longurl_params">&lt;?php esc_html_e( 'Parameters to add to the long URL (before URL shortening):', 'wp-to-twitter' ); ?>&lt;/label>&lt;br>
+			&lt;input type="text" name="joturl_longurl_params" id="joturl_longurl_params" size="40" value="&lt;?php echo esc_attr( get_option( 'joturl_longurl_params' ) ); ?>"/>
+		&lt;/p>
+
+		&lt;p>
+			&lt;label for="joturl_shorturl_params">&lt;?php esc_html_e( 'Parameters to add to the short URL (after URL shortening):', 'wp-to-twitter' ); ?>&lt;/label>&lt;br>
+			&lt;input type="text" name="joturl_shorturl_params" id="joturl_shorturl_params" size="40" value="&lt;?php echo esc_attr( get_option( 'joturl_shorturl_params' ) ); ?>"/>
+		&lt;/p>
+		&lt;p>
+			&lt;a href="https://joturl.com/reserved/settings.html#tools-api">&lt;?php esc_html_e( 'View your jotURL public and private API key', 'wp-to-twitter' ); ?>&lt;/a>
+		&lt;/p>
+		&lt;div>&lt;input type="hidden" name="submit-type" value="joturlapi"/>&lt;/div>
+		&lt;p>
+			&lt;input type="submit" name="submit" value="&lt;?php esc_attr_e( 'Save URL Shortener Settings', 'wp-to-twitter' ); ?>" class="button-primary" />
+		&lt;/p>
+		&lt;?php
+	}
+
 	/**
 	 * Controls for adding shortener relevant data.
 	 */
 	function wpt_shortener_controls() {
-		$shortener  = get_option( 'jd_shortener' );
+		$shortener  = (int) get_option( 'jd_shortener' );
 		$admin_url  = admin_url( 'admin.php?page=wp-tweets-pro' );
-		$form_start = '&lt;div class="panel">
-							&lt;form method="post" action="' . add_query_arg( 'tab', 'shortener', $admin_url ) . '">
-								&lt;div>&lt;input type="hidden" name="wpt_shortener_update" value="true" />&lt;/div>
-								&lt;div>';
-		$nonce      = wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false );
-		$form_end   = '&lt;div>' . $nonce . '&lt;/div>
-								&lt;p>
-									&lt;input type="submit" name="submit" value="' . esc_attr__( 'Save URL Shortener Settings', 'wp-to-twitter' ) . '" class="button-primary" />
-								&lt;/p>
-							&lt;/div>
-						&lt;/form>
-					&lt;/div>';
-		// for the moment, this just displays the fields. Eventually, a real filter.
 		?>
-		&lt;div class="ui-sortable meta-box-sortables">
-			&lt;div class="postbox">
-				&lt;h3>
-					&lt;span>&lt;?php esc_html_e( 'URL Shortener Account Settings', 'wp-to-twitter' ); ?>&lt;/span>
-				&lt;/h3>
-
-				&lt;div class="inside">
-					&lt;?php
-					if ( 7 === (int) $shortener ) {
-						echo '&lt;p>' . esc_html__( 'The Su.pr URL shortener was shut down when Stumbleupon closed doors in June 2018.', 'wp-to-twitter' ) . '&lt;/p>';
-					} elseif ( 2 === (int) $shortener ) {
-						if ( function_exists( 'wbitly_shorten_url' ) ) {
-							echo '&lt;p>' . __( 'XPoster supports Bit.ly shortened links via &lt;a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener&lt;/a>. If you are having issues with Bit.ly URLs, please request support from &lt;a href="https://wordpress.org/support/plugin/codehaveli-bitly-url-shortener/">the plugin support forums&lt;/a>.', 'wp-to-twitter' ) . '&lt;/p>';
-						} else {
-							echo '&lt;p>' . __( 'XPoster supports Bit.ly shortened links via &lt;a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener&lt;/a>. Install that plug-in to use Bit.ly', 'wp-to-twitter' ) . '&lt;/p>';
-						}
-					} elseif ( 5 === (int) $shortener || 6 === (int) $shortener ) {
-						echo $form_start;
-						if ( 5 === (int) $shortener ) {
-							?>
-						&lt;p>
-							&lt;label for="yourlspath">&lt;?php esc_html_e( 'Path to your YOURLS config file', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
-							&lt;input type="text" id="yourlspath" name="yourlspath" class="widefat" value="&lt;?php echo esc_attr( get_option( 'yourlspath' ) ); ?>"/>&lt;br/>
-							&lt;small>&lt;?php esc_html_e( 'Example:', 'wp-to-twitter' ); ?> &lt;code>/home/username/www/www/yourls/user/config.php&lt;/code>
-							&lt;/small>
-						&lt;/p>
+		&lt;div class="panel">
+			&lt;form method="post" action="&lt;?php echo esc_url( add_query_arg( 'tab', 'shortener', $admin_url ) ); ?>">
+				&lt;div>&lt;input type="hidden" name="wpt_shortener_update" value="true" />&lt;/div>
+				&lt;?php wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true ); ?>
+				&lt;div class="ui-sortable meta-box-sortables">
+					&lt;div class="postbox">
+						&lt;h3>
+							&lt;span>&lt;?php esc_html_e( 'URL Shortener Account Settings', 'wp-to-twitter' ); ?>&lt;/span>
+						&lt;/h3>
+						&lt;div class="inside">
 							&lt;?php
-						}
-						if ( 6 === (int) $shortener ) {
+							wpt_show_shortener( $shortener );
 							?>
-						&lt;p>
-							&lt;label for="yourlsurl">&lt;?php esc_html_e( 'URI to the YOURLS API', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
-							&lt;input type="text" id="yourlsurl" name="yourlsurl" class="widefat" value="&lt;?php echo esc_attr( get_option( 'yourlsurl' ) ); ?>"/>&lt;br/>
-							&lt;small>&lt;?php esc_html_e( 'Example:', 'wp-to-twitter' ); ?> &lt;code>https://domain.com/yourls-api.php&lt;/code>
-							&lt;/small>
-						&lt;/p>
-							&lt;?php
-						}
-						?>
-						&lt;p>
-							&lt;label for="yourlstoken">&lt;?php esc_html_e( 'YOURLS signature token:', 'wp-to-twitter' ); ?>&lt;/label>
-							&lt;input type="text" name="yourlstoken" id="yourlstoken" size="30" value="&lt;?php echo esc_attr( get_option( 'yourlstoken' ) ); ?>"/>
-						&lt;/p>
-						&lt;?php
-						if ( get_option( 'yourlsapi' ) &amp;&amp; get_option( 'yourlslogin' ) ) {
-							?>
-							&lt;p>
-								&lt;em>&lt;?php _eesc_html_e( 'Your YOURLS username and password are saved. If you add a signature token, that will be used for API calls and your username and password will be deleted from the database.', 'wp-to-twitter' ); ?>&lt;/em>
-							&lt;/p>
-							&lt;?php
-						}
-						?>
-						&lt;p>
-							&lt;input type="radio" name="jd_keyword_format" id="jd_keyword_id" value="1" &lt;?php checked( get_option( 'jd_keyword_format' ), 1 ); ?> />
-							&lt;label for="jd_keyword_id">&lt;?php esc_html_e( 'Post ID for YOURLS url slug.', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
-							&lt;input type="radio" name="jd_keyword_format" id="jd_keyword" value="2" &lt;?php checked( get_option( 'jd_keyword_format' ), 2 ); ?> />
-							&lt;label for="jd_keyword">&lt;?php esc_html_e( 'Custom keyword for YOURLS url slug.', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
-							&lt;input type="radio" name="jd_keyword_format" id="jd_keyword_default" value="0" &lt;?php checked( get_option( 'jd_keyword_format' ), 0 ); ?> />
-							&lt;label for="jd_keyword_default">&lt;?php esc_html_e( 'Default: sequential URL numbering.', 'wp-to-twitter' ); ?>&lt;/label>
-						&lt;/p>
-						&lt;div>
-							&lt;input type="hidden" name="submit-type" value="yourlsapi" />
 						&lt;/div>
-						&lt;?php
-						echo $form_end;
-					} elseif ( 8 === (int) $shortener ) {
-						echo '&lt;p>' . __( 'The Goo.gl URL shortener was shut down by Google in March 2019.', 'wp-to-twitter' ) . '&lt;/p>';
-					} elseif ( 10 === (int) $shortener ) {
-						echo $form_start;
-						?>
-						&lt;p>
-							&lt;label for="joturllogin">&lt;?php esc_html_e( 'Your jotURL public API key:', 'wp-to-twitter' ); ?>&lt;/label>&lt;br>
-							&lt;input type="text" name="joturllogin" id="joturllogin" value="&lt;?php echo esc_attr( get_option( 'joturllogin' ) ); ?>"/>
-						&lt;/p>
-						&lt;p>
-							&lt;label for="joturlapi">&lt;?php esc_html_e( 'Your jotURL private API key:', 'wp-to-twitter' ); ?>&lt;/label>&lt;br>
-							&lt;input type="text" name="joturlapi" id="joturlapi" size="40" value="&lt;?php echo esc_attr( get_option( 'joturlapi' ) ); ?>"/>
-						&lt;/p>
-						&lt;p>
-							&lt;label for="joturl_domain">&lt;?php esc_html_e( 'Your jotURL custom domain:', 'wp-to-twitter' ); ?>&lt;/label>&lt;br>
-							&lt;input type="text" name="joturl_domain" id="joturl_domain" size="40" value="&lt;?php echo esc_attr( get_option( 'joturl_domain' ) ); ?>"/>
-						&lt;/p>
-						&lt;p>
-							&lt;label for="joturl_longurl_params">&lt;?php esc_html_e( 'Parameters to add to the long URL (before URL shortening):', 'wp-to-twitter' ); ?>&lt;/label>&lt;br>
-							&lt;input type="text" name="joturl_longurl_params" id="joturl_longurl_params" size="40" value="&lt;?php echo esc_attr( get_option( 'joturl_longurl_params' ) ); ?>"/>
-						&lt;/p>
-
-						&lt;p>
-							&lt;label for="joturl_shorturl_params">&lt;?php esc_html_e( 'Parameters to add to the short URL (after URL shortening):', 'wp-to-twitter' ); ?>&lt;/label>&lt;br>
-							&lt;input type="text" name="joturl_shorturl_params" id="joturl_shorturl_params" size="40" value="&lt;?php echo esc_attr( get_option( 'joturl_shorturl_params' ) ); ?>"/>
-						&lt;/p>
-						&lt;p>
-							&lt;a href="https://joturl.com/reserved/settings.html#tools-api">&lt;?php esc_html_e( 'View your jotURL public and private API key', 'wp-to-twitter' ); ?>&lt;/a>
-						&lt;/p>
-						&lt;div>&lt;input type="hidden" name="submit-type" value="joturlapi"/>&lt;/div>
-						&lt;?php
-						echo $form_end;
-					} else {
-						$form = apply_filters( 'wpt_shortener_settings', '', $shortener );
-						if ( '' !== $form ) {
-							echo $form_start . $form . $form_end;
-						} else {
-							_e( 'Your shortener does not require any account settings.', 'wp-to-twitter' );
-						}
-					}
-					?>
+					&lt;/div>
 				&lt;/div>
-			&lt;/div>
+			&lt;/form>
 		&lt;/div>
 		&lt;?php
 	}
@@ -707,21 +810,16 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			&lt;label for="jd_shortener">&lt;?php esc_html_e( 'Choose a URL shortener', 'wp-to-twitter' ); ?>&lt;/label>
 			&lt;select name="jd_shortener" id="jd_shortener">
 				&lt;option value="3" &lt;?php selected( $shortener, '3' ); ?>>&lt;?php esc_html_e( "Don't shorten URLs.", 'wp-to-twitter' ); ?>&lt;/option>
-				&lt;option value="4" &lt;?php selected( $shortener, '4' ); ?>>WordPress&lt;/option>
-				&lt;option value="2" &lt;?php selected( $shortener, '2' ); ?>>Bit.ly&lt;/option>
 				&lt;?php
-				if ( '5' === $shortener ) { // if the user has already selected local server, leave available.
+				$shorteners = wpt_get_shorteners();
+				foreach ( $shorteners as $id => $info ) {
+					if ( 5 === $id &amp;&amp; 5 !== $shortener ) {
+						continue;
+					}
 					?>
-				&lt;option value="5" &lt;?php selected( $shortener, '5' ); ?>>&lt;?php esc_html_e( 'YOURLS (this server)', 'wp-to-twitter' ); ?>&lt;/option>
+					&lt;option value="&lt;?php echo absint( $id ); ?>" &lt;?php selected( $shortener, $id ); ?>>&lt;?php echo esc_html( $info['label'] ); ?>&lt;/option>
 					&lt;?php
 				}
-				?>
-				&lt;option value="6" &lt;?php selected( $shortener, '6' ); ?>>YOURLS&lt;/option>
-				&lt;option value="10" &lt;?php selected( $shortener, '10' ); ?>>jotURL&lt;/option>
-				&lt;option value="11" &lt;?php selected( $shortener, '11' ); ?>>Hum&lt;/option>
-				&lt;?php
-				// Add a custom shortener.
-				echo apply_filters( 'wpt_choose_shortener', '', $shortener );
 				?>
 			&lt;/select>
 		&lt;?php

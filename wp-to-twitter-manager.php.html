@@ -555,7 +555,7 @@ function wpt_update_settings() {
 		&lt;?php
 	}
 	if ( 'shortener' === $current ) {
-		echo apply_filters( 'wpt_shortener_controls', '' );
+		wpt_shortener_controls();
 	}
 
 	if ( 'advanced' === $current ) {
@@ -719,6 +719,7 @@ function wpt_update_settings() {
 						&lt;div class='wpt-permissions'>
 							&lt;fieldset>
 								&lt;legend class="screen-reader-text">&lt;?php esc_html_e( 'Permissions', 'wp-to-twitter' ); ?>&lt;/legend>
+								&lt;ul class='tabs'>
 								&lt;?php
 								global $wp_roles;
 								$roles          = $wp_roles->get_names();
@@ -729,27 +730,41 @@ function wpt_update_settings() {
 									'wpt_tweet_now'      => __( 'Can see Update Now button', 'wp-to-twitter' ),
 									'wpt_twitter_oauth'  => __( 'Allow user to authenticate with services', 'wp-to-twitter' ),
 								);
-								$role_tabs      = '';
-								$role_container = '';
 								foreach ( $roles as $role => $rolename ) {
 									if ( 'administrator' === $role ) {
 										continue;
 									}
-									$role_tabs      .= "&lt;li>&lt;a href='#wpt_" . sanitize_title( $role ) . "'>" . esc_html( $rolename ) . "&lt;/a>&lt;/li>\n";
-									$role_container .= "&lt;div class='wptab wpt_$role' id='wpt_" . sanitize_title( $role ) . "' aria-live='assertive'>&lt;fieldset id='wpt_$role' class='roles'>&lt;legend>" . esc_html( $rolename ) . '&lt;/legend>';
-									$role_container .= "&lt;input type='hidden' value='none' name='wpt_caps[" . $role . "][none]' />
-									&lt;ul class='wpt-settings checkboxes'>";
-									foreach ( $caps as $cap => $name ) {
-										$role_container .= wpt_cap_checkbox( $role, $cap, $name );
-									}
-									$role_container .= '&lt;/ul>&lt;/fieldset>&lt;/div>';
+									?>
+									&lt;li>&lt;a href='#wpt_&lt;?php echo esc_attr( sanitize_title( $role ) ); ?>'>&lt;?php echo esc_html( $rolename ); ?>&lt;/a>&lt;/li>
+									&lt;?php
 								}
-								echo "
-		&lt;ul class='tabs'>
-			$role_tabs
-		&lt;/ul>
-		$role_container";
 								?>
+								&lt;/ul>
+								&lt;?php
+								foreach ( $roles as $role => $rolename ) {
+									if ( 'administrator' === $role ) {
+										continue;
+									}
+									?>
+									&lt;div class='wptab wpt_$role' id='wpt_&lt;?php echo esc_attr( sanitize_title( $role ) ); ?>' aria-live='assertive'>
+										&lt;fieldset id='wpt_$role' class='roles'>
+											&lt;legend>&lt;?php echo esc_html( $rolename ); ?>&lt;/legend>
+											&lt;input type='hidden' value='none' name='wpt_caps[&lt;?php echo esc_attr( $role ); ?>][none]' />
+											&lt;ul class='wpt-settings checkboxes'>
+									&lt;?php
+									foreach ( $caps as $cap => $name ) {
+										wpt_cap_checkbox( $role, $cap, $name );
+									}
+									?>
+											&lt;/ul>
+										&lt;/fieldset>
+									&lt;/div>
+									&lt;?php
+								}
+								?>
+								
+								
+								&lt;/ul>
 							&lt;/fieldset>
 						&lt;/div>
 					&lt;/div>
@@ -778,7 +793,6 @@ function wpt_update_settings() {
 					&lt;h3>&lt;span>&lt;?php esc_html_e( 'Template tag priority order', 'wp-to-twitter' ); ?>&lt;/span>&lt;/h3>
 					&lt;div class="inside">
 						&lt;?php
-						$inputs = '';
 						if ( ! $preferred_order ) {
 							$preferred_order = array();
 						}
@@ -787,16 +801,6 @@ function wpt_update_settings() {
 							$default_order = $preferred_order;
 						}
 						asort( $default_order );
-						foreach ( $default_order as $k => $v ) {
-							if ( 'blogname' === $k ) {
-								$label = '&lt;code>#blog#&lt;/code>';
-							} elseif ( 'excerpt' === $k ) {
-								$label = '&lt;code>#post#&lt;/code>';
-							} else {
-								$label = '&lt;code>#' . $k . '#&lt;/code>';
-							}
-							$inputs .= "&lt;div class='wpt-truncate'>&lt;label for='" . esc_attr( "$k-$v" ) . "'>$label&lt;/label>&lt;br />&lt;input type='number' size='3' value='" . esc_attr( $v ) . "' name='wpt_truncation_order[" . esc_attr( $k ) . "]' />&lt;/div> ";
-						}
 						?>
 						&lt;fieldset>
 							&lt;legend class='screen-reader-text'>&lt;?php esc_html_e( 'Template tag priority order', 'wp-to-twitter' ); ?>&lt;/legend>
@@ -807,7 +811,23 @@ function wpt_update_settings() {
 							?>
 							&lt;/p>
 							&lt;p>
-							&lt;?php echo $inputs; ?>
+							&lt;?php
+							foreach ( $default_order as $k => $v ) {
+								if ( 'blogname' === $k ) {
+									$label = '#blog#';
+								} elseif ( 'excerpt' === $k ) {
+									$label = '#post#';
+								} else {
+									$label = '#' . $k . '#';
+								}
+								?>
+								&lt;div class='wpt-truncate'>
+									&lt;label for='&lt;?php echo esc_attr( "$k-$v" ); ?>'>&lt;code>&lt;?php echo esc_html( $label ); ?>&lt;/code>&lt;/label>&lt;br />
+									&lt;input type='number' size='3' value='&lt;?php echo esc_attr( $v ); ?>' name='wpt_truncation_order[&lt;?php echo esc_attr( $k ); ?>]' />
+								&lt;/div>
+								&lt;?php
+							}
+							?>
 							&lt;/p>
 						&lt;/fieldset>
 					&lt;/div>
