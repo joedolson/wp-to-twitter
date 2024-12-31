@@ -704,7 +704,6 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	$newpost        = false;
 	$oldpost        = false;
 	$is_inline_edit = false;
-	$sentence       = '';
 	$template       = '';
 	$nptext         = '';
 	if ( '1' !== get_option( 'wpt_inline_edits' ) ) {
@@ -1450,7 +1449,13 @@ function wpt_needs_connection() {
 			$is_dismissible = ' <a href="' . esc_url( $dismiss_url ) . '" class="button button-secondary">' . __( 'Ignore', 'wp-to-twitter' ) . '</a>';
 		}
 		if ( $message ) {
-			echo "<div class='notice notice-error $class'>$message $is_dismissible</div>";
+			wp_admin_notice(
+				"$message $is_dismissible",
+				array(
+					'type'               => 'error',
+					'additional_classes' => $class,
+				)
+			);
 		}
 	}
 }

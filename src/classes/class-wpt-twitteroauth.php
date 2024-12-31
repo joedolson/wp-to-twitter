@@ -326,7 +326,7 @@ if ( ! class_exists( 'Wpt_TwitterOAuth' ) ) {
 			 */
 			$alt_text = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
 			if ( '' !== $alt_text ) {
-				$image_alt = json_encode(
+				$image_alt = wp_json_encode(
 					array(
 						'media_id' => $media_id,
 						'alt_text' => array(

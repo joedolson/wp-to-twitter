@@ -263,7 +263,7 @@ class Wpt_Bluesky_Api {
 			);
 			// Remove verification flag and encode data.
 			unset( $data['verification'] );
-			$data = json_encode( $data );
+			$data = wp_json_encode( $data );
 		} else {
 			if ( isset( $data['content-type'] ) ) {
 				// Media uploads are passed with a content-type of the object uploaded.
@@ -280,7 +280,7 @@ class Wpt_Bluesky_Api {
 					'Accept: application/json',
 					'Accept-Charset: utf-8',
 				);
-				$data    = json_encode( $data );
+				$data    = wp_json_encode( $data );
 			}
 		}
 

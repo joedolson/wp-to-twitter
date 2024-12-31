@@ -268,7 +268,7 @@ class TmhOAuth {
 	 * @return void value is stored to the class variable 'url'
 	 */
 	private function prepare_url( $url ) {
-		$parts = parse_url( $url );
+		$parts = wp_parse_url( $url );
 
 		$port   = isset( $parts['port'] ) ? $parts['port'] : false;
 		$scheme = $parts['scheme'];

@@ -375,7 +375,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * @param array  $parameters Query parameters; will be combined with POST data.
 		 */
 		public function __construct( $http_method, $http_url, $parameters = array() ) {
-			$parameters        = array_merge( WPOAuthUtil::parse_parameters( parse_url( $http_url, PHP_URL_QUERY ) ), $parameters );
+			$parameters        = array_merge( WPOAuthUtil::parse_parameters( wp_parse_url( $http_url, PHP_URL_QUERY ) ), $parameters );
 			$this->parameters  = $parameters;
 			$this->http_method = $http_method;
 			$this->http_url    = $http_url;
@@ -393,10 +393,13 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		public static function from_request( $http_method = null, $http_url = null, $parameters = null ) {
 			$scheme = ( ! isset( $_SERVER['HTTPS'] ) || 'on' !== $_SERVER['HTTPS'] ) ? 'http' : 'https';
 			if ( null === $http_url ) {
-				$http_url = $scheme . '://' . $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
+				$host     = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+				$port     = isset( $_SERVER['HTTP_PORT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_PORT'] ) ) : '';
+				$uri      = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+				$http_url = $scheme . '://' . $host . ':' . $port . $uri;
 			}
 			if ( null === $http_method ) {
-				$http_method = $_SERVER['REQUEST_METHOD'];
+				$http_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
 			}
 
 			// We weren't handed any parameters, so let's find the ones relevant to this request.
@@ -406,7 +409,8 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				$request_headers = WPOAuthUtil::get_headers();
 
 				// Parse the query-string to find GET parameters.
-				$parameters = WPOAuthUtil::parse_parameters( $_SERVER['QUERY_STRING'] );
+				$query_string = isset( $_SERVER['QUERY_STRING'] ) ? sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ) ? '';
+				$parameters   = WPOAuthUtil::parse_parameters( $query_string );
 
 				// It's a POST request of the proper content-type, so parse POST.
 				// parameters and add those overriding any duplicates from GET.
@@ -558,7 +562,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 		 * scheme://host/path
 		 */
 		public function get_normalized_http_url() {
-			$parts = parse_url( $this->http_url );
+			$parts = wp_parse_url( $this->http_url );
 
 			$port   = isset( $parts['port'] ) ? $parts['port'] : false;
 			$scheme = isset( $parts['scheme'] ) ? $parts['scheme'] : '';
@@ -1137,10 +1141,10 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				// that $_SERVER actually contains what we need.
 				$out = array();
 				if ( isset( $_SERVER['CONTENT_TYPE'] ) ) {
-					$out['Content-Type'] = $_SERVER['CONTENT_TYPE'];
+					$out['Content-Type'] = sanitize_text_field( wp_unslash( $_SERVER['CONTENT_TYPE'] ) );
 				}
 				if ( isset( $_ENV['CONTENT_TYPE'] ) ) {
-					$out['Content-Type'] = $_ENV['CONTENT_TYPE'];
+					$out['Content-Type'] = sanitize_text_field( wp_unslash( $_ENV['CONTENT_TYPE'] ) );
 				}
 
 				foreach ( $_SERVER as $key => $value ) {

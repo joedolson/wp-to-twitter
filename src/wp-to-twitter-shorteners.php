@@ -785,7 +785,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 			<select name="jd_shortener" id="jd_shortener">
 				<option value="3" <?php selected( $shortener, '3' ); ?>><?php esc_html_e( "Don't shorten URLs.", 'wp-to-twitter' ); ?></option>
 				<?php
-				$shorteners = wpt_get_shorteners();
+				$shorteners = wpt_get_shorteners( $shortener );
 				foreach ( $shorteners as $id => $info ) {
 					if ( 5 === $id && 5 !== $shortener ) {
 						continue;

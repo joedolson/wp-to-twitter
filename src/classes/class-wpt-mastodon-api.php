@@ -108,7 +108,7 @@ class Wpt_Mastodon_Api {
 				'curl_error_code' => curl_errno( $ch ),
 				'curl_error'      => curl_error( $ch ),
 			);
-			return json_encode( $error );
+			return wp_json_encode( $error );
 		}
 		curl_close( $ch );
 
