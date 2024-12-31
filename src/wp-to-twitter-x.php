@@ -484,34 +484,3 @@ function wtt_connect_oauth( $auth = false ) {
 		</div>';
 	}
 }
-
-/**
- * Update stored set of authenticated users.
- */
-function wpt_update_authenticated_users() {
-	$args = array(
-		'meta_query' => array(
-			array(
-				'key'     => 'wtt_twitter_username',
-				'compare' => 'EXISTS',
-			),
-		),
-	);
-	// get all authorized users.
-	$users            = get_users( $args );
-	$authorized_users = array();
-	if ( is_array( $users ) ) {
-		foreach ( $users as $this_user ) {
-			if ( wtt_oauth_test( $this_user->ID, 'verify' ) ) {
-				$twitter            = get_user_meta( $this_user->ID, 'wtt_twitter_username', true );
-				$authorized_users[] = array(
-					'ID'      => $this_user->ID,
-					'name'    => $this_user->display_name,
-					'twitter' => $twitter,
-				);
-			}
-		}
-	}
-
-	update_option( 'wpt_authorized_users', $authorized_users );
-}
