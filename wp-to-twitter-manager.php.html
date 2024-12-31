@@ -1091,7 +1091,7 @@ function wpt_service_length( $service ) {
 		case 'x':
 			$service_max = $default;
 			$field_max   = 25000;
-			$max_warning = "&lt;span id='maxlengthwarning'>" . __( 'X.com Statuses longer than 280 characters require an &lt;a href="https://help.twitter.com/en/using-x/x-premium">X Premium&lt;/a> subscription.', 'wp-to-twitter' ) . '&lt;/span>';
+			$max_warning = "&lt;span id='maxlengthwarning'>" . __( 'X.com Statuses longer than 280 characters require an &lt;a href="https://help.x.com/en/using-x/x-premium">X Premium&lt;/a> subscription.', 'wp-to-twitter' ) . '&lt;/span>';
 			break;
 		case 'mastodon':
 			$service_max = 500;
@@ -1109,8 +1109,8 @@ function wpt_service_length( $service ) {
 	$update_length = intval( ( get_option( 'wpt_' . $service . '_length' ) ) ? get_option( 'wpt_' . $service . '_length' ) : $default );
 	?>
 	&lt;p class='tweet_length_control'>
-		&lt;label for='wpt_&lt;?php esc_attr( $service ); ?>_length'>&lt;?php esc_html_e( 'Maximum Status Length', 'wp-to-twitter' ); ?>&lt;/label>
-		&lt;input type='number' min='0' max='&lt;?php echo absint( $field_max ); ?>' step='1' value='&lt;?php echo absint( $update_length ); ?>' id='wpt_&lt;?php esc_attr( $service ); ?>_length' aria-describedby='maxlengthwarning' name='wpt_&lt;?php esc_attr( $service ); ?>_length' />
+		&lt;label for='wpt_&lt;?php echo esc_attr( $service ); ?>_length'>&lt;?php esc_html_e( 'Maximum Status Length', 'wp-to-twitter' ); ?>&lt;/label>
+		&lt;input type='number' min='0' max='&lt;?php echo absint( $field_max ); ?>' step='1' value='&lt;?php echo absint( $update_length ); ?>' id='wpt_&lt;?php echo esc_attr( $service ); ?>_length' aria-describedby='maxlengthwarning' name='wpt_&lt;?php echo esc_attr( $service ); ?>_length' />
 		&lt;?php echo wp_kses_post( $max_warning ); ?>
 	&lt;/p>
 	&lt;?php
