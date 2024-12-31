@@ -392,7 +392,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 *
 	 * @return array
 	 */
-	function wpt_get_shorteners() {
+	function wpt_get_shorteners( $shortener ) {
 		$shorteners = array(
 			2  => array(
 				'label'    => 'Bit.ly',
@@ -442,7 +442,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 * @param int $shortener Shortener ID.
 	 */
 	function wpt_show_shortener( $shortener ) {
-		$shorteners = wpt_get_shorteners();
+		$shorteners = wpt_get_shorteners( $shortener );
 		if ( isset( $shorteners[ $shortener ] ) ) {
 			$callback = $shorteners[ $shortener ]['callback'];
 		} else {
