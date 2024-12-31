@@ -529,7 +529,7 @@ function wpt_update_settings() {
 		<?php
 	}
 	if ( 'shortener' === $current ) {
-		echo apply_filters( 'wpt_shortener_controls', '' );
+		wpt_shortener_controls();
 	}
 
 	if ( 'advanced' === $current ) {
@@ -693,6 +693,7 @@ function wpt_update_settings() {
 						<div class='wpt-permissions'>
 							<fieldset>
 								<legend class="screen-reader-text"><?php esc_html_e( 'Permissions', 'wp-to-twitter' ); ?></legend>
+								<ul class='tabs'>
 								<?php
 								global $wp_roles;
 								$roles          = $wp_roles->get_names();
@@ -703,27 +704,41 @@ function wpt_update_settings() {
 									'wpt_tweet_now'      => __( 'Can see Update Now button', 'wp-to-twitter' ),
 									'wpt_twitter_oauth'  => __( 'Allow user to authenticate with services', 'wp-to-twitter' ),
 								);
-								$role_tabs      = '';
-								$role_container = '';
 								foreach ( $roles as $role => $rolename ) {
 									if ( 'administrator' === $role ) {
 										continue;
 									}
-									$role_tabs      .= "<li><a href='#wpt_" . sanitize_title( $role ) . "'>" . esc_html( $rolename ) . "</a></li>\n";
-									$role_container .= "<div class='wptab wpt_$role' id='wpt_" . sanitize_title( $role ) . "' aria-live='assertive'><fieldset id='wpt_$role' class='roles'><legend>" . esc_html( $rolename ) . '</legend>';
-									$role_container .= "<input type='hidden' value='none' name='wpt_caps[" . $role . "][none]' />
-									<ul class='wpt-settings checkboxes'>";
-									foreach ( $caps as $cap => $name ) {
-										$role_container .= wpt_cap_checkbox( $role, $cap, $name );
-									}
-									$role_container .= '</ul></fieldset></div>';
+									?>
+									<li><a href='#wpt_<?php echo esc_attr( sanitize_title( $role ) ); ?>'><?php echo esc_html( $rolename ); ?></a></li>
+									<?php
 								}
-								echo "
-		<ul class='tabs'>
-			$role_tabs
-		</ul>
-		$role_container";
 								?>
+								</ul>
+								<?php
+								foreach ( $roles as $role => $rolename ) {
+									if ( 'administrator' === $role ) {
+										continue;
+									}
+									?>
+									<div class='wptab wpt_$role' id='wpt_<?php echo esc_attr( sanitize_title( $role ) ); ?>' aria-live='assertive'>
+										<fieldset id='wpt_$role' class='roles'>
+											<legend><?php echo esc_html( $rolename ); ?></legend>
+											<input type='hidden' value='none' name='wpt_caps[<?php echo esc_attr( $role ); ?>][none]' />
+											<ul class='wpt-settings checkboxes'>
+									<?php
+									foreach ( $caps as $cap => $name ) {
+										wpt_cap_checkbox( $role, $cap, $name );
+									}
+									?>
+											</ul>
+										</fieldset>
+									</div>
+									<?php
+								}
+								?>
+								
+								
+								</ul>
 							</fieldset>
 						</div>
 					</div>
@@ -752,7 +767,6 @@ function wpt_update_settings() {
 					<h3><span><?php esc_html_e( 'Template tag priority order', 'wp-to-twitter' ); ?></span></h3>
 					<div class="inside">
 						<?php
-						$inputs = '';
 						if ( ! $preferred_order ) {
 							$preferred_order = array();
 						}
@@ -761,16 +775,6 @@ function wpt_update_settings() {
 							$default_order = $preferred_order;
 						}
 						asort( $default_order );
-						foreach ( $default_order as $k => $v ) {
-							if ( 'blogname' === $k ) {
-								$label = '<code>#blog#</code>';
-							} elseif ( 'excerpt' === $k ) {
-								$label = '<code>#post#</code>';
-							} else {
-								$label = '<code>#' . $k . '#</code>';
-							}
-							$inputs .= "<div class='wpt-truncate'><label for='" . esc_attr( "$k-$v" ) . "'>$label</label><br /><input type='number' size='3' value='" . esc_attr( $v ) . "' name='wpt_truncation_order[" . esc_attr( $k ) . "]' /></div> ";
-						}
 						?>
 						<fieldset>
 							<legend class='screen-reader-text'><?php esc_html_e( 'Template tag priority order', 'wp-to-twitter' ); ?></legend>
@@ -781,7 +785,23 @@ function wpt_update_settings() {
 							?>
 							</p>
 							<p>
-							<?php echo $inputs; ?>
+							<?php
+							foreach ( $default_order as $k => $v ) {
+								if ( 'blogname' === $k ) {
+									$label = '#blog#';
+								} elseif ( 'excerpt' === $k ) {
+									$label = '#post#';
+								} else {
+									$label = '#' . $k . '#';
+								}
+								?>
+								<div class='wpt-truncate'>
+									<label for='<?php echo esc_attr( "$k-$v" ); ?>'><code><?php echo esc_html( $label ); ?></code></label><br />
+									<input type='number' size='3' value='<?php echo esc_attr( $v ); ?>' name='wpt_truncation_order[<?php echo esc_attr( $k ); ?>]' />
+								</div>
+								<?php
+							}
+							?>
 							</p>
 						</fieldset>
 					</div>

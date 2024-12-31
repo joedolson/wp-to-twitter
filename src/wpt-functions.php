@@ -308,12 +308,12 @@ function wpt_handle_errors() {
  * @param string $role Role name.
  * @param string $cap Capability name.
  *
- * @return Check if has capability.
+ * @return string 'checked' if has capability.
  */
 function wpt_check_caps( $role, $cap ) {
 	$role = get_role( $role );
 	if ( $role->has_cap( $cap ) ) {
-		return " checked='checked'";
+		return 'checked';
 	}
 	return '';
 }
@@ -328,7 +328,14 @@ function wpt_check_caps( $role, $cap ) {
  * @return Checkbox HTML.
  */
 function wpt_cap_checkbox( $role, $cap, $name ) {
-	return "<li><input type='checkbox' id='wpt_caps_{$role}_$cap' name='wpt_caps[$role][$cap]' value='on'" . wpt_check_caps( $role, $cap ) . " /> <label for='wpt_caps_{$role}_$cap'>" . esc_html( $name ) . '</label></li>';
+	$id       = 'wpt_caps_' . $role . '_' . $cap;
+	$has_caps = wpt_check_caps( $role, $cap );
+	?>
+	<li>
+		<input type='checkbox' id='<?php echo esc_attr( $id ); ?>' name='wpt_caps[<?php echo esc_attr( $role ); ?>][<?php echo esc_attr( $cap ); ?>]' value='on'<?php checked( 'checked', $has_caps ); ?> />
+		<label for='<?php echo esc_attr( $id ); ?>'><?php echo esc_html( $name ); ?></label>
+	</li>
+	<?php
 }
 
 /**
