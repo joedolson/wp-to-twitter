@@ -859,11 +859,11 @@ function wpt_get_support_form() {
 	$plugins_string
 	";
 		if ( isset( $_POST['wpt_support'] ) ) {
-			$nonce = $_REQUEST['_wpnonce'];
+			$nonce = ( isset( $_REQUEST['_wpnonce'] ) ) ? $_REQUEST['_wpnonce'] : false;
 			if ( ! wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) {
 				wp_die( 'XPoster: Security check failed' );
 			}
-			$request = ( ! empty( $_POST['support_request'] ) ) ? stripslashes( sanitize_textarea_field( $_POST['support_request'] ) ) : false;
+			$request = ( ! empty( $_POST['support_request'] ) ) ? sanitize_textarea_field( wp_unslash( $_POST['support_request'] ) ) : false;
 			if ( function_exists( 'wpt_pro_exists' ) &amp;&amp; true === wpt_pro_exists() ) {
 				$pro = ' PRO';
 			} else {
@@ -871,7 +871,7 @@ function wpt_get_support_form() {
 			}
 			$subject        = "XPoster $pro support request.";
 			$message        = $request . "\n\n" . $data;
-			$response_email = ( isset( $_POST['response_email'] ) ) ? sanitize_email( $_POST['response_email'] ) : false;
+			$response_email = ( isset( $_POST['response_email'] ) ) ? sanitize_email( wp_unslash( $_POST['response_email'] ) ) : false;
 			$from           = "From: $current_user->display_name &lt;$response_email>\r\nReply-to: $current_user->display_name &lt;$response_email>\r\n";
 
 			if ( ! $response_email ) {

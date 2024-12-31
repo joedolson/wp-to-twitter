@@ -1143,7 +1143,6 @@ add_filter( 'plugin_action_links', 'wpt_plugin_action', 10, 2 );
  * Parse plugin update info to display in update list.
  */
 function wpt_plugin_update_message() {
-	$note = '';
 	define( 'WPT_PLUGIN_README_URL', 'http://svn.wp-plugins.org/wp-to-twitter/trunk/readme.txt' );
 	$response = wp_remote_get( WPT_PLUGIN_README_URL, array( 'user-agent' => 'WordPress/XPoster ' . XPOSTER_VERSION . '; ' . get_bloginfo( 'url' ) ) );
 	if ( ! is_wp_error( $response ) || is_array( $response ) ) {
@@ -1151,11 +1150,11 @@ function wpt_plugin_update_message() {
 		$bits   = explode( '== Upgrade Notice ==', $data );
 		$notice = trim( str_replace( '* ', '', nl2br( trim( $bits[1] ) ) ) );
 		if ( $notice ) {
-			$note = '&lt;/div>&lt;div id="wpt-upgrade" class="notice inline notice-warning">&lt;ul>&lt;li>&lt;strong style="color:#c22;">Upgrade Notes:&lt;/strong> ' . str_replace( '* ', '', nl2br( trim( $bits[1] ) ) ) . '&lt;/li>&lt;/ul>';
+			?>
+			&lt;/div>&lt;div id="wpt-upgrade" class="notice inline notice-warning">&lt;ul>&lt;li>&lt;strong style="color:#c22;">Upgrade Notes:&lt;/strong> ' . esc_html( str_replace( '* ', '', nl2br( trim( $bits[1] ) ) ) ) . '&lt;/li>&lt;/ul>
+			&lt;?php
 		}
 	}
-
-	echo $note;
 }
 add_action( 'in_plugin_update_message-wp-to-twitter/wp-to-twitter.php', 'wpt_plugin_update_message' );
 
@@ -1359,7 +1358,13 @@ add_action( 'admin_notices', 'wpt_debugging_enabled', 10 );
  */
 function wpt_debugging_enabled() {
 	if ( current_user_can( 'manage_options' ) &amp;&amp; WPT_DEBUG ) {
-		echo "&lt;div class='notice error important'>&lt;p>" . __( '&lt;strong>XPoster&lt;/strong> debugging is enabled. Remember to disable debugging when you are finished.', 'wp-to-twitter' ) . '&lt;/p>&lt;/div>';
+		$message = __( '&lt;strong>XPoster&lt;/strong> debugging is enabled. Remember to disable debugging when you are finished.', 'wp-to-twitter' );
+		wp_admin_notice(
+			$message,
+			array(
+				'type' => 'error',
+			)
+		);
 	}
 }
 
@@ -1381,10 +1386,22 @@ function wpt_needs_bearer_token() {
 		}
 		if ( ! $bt &amp;&amp; $authorized ) {
 			if ( $auth &amp;&amp; get_option( 'jd_individual_twitter_users' ) ) {
-				echo "&lt;div class='notice error important'>&lt;p>" . __( '&lt;strong>XPoster&lt;/strong> needs a Bearer Token added to your profile settings to support the X.com API.', 'wp-to-twitter' ) . '&lt;/p>&lt;/div>';
+				$message = __( '&lt;strong>XPoster&lt;/strong> needs a Bearer Token added to your profile settings to support the X.com API.', 'wp-to-twitter' );
+				wp_admin_notice(
+					$message,
+					array(
+						'type' => 'error',
+					)
+				);
 			} elseif ( current_user_can( 'manage_options' ) ) {
 				// Translators: URL to connection settings.
-				echo "&lt;div class='notice error important'>&lt;p>" . sprintf( __( '&lt;strong>XPoster&lt;/strong> needs a Bearer Token added to the &lt;a href="%s">connection settings&lt;/a> to support the X.com API.', 'wp-to-twitter' ), admin_url( 'admin.php?page=wp-tweets-pro&amp;tab=connection' ) ) . '&lt;/p>&lt;/div>';
+				$message = sprintf( __( '&lt;strong>XPoster&lt;/strong> needs a Bearer Token added to the &lt;a href="%s">connection settings&lt;/a> to support the X.com API.', 'wp-to-twitter' ), admin_url( 'admin.php?page=wp-tweets-pro&amp;tab=connection' ) );
+				wp_admin_notice(
+					$message,
+					array(
+						'type' => 'error',
+					)
+				);
 			}
 		}
 	}
