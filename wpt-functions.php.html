@@ -825,6 +825,8 @@ function wpt_get_support_form() {
 				$plugins_string .= "$plugin_name: $plugin_version; $plugin_uri\n";
 			}
 		}
+		$server = isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : 'N/A';
+		$agent  = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : 'N/A';
 
 		$data = "
 	================ Installation Data ====================
@@ -844,8 +846,8 @@ function wpt_get_support_form() {
 
 	==Extra info:==
 	PHP Version: $php_version
-	Server Software: $_SERVER[SERVER_SOFTWARE]
-	User Agent: $_SERVER[HTTP_USER_AGENT]
+	Server Software: $server
+	User Agent: $agent
 
 	==Theme:==
 	Name: $theme_name
@@ -857,7 +859,7 @@ function wpt_get_support_form() {
 	$plugins_string
 	";
 		if ( isset( $_POST['wpt_support'] ) ) {
-			$nonce = ( isset( $_REQUEST['_wpnonce'] ) ) ? $_REQUEST['_wpnonce'] : false;
+			$nonce = ( isset( $_REQUEST['_wpnonce'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : false;
 			if ( ! wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) {
 				wp_die( 'XPoster: Security check failed' );
 			}
