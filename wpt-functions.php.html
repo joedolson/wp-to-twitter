@@ -875,81 +875,74 @@ function wpt_get_support_form() {
 			$from           = "From: $current_user->display_name &lt;$response_email>\r\nReply-to: $current_user->display_name &lt;$response_email>\r\n";
 
 			if ( ! $response_email ) {
-				echo "&lt;div class='notice error'>&lt;p>" . __( 'Please supply a valid email where you can receive support responses.', 'wp-to-twitter' ) . '&lt;/p>&lt;/div>';
+				wp_admin_notice(
+					__( 'Please supply a valid email where you can receive support responses.', 'wp-to-twitter' ),
+					array(
+						'type' => 'error',
+					)
+				);
 			} elseif ( ! $request ) {
-				echo "&lt;div class='notice error'>&lt;p>" . __( 'Please describe your problem. I\'m not psychic.', 'wp-to-twitter' ) . '&lt;/p>&lt;/div>';
+				wp_admin_notice(
+					__( 'Please describe your problem. Thank you!', 'wp-to-twitter' ),
+					array(
+						'type' => 'error',
+					)
+				);
 			} else {
 				$sent = wp_mail( 'plugins@xposterpro.com', $subject, $message, $from );
 				if ( $sent ) {
 					// Translators: Email address.
-					echo "&lt;div class='notice updated'>&lt;p>" . sprintf( __( 'Thank you for supporting XPoster! I\'ll get back to you as soon as I can. Please make sure you can receive email at &lt;code>%s&lt;/code>.', 'wp-to-twitter' ), $response_email ) . '&lt;/p>&lt;/div>';
+					$message = sprintf( __( 'Thank you for supporting XPoster! I\'ll get back to you as soon as I can. Please make sure you can receive email at &lt;code>%s&lt;/code>.', 'wp-to-twitter' ), $response_email );
+					wp_admin_notice( $message );
 				} else {
 					// Translators: URL to plugin support form.
-					echo "&lt;div class='notice error'>&lt;p>" . __( "Sorry! I couldn't send that message. Here's the text of your request:", 'wp-to-twitter' ) . '&lt;/p>&lt;p>' . sprintf( __( '&lt;a href="%s">Contact me here&lt;/a>, instead.', 'wp-to-twitter' ), 'https://www.joedolson.com/contact/get-support/' ) . "&lt;/p>&lt;pre>$request&lt;/pre>&lt;/div>";
+					$message = '&lt;p>' . sprintf( __( "Sorry! I couldn't send that message. Here's the text of your request:", 'wp-to-twitter' ) ) . '&lt;/p>&lt;p>' . sprintf( __( '&lt;a href="%s">Contact me here&lt;/a>, instead.', 'wp-to-twitter' ), 'https://www.joedolson.com/contact/get-support/' ) . "&lt;/p>&lt;pre>$request&lt;/pre>";
+					wp_admin_notice(
+						$message,
+						array(
+							'type'           => 'error',
+							'paragraph_wrap' => false,
+						)
+					);
 				}
 			}
 		}
 		$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
 		$admin_url = add_query_arg( 'tab', 'support', $admin_url );
-		echo "
-		&lt;form method='post' action='$admin_url'>
-			&lt;div>&lt;input type='hidden' name='_wpnonce' value='" . wp_create_nonce( 'wp-to-twitter-nonce' ) . "' />&lt;/div>
+		?>
+		&lt;form method='post' action='&lt;?php echo esc_url( $admin_url ); ?>'>
+			&lt;div>&lt;input type='hidden' name='_wpnonce' value='&lt;?php echo esc_attr( wp_create_nonce( 'wp-to-twitter-nonce' ) ); ?>' />&lt;/div>
 			&lt;div>
-			&lt;p>" . __( "If you're having trouble with XPoster Pro, please try to answer these questions in your message:", 'wp-to-twitter' ) . '&lt;/p>
+			&lt;p>&lt;?php esc_html_e( "If you're having trouble with XPoster Pro, please try to answer these questions in your message:", 'wp-to-twitter' ); ?>&lt;/p>
 			&lt;ul>
-				&lt;li>' . __( 'What were you doing when the problem occurred?', 'wp-to-twitter' ) . '&lt;/li>
-				&lt;li>' . __( 'What did you expect to happen?', 'wp-to-twitter' ) . '&lt;/li>
-				&lt;li>' . __( 'What happened instead?', 'wp-to-twitter' ) . "&lt;/li>
+				&lt;li>&lt;?php esc_html_e( 'What were you doing when the problem occurred?', 'wp-to-twitter' ); ?>&lt;/li>
+				&lt;li>&lt;?php esc_html_e( 'What did you expect to happen?', 'wp-to-twitter' ); ?>&lt;/li>
+				&lt;li>&lt;?php esc_html_e( 'What happened instead?', 'wp-to-twitter' ); ?>&lt;/li>
 			&lt;/ul>
 			&lt;p>
-			&lt;label for='response_email'>" . __( 'Your Email', 'wp-to-twitter' ) . "&lt;/label>&lt;br />
-			&lt;input type='email' name='response_email' id='response_email' value='$response_email' class='widefat' required='required' aria-required='true' />
+			&lt;label for='response_email'>&lt;?php esc_html_e( 'Your Email', 'wp-to-twitter' ); ?>&lt;/label>&lt;br />
+			&lt;input type='email' name='response_email' id='response_email' value='&lt;?php esc_attr( $response_email ); ?>' class='widefat' required='required' />
 			&lt;/p>
 			&lt;p>
-			&lt;label for='support_request'>" . __( 'Support Request:', 'wp-to-twitter' ) . "&lt;/label>&lt;br />&lt;textarea class='support-request' name='support_request' id='support_request' cols='80' rows='10' class='widefat'>" . stripslashes( esc_attr( $request ) ) . "&lt;/textarea>
+			&lt;label for='support_request'>&lt;?php esc_html_e( 'Support Request:', 'wp-to-twitter' ); ?>&lt;/label>&lt;br />
+			&lt;textarea class='support-request' name='support_request' id='support_request' cols='80' rows='10' class='widefat'>&lt;?php echo esc_textarea( stripslashes( $request ) ); ?>&lt;/textarea>
 			&lt;/p>
 			&lt;p>
-			&lt;input type='submit' value='" . __( 'Send Support Request', 'wp-to-twitter' ) . "' name='wpt_support' class='button-primary' />
+			&lt;input type='submit' value='&lt;?php esc_attr_e( 'Send Support Request', 'wp-to-twitter' ); ?>' name='wpt_support' class='button-primary' />
 			&lt;/p>
-			&lt;p>" .
-			__( 'The following additional information will be sent with your support request:', 'wp-to-twitter' )
-			. '&lt;/p>
+			&lt;p>&lt;?php esc_html_e( 'The following additional information will be sent with your support request:', 'wp-to-twitter' ); ?>&lt;/p>
 			&lt;/div>
-		&lt;/form>';
-
-		echo "&lt;div class='wpt_support'>
-		" . wpautop( $data ) . '
-		&lt;/div>';
+		&lt;/form>
+		&lt;div class='wpt_support'>
+			&lt;?php
+			echo wp_kses_post( wpautop( $data ) );
+			?>
+		&lt;/div>
+		&lt;?php
 	} else {
-		echo '&lt;p>' . __( 'You need a valid XPoster Pro license to receive support. Return to this screen to use the premium support form after &lt;a href="https://xposterpro.com/awesome/xposter-pro/">getting your Pro license&lt;/a>.', 'wp-to-twitter' ) . '&lt;/p>';
-	}
-	wpt_faq();
-}
-
-/**
- * FAQ questions.
- */
-function wpt_faq() {
-	$qs = array(
-		array(
-			'question' => __( 'My app has been suspended by X.com. What do I do now?', 'wp-to-twitter' ),
-			'answer'   => __( 'Some users have been successful by removing their existing app and creating a new one, following the setup instructions in the X.com Connection tab. It is unlikely you will make any progress by contesting the suspension.', 'wp-to-twitter' ),
-		),
-		array(
-			'question' => __( "I'm receiving a '401 Unauthorized' error from X.com, but my credentials haven't changed. What should I do?", 'wp-to-twitter' ),
-			'answer'   => __( 'First, check and see whether your app has been suspended in your X.com developer account. If it has, see above. If not, this is most likely a temporary problem in the X.com API; but you can try generating new keys and secrets in your developer account and re-connect your app. Some users have also been successful by changing their account status to the free account. (Older accounts may have a legacy status that is not handled well by X.com.)', 'wp-to-twitter' ),
-		),
-		array(
-			'question' => __( "I'm receiving a '429 Too Many Requests' error from X.com. What should I do?", 'wp-to-twitter' ),
-			'answer'   => __( 'X.com changed their free API usage limits in October 2024, reducing them from 1500 per month to 500 per month, with a maximum allowance of 17 per day. This change significantly increases the likelihood that you will exceed the allowed API usage on the free account. Your only option is to upgrade to an alternate API tier; this is not included in a Premium X.com account.', 'wp-to-twitter' ),
-		),
-	);
-
-	echo '&lt;h2>' . __( 'Frequently Asked Questions', 'wp-to-twitter' ) . '&lt;/h2>';
-	echo '&lt;p>' . __( '&lt;strong>Please note:&lt;/strong> These answers are mostly guesswork; user experiences have been inconsistent and the documentation does not always match real behavior.', 'wp-to-twitter' ) . '&lt;/p>';
-	foreach ( $qs as $q ) {
-		echo '&lt;h3>' . $q['question'] . '&lt;/h3>';
-		echo wpautop( $q['answer'] );
+		?>
+		&lt;p>&lt;?php esc_html_e( 'You need a valid XPoster Pro license to receive support. Return to this screen to use the premium support form after &lt;a href="https://xposterpro.com/awesome/xposter-pro/">getting your Pro license&lt;/a>.', 'wp-to-twitter' ); ?>&lt;/p>
+		&lt;?php
 	}
 }
 
