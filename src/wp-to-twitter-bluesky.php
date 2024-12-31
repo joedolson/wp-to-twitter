@@ -110,84 +110,103 @@ function wtt_connect_bluesky( $auth = false ) {
 		echo '<div class="ui-sortable meta-box-sortables">';
 		echo '<div class="postbox">';
 	}
-	$information = '';
 	if ( $auth ) {
 		wpt_update_authenticated_users();
 	}
 
 	$class   = ( $auth ) ? 'wpt-profile' : 'wpt-settings';
-	$form    = ( ! $auth ) ? '<form action="" method="post" class="wpt-connection-form">' : '';
-	$nonce   = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
 	$connect = wpt_bluesky_connection( $auth );
-	$disable = '';
-
 	if ( ! $connect ) {
 		$ack    = ( ! $auth ) ? get_option( 'wpt_bluesky_token' ) : get_user_meta( $auth, 'wpt_bluesky_token', true );
 		$user   = ( ! $auth ) ? get_option( 'wpt_bluesky_username' ) : get_user_meta( $auth, 'wpt_bluesky_username', true );
-		$submit = ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . __( 'Connect to Bluesky', 'wp-to-twitter' ) . '" /></p>' : '';
-		print( '
-			<h3 class="wpt-has-link"><span>' . __( 'Connect to Bluesky', 'wp-to-twitter' ) . '</span> <a href="https://xposterpro.com/connecting-xposter-and-bluesky/" class="button button-secondary">' . __( 'Instructions', 'wp-to-twitter' ) . '</a></h3>
-			<div class="inside ' . esc_attr( $class ) . '">
-			' . $form . '
-				<ol class="wpt-oauth-settings">
-					<li>' . __( 'Navigate to Settings > Privacy and Security > App passwords in your Bluesky account.', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Click on "Add App Password".', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Name your app password.', 'wp-to-twitter' ) . '</li>
-					<li>' . __( 'Copy your App Password.', 'wp-to-twitter' ) . '
-					<li>' . __( 'Add your App Password and Bluesky Handle to setings', 'wp-to-twitter' ) . '
-					<div class="tokens auth-fields">
-					<p>
-						<label for="wpt_bluesky_username">' . __( 'Bluesky Handle', 'wp-to-twitter' ) . '</label>
-						<input placeholder="joedolson.bsky.social" type="text" size="45" name="wpt_bluesky_username" id="wpt_bluesky_username" value="' . esc_attr( wpt_mask_attr( $user ) ) . '" />
-					</p>
-					<p>
-						<label for="wpt_bluesky_token">' . __( 'App Password', 'wp-to-twitter' ) . '</label>
-						<input type="text" size="45" name="wpt_bluesky_token" id="wpt_bluesky_token" value="' . esc_attr( wpt_mask_attr( $ack ) ) . '" />
-					</p>
-					</div></li>
-				</ol>
-				' . $submit . '
-				<input type="hidden" name="bluesky_settings" value="wtt_oauth_test" class="hidden" />
-				' . $nonce . '
-			</div>' );
+		?>
+		<h3 class="wpt-has-link"><span><?php esc_html_e( 'Connect to Bluesky', 'wp-to-twitter' ); ?></span> <a href="https://xposterpro.com/connecting-xposter-and-bluesky/" class="button button-secondary"><?php esc_html_e( 'Instructions', 'wp-to-twitter' ); ?></a></h3>
+		<div class="inside <?php esc_attr( $class ); ?>">
+		<?php
+		echo ( ! $auth ) ? '<form action="" method="post" class="wpt-connection-form">' : '';
+		?>
+			<ol class="wpt-oauth-settings">
+				<li><?php echo esc_html_e( 'Navigate to Settings > Privacy and Security > App passwords in your Bluesky account.', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Click on "Add App Password".', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Name your app password.', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Copy your App Password.', 'wp-to-twitter' ); ?></li>
+				<li><?php echo esc_html_e( 'Add your App Password and Bluesky Handle to setings', 'wp-to-twitter' ); ?>
+				<div class="tokens auth-fields">
+				<p>
+					<label for="wpt_bluesky_username"><?php echo esc_html_e( 'Bluesky Handle', 'wp-to-twitter' ); ?></label>
+					<input placeholder="joedolson.bsky.social" type="text" size="45" name="wpt_bluesky_username" id="wpt_bluesky_username" value="<?php echo esc_attr( wpt_mask_attr( $user ) ); ?>" />
+				</p>
+				<p>
+					<label for="wpt_bluesky_token"><?php echo esc_html_e( 'App Password', 'wp-to-twitter' ); ?></label>
+					<input type="text" size="45" name="wpt_bluesky_token" id="wpt_bluesky_token" value="<?php echo esc_attr( wpt_mask_attr( $ack ) ); ?>" />
+				</p>
+				</div></li>
+			</ol>
+			<?php
+			echo ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . esc_attr_e( 'Connect to Bluesky', 'wp-to-twitter' ) . '" /></p>' : '';
+			?>
+			<input type="hidden" name="bluesky_settings" value="wtt_oauth_test" class="hidden" />
+			<?php
+			if ( ! $auth ) {
+				wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true );
+				echo '</form>';
+			}
+			?>
+		</div>
+		<?php
 	} elseif ( $connect ) {
 		$ack   = ( ! $auth ) ? get_option( 'wpt_bluesky_token' ) : get_user_meta( $auth, 'wpt_bluesky_token', true );
 		$uname = ( ! $auth ) ? get_option( 'wpt_bluesky_username' ) : get_user_meta( $auth, 'wpt_bluesky_username', true );
-		$nonce = ( ! $auth ) ? wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, false ) . wp_referer_field( false ) . '</form>' : '';
 		$site  = get_bloginfo( 'name' );
-
-		if ( ! $auth ) {
-			$disabled = get_option( 'wpt_disabled_services', array() );
-			$checked  = ( in_array( 'bluesky', array_keys( $disabled ), true ) ) ? ' checked="checked"' : '';
-			$disable  = '<form action="" method="post" class="wpt-connection-form">' . wpt_service_length( 'bluesky' ) . '<p class="checkboxes"><input' . $checked . ' type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_bluesky" value="bluesky"><label for="wpt_disable_bluesky">' . __( 'Disable Posting to Bluesky', 'wp-to-twitter' ) . '</label></p>
-			<input type="hidden" name="bluesky_settings" value="wtt_bluesky_update"><input type="submit" name="wtt_bluesky_update" class="button-secondary" value="' . __( 'Save Changes', 'wp-to-twitter' ) . '" />' . $nonce;
-
-			// Translators: Name of the current site.
-			$submit = '<input type="submit" name="submit" class="button-primary" value="' . sprintf( __( 'Disconnect %s from Bluesky', 'wp-to-twitter' ), $site ) . '" />
-					<input type="hidden" name="bluesky_settings" value="wtt_bluesky_disconnect" class="hidden" />';
-		} else {
-			$submit = '<input type="checkbox" name="bluesky_settings" value="wtt_bluesky_disconnect" id="disconnect" /> <label for="disconnect">' . __( 'Disconnect Your Account from Bluesky', 'wp-to-twitter' ) . '</label>';
-		}
-
-		print( '
-			<h3>' . __( 'Bluesky Connection', 'wp-to-twitter' ) . '</h3>
-			<div class="inside ' . $class . '">
-			' . $information . $form . '
-				<div id="wtt_authentication_display">
-					<ul>
-						<li><strong class="auth_label">' . __( 'Username ', 'wp-to-twitter' ) . '</strong> <code class="auth_code"><a href="https://bsky.app/profile/' . esc_attr( $uname ) . '">' . esc_attr( $uname ) . '</a></code></li>
-						<li><strong class="auth_label">' . __( 'Access Token ', 'wp-to-twitter' ) . '</strong> <code class="auth_code">' . esc_attr( wpt_mask_attr( $ack ) ) . '</code></li>
-					</ul>
-					<div>
-					' . $submit . '
-					</div>
+		?>
+		<h3><?php esc_html_e( 'Bluesky Connection', 'wp-to-twitter' ); ?></h3>
+		<div class="inside <?php echo esc_attr( $class ); ?>">
+		<?php
+		echo ( ! $auth ) ? '<form action="" method="post" class="wpt-connection-form">' : '';
+		?>
+			<div id="wtt_authentication_display">
+			<ul>
+					<li><strong class="auth_label"><?php echo esc_html_e( 'Username ', 'wp-to-twitter' ); ?></strong> <code class="auth_code"><a href="https://bsky.app/profile/@<?php echo esc_attr( $uname ); ?>"><?php echo esc_attr( $uname ); ?></a></code></li>
+					<li><strong class="auth_label"><?php echo esc_html_e( 'Access Token ', 'wp-to-twitter' ); ?></strong> <code class="auth_code"><?php echo esc_attr( wpt_mask_attr( $ack ) ); ?></code></li>
+				</ul>
+				<div>
+				<?php
+			if ( ! $auth ) {
+				// Translators: Name of the current site.
+				$text = sprintf( __( 'Disconnect %s from Bluesky', 'wp-to-twitter' ), $site );
+				?>
+				<input type="submit" name="submit" class="button-primary" value="<?php echo esc_attr( $text ); ?>" />
+				<input type="hidden" name="bluesky_settings" value="wtt_bluesky_disconnect" class="hidden" />
+				<?php
+			} else {
+				?>
+				<input type="checkbox" name="bluesky_settings" value="wtt_bluesky_disconnect" id="disconnect" /> <label for="disconnect"><?php esc_html_e( 'Disconnect Your Account from Bluesky', 'wp-to-twitter' ); ?></label>
+				<?php
+			}
+			?>
 				</div>
-				' . $nonce . $disable . '
-			</div>' );
-
+			</div>
+			<?php
+			if ( ! $auth ) {
+				$disabled = get_option( 'wpt_disabled_services', array() );
+				$checked  = ( in_array( 'bluesky', array_keys( $disabled ), true ) ) ? 'checked' : '';
+				?>
+				<form action="" method="post" class="wpt-connection-form">
+					<?php wpt_service_length( 'bluesky' ); ?>
+					<p class="checkboxes"><input <?php checked( 'checked', $checked ); ?> type="checkbox" name="wpt_disabled_services[]" id="wpt_disable_bluesky" value="bluesky"><label for="wpt_disable_bluesky"><?php esc_html_e( 'Disable Posting to Bluesky', 'wp-to-twitter' ); ?></label></p>
+					<input type="hidden" name="bluesky_settings" value="wtt_bluesky_update"><input type="submit" name="wtt_bluesky_update" class="button-secondary" value="<?php esc_html_e( 'Save Changes', 'wp-to-twitter' ); ?>" />
+					<?php wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true ); ?>
+				</form>
+				<?php
+			}
+			?>
+		</div>
+		<?php
 	}
 	if ( ! $auth ) {
-		echo '</div>
-		</div>';
+		?>
+	</div>
+</div>
+		<?php
 	}
 }
