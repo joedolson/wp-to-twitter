@@ -146,17 +146,17 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
 		$status_id  = false;
 	} else {
 		/**
-		 * Filter the approval to send a Bluesky Skeet.
+		 * Filter the approval to send a Bluesky post.
 		 *
-		 * @hook wpt_do_skeet
-		 * @param {bool}     $do_skeet Return false to cancel this Skeet.
+		 * @hook wpt_do_bluesky_post
+		 * @param {bool}     $do_post Return false to cancel this post.
 		 * @param {int|bool} $auth Author.
 		 * @param {int}      $id Post ID.
 		 * @param {string}   $text Status update text.
 		 *
 		 * @return {bool}
 		 */
-		$do_post   = apply_filters( 'wpt_do_skeet', true, $auth, $id, $status['text'] );
+		$do_post   = apply_filters( 'wpt_do_bluesky_post', true, $auth, $id, $status['text'] );
 		$status_id = false;
 		$success   = false;
 		// Change status array to Bluesky expectation.
