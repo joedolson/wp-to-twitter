@@ -78,7 +78,8 @@ function wpt_set_log( $data, $id, $message, $http = '200' ) {
 			'message' => $message,
 			'http'    => (string) $http,
 		);
-		update_post_meta( $id, '_' . $data, $message );
+		delete_transient( $id . '_' . $data );
+		set_transient( $id . '_' . $data, $message );
 	}
 	delete_transient( $data . '_last' );
 	set_transient( $data . '_last', array( $id, $message ), 300 );
@@ -98,7 +99,7 @@ function wpt_get_log( $data, $id ) {
 	} elseif ( 'last' === $id ) {
 		$log = get_transient( $data . '_last' );
 	} else {
-		$log = get_post_meta( $id, '_' . $data, true );
+		$log = get_transient( $id . '_' . $data );
 	}
 
 	return $log;
