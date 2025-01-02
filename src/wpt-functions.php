@@ -71,7 +71,8 @@ function wpt_selected( $field, $value, $type = 'select' ) {
  */
 function wpt_set_log( $data, $id, $message, $http = '200' ) {
 	if ( 'test' === $id ) {
-		update_option( $data, $message );
+		delete_transient( $data );
+		set_transient( $data, $message, 300 );
 	} else {
 		$message = array(
 			'message' => $message,
@@ -79,7 +80,8 @@ function wpt_set_log( $data, $id, $message, $http = '200' ) {
 		);
 		update_post_meta( $id, '_' . $data, $message );
 	}
-	update_option( $data . '_last', array( $id, $message ) );
+	delete_transient( $data . '_last' );
+	set_transient( $data . '_last', array( $id, $message ), 300 );
 }
 
 /**
@@ -92,9 +94,9 @@ function wpt_set_log( $data, $id, $message, $http = '200' ) {
  */
 function wpt_get_log( $data, $id ) {
 	if ( 'test' === $id ) {
-		$log = get_option( $data );
+		$log = get_transient( $data );
 	} elseif ( 'last' === $id ) {
-		$log = get_option( $data . '_last' );
+		$log = get_transient( $data . '_last' );
 	} else {
 		$log = get_post_meta( $id, '_' . $data, true );
 	}

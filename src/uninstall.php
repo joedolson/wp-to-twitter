@@ -18,7 +18,6 @@ if ( ! defined( 'ABSPATH' ) && ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 	delete_option( 'comment-published-update' );
 	delete_option( 'comment-published-text' );
-	delete_option( 'wpt_status_message_last' );
 	delete_option( 'wtt_twitter_username' );
 	// Su.pr API.
 	delete_option( 'suprapi' );
