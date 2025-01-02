@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_tweet_sentence - XPoster Hook Doumentation</title>
+    <title>Filter: wpt_do_bluesky_post - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_tweet_sentence</h1></header>
+    <header><h1 class="page-title">Filter: wpt_do_bluesky_post</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_tweet_sentence">apply_filters( 'wpt_tweet_sentence', <span class="signature">$update, $post_ID )</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="wpt_do_bluesky_post">apply_filters( 'wpt_do_bluesky_post', <span class="signature">$do_post, $auth, $id, $text )</span><span class="type-signature"> &rarr; {bool}</span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Filter a template prior to parsing tags.</p>
+    <p>Filter the approval to send a Bluesky post.</p>
 </div>
 
 
@@ -77,13 +77,13 @@
 
         <tr>
             
-                <td class="name"><code>$update</code></td>
+                <td class="name"><code>$do_post</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">bool</span>
 
 
             
@@ -93,14 +93,40 @@
 
             
 
-            <td class="description last"><p>Template for this status update.</p></td>
+            <td class="description last"><p>Return false to cancel this post.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$post_ID</code></td>
+                <td class="name"><code>$auth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+|
+
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Author.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$id</code></td>
             
 
             <td class="type">
@@ -117,6 +143,29 @@
             
 
             <td class="description last"><p>Post ID.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>$text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Status update text.</p></td>
         </tr>
 
     
@@ -157,7 +206,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wpt-truncate.php.html">wpt-truncate.php</a>, <a href="wpt-truncate.php.html#line102">line 102</a>
+        <a href="wpt-post-to-bluesky.php.html">wpt-post-to-bluesky.php</a>, <a href="wpt-post-to-bluesky.php.html#line148">line 148</a>
     </li></ul></dd>
     
 
@@ -191,7 +240,7 @@
     </dt>
     <dd>
         
-<span class="param-type">string</span>
+<span class="param-type">bool</span>
 
 
     </dd>
