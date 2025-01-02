@@ -17,7 +17,10 @@ function wpt_ajax_tweet() {
 	if ( ! check_ajax_referer( 'wpt-tweet-nonce', 'security', false ) ) {
 		wp_die( esc_html__( 'XPoster: Invalid Security Check', 'wp-to-twitter' ) );
 	}
-	$action       = ( 'tweet' === $_REQUEST['tweet_action'] ) ? 'tweet' : 'schedule';
+	$action = ( isset( $_REQUEST['tweet_action'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['tweet_action'] ) ) : false;
+	if ( ! $action ) {
+		return;
+	}
 	$authors      = ( isset( $_REQUEST['tweet_auth'] ) && null !== $_REQUEST['tweet_auth'] ) ? map_deep( wp_unslash( $_REQUEST['tweet_auth'] ), 'sanitize_text_field' ) : false;
 	$upload       = ( isset( $_REQUEST['tweet_upload'] ) && null !== $_REQUEST['tweet_upload'] ) ? (int) $_REQUEST['tweet_upload'] : '1';
 	$current_user = wp_get_current_user();
@@ -39,10 +42,10 @@ function wpt_ajax_tweet() {
 
 	if ( current_user_can( 'wpt_can_tweet' ) ) {
 		$options        = get_option( 'wpt_post_types' );
-		$post_ID        = intval( $_REQUEST['tweet_post_id'] );
+		$post_ID        = isset( $_REQUEST['tweet_post_id'] ) ? intval( $_REQUEST['tweet_post_id'] ) : false;
 		$type           = get_post_type( $post_ID );
 		$default        = ( isset( $options[ $type ]['post-edited-text'] ) ) ? $options[ $type ]['post-edited-text'] : '';
-		$sentence       = ( isset( $_REQUEST['tweet_text'] ) && '' !== trim( $_REQUEST['tweet_text'] ) ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['tweet_text'] ) ) : $default;
+		$sentence       = ( isset( $_REQUEST['tweet_text'] ) && ! empty( $_REQUEST['tweet_text'] ) ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['tweet_text'] ) ) : $default;
 		$sentence       = stripcslashes( trim( $sentence ) );
 		$sentence       = wpt_truncate_status( $sentence, array(), $post_ID, false, $user_ID );
 		$schedule       = ( isset( $_REQUEST['tweet_schedule'] ) ) ? strtotime( sanitize_text_field( wp_unslash( $_REQUEST['tweet_schedule'] ) ) ) : wp_rand( 60, 240 );
