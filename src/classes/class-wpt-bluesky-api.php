@@ -259,7 +259,7 @@ class Wpt_Bluesky_Api {
 		// Verification gets the bearer token, and does not require it.
 		if ( isset( $data['verification'] ) ) {
 			$headers = array(
-				'Content-Type: application/json',
+				'Content-Type' => 'application/json',
 			);
 			// Remove verification flag and encode data.
 			unset( $data['verification'] );
@@ -268,40 +268,41 @@ class Wpt_Bluesky_Api {
 			if ( isset( $data['content-type'] ) ) {
 				// Media uploads are passed with a content-type of the object uploaded.
 				$headers = array(
-					'Content-Type: ' . $data['content-type'],
-					'Authorization: Bearer ' . $this->verify()['accessJwt'],
+					'Content-Type'  => $data['content-type'],
+					'Authorization' => 'Bearer ' . $this->verify()['accessJwt'],
 				);
 				unset( $data['content-type'] );
 				$data = $data['data'];
 			} else {
 				$headers = array(
-					'Authorization: Bearer ' . $this->verify()['accessJwt'],
-					'Content-Type: application/json',
-					'Accept: application/json',
-					'Accept-Charset: utf-8',
+					'Authorization'  => 'Bearer ' . $this->verify()['accessJwt'],
+					'Content-Type'   => 'application/json',
+					'Accept'         => 'application/json',
+					'Accept-Charset' => 'utf-8',
 				);
 				$data    = wp_json_encode( $data );
 			}
 		}
 
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_URL, $endpoint );
-		curl_setopt( $ch, CURLOPT_POST, true );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
-		$reply = curl_exec( $ch );
+		$reply = wp_remote_post(
+			$endpoint,
+			array(
+				'method'  => 'POST',
+				'headers' => $headers,
+				'body'    => $data,
+			)
+		);
 
-		if ( ! $reply ) {
+		if ( is_wp_error( $reply ) ) {
 			$error = array(
-				'ok'              => false,
-				'curl_error_code' => curl_errno( $ch ),
-				'curl_error'      => curl_error( $ch ),
+				'ok'         => false,
+				'error_code' => $reply->get_error_code(),
+				'error'      => $reply->get_error_message(),
 			);
-			return $error;
+			return wp_json_encode( $error );
 		}
-		curl_close( $ch );
 
-		return json_decode( $reply, true );
+		return json_decode( wp_remote_retrieve_body( $reply ), true );		
+
 	}
 }
