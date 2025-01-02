@@ -965,30 +965,6 @@ function wpt_check_mime_type( $attachment_id, $service ) {
 	return $return;
 }
 
-/**
- * Make a curl query.
- *
- * @param string $url URL to query.
- *
- * @return Curl response.
- */
-function wp_get_curl( $url ) {
-	$curl = curl_init( $url );
-	curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
-	curl_setopt( $curl, CURLOPT_HEADER, 0 );
-	curl_setopt( $curl, CURLOPT_USERAGENT, '' );
-	curl_setopt( $curl, CURLOPT_TIMEOUT, 10 );
-	curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true );
-
-	$response = curl_exec( $curl );
-	if ( 0 !== curl_errno( $curl ) || 200 !== curl_getinfo( $curl, CURLINFO_HTTP_CODE ) ) {
-		$response = false;
-	} // end if.
-	curl_close( $curl );
-
-	return $response;
-}
-
 add_action( 'dp_duplicate_post', 'wpt_delete_copied_meta', 10, 2 );
 add_action( 'dp_duplicate_page', 'wpt_delete_copied_meta', 10, 2 );
 /**

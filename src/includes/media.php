@@ -19,6 +19,7 @@
  */
 function wpt_image_binary( $attachment, $service = 'twitter' ) {
 	$image_sizes = get_intermediate_image_sizes();
+	$transport   = 'wp_http';
 	if ( in_array( 'large', $image_sizes, true ) ) {
 		$size = 'large';
 	} else {
@@ -61,14 +62,12 @@ function wpt_image_binary( $attachment, $service = 'twitter' ) {
 		$upload    = wp_get_attachment_image_src( $attachment, $size );
 		$image_url = $upload[0];
 		$remote    = wp_remote_get( $image_url );
-		if ( is_wp_error( $remote ) ) {
-			$transport = 'curl';
-			$binary    = wp_get_curl( $image_url );
+		if ( ! is_wp_error( $remote ) ) {
+			$binary = wp_remote_retrieve_body( $remote );
+			wpt_mail( 'XPoster: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . print_r( $remote, 1 ), $parent );
 		} else {
-			$transport = 'wp_http';
-			$binary    = wp_remote_retrieve_body( $remote );
+			$binary = false;
 		}
-		wpt_mail( 'XPoster: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . print_r( $remote, 1 ), $parent );
 		if ( ! $binary ) {
 			return false;
 		}
