@@ -91,6 +91,11 @@ function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = 
 	if ( empty( $post ) ) {
 		$post = wpt_post_info( $post_ID );
 	}
+	// create full unconditional post update - prior to truncation.
+	// order matters; arrays have to be ordered the same way.
+	$tags   = array_map( 'wpt_make_tag', wpt_tags() );
+	$values = wpt_create_values( $post, $post_ID, $ref );
+
 	// media file no longer needs accounting in shortening. 9/22/2016.
 	$maxlength = wpt_max_length( $service );
 	$length    = $maxlength['base_length'];
@@ -136,10 +141,6 @@ function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = 
 		return apply_filters( 'wpt_custom_truncate', $post_update, $update, $post_ID, $repost, 1 );
 	}
 
-	// create full unconditional post update - prior to truncation.
-	// order matters; arrays have to be ordered the same way.
-	$tags   = array_map( 'wpt_make_tag', wpt_tags() );
-	$values = wpt_create_values( $post, $post_ID, $ref );
 	// Replace the template tags with their corresponding values.
 	$post_update = str_ireplace( $tags, $values, $update );
 
