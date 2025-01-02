@@ -31,7 +31,6 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 */
 	function wpt_shorten_url( $url, $post_title, $post_ID, $testmode = false, $store_urls = true, $get_urls = true ) {
 		$shortener = (string) get_option( 'jd_shortener' );
-		wpt_mail( 'Shortener running: initial link', "Url: $url, Title: $post_title, Post ID: $post_ID, Test mode: $testmode, Shortener: $shortener", $post_ID ); // DEBUG.
 		// if the URL already exists & a shortener is enabled, return it without processing.
 		if ( '3' === $shortener && wpt_short_url( $post_ID ) && $store_urls ) {
 			$shrink = wpt_short_url( $post_ID );
@@ -128,6 +127,8 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		 * @return {string}
 		 */
 		$shrink = apply_filters( 'wpt_do_shortening', false, $shortener, $url, $post_title, $post_ID, $testmode );
+		wpt_mail( 'Shortener running: initial link', "Url: $url, Title: $post_title, Post ID: $post_ID, Test mode: $testmode, Shortener: $shortener", $post_ID ); // DEBUG.
+
 		// if an add-on has shortened the link, skip shortening.
 		$error = false;
 		if ( ! $shrink ) {
