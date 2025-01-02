@@ -787,8 +787,8 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			}
 			// create status update and ID whether current action is edit or new.
 			$ct = get_post_meta( $post_ID, '_jd_twitter', true );
-			if ( isset( $_POST['_jd_twitter'] ) && '' !== trim( $_POST['_jd_twitter'] ) ) {
-				$ct = sanitize_textarea_field( $_POST['_jd_twitter'] );
+			if ( isset( $_POST['_jd_twitter'] ) && ! empty( $_POST['_jd_twitter'] ) ) {
+				$ct = sanitize_textarea_field( wp_unslash( $_POST['_jd_twitter'] ) );
 			}
 			$custom_tweet = ( '' !== $ct ) ? stripcslashes( trim( $ct ) ) : '';
 			// if ops is set and equals 'publish', this is being edited. Otherwise, it's a new post.
@@ -862,18 +862,16 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
  * @return mixed boolean/integer link ID if successful, false if failure.
  */
 function wpt_post_update_link( $link_id ) {
-	$thislinkprivate = sanitize_text_field( $_POST['link_visible'] );
+	$bookmark        = get_bookmark( $link_id );
+	$thislinkprivate = $bookmark->link_visible;
 	if ( 'N' !== $thislinkprivate ) {
-		$thislinkname        = stripslashes( sanitize_text_field( $_POST['link_name'] ) );
-		$thispostlink        = sanitize_text_field( $_POST['link_url'] );
-		$thislinkdescription = stripcslashes( sanitize_textarea_field( $_POST['link_description'] ) );
+		$thislinkname        = $bookmark->link_name;
+		$thispostlink        = $bookmark->link_url;
+		$thislinkdescription = $bookmark->link_description;
 		$sentence            = stripcslashes( get_option( 'newlink-published-text' ) );
 		$sentence            = str_ireplace( '#title#', $thislinkname, $sentence );
 		$sentence            = str_ireplace( '#description#', $thislinkdescription, $sentence );
 
-		if ( mb_strlen( $sentence ) > 118 ) {
-			$sentence = mb_substr( $sentence, 0, 114 ) . '...';
-		}
 		/**
 		 * Customize the URL shortening of a link in the link manager.
 		 *
@@ -1000,22 +998,22 @@ function wpt_save_post( $id, $post ) {
 		return $id;
 	}
 	if ( isset( $_POST['wp_to_twitter_meta'] ) ) {
-		$nonce = ( isset( $_POST['wp_to_twitter_nonce'] ) ) ? $_POST['wp_to_twitter_nonce'] : false;
+		$nonce = ( isset( $_POST['wp_to_twitter_nonce'] ) ) ? sanitize_text_field( wp_unslash( $_POST['wp_to_twitter_nonce'] ) ) : false;
 		if ( ! ( $nonce && wp_verify_nonce( $nonce, 'wp-to-twitter-nonce' ) ) ) {
 			wp_die( 'XPoster: Security check failed' );
 		}
 		if ( isset( $_POST['_yourls_keyword'] ) ) {
-			$yourls = sanitize_text_field( $_POST['_yourls_keyword'] );
+			$yourls = sanitize_text_field( wp_unslash( $_POST['_yourls_keyword'] ) );
 			update_post_meta( $id, '_yourls_keyword', $yourls );
 		}
 		if ( isset( $_POST['_jd_twitter'] ) && '' !== $_POST['_jd_twitter'] ) {
-			$twitter = sanitize_textarea_field( $_POST['_jd_twitter'] );
+			$twitter = sanitize_textarea_field( wp_unslash( $_POST['_jd_twitter'] ) );
 			update_post_meta( $id, '_jd_twitter', $twitter );
 		} elseif ( isset( $_POST['_jd_twitter'] ) && '' === $_POST['_jd_twitter'] ) {
 			delete_post_meta( $id, '_jd_twitter' );
 		}
 		if ( isset( $_POST['_jd_wp_twitter'] ) && '' !== $_POST['_jd_wp_twitter'] ) {
-			$wp_twitter = sanitize_textarea_field( $_POST['_jd_wp_twitter'] );
+			$wp_twitter = sanitize_textarea_field( wp_unslash( $_POST['_jd_wp_twitter'] ) );
 			update_post_meta( $id, '_jd_wp_twitter', $wp_twitter );
 		}
 		if ( isset( $_POST['_wpt_post_this'] ) ) {
@@ -1085,8 +1083,14 @@ function wpt_admin_style() {
 		$wpt_version .= '-' . wp_rand( 10000, 99999 );
 	}
 	global $current_screen;
-
-	if ( isset( $_GET['page'] ) && ( 'wp-to-twitter' === $_GET['page'] || 'wp-tweets-pro' === $_GET['page'] || 'wp-to-twitter-schedule' === $_GET['page'] || 'wp-to-twitter-tweets' === $_GET['page'] || 'wp-to-twitter-errors' === $_GET['page'] ) || 'profile' === $current_screen->base ) {
+	$enqueues = array(
+		'toplevel_page_wp-tweets-pro',
+		'xposter-pro_page_wp-to-twitter-schedule',
+		'xposter-pro_page_wp-to-twitter-tweets',
+		'xposter-pro_page_wp-to-twitter-errors',
+		'profile',
+	);
+	if ( in_array( $current_screen->base, $enqueues, true ) ) {
 		wp_enqueue_style( 'wpt-styles', plugins_url( 'css/styles.css', __FILE__ ), array(), $wpt_version );
 	}
 }
