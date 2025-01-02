@@ -429,7 +429,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 
 		return $return;
 	} else {
-		wpt_set_log( 'wpt_status_message', $id, __( 'No API connection found.', 'wp-to-twitter' ), '404' );
+		wpt_set_log( 'wpt_status_message', $id, __( 'No API connections found.', 'wp-to-twitter' ), '404' );
 
 		return false;
 	}
