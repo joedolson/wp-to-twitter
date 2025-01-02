@@ -302,7 +302,6 @@ class Wpt_Bluesky_Api {
 			return wp_json_encode( $error );
 		}
 
-		return json_decode( wp_remote_retrieve_body( $reply ), true );		
-
+		return json_decode( wp_remote_retrieve_body( $reply ), true );
 	}
 }

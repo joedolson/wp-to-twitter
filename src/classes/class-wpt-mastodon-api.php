@@ -93,6 +93,7 @@ class Wpt_Mastodon_Api {
 			'Authorization' => 'Bearer ' . $this->token,
 			'Content-Type'  => 'multipart/form-data',
 		);
+
 		$reply = wp_remote_post(
 			$this->instance_url . $endpoint,
 			array(
