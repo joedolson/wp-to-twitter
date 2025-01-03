@@ -1057,7 +1057,7 @@ add_action( 'init', 'wpt_old_admin_redirect' );
  * Send links to old admin to new admin page
  */
 function wpt_old_admin_redirect() {
-	if ( is_admin() && isset( $_GET['page'] ) && 'wp-to-twitter/wp-to-twitter.php' === $_GET['page'] ) {
+	if ( is_admin() && isset( $_GET['page'] ) && 'wp-to-twitter/wp-to-twitter.php' === $_GET['page'] ) {  // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		wp_safe_redirect( admin_url( 'admin.php?page=wp-tweets-pro' ) );
 		exit;
 	}
@@ -1260,8 +1260,6 @@ function wpt_do_post_update( $id, $post = null, $updated = null, $post_before = 
 	if ( 'publish' !== $post->post_status ) {
 		return $id;
 	}
-	// is there any reason to accept any other status?
-	wpt_mail( 'Status update on published post', $id );
 	wpt_post_update_instant( $id, $post, $updated, $post_before );
 }
 add_action( 'xmlrpc_publish_post', 'wpt_post_update_xmlrpc' );
