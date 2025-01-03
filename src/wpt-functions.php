@@ -1030,7 +1030,7 @@ function wpt_update_authenticated_users() {
 /**
  * Format errors for storing in debugging data. Recursive.
  *
- * @param array|object Data to format.
+ * @param array|object $data Data to format.
  *
  * @return string String version of data.
  */
