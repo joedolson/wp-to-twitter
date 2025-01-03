@@ -1063,7 +1063,7 @@ function wpt_update_authenticated_users() {
 function wpt_format_error( $data ) {
 	if ( ! is_array( $data ) ) {
 		if ( is_object( $data ) ) {
-			$data = json_decode( json_encode( $data ), true );
+			$data = json_decode( wp_json_encode( $data ), true );
 		} else {
 			$data = (array) $data;
 		}
