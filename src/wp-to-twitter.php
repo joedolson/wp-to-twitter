@@ -954,7 +954,7 @@ function wpt_admin_scripts() {
 			)
 		);
 	}
-	if ( 'post' === $current_screen->base && isset( $_GET['post'] ) && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
+	if ( 'post' === $current_screen->base && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
 		wp_enqueue_script( 'wpt.ajax', plugins_url( 'js/ajax.js', __FILE__ ), array( 'jquery' ), $wpt_version, true );
 		wp_localize_script(
 			'wpt.ajax',
