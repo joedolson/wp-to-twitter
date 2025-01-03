@@ -1036,7 +1036,11 @@ function wpt_update_authenticated_users() {
  */
 function wpt_format_error( $data ) {
 	if ( ! is_array( $data ) ) {
-		$data = (array) $data;
+		if ( is_object( $data ) ) {
+			$data = json_decode( json_encode( $data ), true );
+		} else {
+			$data = (array) $data;
+		}
 	}
 	$output = '';
 	foreach ( $data as $key => $value ) {
