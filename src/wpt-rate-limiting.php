@@ -159,8 +159,8 @@ function wpt_term_rate_limits() {
  * @param int $tax_id Taxonomy ID.
  */
 function wpt_save_term_rate_limit( $term_id, $tax_id ) {
-	$nonce      = isset( $_REQUEST['_wpnonce_add-tag'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce_add-tag'] ) ) : false;
-	$verify     = wp_verify_nonce( $nonce, 'add-tag' );
+	$nonce  = isset( $_REQUEST['_wpnonce_add-tag'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce_add-tag'] ) ) : false;
+	$verify = wp_verify_nonce( $nonce, 'add-tag' );
 	if ( ! $verify ) {
 		wp_die( __( 'XPoster: Nonce verification failed', 'wp-to-twitter' ) );
 	}
