@@ -162,7 +162,7 @@ function wpt_save_term_rate_limit( $term_id, $tax_id ) {
 	$nonce  = isset( $_REQUEST['_wpnonce_add-tag'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce_add-tag'] ) ) : false;
 	$verify = wp_verify_nonce( $nonce, 'add-tag' );
 	if ( ! $verify ) {
-		wp_die( __( 'XPoster: Nonce verification failed', 'wp-to-twitter' ) );
+		wp_die( esc_html__( 'XPoster: Nonce verification failed', 'wp-to-twitter' ) );
 	}
 	$limits     = get_option( 'wpt_rate_limit' );
 	$option_set = isset( $_POST['wpt_rate_limit'] ) ? sanitize_text_field( wp_unslash( $_POST['wpt_rate_limit'] ) ) : wpt_default_rate_limit( $term_id );
