@@ -74,7 +74,7 @@ function jd_post_info( $post_ID ) {
 }
 
 /**
- * Sent post tweet.
+ * Sent post tweet. Deprecated; replaced by wpt_tweet.
  *
  * @param int    $post_ID Post ID.
  * @param string $type Type of post.
