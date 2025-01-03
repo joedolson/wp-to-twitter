@@ -444,6 +444,7 @@ function wpt_check_service_history( $post_ID, $auth, $template, $connections ) {
 	$checks = array();
 	foreach ( $connections as $service => $connected ) {
 		if ( ! $connected ) {
+			$checks[ $service ] = false;
 			continue;
 		}
 		$status = wpt_truncate_status( $template, array(), $post_ID, false, $auth, $service );
