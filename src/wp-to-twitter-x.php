@@ -255,11 +255,11 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 						}
 						if ( '1' === get_option( 'wp_debug_oauth' ) ) {
 							echo '<h2>Summary Connection Response</h2><pre>';
-							print_r( $error_information );
+							wpt_format_error( $error_information );
 							echo '</pre><h2>Account Verification Data</h2><pre>';
-							print_r( $data );
+							wpt_format_error( $data );
 							echo '</pre><h2>Full Connection Response</h2><pre>';
-							print_r( $connection );
+							wpt_format_error( $connection );
 							echo '</pre>';
 						}
 					} else {

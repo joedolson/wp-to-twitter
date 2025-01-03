@@ -93,7 +93,7 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 					),
 				);
 			}
-			wpt_mail( 'Media Uploaded (Bluesky)', "$auth, $attachment" . PHP_EOL . print_r( $blob, 1 ), $id );
+			wpt_mail( 'Media Uploaded (Bluesky)', "$auth, $attachment" . PHP_EOL . wpt_format_error( $blob ), $id );
 		}
 		if ( ! $attachment && 'card' === $request_type ) {
 			$request = array(
@@ -104,7 +104,7 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 					'description' => $card['description'],
 				),
 			);
-			wpt_mail( 'Bluesky Card without media', "$auth, $attachment" . PHP_EOL . print_r( $blob, 1 ), $id );
+			wpt_mail( 'Bluesky Card without media', "$auth, $attachment" . PHP_EOL . wpt_format_error( $blob ), $id );
 
 		}
 	}

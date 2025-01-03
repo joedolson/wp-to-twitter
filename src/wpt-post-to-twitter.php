@@ -139,14 +139,14 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 					update_option( 'wpt_app_limit', $rate_limit );
 					$http_code = $response->getStatusCode();
 					$notice    = __( 'Request Exception occurred when sending to X.com', 'wp-to-twitter' );
-					wpt_mail( 'X RequestException', print_r( $response, 1 ), $id );
+					wpt_mail( 'X RequestException', wpt_format_error( $response ), $id );
 				}
 			} catch ( Exception $e ) {
 				if ( method_exists( $e, 'getMessage' ) ) {
 					$error     = json_decode( $e->getMessage() );
 					$http_code = $e->getCode();
 					$notice    = $error->title . ': ' . $error->detail;
-					wpt_mail( 'X Exception', print_r( $error, 1 ), $id );
+					wpt_mail( 'X Exception', wpt_format_error( $error ), $id );
 				} else {
 					$http_code = 405;
 					$notice    = __( 'Unhandled response', 'wp-to-twitter' );

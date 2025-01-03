@@ -47,7 +47,7 @@ function wpt_update_bluesky_settings( $auth = false, $post = false ) {
 					$verify   = wpt_bluesky_connection( $auth, $validate );
 					if ( '1' === get_option( 'wp_debug_oauth' ) ) {
 						echo '<br /><strong>Account Verification Data:</strong><br /><pre>';
-						print_r( $verify );
+						wpt_format_error( $verify );
 						echo '</pre>';
 					}
 					if ( isset( $verify['active'] ) && $verify['active'] ) {

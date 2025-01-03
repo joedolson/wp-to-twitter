@@ -294,7 +294,7 @@ function wpt_service_enabled( $post_ID, $service ) {
 	$disabled = get_option( 'wpt_disabled_services', array() );
 	$send_to  = true;
 	if ( in_array( $service, $omit, true ) || in_array( $service, array_keys( $disabled ), true ) ) {
-		wpt_mail( ucfirst( $service ) . ' is disabled.', print_r( $disabled, 1 ), $post_ID );
+		wpt_mail( ucfirst( $service ) . ' is disabled.', wpt_format_error( $disabled ), $post_ID );
 		$send_to = false;
 	}
 	/**
@@ -397,7 +397,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 		$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
 		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
 		$return['xcom'] = $response;
-		wpt_mail( 'Share Connection Status: X', "$text, $auth, $id, $media, " . print_r( $response, 1 ), $id );
+		wpt_mail( 'Share Connection Status: X', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
 	}
 	if ( $check['mastodon'] && $check_mastodon && wpt_service_enabled( $id, 'mastodon' ) ) {
 		$text       = $check['mastodon'];
@@ -409,7 +409,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 		$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
 		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
 		$return['mastodon'] = $response;
-		wpt_mail( 'Share Connection Status: Mastodon', "$text, $auth, $id, $media, " . print_r( $response, 1 ), $id );
+		wpt_mail( 'Share Connection Status: Mastodon', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
 	}
 	if ( $check['bluesky'] && $check_bluesky && wpt_service_enabled( $id, 'bluesky' ) ) {
 		$text         = $check['bluesky'];
@@ -423,7 +423,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 		$response     = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
 		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
 		$return['bluesky'] = $response;
-		wpt_mail( 'Share Connection Status: Bluesky', "$text, $auth, $id, $media, " . print_r( $response, 1 ), $id );
+		wpt_mail( 'Share Connection Status: Bluesky', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
 	}
 	if ( ! empty( $return ) ) {
 
@@ -730,7 +730,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 		$debug_post_info = $post_info;
 		unset( $debug_post_info['post_content'] );
 		unset( $debug_post_info['postContent'] );
-		wpt_mail( '2: XPoster Post Info (post content omitted)', print_r( $debug_post_info, 1 ), $post_ID ); // DEBUG.
+		wpt_mail( '2: XPoster Post Info (post content omitted)', wpt_format_error( $debug_post_info ), $post_ID ); // DEBUG.
 		/**
 		 * Apply filters against this post to determine whether it should be allowed to be sent.
 		 *
@@ -931,8 +931,8 @@ function wpt_admin_scripts() {
 	if ( SCRIPT_DEBUG ) {
 		$wpt_version .= '-' . wp_rand( 10000, 99999 );
 	}
-	wp_register_script( 'wpt.charcount', plugins_url( 'js/jquery.charcount.js', __FILE__ ), array( 'jquery' ), $wpt_version );
-	if ( 'post' === $current_screen->base || 'xposter-pro_page_wp-to-twitter-schedule' === $current_screen->id ) {
+	wp_register_script( 'wpt.charcount', plugins_url( 'js/jquery.charcount.js', __FILE__ ), array( 'jquery' ), $wpt_version, true );
+	if ( 'post' === $current_screen->base || 'xposter-pro_page_wp-to-twitter-schedule' === $current_screen->base ) {
 		wp_enqueue_script( 'wpt.charcount' );
 		wp_register_style( 'wpt-post-styles', plugins_url( 'css/post-styles.css', __FILE__ ), array(), $wpt_version );
 		wp_enqueue_style( 'wpt-post-styles' );
@@ -960,7 +960,7 @@ function wpt_admin_scripts() {
 		);
 	}
 	if ( 'post' === $current_screen->base && isset( $_GET['post'] ) && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
-		wp_enqueue_script( 'wpt.ajax', plugins_url( 'js/ajax.js', __FILE__ ), array( 'jquery' ), $wpt_version );
+		wp_enqueue_script( 'wpt.ajax', plugins_url( 'js/ajax.js', __FILE__ ), array( 'jquery' ), $wpt_version, true );
 		wp_localize_script(
 			'wpt.ajax',
 			'wpt_data',
@@ -972,7 +972,7 @@ function wpt_admin_scripts() {
 		);
 	}
 	if ( 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
-		wp_enqueue_script( 'wpt.tabs', plugins_url( 'js/tabs.js', __FILE__ ), array( 'jquery' ), $wpt_version );
+		wp_enqueue_script( 'wpt.tabs', plugins_url( 'js/tabs.js', __FILE__ ), array( 'jquery' ), $wpt_version, true );
 		wp_localize_script(
 			'wpt.tabs',
 			'wpt',
@@ -1040,7 +1040,7 @@ function wpt_save_post( $id, $post ) {
 		do_action( 'wpt_insert_post', $_POST, $id );
 		// WPT PRO.
 		// only send debug data if post meta is updated.
-		wpt_mail( 'Post Meta Processed', 'XPoster post meta was updated' . "\n\n" . print_r( map_deep( $_POST, 'sanitize_textarea_field' ), 1 ), $id ); // DEBUG.
+		wpt_mail( 'Post Meta Processed', 'XPoster post meta was updated' . "\n\n" . wpt_format_error( map_deep( $_POST, 'sanitize_textarea_field' ) ), $id ); // DEBUG.
 
 		if ( isset( $_POST['wpt-delete-debug'] ) && 'true' === $_POST['wpt-delete-debug'] ) {
 			delete_post_meta( $id, '_wpt_debug_log' );

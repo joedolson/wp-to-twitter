@@ -60,7 +60,7 @@ function wpt_update_mastodon_settings( $auth = false, $post = false ) {
 						delete_option( 'wpt_curl_error' );
 						if ( '1' === get_option( 'wp_debug_oauth' ) ) {
 							echo '<br /><strong>Account Verification Data:</strong><br />';
-							print_r( $verify );
+							wpt_format_error( $verify );
 							echo '</pre>';
 						}
 					} else {

@@ -720,7 +720,7 @@ function wpt_post_attachment( $post_ID ) {
 	}
 	$meta = wp_get_attachment_metadata( $attachment_id );
 	if ( ! isset( $meta['width'], $meta['height'] ) ) {
-		wpt_mail( "Image Data Does not Exist for #$attachment_id", print_r( $meta, 1 ), $post_ID );
+		wpt_mail( "Image Data Does not Exist for #$attachment_id", wpt_format_error( $meta ), $post_ID );
 		$attachment_id = false;
 	}
 	if ( $attachment_id ) {
@@ -1025,4 +1025,27 @@ function wpt_update_authenticated_users() {
 	}
 
 	update_option( 'wpt_authorized_users', $authorized_users );
+}
+
+/**
+ * Format errors for storing in debugging data. Recursive.
+ *
+ * @param array|object Data to format.
+ *
+ * @return string String version of data.
+ */
+function wpt_format_error( $data ) {
+	if ( ! is_array( $data ) ) {
+		(array) $data;
+	}
+	$output = '';
+	foreach ( $data as $key => $value ) {
+		if ( is_array( $value ) ) {
+			$output .= '<li><strong>' . esc_html( $key ) . '</strong>' . wpt_format_error( $value );
+		} else {
+			$output .= '<li><strong>' . esc_html( $key ) . '</strong>:' . esc_html( $value ) . PHP_EOL . '</li>';
+		}
+	}
+
+	return '<ul>' . $output . '</ul>';
 }

@@ -64,7 +64,7 @@ function wpt_image_binary( $attachment, $service = 'twitter' ) {
 		$remote    = wp_remote_get( $image_url );
 		if ( ! is_wp_error( $remote ) ) {
 			$binary = wp_remote_retrieve_body( $remote );
-			wpt_mail( 'XPoster: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . print_r( $remote, 1 ), $parent );
+			wpt_mail( 'XPoster: media binary fetched', 'Url: ' . $image_url . 'Transport: ' . $transport . wpt_format_error( $remote ), $parent );
 		} else {
 			$binary = false;
 		}
