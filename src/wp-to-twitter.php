@@ -682,6 +682,20 @@ function wpt_category_limit( $post_type, $post_info, $post_ID ) {
 }
 
 /**
+ * Process bulk edited posts if permitted.
+ *
+ * @param array $updated Array of updated post IDs.
+ */
+function wpt_bulk_edit_posts( $updated ) {
+	if ( '1' === get_option( 'wpt_inline_edits' ) ) {
+		foreach ( $updated as $post_ID ) {
+			wpt_post_update( $post_ID, 'instant' );
+		}
+	}
+}
+add_action( 'bulk_edit_posts', 'wpt_bulk_edit_posts' );
+
+/**
  * Set up a status update to be sent.
  *
  * @param int     $post_ID Post ID.
@@ -699,18 +713,8 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	$post_this      = get_post_meta( $post_ID, '_wpt_post_this', true );
 	$newpost        = false;
 	$oldpost        = false;
-	$is_inline_edit = false;
 	$template       = '';
 	$nptext         = '';
-	if ( '1' !== get_option( 'wpt_inline_edits' ) ) {
-		if ( isset( $_POST['_inline_edit'] ) || isset( $_REQUEST['bulk_edit'] ) ) {
-			return false;
-		}
-	} else {
-		if ( isset( $_POST['_inline_edit'] ) || isset( $_REQUEST['bulk_edit'] ) ) {
-			$is_inline_edit = true;
-		}
-	}
 	if ( '0' === get_option( 'jd_tweet_default' ) ) {
 		// If post this value is not set or equals 'yes'.
 		$send_update  = ( 'no' !== $post_this ) ? true : false;
@@ -788,7 +792,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			}
 			$custom_tweet = ( '' !== $ct ) ? stripcslashes( trim( $ct ) ) : '';
 			// if ops is set and equals 'publish', this is being edited. Otherwise, it's a new post.
-			if ( 0 === $new || true === $is_inline_edit ) {
+			if ( 0 === $new ) {
 				// if this is an old post and editing updates are enabled.
 				if ( '1' === get_option( 'jd_tweet_default_edit' ) ) {
 					/**
