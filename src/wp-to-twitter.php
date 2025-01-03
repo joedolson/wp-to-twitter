@@ -1408,8 +1408,14 @@ function wpt_check_connections( $auth = false, $get_connections = false ) {
  * Dismiss the missing connection notice.
  */
 function wpt_dismiss_connection() {
-	if ( isset( $_GET['page'] ) && 'wp-tweets-pro' === $_GET['page'] && isset( $_GET['dismiss'] ) && 'connection' === $_GET['dismiss'] ) {
-		update_option( 'wpt_ignore_connection', 'true' );
+	global $current_screen;
+	if ( $current_screen && 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
+		$nonce   = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : false;
+		$verify  = wp_verify_nonce( $nonce, 'wpt-dismiss' );
+		$dismiss = isset( $_GET['dismiss'] ) && 'connection' === $_GET['dismiss'] ? true : false;
+		if ( $verify && $dismiss ) {
+			update_option( 'wpt_ignore_connection', 'true' );
+		}
 	}
 }
 add_action( 'admin_init', 'wpt_dismiss_connection' );
@@ -1418,7 +1424,8 @@ add_action( 'admin_init', 'wpt_dismiss_connection' );
  * Display notices if update services are not connected.
  */
 function wpt_needs_connection() {
-	if ( isset( $_GET['page'] ) && 'wp-tweets-pro' === $_GET['page'] && ! 'true' === get_option( 'wpt_ignore_connection' ) ) {
+	global $current_screen;
+	if ( 'toplevel_page_wp-tweets-pro' === $current_screen->id && ! 'true' === get_option( 'wpt_ignore_connection' ) ) {
 		$message  = '';
 		$mastodon = wpt_mastodon_connection();
 		$x        = wpt_check_oauth();
@@ -1446,7 +1453,11 @@ function wpt_needs_connection() {
 		$class          = 'xposter-connection';
 		if ( $x || $mastodon || $bluesky ) {
 			$class          = 'xposter-connection dismissible';
-			$dismiss_url    = add_query_arg( 'dismiss', 'connection', admin_url( 'admin.php?page=wp-tweets-pro' ) );
+			$args           = array(
+				'dismiss'  => 'connection',
+				'_wpnonce' => wp_create_nonce( 'wpt_dismiss' ),
+			);
+			$dismiss_url    = add_query_arg( $args, admin_url( 'admin.php?page=wp-tweets-pro' ) );
 			$is_dismissible = ' <a href="' . esc_url( $dismiss_url ) . '" class="button button-secondary">' . __( 'Ignore', 'wp-to-twitter' ) . '</a>';
 		}
 		if ( $message ) {
