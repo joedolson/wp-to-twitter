@@ -736,11 +736,11 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	if ( wp_is_post_autosave( $post_ID ) || wp_is_post_revision( $post_ID ) ) {
 		return $post_ID;
 	}
-	$post_this      = get_post_meta( $post_ID, '_wpt_post_this', true );
-	$newpost        = false;
-	$oldpost        = false;
-	$template       = '';
-	$nptext         = '';
+	$post_this = get_post_meta( $post_ID, '_wpt_post_this', true );
+	$newpost   = false;
+	$oldpost   = false;
+	$template  = '';
+	$nptext    = '';
 	if ( '0' === get_option( 'jd_tweet_default' ) ) {
 		// If post this value is not set or equals 'yes'.
 		$send_update  = ( 'no' !== $post_this ) ? true : false;
