@@ -955,16 +955,20 @@ function wpt_admin_scripts() {
 		);
 	}
 	if ( 'post' === $current_screen->base && ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
-		wp_enqueue_script( 'wpt.ajax', plugins_url( 'js/ajax.js', __FILE__ ), array( 'jquery' ), $wpt_version, true );
-		wp_localize_script(
-			'wpt.ajax',
-			'wpt_data',
-			array(
-				'post_ID'  => (int) $_GET['post'],
-				'action'   => 'wpt_post_update',
-				'security' => wp_create_nonce( 'wpt-tweet-nonce' ),
-			)
-		);
+		global $post;
+		// AJAX posting is only possible on published posts.
+		if ( 'publish' === $post->post_status ) {
+			wp_enqueue_script( 'wpt.ajax', plugins_url( 'js/ajax.js', __FILE__ ), array( 'jquery' ), $wpt_version, true );
+			wp_localize_script(
+				'wpt.ajax',
+				'wpt_data',
+				array(
+					'post_ID'  => $post->ID,
+					'action'   => 'wpt_post_update',
+					'security' => wp_create_nonce( 'wpt-tweet-nonce' ),
+				)
+			);
+		}
 	}
 	if ( 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
 		wp_enqueue_script( 'wpt.tabs', plugins_url( 'js/tabs.js', __FILE__ ), array( 'jquery' ), $wpt_version, true );
