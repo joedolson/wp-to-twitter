@@ -1044,8 +1044,8 @@ function wpt_format_error( $data ) {
 	}
 	$output = '';
 	foreach ( $data as $key => $value ) {
-		if ( is_array( $value ) ) {
-			$output .= '<li><strong>' . esc_html( $key ) . '</strong>' . wpt_format_error( $value );
+		if ( is_array( $value ) || is_object( $value ) ) {
+			$output .= '<li><strong>' . esc_html( $key ) . '</strong>:' . wpt_format_error( $value );
 		} else {
 			$output .= '<li><strong>' . esc_html( $key ) . '</strong>:' . esc_html( $value ) . PHP_EOL . '</li>';
 		}
