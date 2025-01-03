@@ -225,11 +225,6 @@ function wpt_save_success( $id, $twit, $http_code ) {
 			$jwt = array();
 		}
 		$jwt[] = urldecode( $twit );
-		// Why do I pass this into the POST array? Is this something from a past version? Todo.
-		if ( empty( $_POST ) ) {
-			$_POST = array();
-		}
-		$_POST['_jd_wp_twitter'] = $jwt;
 		update_post_meta( $id, '_jd_wp_twitter', $jwt );
 	}
 }
@@ -1264,7 +1259,6 @@ function wpt_do_post_update( $id, $post = null, $updated = null, $post_before = 
 	wpt_mail( 'Status update on published post', $id );
 	wpt_post_update_instant( $id, $post, $updated, $post_before );
 }
-
 add_action( 'xmlrpc_publish_post', 'wpt_post_update_xmlrpc' );
 add_action( 'publish_phone', 'wpt_post_update_xmlrpc' );
 
