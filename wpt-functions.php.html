@@ -750,7 +750,7 @@ function wpt_post_attachment( $post_ID ) {
 		$attachment_id = false;
 	}
 	if ( $attachment_id ) {
-		wpt_mail( 'Post has upload', "Attachment ID: $attachment_id", $post_ID );
+		wpt_mail( 'Post has media to upload', "Attachment ID: $attachment_id", $post_ID );
 	}
 	/**
 	 * Filter the attachment ID to post with a status update.
@@ -1062,12 +1062,16 @@ function wpt_update_authenticated_users() {
  */
 function wpt_format_error( $data ) {
 	if ( ! is_array( $data ) ) {
-		(array) $data;
+		if ( is_object( $data ) ) {
+			$data = json_decode( json_encode( $data ), true );
+		} else {
+			$data = (array) $data;
+		}
 	}
 	$output = '';
 	foreach ( $data as $key => $value ) {
-		if ( is_array( $value ) ) {
-			$output .= '&lt;li>&lt;strong>' . esc_html( $key ) . '&lt;/strong>' . wpt_format_error( $value );
+		if ( is_array( $value ) || is_object( $value ) ) {
+			$output .= '&lt;li>&lt;strong>' . esc_html( $key ) . '&lt;/strong>:' . wpt_format_error( $value );
 		} else {
 			$output .= '&lt;li>&lt;strong>' . esc_html( $key ) . '&lt;/strong>:' . esc_html( $value ) . PHP_EOL . '&lt;/li>';
 		}

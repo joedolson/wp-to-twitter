@@ -130,7 +130,7 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 					'description' => $card['description'],
 				),
 			);
-			wpt_mail( 'Bluesky Card without media', "$auth, $attachment" . PHP_EOL . wpt_format_error( $blob ), $id );
+			wpt_mail( 'Bluesky Card without media', "$auth, $attachment" . PHP_EOL . wpt_format_error( $request ), $id );
 
 		}
 	}

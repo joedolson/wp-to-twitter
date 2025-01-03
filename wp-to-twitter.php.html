@@ -470,6 +470,7 @@ function wpt_check_service_history( $post_ID, $auth, $template, $connections ) {
 	$checks = array();
 	foreach ( $connections as $service => $connected ) {
 		if ( ! $connected ) {
+			$checks[ $service ] = false;
 			continue;
 		}
 		$status = wpt_truncate_status( $template, array(), $post_ID, false, $auth, $service );
@@ -707,6 +708,20 @@ function wpt_category_limit( $post_type, $post_info, $post_ID ) {
 }
 
 /**
+ * Process bulk edited posts if permitted.
+ *
+ * @param array $updated Array of updated post IDs.
+ */
+function wpt_bulk_edit_posts( $updated ) {
+	if ( '1' === get_option( 'wpt_inline_edits' ) ) {
+		foreach ( $updated as $post_ID ) {
+			wpt_post_update( $post_ID, 'instant' );
+		}
+	}
+}
+add_action( 'bulk_edit_posts', 'wpt_bulk_edit_posts' );
+
+/**
  * Set up a status update to be sent.
  *
  * @param int     $post_ID Post ID.
@@ -724,18 +739,8 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	$post_this      = get_post_meta( $post_ID, '_wpt_post_this', true );
 	$newpost        = false;
 	$oldpost        = false;
-	$is_inline_edit = false;
 	$template       = '';
 	$nptext         = '';
-	if ( '1' !== get_option( 'wpt_inline_edits' ) ) {
-		if ( isset( $_POST['_inline_edit'] ) || isset( $_REQUEST['bulk_edit'] ) ) {
-			return false;
-		}
-	} else {
-		if ( isset( $_POST['_inline_edit'] ) || isset( $_REQUEST['bulk_edit'] ) ) {
-			$is_inline_edit = true;
-		}
-	}
 	if ( '0' === get_option( 'jd_tweet_default' ) ) {
 		// If post this value is not set or equals 'yes'.
 		$send_update  = ( 'no' !== $post_this ) ? true : false;
@@ -813,7 +818,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			}
 			$custom_tweet = ( '' !== $ct ) ? stripcslashes( trim( $ct ) ) : '';
 			// if ops is set and equals 'publish', this is being edited. Otherwise, it's a new post.
-			if ( 0 === $new || true === $is_inline_edit ) {
+			if ( 0 === $new ) {
 				// if this is an old post and editing updates are enabled.
 				if ( '1' === get_option( 'jd_tweet_default_edit' ) ) {
 					/**
@@ -980,17 +985,21 @@ function wpt_admin_scripts() {
 			)
 		);
 	}
-	if ( 'post' === $current_screen->base &amp;&amp; isset( $_GET['post'] ) &amp;&amp; ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
-		wp_enqueue_script( 'wpt.ajax', plugins_url( 'js/ajax.js', __FILE__ ), array( 'jquery' ), $wpt_version, true );
-		wp_localize_script(
-			'wpt.ajax',
-			'wpt_data',
-			array(
-				'post_ID'  => (int) $_GET['post'],
-				'action'   => 'wpt_post_update',
-				'security' => wp_create_nonce( 'wpt-tweet-nonce' ),
-			)
-		);
+	if ( 'post' === $current_screen->base &amp;&amp; ( current_user_can( 'wpt_tweet_now' ) || current_user_can( 'manage_options' ) ) ) {
+		global $post;
+		// AJAX posting is only possible on published posts.
+		if ( 'publish' === $post->post_status ) {
+			wp_enqueue_script( 'wpt.ajax', plugins_url( 'js/ajax.js', __FILE__ ), array( 'jquery' ), $wpt_version, true );
+			wp_localize_script(
+				'wpt.ajax',
+				'wpt_data',
+				array(
+					'post_ID'  => $post->ID,
+					'action'   => 'wpt_post_update',
+					'security' => wp_create_nonce( 'wpt-tweet-nonce' ),
+				)
+			);
+		}
 	}
 	if ( 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
 		wp_enqueue_script( 'wpt.tabs', plugins_url( 'js/tabs.js', __FILE__ ), array( 'jquery' ), $wpt_version, true );
@@ -1078,7 +1087,7 @@ add_action( 'init', 'wpt_old_admin_redirect' );
  * Send links to old admin to new admin page
  */
 function wpt_old_admin_redirect() {
-	if ( is_admin() &amp;&amp; isset( $_GET['page'] ) &amp;&amp; 'wp-to-twitter/wp-to-twitter.php' === $_GET['page'] ) {
+	if ( is_admin() &amp;&amp; isset( $_GET['page'] ) &amp;&amp; 'wp-to-twitter/wp-to-twitter.php' === $_GET['page'] ) {  // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		wp_safe_redirect( admin_url( 'admin.php?page=wp-tweets-pro' ) );
 		exit;
 	}
@@ -1281,8 +1290,6 @@ function wpt_do_post_update( $id, $post = null, $updated = null, $post_before = 
 	if ( 'publish' !== $post->post_status ) {
 		return $id;
 	}
-	// is there any reason to accept any other status?
-	wpt_mail( 'Status update on published post', $id );
 	wpt_post_update_instant( $id, $post, $updated, $post_before );
 }
 add_action( 'xmlrpc_publish_post', 'wpt_post_update_xmlrpc' );
@@ -1431,8 +1438,14 @@ function wpt_check_connections( $auth = false, $get_connections = false ) {
  * Dismiss the missing connection notice.
  */
 function wpt_dismiss_connection() {
-	if ( isset( $_GET['page'] ) &amp;&amp; 'wp-tweets-pro' === $_GET['page'] &amp;&amp; isset( $_GET['dismiss'] ) &amp;&amp; 'connection' === $_GET['dismiss'] ) {
-		update_option( 'wpt_ignore_connection', 'true' );
+	global $current_screen;
+	if ( $current_screen &amp;&amp; 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
+		$nonce   = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : false;
+		$verify  = wp_verify_nonce( $nonce, 'wpt-dismiss' );
+		$dismiss = isset( $_GET['dismiss'] ) &amp;&amp; 'connection' === $_GET['dismiss'] ? true : false;
+		if ( $verify &amp;&amp; $dismiss ) {
+			update_option( 'wpt_ignore_connection', 'true' );
+		}
 	}
 }
 add_action( 'admin_init', 'wpt_dismiss_connection' );
@@ -1441,7 +1454,8 @@ add_action( 'admin_init', 'wpt_dismiss_connection' );
  * Display notices if update services are not connected.
  */
 function wpt_needs_connection() {
-	if ( isset( $_GET['page'] ) &amp;&amp; 'wp-tweets-pro' === $_GET['page'] &amp;&amp; ! 'true' === get_option( 'wpt_ignore_connection' ) ) {
+	global $current_screen;
+	if ( 'toplevel_page_wp-tweets-pro' === $current_screen->id &amp;&amp; ! 'true' === get_option( 'wpt_ignore_connection' ) ) {
 		$message  = '';
 		$mastodon = wpt_mastodon_connection();
 		$x        = wpt_check_oauth();
@@ -1469,7 +1483,11 @@ function wpt_needs_connection() {
 		$class          = 'xposter-connection';
 		if ( $x || $mastodon || $bluesky ) {
 			$class          = 'xposter-connection dismissible';
-			$dismiss_url    = add_query_arg( 'dismiss', 'connection', admin_url( 'admin.php?page=wp-tweets-pro' ) );
+			$args           = array(
+				'dismiss'  => 'connection',
+				'_wpnonce' => wp_create_nonce( 'wpt_dismiss' ),
+			);
+			$dismiss_url    = add_query_arg( $args, admin_url( 'admin.php?page=wp-tweets-pro' ) );
 			$is_dismissible = ' &lt;a href="' . esc_url( $dismiss_url ) . '" class="button button-secondary">' . __( 'Ignore', 'wp-to-twitter' ) . '&lt;/a>';
 		}
 		if ( $message ) {
