@@ -325,6 +325,12 @@ label[for="wpt_license_key"] {
 	justify-content: center;
 }
 
+.wpt-flex.wpt-forms {
+	align-items: start;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+}
+
 .wpt-flex.wpt-social {
 	margin: 0;
 	align-items: center;
