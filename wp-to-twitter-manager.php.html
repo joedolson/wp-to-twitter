@@ -399,9 +399,6 @@ function wpt_update_settings() {
 	if ( 'pro' === $current ) {
 		if ( function_exists( 'wpt_pro_functions' ) ) {
 			wpt_pro_functions();
-			if ( function_exists( 'wpt_notes' ) ) {
-				wpt_notes();
-			}
 		} else {
 			if ( ! function_exists( 'wpt_pro_exists' ) ) {
 				?>
