@@ -158,7 +158,7 @@ function wtt_connect_mastodon( $auth = false ) {
 				</div>
 			</ol>
 			<?php
-			echo ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . esc_attr_e( 'Connect to Mastodon', 'wp-to-twitter' ) . '" /></p>' : '';
+			echo ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . esc_attr__( 'Connect to Mastodon', 'wp-to-twitter' ) . '" /></p>' : '';
 			?>
 			<input type="hidden" name="mastodon_settings" value="wtt_oauth_test" class="hidden" />
 			<?php
