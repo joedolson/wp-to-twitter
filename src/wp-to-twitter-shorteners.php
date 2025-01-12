@@ -403,8 +403,9 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				'callback' => 'wpt_bitly_form',
 			),
 			4  => array(
-				'label' => 'WordPress',
-				'id'    => 'wordpress',
+				'label'    => 'WordPress',
+				'id'       => 'wordpress',
+				'callback' => 'wpt_no_shortener_settings',
 			),
 			5  => array(
 				'label'    => 'YOURLS (Local)',
@@ -446,7 +447,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 */
 	function wpt_show_shortener( $shortener ) {
 		$shorteners = wpt_get_shorteners( $shortener );
-		if ( isset( $shorteners[ $shortener ] ) ) {
+		if ( isset( $shorteners[ $shortener ] ) && isset( $shorteners[ $shortener ]['callback'] ) ) {
 			$callback = $shorteners[ $shortener ]['callback'];
 		} else {
 			$callback = 'wpt_no_shortener_settings';
