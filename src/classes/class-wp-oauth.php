@@ -409,7 +409,7 @@ if ( ! class_exists( 'WPOAuthException' ) ) {
 				$request_headers = WPOAuthUtil::get_headers();
 
 				// Parse the query-string to find GET parameters.
-				$query_string = isset( $_SERVER['QUERY_STRING'] ) ? sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ) ? '';
+				$query_string = isset( $_SERVER['QUERY_STRING'] ) ? sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ) : '';
 				$parameters   = WPOAuthUtil::parse_parameters( $query_string );
 
 				// It's a POST request of the proper content-type, so parse POST.
