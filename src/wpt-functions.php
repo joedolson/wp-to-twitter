@@ -918,7 +918,12 @@ function wpt_get_support_form() {
 		<?php
 	} else {
 		?>
-		<p><?php esc_html_e( 'You need a valid XPoster Pro license to receive support. Return to this screen to use the premium support form after <a href="https://xposterpro.com/awesome/xposter-pro/">getting your Pro license</a>.', 'wp-to-twitter' ); ?></p>
+		<p>
+			<?php
+			// translators: 1) link, 2) close link.
+			echo sprintf( esc_html__( 'You need a valid XPoster Pro license to receive support. Return to this screen to use the premium support form after %1$sgetting your Pro license%2$s.', 'wp-to-twitter' ), '<a href="https://xposterpro.com/awesome/xposter-pro/">', '</a>' );
+			?>
+		</p>
 		<?php
 	}
 }
