@@ -442,10 +442,10 @@ function wpt_update_settings() {
 						foreach ( $post_types as $type ) {
 							$name  = $type->labels->name;
 							$slug  = $type->name;
-							$tabs .= "&lt;li>&lt;a href='#wpt_$slug' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name&lt;/a>&lt;/li>";
+							$tabs .= "&lt;li>&lt;button type='button' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name&lt;/button>&lt;/li>";
 						}
 						if ( '1' === get_option( 'link_manager_enabled' ) || true === apply_filters( 'pre_option_link_manager_enabled', false ) ) {
-							$tabs .= "&lt;li>&lt;a href='#wpt_links' id='tab_wpt_links' aria-controls='wpt_links'>" . esc_html__( 'Links', 'wp-to-twitter' ) . '&lt;/a>&lt;/li>';
+							$tabs .= "&lt;li>&lt;button type='button' id='tab_wpt_links' aria-controls='wpt_links'>" . esc_html__( 'Links', 'wp-to-twitter' ) . '&lt;/button>&lt;/li>';
 						}
 						$tabs .= '&lt;/ul>';
 						echo wp_kses_post( $tabs );
@@ -729,7 +729,7 @@ function wpt_update_settings() {
 						&lt;div class='wpt-permissions'>
 							&lt;fieldset>
 								&lt;legend class="screen-reader-text">&lt;?php esc_html_e( 'Permissions', 'wp-to-twitter' ); ?>&lt;/legend>
-								&lt;ul class='tabs'>
+								&lt;ul class='tabs' role="tablist">
 								&lt;?php
 								global $wp_roles;
 								$roles = $wp_roles->get_names();
@@ -744,8 +744,9 @@ function wpt_update_settings() {
 									if ( 'administrator' === $role ) {
 										continue;
 									}
+									$role = sanitize_title( $role );
 									?>
-									&lt;li>&lt;a href='#wpt_&lt;?php echo esc_attr( sanitize_title( $role ) ); ?>'>&lt;?php echo esc_html( $rolename ); ?>&lt;/a>&lt;/li>
+									&lt;li>&lt;button type="button" role="tab" aria-selected="false" id="tab_wpt_&lt;?php echo esc_attr( $role ); ?>" aria-controls='wpt_&lt;?php echo esc_attr( $role ); ?>'>&lt;?php echo esc_html( $rolename ); ?>&lt;/button>&lt;/li>
 									&lt;?php
 								}
 								?>
@@ -755,8 +756,9 @@ function wpt_update_settings() {
 									if ( 'administrator' === $role ) {
 										continue;
 									}
+									$role = sanitize_title( $role );
 									?>
-									&lt;div class='wptab wpt_$role' id='wpt_&lt;?php echo esc_attr( sanitize_title( $role ) ); ?>' aria-live='assertive'>
+									&lt;div class='wptab wpt_&lt;?php echo esc_attr( $role ); ?>' id='wpt_&lt;?php echo esc_attr( $role ); ?>' aria-labelledby="tab_wpt_&lt;?php echo esc_attr( $role ); ?>" role="tabpanel">
 										&lt;fieldset id='wpt_$role' class='roles'>
 											&lt;legend>&lt;?php echo esc_html( $rolename ); ?>&lt;/legend>
 											&lt;input type='hidden' value='none' name='wpt_caps[&lt;?php echo esc_attr( $role ); ?>][none]' />
