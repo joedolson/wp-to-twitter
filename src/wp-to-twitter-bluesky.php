@@ -143,7 +143,7 @@ function wtt_connect_bluesky( $auth = false ) {
 				</div></li>
 			</ol>
 			<?php
-			echo ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . esc_attr_e( 'Connect to Bluesky', 'wp-to-twitter' ) . '" /></p>' : '';
+			echo ( ! $auth ) ? '<p class="submit"><input type="submit" name="submit" class="button-primary" value="' . esc_attr__( 'Connect to Bluesky', 'wp-to-twitter' ) . '" /></p>' : '';
 			?>
 			<input type="hidden" name="bluesky_settings" value="wtt_oauth_test" class="hidden" />
 			<?php
@@ -178,6 +178,8 @@ function wtt_connect_bluesky( $auth = false ) {
 					<input type="submit" name="submit" class="button-primary" value="<?php echo esc_attr( $text ); ?>" />
 					<input type="hidden" name="bluesky_settings" value="wtt_bluesky_disconnect" class="hidden" />
 					<?php
+						wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true );
+						echo '</form>';
 				} else {
 					?>
 					<input type="checkbox" name="bluesky_settings" value="wtt_bluesky_disconnect" id="disconnect" /> <label for="disconnect"><?php esc_html_e( 'Disconnect Your Account from Bluesky', 'wp-to-twitter' ); ?></label>
