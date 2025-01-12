@@ -598,18 +598,18 @@ function wpt_update_settings() {
 								?>
 							&lt;p>
 								&lt;label for="jd_replace_character">&lt;?php esc_html_e( 'Spaces in tags replaced with:', 'wp-to-twitter' ); ?>&lt;/label>
-								&lt;input type="text" name="jd_replace_character" id="jd_replace_character" value="&lt;?php echo esc_attr( get_option( 'jd_replace_character' ) ); ?>" size="3"/>
+								&lt;input type="text" name="jd_replace_character" id="jd_replace_character" value="&lt;?php echo esc_attr( get_option( 'jd_replace_character' ) ); ?>" size="3" />
 							&lt;/p>
 								&lt;?php
 							}
 							?>
 							&lt;p>
 								&lt;label for="jd_max_tags">&lt;?php esc_html_e( 'Maximum number of tags to include:', 'wp-to-twitter' ); ?>&lt;/label>
-								&lt;input aria-describedby="jd_max_characters_label" type="text" name="jd_max_tags" id="jd_max_tags" value="&lt;?php echo esc_attr( get_option( 'jd_max_tags' ) ); ?>" size="3" />
+								&lt;input aria-describedby="jd_max_characters_label" type="number" min="0" max="20" step="1" name="jd_max_tags" id="jd_max_tags" value="&lt;?php echo esc_attr( get_option( 'jd_max_tags' ) ); ?>" size="3" />
 							&lt;/p>
 							&lt;p>
 								&lt;label for="jd_max_characters">&lt;?php esc_html_e( 'Maximum length in characters for included tags:', 'wp-to-twitter' ); ?>&lt;/label>
-								&lt;input type="text" name="jd_max_characters" id="jd_max_characters" value="&lt;?php echo esc_attr( get_option( 'jd_max_characters' ) ); ?>" size="3"/>
+								&lt;input type="number" min="0" max="100" step="1" name="jd_max_characters" id="jd_max_characters" value="&lt;?php echo esc_attr( get_option( 'jd_max_characters' ) ); ?>" size="3" />
 							&lt;/p>
 						&lt;/fieldset>
 					&lt;/div>
@@ -623,7 +623,7 @@ function wpt_update_settings() {
 							&lt;legend class='screen-reader-text'>&lt;?php esc_html_e( 'Template Settings', 'wp-to-twitter' ); ?>&lt;/legend>
 							&lt;p>
 								&lt;label for="jd_post_excerpt">&lt;?php esc_html_e( 'Post excerpt length in characters', 'wp-to-twitter' ); ?>&lt;/label>&lt;br />
-								&lt;input type="text" name="jd_post_excerpt" id="jd_post_excerpt" size="3" maxlength="3" value="&lt;?php echo( esc_attr( get_option( 'jd_post_excerpt' ) ) ); ?>" />
+								&lt;input type="number" min="0" max="500" step="1" name="jd_post_excerpt" id="jd_post_excerpt" size="3" maxlength="3" value="&lt;?php echo( esc_attr( get_option( 'jd_post_excerpt' ) ) ); ?>" />
 							&lt;/p>
 							&lt;?php
 							if ( '' === get_option( 'jd_date_format', '' ) ) {
