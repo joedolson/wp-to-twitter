@@ -140,7 +140,7 @@ function wpt_check_functions() {
 		$message .= " <a href='$shrink'>$shrink</a></li>";
 	}
 	// check social network credentials.
-	if ( wpt_check_connections( true ) ) {
+	if ( wpt_check_connections( false, true ) ) {
 		$rand     = wp_rand( 1000000, 9999999 );
 		$testpost = wpt_post_to_service( "This is a test of XPoster. $shrink ($rand)" );
 		if ( $testpost && ! empty( $testpost ) ) {
