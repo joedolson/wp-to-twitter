@@ -223,7 +223,7 @@ label[for="wpt_license_key"] {
 	line-height: 1;
 }
 
-#wpt_settings_page .tabs a {
+#wpt_settings_page .tabs button {
 	display: inline-block;
 	padding: 6px 10px;
 	border-radius: 4px 4px 0 0;
@@ -231,7 +231,7 @@ label[for="wpt_license_key"] {
 	background: #f3f3f3;
 }
 
-#wpt_settings_page .tabs a.active {
+#wpt_settings_page .tabs button[aria-selected="true"] {
 	border-bottom: 1px solid #fefefe;
 	background: #fefefe;
 	text-decoration: none;

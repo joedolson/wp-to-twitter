@@ -416,10 +416,10 @@ function wpt_update_settings() {
 						foreach ( $post_types as $type ) {
 							$name  = $type->labels->name;
 							$slug  = $type->name;
-							$tabs .= "<li><a href='#wpt_$slug' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name</a></li>";
+							$tabs .= "<li><button type='button' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name</button></li>";
 						}
 						if ( '1' === get_option( 'link_manager_enabled' ) || true === apply_filters( 'pre_option_link_manager_enabled', false ) ) {
-							$tabs .= "<li><a href='#wpt_links' id='tab_wpt_links' aria-controls='wpt_links'>" . esc_html__( 'Links', 'wp-to-twitter' ) . '</a></li>';
+							$tabs .= "<li><button type='button' id='tab_wpt_links' aria-controls='wpt_links'>" . esc_html__( 'Links', 'wp-to-twitter' ) . '</button></li>';
 						}
 						$tabs .= '</ul>';
 						echo wp_kses_post( $tabs );
@@ -703,7 +703,7 @@ function wpt_update_settings() {
 						<div class='wpt-permissions'>
 							<fieldset>
 								<legend class="screen-reader-text"><?php esc_html_e( 'Permissions', 'wp-to-twitter' ); ?></legend>
-								<ul class='tabs'>
+								<ul class='tabs' role="tablist">
 								<?php
 								global $wp_roles;
 								$roles = $wp_roles->get_names();
@@ -718,8 +718,9 @@ function wpt_update_settings() {
 									if ( 'administrator' === $role ) {
 										continue;
 									}
+									$role = sanitize_title( $role );
 									?>
-									<li><a href='#wpt_<?php echo esc_attr( sanitize_title( $role ) ); ?>'><?php echo esc_html( $rolename ); ?></a></li>
+									<li><button type="button" role="tab" aria-selected="false" id="tab_wpt_<?php echo esc_attr( $role ); ?>" aria-controls='wpt_<?php echo esc_attr( $role ); ?>'><?php echo esc_html( $rolename ); ?></button></li>
 									<?php
 								}
 								?>
@@ -729,8 +730,9 @@ function wpt_update_settings() {
 									if ( 'administrator' === $role ) {
 										continue;
 									}
+									$role = sanitize_title( $role );
 									?>
-									<div class='wptab wpt_$role' id='wpt_<?php echo esc_attr( sanitize_title( $role ) ); ?>' aria-live='assertive'>
+									<div class='wptab wpt_<?php echo esc_attr( $role ); ?>' id='wpt_<?php echo esc_attr( $role ); ?>' aria-labelledby="tab_wpt_<?php echo esc_attr( $role ); ?>" role="tabpanel">
 										<fieldset id='wpt_$role' class='roles'>
 											<legend><?php echo esc_html( $rolename ); ?></legend>
 											<input type='hidden' value='none' name='wpt_caps[<?php echo esc_attr( $role ); ?>][none]' />
