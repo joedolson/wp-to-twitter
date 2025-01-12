@@ -1119,14 +1119,16 @@ function wpt_auto_tweet() {
 	<?php
 }
 
-add_filter( 'wpt_settings', 'wpt_set_auto_tweet_allowed' );
+add_filter( 'wpt_settings', 'wpt_set_auto_tweet_allowed', 10, 1 );
 /**
  * Set the automatic status update allowed parameter..
  */
-function wpt_set_auto_tweet_allowed() {
+function wpt_set_auto_tweet_allowed( $message ) {
 	if ( isset( $_POST['wpt_auto_tweet_allowed'] ) ) {
 		update_option( 'wpt_auto_tweet_allowed', '1' );
 	} else {
 		delete_option( 'wpt_auto_tweet_allowed' );
 	}
+
+	return $message;
 }
