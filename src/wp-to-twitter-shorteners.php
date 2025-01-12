@@ -552,11 +552,11 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	function wpt_bitly_form() {
 		if ( function_exists( 'wbitly_shorten_url' ) ) {
 			?>
-			<p><?php wp_kses_post( __( 'XPoster supports Bit.ly shortened links via <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>. If you are having issues with Bit.ly URLs, please request support from <a href="https://wordpress.org/support/plugin/codehaveli-bitly-url-shortener/">the plugin support forums</a>.', 'wp-to-twitter' ) ); ?></p>
+			<p><?php echo wp_kses_post( __( 'XPoster supports Bit.ly shortened links via <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>. If you are having issues with Bit.ly URLs, please request support from <a href="https://wordpress.org/support/plugin/codehaveli-bitly-url-shortener/">the plugin support forums</a>.', 'wp-to-twitter' ) ); ?></p>
 			<?php
 		} else {
 			?>
-			<p><?php wp_kses_post( __( 'XPoster supports Bit.ly shortened links via <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>. Install that plug-in to use Bit.ly', 'wp-to-twitter' ) ); ?></p>
+			<p><?php echo wp_kses_post( __( 'XPoster supports Bit.ly shortened links via <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>. Install that plug-in to use Bit.ly with XPoster.', 'wp-to-twitter' ) ); ?></p>
 			<?php
 		}
 	}
