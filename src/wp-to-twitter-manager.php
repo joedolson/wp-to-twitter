@@ -572,18 +572,18 @@ function wpt_update_settings() {
 								?>
 							<p>
 								<label for="jd_replace_character"><?php esc_html_e( 'Spaces in tags replaced with:', 'wp-to-twitter' ); ?></label>
-								<input type="text" name="jd_replace_character" id="jd_replace_character" value="<?php echo esc_attr( get_option( 'jd_replace_character' ) ); ?>" size="3"/>
+								<input type="text" name="jd_replace_character" id="jd_replace_character" value="<?php echo esc_attr( get_option( 'jd_replace_character' ) ); ?>" size="3" />
 							</p>
 								<?php
 							}
 							?>
 							<p>
 								<label for="jd_max_tags"><?php esc_html_e( 'Maximum number of tags to include:', 'wp-to-twitter' ); ?></label>
-								<input aria-describedby="jd_max_characters_label" type="text" name="jd_max_tags" id="jd_max_tags" value="<?php echo esc_attr( get_option( 'jd_max_tags' ) ); ?>" size="3" />
+								<input aria-describedby="jd_max_characters_label" type="number" min="0" max="20" step="1" name="jd_max_tags" id="jd_max_tags" value="<?php echo esc_attr( get_option( 'jd_max_tags' ) ); ?>" size="3" />
 							</p>
 							<p>
 								<label for="jd_max_characters"><?php esc_html_e( 'Maximum length in characters for included tags:', 'wp-to-twitter' ); ?></label>
-								<input type="text" name="jd_max_characters" id="jd_max_characters" value="<?php echo esc_attr( get_option( 'jd_max_characters' ) ); ?>" size="3"/>
+								<input type="number" min="0" max="100" step="1" name="jd_max_characters" id="jd_max_characters" value="<?php echo esc_attr( get_option( 'jd_max_characters' ) ); ?>" size="3" />
 							</p>
 						</fieldset>
 					</div>
@@ -597,7 +597,7 @@ function wpt_update_settings() {
 							<legend class='screen-reader-text'><?php esc_html_e( 'Template Settings', 'wp-to-twitter' ); ?></legend>
 							<p>
 								<label for="jd_post_excerpt"><?php esc_html_e( 'Post excerpt length in characters', 'wp-to-twitter' ); ?></label><br />
-								<input type="text" name="jd_post_excerpt" id="jd_post_excerpt" size="3" maxlength="3" value="<?php echo( esc_attr( get_option( 'jd_post_excerpt' ) ) ); ?>" />
+								<input type="number" min="0" max="500" step="1" name="jd_post_excerpt" id="jd_post_excerpt" size="3" maxlength="3" value="<?php echo( esc_attr( get_option( 'jd_post_excerpt' ) ) ); ?>" />
 							</p>
 							<?php
 							if ( '' === get_option( 'jd_date_format', '' ) ) {
