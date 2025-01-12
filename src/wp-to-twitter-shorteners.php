@@ -423,8 +423,9 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				'callback' => 'wpt_joturl_form',
 			),
 			11 => array(
-				'label' => 'Hum',
-				'id'    => 'hum',
+				'label'    => 'Hum',
+				'id'       => 'hum',
+				'callback' => 'wpt_hum_form',
 			),
 		);
 		/**
@@ -548,7 +549,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	}
 
 	/**
-	 * Bitly form.
+	 * Bitly information.
 	 */
 	function wpt_bitly_form() {
 		if ( function_exists( 'wbitly_shorten_url' ) ) {
@@ -558,6 +559,21 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		} else {
 			?>
 			<p><?php echo wp_kses_post( __( 'XPoster supports Bit.ly shortened links via <a href="https://wordpress.org/plugins/codehaveli-bitly-url-shortener/">Codehaveli Bitly URL Shortener</a>. Install that plug-in to use Bit.ly with XPoster.', 'wp-to-twitter' ) ); ?></p>
+			<?php
+		}
+	}
+
+	/**
+	 * Hum information.
+	 */
+	function wpt_hum_form() {
+		if ( class_exists( 'Hum' ) ) {
+			?>
+			<p><?php echo wp_kses_post( __( 'XPoster supports shortened links via the <a href="https://wordpress.org/plugins/hum/">Hum URL Shortener</a>. If you are having issues with Hum URLs, please request support from <a href="https://wordpress.org/support/plugin/hum/">the plugin support forums</a>.', 'wp-to-twitter' ) ); ?></p>
+			<?php
+		} else {
+			?>
+			<p><?php echo wp_kses_post( __( 'XPoster supports shortened links via the <a href="https://wordpress.org/plugins/hum/">Hum URL Shortener</a>. Install that plug-in to use Hum with XPoster.', 'wp-to-twitter' ) ); ?></p>
 			<?php
 		}
 	}
