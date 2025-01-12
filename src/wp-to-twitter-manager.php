@@ -1121,7 +1121,11 @@ function wpt_auto_tweet() {
 
 add_filter( 'wpt_settings', 'wpt_set_auto_tweet_allowed', 10, 1 );
 /**
- * Set the automatic status update allowed parameter..
+ * Set the automatic status update allowed parameter.
+ *
+ * @param string $message Message passed from filter.
+ *
+ * @return string
  */
 function wpt_set_auto_tweet_allowed( $message ) {
 	if ( isset( $_POST['wpt_auto_tweet_allowed'] ) ) {
