@@ -391,8 +391,8 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 	$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
 	$connection = false;
 	if ( $check['x'] && $check_twitter && wpt_service_enabled( $id, 'x' ) ) {
-		$text       = $check['x'];
-		$status     = array(
+		$text           = $check['x'];
+		$status         = array(
 			'text' => $text,
 		);
 		$connection     = $check_twitter;
@@ -404,8 +404,8 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 		wpt_mail( 'Share Connection Status: X', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
 	}
 	if ( $check['mastodon'] && $check_mastodon && wpt_service_enabled( $id, 'mastodon' ) ) {
-		$text       = $check['mastodon'];
-		$status     = array(
+		$text               = $check['mastodon'];
+		$status             = array(
 			'text' => $text,
 		);
 		$connection         = $check_mastodon;
@@ -417,8 +417,8 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 		wpt_mail( 'Share Connection Status: Mastodon', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
 	}
 	if ( $check['bluesky'] && $check_bluesky && wpt_service_enabled( $id, 'bluesky' ) ) {
-		$text         = $check['bluesky'];
-		$status       = array(
+		$text              = $check['bluesky'];
+		$status            = array(
 			'text' => $text,
 		);
 		$connection        = $check_bluesky;
