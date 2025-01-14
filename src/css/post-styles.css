@@ -7,10 +7,6 @@
 	width: 100%;
 }
 
-#wp2t .wpt-template {
-	margin: 6px 0;
-}
-
 #wp2t .counter {
     font-weight: 600;
 }
@@ -52,7 +48,6 @@
 }
 
 #side-sortables #wp2t .jtw {
-    margin: 0;
     width: 100%;
 }
 
