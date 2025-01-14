@@ -443,7 +443,7 @@ function wpt_show_debug() {
 									&lt;/div>
 									&lt;span class='dashicons dashicons-plus' aria-hidden='true'>&lt;/span>
 								&lt;/button>
-								&lt;pre class='wpt-debug-details'>&lt;?php echo esc_html( $body ); ?>&lt;/pre>
+								&lt;pre class='wpt-debug-details'>&lt;?php echo wp_kses_post( $body ); ?>&lt;/pre>
 							&lt;/li>
 							&lt;?php
 						}
