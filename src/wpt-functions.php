@@ -417,7 +417,7 @@ function wpt_show_debug() {
 									</div>
 									<span class='dashicons dashicons-plus' aria-hidden='true'></span>
 								</button>
-								<pre class='wpt-debug-details'><?php echo esc_html( $body ); ?></pre>
+								<pre class='wpt-debug-details'><?php echo wp_kses_post( $body ); ?></pre>
 							</li>
 							<?php
 						}
