@@ -345,6 +345,14 @@ function wpt_service_enabled( $post_ID, $service ) {
 function wpt_post_to_service( $template, $auth = false, $id = false, $media = null ) {
 	$return = wpt_post_to_twitter( $template, $auth, $id, $media );
 
+	if ( $return &amp;&amp; is_array( $return ) ) {
+		$twit      = isset( $return[0] ) ? $return[0] : ''; // TODO: save the array, not just the first text.
+		$notice    = isset( $return['post'] ) ? $return['post']['notice'] : '';
+		$http_code = isset( $return['post'] ) ? $return['post']['http'] : '';
+		wpt_save_error( $id, $auth, $twit, $notice, $http_code, time() );
+		wpt_save_success( $id, $twit, $http_code );
+	}
+
 	return $return;
 }
 
@@ -413,11 +421,12 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 		$status     = array(
 			'text' => $text,
 		);
-		$connection = $check_twitter;
-		$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
-		$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
-		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
+		$connection     = $check_twitter;
+		$status         = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
+		$response       = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
+		$post_response  = wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
 		$return['xcom'] = $response;
+		$return['post'] = $post_response;
 		wpt_mail( 'Share Connection Status: X', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
 	}
 	if ( $check['mastodon'] &amp;&amp; $check_mastodon &amp;&amp; wpt_service_enabled( $id, 'mastodon' ) ) {
@@ -425,11 +434,12 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 		$status     = array(
 			'text' => $text,
 		);
-		$connection = $check_mastodon;
-		$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
-		$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
-		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
+		$connection         = $check_mastodon;
+		$status             = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
+		$response           = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
+		$post_response      = wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
 		$return['mastodon'] = $response;
+		$return['post']     = $post_response;
 		wpt_mail( 'Share Connection Status: Mastodon', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
 	}
 	if ( $check['bluesky'] &amp;&amp; $check_bluesky &amp;&amp; wpt_service_enabled( $id, 'bluesky' ) ) {
@@ -437,13 +447,14 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 		$status       = array(
 			'text' => $text,
 		);
-		$connection   = $check_bluesky;
-		$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
-		$attachment   = ( $attachment ) ? $attachment : wpt_post_attachment( $id );
-		$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
-		$response     = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
-		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
+		$connection        = $check_bluesky;
+		$request_type      = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
+		$attachment        = ( $attachment ) ? $attachment : wpt_post_attachment( $id );
+		$image             = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
+		$response          = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
+		$post_response     = wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
 		$return['bluesky'] = $response;
+		$return['post']    = $post_response;
 		wpt_mail( 'Share Connection Status: Bluesky', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
 	}
 	if ( ! empty( $return ) ) {
@@ -504,6 +515,8 @@ function wpt_check_service_history( $post_ID, $auth, $template, $connections ) {
  * @param int      $id Post ID.
  * @param int|bool $auth Author context.
  * @param string   $twit Posted status text.
+ *
+ * @return array Array with response info.
  */
 function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 	$return      = $response['return'];
@@ -525,8 +538,6 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 			}
 		}
 	}
-	wpt_save_error( $id, $auth, $twit, $notice, $http_code, time() );
-	wpt_save_success( $id, $twit, $http_code );
 	if ( ! $return ) {
 		/**
 		 * Executes an action after posting a status fails.
@@ -568,6 +579,8 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 		}
 		wpt_set_log( 'wpt_status_message', $id, $notice );
 	}
+
+	return $response;
 }
 
 /**
