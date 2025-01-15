@@ -308,7 +308,7 @@ function wpt_show_metabox_message( $post, $options ) {
 					$message,
 					array(
 						'type'               => $class,
-						'additional_classes' => 'inline',
+						'additional_classes' => array( 'inline' ),
 					)
 				);
 			}

@@ -49,6 +49,8 @@ define( 'WPT_DEBUG_BY_EMAIL', false ); // Email debugging no longer default as o
 define( 'WPT_DEBUG_ADDRESS', get_option( 'admin_email' ) );
 define( 'WPT_FROM', 'From: \"' . get_option( 'blogname' ) . '\" <' . get_option( 'admin_email' ) . '>' );
 
+define( 'WPT_STAGING_MODE', true );
+
 // If current environment tests as staging, enable staging mode.
 if ( function_exists( 'wp_get_environment_type' ) ) {
 	if ( 'staging' === wp_get_environment_type() && ! defined( 'WPT_STAGING_MODE' ) ) {
@@ -1052,7 +1054,6 @@ function wpt_save_post( $id, $post ) {
 		 * @param {int}   $id Post ID
 		 */
 		do_action( 'wpt_insert_post', $_POST, $id );
-		// WPT PRO.
 		// only send debug data if post meta is updated.
 		wpt_mail( 'Post Meta Processed', 'XPoster post meta was updated' . "\n\n" . wpt_format_error( map_deep( $_POST, 'sanitize_textarea_field' ) ), $id ); // DEBUG.
 
@@ -1479,7 +1480,7 @@ function wpt_needs_connection() {
 				"$message $is_dismissible",
 				array(
 					'type'               => 'error',
-					'additional_classes' => $class,
+					'additional_classes' => array( $class ),
 				)
 			);
 		}
