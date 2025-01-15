@@ -46,10 +46,10 @@
 		}
 	});
 	// tweet history log
-	$('.wp-to-twitter .history').hide();
-	$('.wp-to-twitter .history-toggle').on('click', function (e) {
-		let dashicon = $( '.wp-to-twitter .history-toggle span ');
-		if ( $( '.wp-to-twitter .history' ).is( ':visible' ) ) {
+	$('#wp2t .history').hide();
+	$('#wp2t .history-toggle').on('click', function (e) {
+		let dashicon = $( '#wp2t .history-toggle span ');
+		if ( $( '#wp2t .history' ).is( ':visible' ) ) {
 			dashicon.addClass( 'dashicons-plus' );
 			dashicon.removeClass( 'dashicons-minus' );
 			dashicon.parent( 'button' ).attr( 'aria-expanded', 'false' );
@@ -58,7 +58,7 @@
 			dashicon.addClass( 'dashicons-minus' );
 			dashicon.parent( 'button' ).attr( 'aria-expanded', 'true' );
 		}
-		$('.wp-to-twitter .history').toggle( 300 );
+		$('#wp2t .history').toggle( 300 );
 	});
 
 	const templateTags = document.querySelectorAll( '#wp2t .inline-list button' );

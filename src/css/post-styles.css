@@ -15,7 +15,7 @@
 	padding: 0 12px 12px;
 }
 
-.wp-to-twitter .history ul li {
+#wp2t .history ul li {
 	padding: 6px;
 	word-wrap: break-word;
 }
@@ -29,7 +29,7 @@
 	margin-bottom: 0;
 }
 
-.wp-to-twitter .history ul li em {
+#wp2t .history ul li em {
 	margin-top: .5rem;
 	display: block;
 }
@@ -55,7 +55,7 @@
     height: 120px;
 }
 
-.wp-to-twitter .dashicons {
+#wp2t .dashicons {
 	font-size: inherit;
 	line-height: inherit;
 }

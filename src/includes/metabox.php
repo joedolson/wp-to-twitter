@@ -143,10 +143,10 @@ function wpt_add_twitter_inner_box( $post ) {
 			?>
 			</div>
 		</div>
+		</div>
+		</div>
 		<?php wpt_show_history( $post->ID ); ?>
 		<?php wpt_meta_box_support( $is_pro ); ?>
-		</div>
-		</div>
 		<?php
 	} else {
 		// permissions: this user isn't allowed to post status updates.
