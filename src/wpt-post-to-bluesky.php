@@ -137,6 +137,7 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
 	 * @return {bool}
 	 */
 	$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id, 'bluesky' );
+	$status_text  = $status['text'];
 	if ( ( defined( 'WPT_STAGING_MODE' ) && true === WPT_STAGING_MODE ) || $staging_mode ) {
 		// if in staging mode, we'll behave as if the update succeeded, but not send it.
 		$connection = true;
@@ -162,7 +163,7 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
 		// Change status array to Bluesky expectation.
 		$status = array(
 			'type'      => 'app.bsky.feed.post',
-			'text'      => $status['text'],
+			'text'      => $status_text,
 			'createdAt' => gmdate( DATE_ATOM ),
 		);
 		if ( ! empty( $image ) ) {
@@ -202,6 +203,7 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
 		'http'      => $http_code,
 		'notice'    => $notice,
 		'status_id' => $status_id,
+		'status'    => $status_text,
 		'service'   => 'bluesky',
 	);
 }

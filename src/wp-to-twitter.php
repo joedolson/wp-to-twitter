@@ -318,13 +318,13 @@ function wpt_service_enabled( $post_ID, $service ) {
  */
 function wpt_post_to_service( $template, $auth = false, $id = false, $media = null ) {
 	$return = wpt_post_to_twitter( $template, $auth, $id, $media );
-
 	if ( $return && is_array( $return ) ) {
-		$twit      = isset( $return[0] ) ? $return[0] : ''; // TODO: save the array, not just the first text.
-		$notice    = isset( $return['post'] ) ? $return['post']['notice'] : '';
-		$http_code = isset( $return['post'] ) ? $return['post']['http'] : '';
-		wpt_save_error( $id, $auth, $twit, $notice, $http_code, time() );
-		wpt_save_success( $id, $twit, $http_code );
+		$info      = array_pop( $return );
+		$status    = isset( $info['status'] ) ? $info['status'] : '';
+		$notice    = isset( $info['notice'] ) ? $info['notice'] : '';
+		$http_code = isset( $info['http'] ) ? $info['http'] : '';
+		wpt_save_error( $id, $auth, $status, $notice, $http_code, time() );
+		wpt_save_success( $id, $status, $http_code );
 	}
 
 	return $return;
@@ -391,44 +391,41 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 	$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
 	$connection = false;
 	if ( $check['x'] && $check_twitter && wpt_service_enabled( $id, 'x' ) ) {
-		$text           = $check['x'];
-		$status         = array(
+		$text       = $check['x'];
+		$status     = array(
 			'text' => $text,
 		);
-		$connection     = $check_twitter;
-		$status         = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
-		$response       = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
-		$post_response  = wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
+		$connection = $check_twitter;
+		$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
+		$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
+		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
 		$return['xcom'] = $response;
-		$return['post'] = $post_response;
 		wpt_mail( 'Share Connection Status: X', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
 	}
 	if ( $check['mastodon'] && $check_mastodon && wpt_service_enabled( $id, 'mastodon' ) ) {
-		$text               = $check['mastodon'];
-		$status             = array(
+		$text       = $check['mastodon'];
+		$status     = array(
 			'text' => $text,
 		);
-		$connection         = $check_mastodon;
-		$status             = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
-		$response           = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
-		$post_response      = wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
+		$connection = $check_mastodon;
+		$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
+		$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
+		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
 		$return['mastodon'] = $response;
-		$return['post']     = $post_response;
 		wpt_mail( 'Share Connection Status: Mastodon', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
 	}
 	if ( $check['bluesky'] && $check_bluesky && wpt_service_enabled( $id, 'bluesky' ) ) {
-		$text              = $check['bluesky'];
-		$status            = array(
+		$text         = $check['bluesky'];
+		$status       = array(
 			'text' => $text,
 		);
-		$connection        = $check_bluesky;
-		$request_type      = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
-		$attachment        = ( $attachment ) ? $attachment : wpt_post_attachment( $id );
-		$image             = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
-		$response          = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
-		$post_response     = wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
+		$connection   = $check_bluesky;
+		$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
+		$attachment   = ( $attachment ) ? $attachment : wpt_post_attachment( $id );
+		$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
+		$response     = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
+		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
 		$return['bluesky'] = $response;
-		$return['post']    = $post_response;
 		wpt_mail( 'Share Connection Status: Bluesky', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
 	}
 	if ( ! empty( $return ) ) {
