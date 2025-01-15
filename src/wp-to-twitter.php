@@ -49,8 +49,6 @@ define( 'WPT_DEBUG_BY_EMAIL', false ); // Email debugging no longer default as o
 define( 'WPT_DEBUG_ADDRESS', get_option( 'admin_email' ) );
 define( 'WPT_FROM', 'From: \"' . get_option( 'blogname' ) . '\" <' . get_option( 'admin_email' ) . '>' );
 
-define( 'WPT_STAGING_MODE', true );
-
 // If current environment tests as staging, enable staging mode.
 if ( function_exists( 'wp_get_environment_type' ) ) {
 	if ( 'staging' === wp_get_environment_type() && ! defined( 'WPT_STAGING_MODE' ) ) {
