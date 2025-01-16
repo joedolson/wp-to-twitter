@@ -333,16 +333,6 @@ label[for="wpt_license_key"] {
 	font-size: 1.1em;
 }
 
-.tweet {
-	background: #070 url(../images/Ok.png) 99% 50% no-repeat;
-	color: #fff;
-}
-
-.notweet {
-	background: #9d1309 url(../images/Error.png) 99% 50% no-repeat;
-	color: #fff;
-}
-
 .donations * {
 	vertical-align: middle;
 	display: inline-block;
