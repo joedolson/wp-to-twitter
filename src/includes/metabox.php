@@ -188,9 +188,7 @@ function wpt_show_history( $post_id ) {
 						?>
 						<li>
 							<div class="wpt-status-updated">
-								<?php 
-								echo esc_html( $previous_tweet );
-								?>
+								<?php echo esc_html( $previous_tweet );	?>
 							</div>
 							<ul class="wpt-intents">
 						<?php
@@ -211,7 +209,7 @@ function wpt_show_history( $post_id ) {
 									<img src='<?php echo esc_url( wpt_get_svg( 'mastodon' ) ); ?>' alt='<?php esc_html_e( 'Post to Mastodon', 'wp-to-twitter' ); ?>' />
 								</a>
 							</li>
-							<?php					
+							<?php
 						}
 						if ( wpt_bluesky_connection() ) {
 							?>
@@ -220,7 +218,7 @@ function wpt_show_history( $post_id ) {
 									<img src='<?php echo esc_url( wpt_get_svg( 'bluesky' ) ); ?>' alt='<?php esc_html_e( 'Post to Bluesky', 'wp-to-twitter' ); ?>' />
 								</a>
 							</li>
-							<?php	
+							<?php
 						}
 						?>
 						</ul>
@@ -247,15 +245,13 @@ function wpt_show_history( $post_id ) {
 						?>
 						<li>
 							<code>
-								<?php 
+								<?php
 								// Translators: HTTP error code.
 								printf( esc_html__( 'Error: %s', 'wp-to-twitter' ), $reason );
 								?>
 							</code>
 							<div class="wpt-status-updated">
-								<?php 
-								echo esc_html( $ft );
-								?>
+								<?php echo esc_html( $ft ); ?>
 							</div>
 							<ul class="wpt-intents">
 						<?php
@@ -276,7 +272,7 @@ function wpt_show_history( $post_id ) {
 									<img src='<?php echo esc_url( wpt_get_svg( 'mastodon' ) ); ?>' alt='<?php esc_html_e( 'Post to Mastodon', 'wp-to-twitter' ); ?>' />
 								</a>
 							</li>
-							<?php					
+							<?php
 						}
 						if ( wpt_bluesky_connection() ) {
 							?>
@@ -285,7 +281,7 @@ function wpt_show_history( $post_id ) {
 									<img src='<?php echo esc_url( wpt_get_svg( 'bluesky' ) ); ?>' alt='<?php esc_html_e( 'Post to Bluesky', 'wp-to-twitter' ); ?>' />
 								</a>
 							</li>
-							<?php	
+							<?php
 						}
 						?>
 						</ul>

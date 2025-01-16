@@ -432,6 +432,7 @@ function wpt_update_settings() {
 								<legend class="screen-reader-text"><?php esc_html_e( 'Status Templates', 'wp-to-twitter' ); ?></legend>
 								<?php
 								if ( false === $type->public ) {
+									// Some private post types are public, but in a non-standard way; others are truly private.
 									wp_admin_notice(
 										__( 'Caution: this post type is marked as private.', 'wp-to-twitter' ),
 										array(
