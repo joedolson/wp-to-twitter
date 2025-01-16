@@ -214,9 +214,7 @@ function wpt_show_history( $post_id ) {
 						?>
 						&lt;li>
 							&lt;div class="wpt-status-updated">
-								&lt;?php 
-								echo esc_html( $previous_tweet );
-								?>
+								&lt;?php echo esc_html( $previous_tweet );	?>
 							&lt;/div>
 							&lt;ul class="wpt-intents">
 						&lt;?php
@@ -237,7 +235,7 @@ function wpt_show_history( $post_id ) {
 									&lt;img src='&lt;?php echo esc_url( wpt_get_svg( 'mastodon' ) ); ?>' alt='&lt;?php esc_html_e( 'Post to Mastodon', 'wp-to-twitter' ); ?>' />
 								&lt;/a>
 							&lt;/li>
-							&lt;?php					
+							&lt;?php
 						}
 						if ( wpt_bluesky_connection() ) {
 							?>
@@ -246,7 +244,7 @@ function wpt_show_history( $post_id ) {
 									&lt;img src='&lt;?php echo esc_url( wpt_get_svg( 'bluesky' ) ); ?>' alt='&lt;?php esc_html_e( 'Post to Bluesky', 'wp-to-twitter' ); ?>' />
 								&lt;/a>
 							&lt;/li>
-							&lt;?php	
+							&lt;?php
 						}
 						?>
 						&lt;/ul>
@@ -273,15 +271,13 @@ function wpt_show_history( $post_id ) {
 						?>
 						&lt;li>
 							&lt;code>
-								&lt;?php 
+								&lt;?php
 								// Translators: HTTP error code.
 								printf( esc_html__( 'Error: %s', 'wp-to-twitter' ), $reason );
 								?>
 							&lt;/code>
 							&lt;div class="wpt-status-updated">
-								&lt;?php 
-								echo esc_html( $ft );
-								?>
+								&lt;?php echo esc_html( $ft ); ?>
 							&lt;/div>
 							&lt;ul class="wpt-intents">
 						&lt;?php
@@ -302,7 +298,7 @@ function wpt_show_history( $post_id ) {
 									&lt;img src='&lt;?php echo esc_url( wpt_get_svg( 'mastodon' ) ); ?>' alt='&lt;?php esc_html_e( 'Post to Mastodon', 'wp-to-twitter' ); ?>' />
 								&lt;/a>
 							&lt;/li>
-							&lt;?php					
+							&lt;?php
 						}
 						if ( wpt_bluesky_connection() ) {
 							?>
@@ -311,7 +307,7 @@ function wpt_show_history( $post_id ) {
 									&lt;img src='&lt;?php echo esc_url( wpt_get_svg( 'bluesky' ) ); ?>' alt='&lt;?php esc_html_e( 'Post to Bluesky', 'wp-to-twitter' ); ?>' />
 								&lt;/a>
 							&lt;/li>
-							&lt;?php	
+							&lt;?php
 						}
 						?>
 						&lt;/ul>
