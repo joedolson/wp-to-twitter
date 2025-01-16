@@ -416,8 +416,8 @@ function wpt_update_settings() {
 						<ul class='tabs' role='tablist'>
 						<?php
 						foreach ( $post_types as $type ) {
-							$name  = $type->labels->name;
-							$slug  = $type->name;
+							$name = $type->labels->name;
+							$slug = $type->name;
 							?>
 							<li>
 								<button type='button' role='tab' id='tab_wpt_<?php echo esc_attr( $slug ); ?>' aria-controls='wpt_<?php echo esc_attr( $slug ); ?>'><?php echo esc_html( $name ); ?></button>
