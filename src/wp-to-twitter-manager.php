@@ -412,17 +412,28 @@ function wpt_update_settings() {
 						wpt_pick_shortener();
 						$post_types   = wpt_possible_post_types();
 						$wpt_settings = get_option( 'wpt_post_types' );
-						$tabs         = "<ul class='tabs' role='tablist'>";
+						?>
+						<ul class='tabs' role='tablist'>
+						<?php
 						foreach ( $post_types as $type ) {
 							$name  = $type->labels->name;
 							$slug  = $type->name;
-							$tabs .= "<li><button type='button' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name</button></li>";
+							?>
+							<li>
+								<button type='button' role='tab' id='tab_wpt_<?php echo esc_attr( $slug ); ?>' aria-controls='wpt_<?php echo esc_attr( $slug ); ?>'><?php echo esc_html( $name ); ?></button>
+							</li>
+							<?php
 						}
 						if ( '1' === get_option( 'link_manager_enabled' ) || true === apply_filters( 'pre_option_link_manager_enabled', false ) ) {
-							$tabs .= "<li><button type='button' id='tab_wpt_links' aria-controls='wpt_links'>" . esc_html__( 'Links', 'wp-to-twitter' ) . '</button></li>';
+							?>
+							<li>
+								<button type='button' id='tab_wpt_links' aria-controls='wpt_links'><?php esc_html_e( 'Links', 'wp-to-twitter' ); ?></button>
+							</li>
+							<?php
 						}
-						$tabs .= '</ul>';
-						echo wp_kses_post( $tabs );
+						?>
+						</ul>
+						<?php
 						foreach ( $post_types as $type ) {
 							$name = $type->labels->name;
 							$slug = $type->name;
