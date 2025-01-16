@@ -438,17 +438,28 @@ function wpt_update_settings() {
 						wpt_pick_shortener();
 						$post_types   = wpt_possible_post_types();
 						$wpt_settings = get_option( 'wpt_post_types' );
-						$tabs         = "&lt;ul class='tabs' role='tablist'>";
+						?>
+						&lt;ul class='tabs' role='tablist'>
+						&lt;?php
 						foreach ( $post_types as $type ) {
 							$name  = $type->labels->name;
 							$slug  = $type->name;
-							$tabs .= "&lt;li>&lt;button type='button' role='tab' id='tab_wpt_$slug' aria-controls='wpt_$slug'>$name&lt;/button>&lt;/li>";
+							?>
+							&lt;li>
+								&lt;button type='button' role='tab' id='tab_wpt_&lt;?php echo esc_attr( $slug ); ?>' aria-controls='wpt_&lt;?php echo esc_attr( $slug ); ?>'>&lt;?php echo esc_html( $name ); ?>&lt;/button>
+							&lt;/li>
+							&lt;?php
 						}
 						if ( '1' === get_option( 'link_manager_enabled' ) || true === apply_filters( 'pre_option_link_manager_enabled', false ) ) {
-							$tabs .= "&lt;li>&lt;button type='button' id='tab_wpt_links' aria-controls='wpt_links'>" . esc_html__( 'Links', 'wp-to-twitter' ) . '&lt;/button>&lt;/li>';
+							?>
+							&lt;li>
+								&lt;button type='button' id='tab_wpt_links' aria-controls='wpt_links'>&lt;?php esc_html_e( 'Links', 'wp-to-twitter' ); ?>&lt;/button>
+							&lt;/li>
+							&lt;?php
 						}
-						$tabs .= '&lt;/ul>';
-						echo wp_kses_post( $tabs );
+						?>
+						&lt;/ul>
+						&lt;?php
 						foreach ( $post_types as $type ) {
 							$name = $type->labels->name;
 							$slug = $type->name;
