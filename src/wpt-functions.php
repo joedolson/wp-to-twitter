@@ -675,7 +675,7 @@ function wpt_post_is_new( $modified, $postdate ) {
 }
 
 /**
- * Gets the first attachment for the supplied post.
+ * Gets the attachment intended for use in status updates for a post.
  *
  * @param integer $post_ID The post ID.
  *
@@ -718,14 +718,6 @@ function wpt_post_attachment( $post_ID ) {
 			$attachment_id = false;
 		}
 	}
-	$meta = wp_get_attachment_metadata( $attachment_id );
-	if ( ! isset( $meta['width'], $meta['height'] ) ) {
-		wpt_mail( "Image Data Does not Exist for #$attachment_id", wpt_format_error( $meta ), $post_ID );
-		$attachment_id = false;
-	}
-	if ( $attachment_id ) {
-		wpt_mail( 'Post has media to upload', "Attachment ID: $attachment_id", $post_ID );
-	}
 	/**
 	 * Filter the attachment ID to post with a status update.
 	 *
@@ -736,7 +728,17 @@ function wpt_post_attachment( $post_ID ) {
 	 *
 	 * @return {int|bool}
 	 */
-	return apply_filters( 'wpt_post_attachment', $attachment_id, $post_ID );
+	$attachment_id = apply_filters( 'wpt_post_attachment', $attachment_id, $post_ID );
+	$meta          = wp_get_attachment_metadata( $attachment_id );
+	if ( ! isset( $meta['width'], $meta['height'] ) ) {
+		wpt_mail( "Image Data Does not Exist for #$attachment_id", wpt_format_error( $meta ), $post_ID );
+		$attachment_id = false;
+	}
+	if ( $attachment_id ) {
+		wpt_mail( 'Post has media to upload', "Attachment ID: $attachment_id", $post_ID );
+	}
+
+	return $attachment_id;
 }
 
 /**
