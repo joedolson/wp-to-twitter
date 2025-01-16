@@ -889,12 +889,14 @@ function wpt_update_settings() {
 						&lt;div>
 							&lt;input type="hidden" name="submit-type" value="advanced"/>
 						&lt;/div>
-						&lt;input type="submit" name="submit" value="&lt;?php esc_html_e( 'Save Advanced XPoster Options', 'wp-to-twitter' ); ?>" class="button-primary"/>
 					&lt;/div>
-				&lt;/form>
+				&lt;/div>
 			&lt;/div>
-		&lt;/div>
 	&lt;/div>
+	&lt;p>
+		&lt;input type="submit" name="submit" value="&lt;?php esc_html_e( 'Save Advanced XPoster Options', 'wp-to-twitter' ); ?>" class="button-primary"/>
+	&lt;/p>
+&lt;/form>
 		&lt;?php
 	}
 	if ( 'support' === $current ) {
