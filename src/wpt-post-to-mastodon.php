@@ -58,7 +58,7 @@ function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $i
 			);
 
 			$response = $connection->upload_media( $request );
-			if ( isset( $response['id'] ) ) {}
+			if ( isset( $response['id'] ) ) {
 				$media_id              = $response['id'];
 				$status['media_ids[]'] = $media_id;
 
