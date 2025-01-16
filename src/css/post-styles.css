@@ -34,12 +34,34 @@
 	display: block;
 }
 
+#wp2t .wpt-intents {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+
+#wp2t .wpt-intents a {
+	display: block;
+}
+
+#wp2t .wpt-intents img {
+	width: 20px;
+	height: auto;
+	display: block;
+	padding: 4px;
+}
+
+#wp2t .wpt-error {
+	border-left: 4px solid #b32d2e;
+	padding-left: 4px;
+}
+
 #wp2t .warning {
-    color: #700;
+    color: #8a2424;
 }
 
 #wp2t .exceeded {
-    color: #e00;
+    color: #d63638;
 }
 
 #wp2t code span {

@@ -1485,3 +1485,14 @@ function wpt_needs_connection() {
 	}
 }
 add_action( 'admin_notices', 'wpt_needs_connection' );
+
+/**
+ * Get service SVG.
+ *
+ * @param string $service Service name.
+ *
+ * @return string Url.
+ */
+function wpt_get_svg( $service ) {
+	return plugins_url( 'images/' . $service . '.svg', __FILE__ );
+}

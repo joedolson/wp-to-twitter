@@ -175,75 +175,132 @@ function wpt_show_history( $post_id ) {
 		<button type="button" aria-expanded="false" class='history-toggle button-secondary'><span class='dashicons dashicons-plus' aria-hidden="true"></span><?php esc_html_e( 'View Update History', 'wp-to-twitter' ); ?></button>
 	</p>
 	<div class='history'>
-	<h4 class='wpt-past-updates'><?php esc_html_e( 'Previous Updates', 'wp-to-twitter' ); ?>:</h4>
-	<ul class="striped">
+		<h4 class='wpt-past-updates'><?php esc_html_e( 'Sent Updates', 'wp-to-twitter' ); ?>:</h4>
 		<?php
 		$has_history = false;
 		if ( is_array( $previous_tweets ) ) {
-			foreach ( $previous_tweets as $previous_tweet ) {
-				if ( '' !== $previous_tweet ) {
-					$has_history = true;
-					$intents     = array();
-					if ( wtt_oauth_test() ) {
-						$intents['x'] = "<a class='wpt-x' href='https://x.com/intent/tweet?text=" . urlencode( $previous_tweet ) . "'>" . __( 'X', 'wp-to-twitter' ) . '<span class="dashicons dashicons-external" aria-hidden="true"></span></a>';
-					}
-					if ( wpt_mastodon_connection() ) {
-						$mastodon            = get_option( 'wpt_mastodon_instance' );
-						$intents['mastodon'] = "<a class='wpt-mastodon' href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $previous_tweet ) . "'>" . __( 'Mastodon', 'wp-to-twitter' ) . '<span class="dashicons dashicons-external" aria-hidden="true"></span></a>';
-					}
-					if ( wpt_bluesky_connection() ) {
-						$intents['bluesky'] = "<a class='wpt-bluesky' href='https://bsky.app/intent/compose?text=" . urlencode( $previous_tweet ) . "'>" . __( 'Bluesky', 'wp-to-twitter' ) . '<span class="dashicons dashicons-external" aria-hidden="true"></span></a>';
-					}
-					$intent_links = implode( ', ', $intents );
-					?>
-					<li><input type='hidden' name='_jd_wp_twitter[]' value='<?php echo esc_attr( $previous_tweet ); ?>' />
-					<?php
-					echo wp_kses_post( "<p class='wpt-previous-tweet'>$previous_tweet</p>$intent_links" );
-					?>
-					</li>
-					<?php
-				}
-			}
-		}
-		?>
-	</ul>
-		<?php
-		$list       = false;
-		$error_list = '';
-		if ( is_array( $failed_tweets ) ) {
-			foreach ( $failed_tweets as $failed_tweet ) {
-				if ( ! empty( $failed_tweet ) ) {
-					$ft     = $failed_tweet['sentence'];
-					$reason = $failed_tweet['code'];
-					$error  = $failed_tweet['error'];
-					$list   = true;
-
-					$twitter_intent  = '';
-					$mastodon_intent = '';
-					$bluesky_intent  = '';
-					if ( wtt_oauth_test() ) {
-						$twitter_intent = "<a href='https://x.com/intent/tweet?text=" . urlencode( $ft ) . "'>" . __( 'Send to X.com', 'wp-to-twitter' ) . '</a>';
-					}
-					if ( wpt_mastodon_connection() ) {
-						$mastodon        = get_option( 'wpt_mastodon_instance' );
-						$mastodon_intent = "<a href='" . esc_url( $mastodon ) . '/statuses/new?text=' . urlencode( $ft ) . "'>" . __( 'Send to Mastodon', 'wp-to-twitter' ) . '</a>';
-					}
-					if ( wpt_bluesky_connection() ) {
-						$bluesky_intent = "<a href='https://bsky.app/intent/compose?text=" . urlencode( $ft ) . "'>" . __( 'Send to Bluesky', 'wp-to-twitter' ) . '</a>';
-					}
-					$error_list .= "<li><code>Error: $reason</code> $ft $twitter_intent $mastodon_intent $bluesky_intent <br /><em>$error</em></li>";
-				}
-			}
-			if ( true === $list ) {
-				?>
-				<h4 class='wpt-failed-updates'><?php esc_html_e( 'Failed Status Updates', 'wp-to-twitter' ); ?></h4>
-				<ul>
-					<?php echo wp_kses_post( $error_list ); ?>
-				</ul>
+			?>
+			<ul class="striped">
 				<?php
-			}
+				foreach ( $previous_tweets as $previous_tweet ) {
+					$has_history = true;
+					if ( ! empty( $previous_tweet ) ) {
+						?>
+						<li>
+							<div class="wpt-status-updated">
+								<?php 
+								echo esc_html( $previous_tweet );
+								?>
+							</div>
+							<ul class="wpt-intents">
+						<?php
+						if ( wtt_oauth_test() ) {
+							?>
+							<li>
+								<a href='https://x.com/intent/tweet?text=<?php echo esc_attr( urlencode( $previous_tweet ) ); ?>'>
+									<img src='<?php echo esc_url( wpt_get_svg( 'x' ) ); ?>' alt='<?php esc_html_e( 'Post to X', 'wp-to-twitter' ); ?>' />
+								</a>
+							</li>
+							<?php
+						}
+						if ( wpt_mastodon_connection() ) {
+							$mastodon = get_option( 'wpt_mastodon_instance' );
+							?>
+							<li>
+								<a href='<?php esc_url( $mastodon ) . '/statuses/new?text=' . esc_attr( urlencode( $previous_tweet ) ); ?>'>
+									<img src='<?php echo esc_url( wpt_get_svg( 'mastodon' ) ); ?>' alt='<?php esc_html_e( 'Post to Mastodon', 'wp-to-twitter' ); ?>' />
+								</a>
+							</li>
+							<?php					
+						}
+						if ( wpt_bluesky_connection() ) {
+							?>
+							<li>
+								<a href='https://bsky.app/intent/compose?text='<?php echo esc_attr( urlencode( $previous_tweet ) ); ?>'>
+									<img src='<?php echo esc_url( wpt_get_svg( 'bluesky' ) ); ?>' alt='<?php esc_html_e( 'Post to Bluesky', 'wp-to-twitter' ); ?>' />
+								</a>
+							</li>
+							<?php	
+						}
+						?>
+						</ul>
+						<li><input type='hidden' name='_jd_wp_twitter[]' value='<?php echo esc_attr( $previous_tweet ); ?>' />
+					</li>
+						<?php
+					}
+				}
+				?>
+			</ul>
+			<?php
 		}
-		if ( $has_history || $list ) {
+		if ( is_array( $failed_tweets ) ) {
+			?>
+			<h4 class='wpt-failed-updates'><?php esc_html_e( 'Failed Updates', 'wp-to-twitter' ); ?></h4>
+			<ul class="striped">
+				<?php
+				foreach ( $failed_tweets as $failed_tweet ) {
+					$has_history = true;
+					if ( ! empty( $failed_tweet ) ) {
+						$ft     = $failed_tweet['sentence'];
+						$reason = $failed_tweet['code'];
+						$error  = $failed_tweet['error'];
+						?>
+						<li>
+							<code>
+								<?php 
+								// Translators: HTTP error code.
+								printf( esc_html__( 'Error: %s', 'wp-to-twitter' ), $reason );
+								?>
+							</code>
+							<div class="wpt-status-updated">
+								<?php 
+								echo esc_html( $ft );
+								?>
+							</div>
+							<ul class="wpt-intents">
+						<?php
+						if ( wtt_oauth_test() ) {
+							?>
+							<li>
+								<a href='https://x.com/intent/tweet?text=<?php echo esc_attr( urlencode( $ft ) ); ?>'>
+									<img src='<?php echo esc_url( wpt_get_svg( 'x' ) ); ?>' alt='<?php esc_html_e( 'Post to X', 'wp-to-twitter' ); ?>' />
+								</a>
+							</li>
+							<?php
+						}
+						if ( wpt_mastodon_connection() ) {
+							$mastodon = get_option( 'wpt_mastodon_instance' );
+							?>
+							<li>
+								<a href='<?php esc_url( $mastodon ) . '/statuses/new?text=' . esc_attr( urlencode( $ft ) ); ?>'>
+									<img src='<?php echo esc_url( wpt_get_svg( 'mastodon' ) ); ?>' alt='<?php esc_html_e( 'Post to Mastodon', 'wp-to-twitter' ); ?>' />
+								</a>
+							</li>
+							<?php					
+						}
+						if ( wpt_bluesky_connection() ) {
+							?>
+							<li>
+								<a href='https://bsky.app/intent/compose?text='<?php echo esc_attr( urlencode( $ft ) ); ?>'>
+									<img src='<?php echo esc_url( wpt_get_svg( 'bluesky' ) ); ?>' alt='<?php esc_html_e( 'Post to Bluesky', 'wp-to-twitter' ); ?>' />
+								</a>
+							</li>
+							<?php	
+						}
+						?>
+						</ul>
+						<em class="wpt-error">
+							<?php echo esc_html( $error ); ?>
+						</em>
+					</li>
+						<?php
+					}
+				}
+				?>
+			</ul>
+			<?php
+		}
+		if ( $has_history ) {
 			?>
 			<p><input type='checkbox' name='wpt_clear_history' id='wptch' value='clear' /> <label for='wptch'><?php esc_html_e( 'Delete Status History', 'wp-to-twitter' ); ?></label></p>
 			<?php
