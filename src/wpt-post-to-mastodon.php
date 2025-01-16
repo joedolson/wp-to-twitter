@@ -58,10 +58,14 @@ function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $i
 			);
 
 			$response              = $connection->upload_media( $request );
-			$media_id              = $response['id'];
-			$status['media_ids[]'] = $media_id;
+			if ( isset( $response['id'] ) ) {}
+				$media_id              = $response['id'];
+				$status['media_ids[]'] = $media_id;
 
-			wpt_mail( 'Media Uploaded (Mastodon)', "$auth, $media_id, $attachment", $id );
+				wpt_mail( 'Media Uploaded (Mastodon)', "User: $auth, Mastodon Media ID: $media_id, Attachment ID: $attachment" . wpt_format_error( $response ), $id );
+			} else {
+				wpt_mail( 'Media Upload Failed (Mastodon)', "User: $auth, Attachment ID: $attachment" . wpt_format_error( $response ), $id );				
+			}
 		}
 	}
 
