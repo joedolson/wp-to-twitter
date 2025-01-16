@@ -101,8 +101,7 @@ function wpt_test_rate_limit( $post_ID, $auth ) {
  */
 function wpt_default_rate_limit( $term = false ) {
 	$limit = ( '' !== get_option( 'wpt_default_rate_limit' ) ) ? get_option( 'wpt_default_rate_limit' ) : 10;
-	$limit = ( '0' === (string) $limit ) ? 1 : $limit;
-
+	$limit = ( 0 === (int) $limit ) ? 1 : $limit;
 	/**
 	 * Filter the default rate limit.
 	 *
