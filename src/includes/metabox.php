@@ -188,7 +188,7 @@ function wpt_show_history( $post_id ) {
 						?>
 						<li>
 							<div class="wpt-status-updated">
-								<?php echo esc_html( $previous_tweet );	?>
+								<?php echo esc_html( $previous_tweet ); ?>
 							</div>
 							<ul class="wpt-intents">
 						<?php
