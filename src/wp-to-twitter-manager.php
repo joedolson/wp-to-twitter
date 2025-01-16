@@ -863,12 +863,14 @@ function wpt_update_settings() {
 						<div>
 							<input type="hidden" name="submit-type" value="advanced"/>
 						</div>
-						<input type="submit" name="submit" value="<?php esc_html_e( 'Save Advanced XPoster Options', 'wp-to-twitter' ); ?>" class="button-primary"/>
 					</div>
-				</form>
+				</div>
 			</div>
-		</div>
 	</div>
+	<p>
+		<input type="submit" name="submit" value="<?php esc_html_e( 'Save Advanced XPoster Options', 'wp-to-twitter' ); ?>" class="button-primary"/>
+	</p>
+</form>
 		<?php
 	}
 	if ( 'support' === $current ) {
