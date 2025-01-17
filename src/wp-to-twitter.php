@@ -105,9 +105,9 @@ function wpt_deactivate() {
  */
 function xposter_pro_check() {
 	global $wptp_version;
+	$plugin_data = get_plugin_data( __FILE__, false );
+	$upgrade_now = ' <a href="https://xposterpro.com/awesome/xposter-pro/">' . esc_html__( 'Upgrade Now', 'wp-to-twitter' ) . '</a>';
 	if ( $wptp_version && version_compare( $wptp_version, '3.0.0', '<=' ) ) {
-		$plugin_data = get_plugin_data( __FILE__, false );
-		$upgrade_now = ' <a href="https://xposterpro.com/awesome/xposter-pro/">' . esc_html__( 'Upgrade Now', 'wp-to-twitter' ) . '</a>';
 		$message = sprintf(
 			// Translators: Plugin name, plugin version unsupported.
 			__( '%1$s is not compatible with XPoster Pro %2$s or lower; XPoster Pro has been deactivated.', 'wp-to-twitter' ) . $upgrade_now,
@@ -125,8 +125,6 @@ function xposter_pro_check() {
 		}
 	}
 	if ( $wptp_version && version_compare( $wptp_version, '3.4.0', '<=' ) ) {
-		$plugin_data = get_plugin_data( __FILE__, false );
-		$upgrade_now = ' <a href="https://xposterpro.com/awesome/xposter-pro/">' . esc_html__( 'Upgrade Now', 'wp-to-twitter' ) . '</a>';
 		$message = sprintf(
 			// Translators: Plugin name, plugin version unsupported.
 			__( '%1$s has limited compatibility with XPoster Pro %2$s or lower. Some features may not be available.', 'wp-to-twitter' ) . $upgrade_now,
