@@ -477,7 +477,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 function wpt_check_service_history( $post_ID, $auth, $template, $connections ) {
 	$checks = array();
 	foreach ( $connections as $service => $connected ) {
-		if ( ! $connected ) {
+		if ( ! $connected || ! wpt_service_enabled( $post_ID, $service ) ) {
 			$checks[ $service ] = false;
 			continue;
 		}

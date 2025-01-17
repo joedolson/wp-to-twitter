@@ -60,7 +60,7 @@ function wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id
 
 				return $status;
 			}
-			$attachment_data = wpt_image_binary( $attachment );
+			$attachment_data = wpt_image_binary( $attachment, $id );
 			// Return early if fails to fetch image binary.
 			if ( ! $attachment_data ) {
 				return $status;

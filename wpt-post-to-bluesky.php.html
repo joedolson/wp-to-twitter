@@ -88,7 +88,7 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 			if ( ! ( in_array( $mimetype, $mimetypes, true ) &amp;&amp; (int) $size &lt; 1000000 ) ) {
 				return $request;
 			}
-			$attachment_data = wpt_image_binary( $attachment, 'bluesky' );
+			$attachment_data = wpt_image_binary( $attachment, $id, 'bluesky' );
 			if ( ! $attachment_data ) {
 				return $request;
 			}
