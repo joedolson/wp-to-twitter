@@ -247,7 +247,7 @@ function wpt_show_history( $post_id ) {
 							<code>
 								<?php
 								// Translators: HTTP error code.
-								printf( esc_html__( 'Error: %s', 'wp-to-twitter' ), $reason );
+								printf( esc_html__( 'Error: %s', 'wp-to-twitter' ), esc_html( $reason ) );
 								?>
 							</code>
 							<div class="wpt-status-updated">
