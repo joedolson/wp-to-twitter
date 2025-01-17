@@ -104,10 +104,10 @@ class Wpt_Mastodon_Api {
 			if ( $alt ) {
 				$body .= 'Content-Disposition: form-data; name="description";' . $eol . $eol;
 				$body .= $alt . $eol;
-				$body .= '--' . $boundary . $eol;				
+				$body .= '--' . $boundary . $eol;
 			}
 			$body .= 'Content-Disposition: form-data; name="file"; filename="' . $name . '"' . $eol;
-			$body .= 'Content-Type: '. $mime . $eol . $eol;
+			$body .= 'Content-Type: ' . $mime . $eol . $eol;
 			$body .= $file . $eol;
 			$body .= '--' . $boundary . '--';
 

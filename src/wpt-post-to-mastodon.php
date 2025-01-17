@@ -64,7 +64,7 @@ function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $i
 
 				wpt_mail( 'Media Uploaded (Mastodon)', "User: $auth, Mastodon Media ID: $media_id, Attachment ID: $attachment" . wpt_format_error( $response ) . wpt_format_error( $request ), $id );
 			} else {
-				wpt_mail( 'Media Upload Failed (Mastodon)', "User: $auth, Attachment ID: $attachment" . wpt_format_error( $response ), $id );				
+				wpt_mail( 'Media Upload Failed (Mastodon)', "User: $auth, Attachment ID: $attachment" . wpt_format_error( $response ), $id );
 			}
 		}
 	}

@@ -34,7 +34,7 @@ function wpt_image_binary( $attachment, $post_ID, $service = 'twitter' ) {
 	 *
 	 * @return string
 	 */
-	$size   = apply_filters( 'wpt_upload_image_size', $size );
+	$size = apply_filters( 'wpt_upload_image_size', $size );
 	if ( 'mastodon' === $service ) {
 		$path = wpt_attachment_path( $attachment, $size );
 		$mime = wp_get_image_mime( $path );

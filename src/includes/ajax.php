@@ -41,9 +41,9 @@ function wpt_ajax_tweet() {
 	$authors = ( is_array( $authors ) && ! empty( $authors ) ) ? $authors : array( $auth );
 
 	if ( current_user_can( 'wpt_can_tweet' ) ) {
-		$options        = get_option( 'wpt_post_types' );
-		$post_ID        = isset( $_REQUEST['tweet_post_id'] ) ? intval( $_REQUEST['tweet_post_id'] ) : false;
-		$image_id     = ( isset( $_REQUEST['image_id'] ) && null !== $_REQUEST['image_id'] ) ? (int) $_REQUEST['image_id'] : false;
+		$options  = get_option( 'wpt_post_types' );
+		$post_ID  = isset( $_REQUEST['tweet_post_id'] ) ? intval( $_REQUEST['tweet_post_id'] ) : false;
+		$image_id = ( isset( $_REQUEST['image_id'] ) && null !== $_REQUEST['image_id'] ) ? (int) $_REQUEST['image_id'] : false;
 		if ( $image_id ) {
 			update_post_meta( $post_ID, '_wpt_custom_image', $image_id );
 		}
