@@ -105,15 +105,14 @@ function wpt_deactivate() {
  */
 function xposter_pro_check() {
 	global $wptp_version;
-	if ( $wptp_version && version_compare( $wptp_version, '3.4.0', '<=' ) ) {
+	if ( $wptp_version && version_compare( $wptp_version, '3.0.0', '<=' ) ) {
 		$plugin_data = get_plugin_data( __FILE__, false );
 		$upgrade_now = ' <a href="https://xposterpro.com/awesome/xposter-pro/">' . esc_html__( 'Upgrade Now', 'wp-to-twitter' ) . '</a>';
-		// Translators: Plugin name, plugin version required, your plugin version.
 		$message = sprintf(
-			__( '%1$s is only compatible with XPoster Pro %2$s or higher; XPoster Pro has been deactivated. Your current version is %3$s.', 'wp-to-twitter' ) . $upgrade_now,
+			// Translators: Plugin name, plugin version unsupported.
+			__( '%1$s is not compatible with XPoster Pro %2$s or lower; XPoster Pro has been deactivated.', 'wp-to-twitter' ) . $upgrade_now,
 			'<strong>' . $plugin_data['Name'] . '</strong>',
-			'<strong>3.4.0</strong>',
-			$wptp_version
+			'3.0.0'
 		);
 		wp_admin_notice(
 			$message,
@@ -123,9 +122,23 @@ function xposter_pro_check() {
 		);
 		if ( '3.0.0' === $wptp_version ) {
 			deactivate_plugins( 'wp-tweets-pro/wpt-pro-functions.php' );
-		} else {
-			deactivate_plugins( 'xposter-pro/wpt-pro-functions.php' );
 		}
+	}
+	if ( $wptp_version && version_compare( $wptp_version, '3.4.0', '<=' ) ) {
+		$plugin_data = get_plugin_data( __FILE__, false );
+		$upgrade_now = ' <a href="https://xposterpro.com/awesome/xposter-pro/">' . esc_html__( 'Upgrade Now', 'wp-to-twitter' ) . '</a>';
+		$message = sprintf(
+			// Translators: Plugin name, plugin version unsupported.
+			__( '%1$s has limited compatibility with XPoster Pro %2$s or lower. Some features may not be available.', 'wp-to-twitter' ) . $upgrade_now,
+			'<strong>' . $plugin_data['Name'] . '</strong>',
+			'3.3.2'
+		);
+		wp_admin_notice(
+			$message,
+			array(
+				'type' => 'error',
+			)
+		);
 	}
 }
 add_action( 'admin_notices', 'xposter_pro_check' );
