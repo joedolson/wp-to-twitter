@@ -47,7 +47,7 @@ function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $i
 			 * @return {string}
 			 */
 			$alt_text        = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
-			$attachment_data = wpt_image_binary( $attachment, 'mastodon' );
+			$attachment_data = wpt_image_binary( $attachment, $id, 'mastodon' );
 			// Return without attempting if fails to fetch image object.
 			if ( ! $attachment_data ) {
 				return $status;
@@ -62,7 +62,7 @@ function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $i
 				$media_id              = $response['id'];
 				$status['media_ids[]'] = $media_id;
 
-				wpt_mail( 'Media Uploaded (Mastodon)', "User: $auth, Mastodon Media ID: $media_id, Attachment ID: $attachment" . wpt_format_error( $response ), $id );
+				wpt_mail( 'Media Uploaded (Mastodon)', "User: $auth, Mastodon Media ID: $media_id, Attachment ID: $attachment" . wpt_format_error( $response ) . wpt_format_error( $request ), $id );
 			} else {
 				wpt_mail( 'Media Upload Failed (Mastodon)', "User: $auth, Attachment ID: $attachment" . wpt_format_error( $response ), $id );				
 			}

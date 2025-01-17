@@ -89,9 +89,34 @@ class Wpt_Mastodon_Api {
 	 * @return array Mastodon response or error.
 	 */
 	public function call_api( $endpoint, $method, $data ) {
+		$content_type_boundary = '';
+		$body                  = '';
+		if ( '/api/v1/media' === $endpoint ) {
+			$boundary = md5( time() );
+			$eol      = "\r\n";
+			$filedata = $data['file'];
+			$name     = $filedata['name'];
+			$file     = $filedata['file'];
+			$mime     = $filedata['mime'];
+			$alt      = $data['description'];
+
+			$body = '--' . $boundary . $eol;
+			if ( $alt ) {
+				$body .= 'Content-Disposition: form-data; name="description";' . $eol . $eol;
+				$body .= $alt . $eol;
+				$body .= '--' . $boundary . $eol;				
+			}
+			$body .= 'Content-Disposition: form-data; name="file"; filename="' . $name . '"' . $eol;
+			$body .= 'Content-Type: '. $mime . $eol . $eol;
+			$body .= $file . $eol;
+			$body .= '--' . $boundary . '--';
+
+			$data                  = $body;
+			$content_type_boundary = "; boundary=$boundary";
+		}
 		$headers = array(
 			'Authorization' => 'Bearer ' . $this->token,
-			'Content-Type'  => 'multipart/form-data',
+			'Content-Type'  => 'multipart/form-data' . $content_type_boundary,
 		);
 
 		$reply = wp_remote_post(
@@ -109,7 +134,7 @@ class Wpt_Mastodon_Api {
 				'error_code' => $reply->get_error_code(),
 				'error'      => $reply->get_error_message(),
 			);
-			return wp_json_encode( $error );
+			return $error;
 		}
 
 		return json_decode( wp_remote_retrieve_body( $reply ), true );
