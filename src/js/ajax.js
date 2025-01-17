@@ -24,6 +24,7 @@
 			let auth = $('#wpt_authorized_users').val();
 
 			let upload = $('input:radio[name=_wpt_image]:checked').val();
+			let image_id = $( 'input[name=_wpt_custom_image]').val();
 			let tweet_action = ( $(this).attr('data-action') === 'tweet' ) ? 'tweet' : 'schedule'
 			let data = {
 				'action': wpt_data.action,
@@ -33,6 +34,7 @@
 				'tweet_action': tweet_action,
 				'tweet_auth': auth,
 				'tweet_upload': upload,
+				'image_id': image_id,
 				'security': wpt_data.security
 			};
 			$.post(ajaxurl, data, function (response) {

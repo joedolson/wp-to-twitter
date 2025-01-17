@@ -43,6 +43,10 @@ function wpt_ajax_tweet() {
 	if ( current_user_can( 'wpt_can_tweet' ) ) {
 		$options        = get_option( 'wpt_post_types' );
 		$post_ID        = isset( $_REQUEST['tweet_post_id'] ) ? intval( $_REQUEST['tweet_post_id'] ) : false;
+		$image_id     = ( isset( $_REQUEST['image_id'] ) && null !== $_REQUEST['image_id'] ) ? (int) $_REQUEST['image_id'] : false;
+		if ( $image_id ) {
+			update_post_meta( $post_ID, '_wpt_custom_image', $image_id );
+		}
 		$type           = get_post_type( $post_ID );
 		$default        = ( isset( $options[ $type ]['post-edited-text'] ) ) ? $options[ $type ]['post-edited-text'] : '';
 		$sentence       = ( isset( $_REQUEST['tweet_text'] ) && ! empty( $_REQUEST['tweet_text'] ) ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['tweet_text'] ) ) : $default;
