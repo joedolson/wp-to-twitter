@@ -897,11 +897,16 @@ function wpt_get_support_form() {
 				$sent = wp_mail( 'plugins@xposterpro.com', $subject, $message, $from );
 				if ( $sent ) {
 					// Translators: Email address.
-					$message = sprintf( __( 'Thank you for supporting XPoster! I\'ll get back to you as soon as I can. Please make sure you can receive email at &lt;code>%s&lt;/code>.', 'wp-to-twitter' ), $response_email );
-					wp_admin_notice( $message );
+					$message = sprintf( __( 'Thank you! I\'ll get back to you as soon as I can. Please make sure you can receive email at &lt;code>%s&lt;/code>.', 'wp-to-twitter' ), $response_email );
+					wp_admin_notice(
+						$message,
+						array(
+							'type' => 'success',
+						)
+					);
 				} else {
 					// Translators: URL to plugin support form.
-					$message = '&lt;p>' . sprintf( __( "Sorry! I couldn't send that message. Here's the text of your request:", 'wp-to-twitter' ) ) . '&lt;/p>&lt;p>' . sprintf( __( '&lt;a href="%s">Contact me here&lt;/a>, instead.', 'wp-to-twitter' ), 'https://www.joedolson.com/contact/get-support/' ) . "&lt;/p>&lt;pre>$request&lt;/pre>";
+					$message = '&lt;p>' . sprintf( __( "Sorry! I couldn't send that message. Here's the text of your request:", 'wp-to-twitter' ) ) . '&lt;/p>&lt;p>' . sprintf( __( '&lt;a href="%s">Contact me here&lt;/a>, instead.', 'wp-to-twitter' ), 'https://www.xposterpro.com/contact/get-support/' ) . "&lt;/p>&lt;pre>$request&lt;/pre>";
 					wp_admin_notice(
 						$message,
 						array(
