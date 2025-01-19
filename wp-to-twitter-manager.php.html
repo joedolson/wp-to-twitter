@@ -360,12 +360,15 @@ function wpt_update_settings() {
 	wpt_handle_errors();
 	if ( ! function_exists( 'wpt_pro_exists' ) ) {
 		?>
-	&lt;aside class="xposter-sales">&lt;p class="link-highlight">
+	&lt;aside class="xposter-sales">
+		&lt;p class="link-highlight">
 		&lt;?php
 			// Translators: URL to purchase.
-			echo wp_kses_post( sprintf( __( 'Buy &lt;strong>XPoster Pro&lt;/strong> &amp;mdash; supercharge your social media! &lt;a href="%s">Buy Now&lt;/a>', 'wp-to-twitter' ), 'https://xposterpro.com/awesome/xposter-pro/' ) );
+			echo '&lt;span>' . wp_kses_post( __( 'Buy &lt;strong>XPoster Pro&lt;/strong> &amp;mdash; supercharge your social media!', 'wp-to-twitter' ) ) . '&lt;/span>';
+			echo '&lt;a href="https://xposterpro.com/awesome/xposter-pro/">' . esc_html__( 'Buy Now', 'wp-to-twitter' ) . '&lt;/a>';
 		?>
-		&lt;/p>&lt;/aside>
+		&lt;/p>
+	&lt;/aside>
 		&lt;?php
 	}
 	?>
