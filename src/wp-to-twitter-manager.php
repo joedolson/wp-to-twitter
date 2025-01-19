@@ -334,12 +334,15 @@ function wpt_update_settings() {
 	wpt_handle_errors();
 	if ( ! function_exists( 'wpt_pro_exists' ) ) {
 		?>
-	<aside class="xposter-sales"><p class="link-highlight">
+	<aside class="xposter-sales">
+		<p class="link-highlight">
 		<?php
 			// Translators: URL to purchase.
-			echo wp_kses_post( sprintf( __( 'Buy <strong>XPoster Pro</strong> &mdash; supercharge your social media! <a href="%s">Buy Now</a>', 'wp-to-twitter' ), 'https://xposterpro.com/awesome/xposter-pro/' ) );
+			echo '<span>' . wp_kses_post( __( 'Buy <strong>XPoster Pro</strong> &mdash; supercharge your social media!', 'wp-to-twitter' ) ) . '</span>';
+			echo '<a href="https://xposterpro.com/awesome/xposter-pro/">' . esc_html__( 'Buy Now', 'wp-to-twitter' ) . '</a>';
 		?>
-		</p></aside>
+		</p>
+	</aside>
 		<?php
 	}
 	?>

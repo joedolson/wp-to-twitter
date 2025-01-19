@@ -13,13 +13,31 @@
 	margin-bottom: .5rem;
 }
 
+.xposter-sales {
+	margin-top: -10px;
+	margin-left: -22px;
+	margin-right: -22px;
+}
+
 .xposter-sales p,
 aside.xposter-sales {
 	font-size: 1.2rem;
 	background: #fcb000;
 	color: #000;
 	padding: .5rem;
-	margin-top: 10px;
+}
+
+.xposter-sales p {
+	display: flex;
+	flex-wrap: wrap;
+	align-content: center;
+	justify-content: center;
+	gap: 1rem;
+	margin: 0;
+}
+
+.xposter-sales p span {
+	align-content: center;
 }
 
 .wpt-connection-form .auth-fields {
