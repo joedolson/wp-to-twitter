@@ -899,7 +899,7 @@ function wpt_update_settings() {
 function wpt_sidebar() {
 	$context = ( ! function_exists( 'wpt_pro_exists' ) ) ? 'free' : 'premium';
 	?>
-	<div class="postbox-container jcd-narrow">
+	<div class="postbox-container wpt-sidebar">
 	<div class="metabox-holder">
 		<div class="ui-sortable meta-box-sortables <?php esc_attr( $context ); ?>">
 			<div class="postbox">
