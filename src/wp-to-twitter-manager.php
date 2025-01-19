@@ -349,7 +349,7 @@ function wpt_update_settings() {
 		<h2 id="wpt-nav" class="screen-reader-text"><?php esc_html_e( 'XPoster Settings', 'wp-to-twitter' ); ?></h2>
 		<?php wpt_settings_tabs(); ?>
 	</nav>
-	<div id="wpt_settings_page" class="postbox-container jcd-wide">
+	<div id="wpt_settings_page" class="postbox-container wpt-main">
 	<div class="metabox-holder">
 
 	<?php

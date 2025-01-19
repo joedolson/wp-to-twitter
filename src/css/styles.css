@@ -338,11 +338,11 @@ label[for="wpt_license_key"] {
 	display: inline-block;
 }
 
-#wp-to-twitter .jcd-wide {
+#wp-to-twitter .wpt-main {
 	width: 70%;
 }
 
-#wp-to-twitter .jcd-narrow {
+#wp-to-twitter .wpt-sidebar {
 	width: 25%;
 }
 
@@ -383,7 +383,9 @@ label[for='wpt_prepend_rt'], label[for='wpt_prepend_rt2'], label[for='wpt_prepen
 	margin:10px auto!important;
 }
 
-.jcd-narrow .free .postbox, .jcd-narrow .free .postbox a:not(.link-highlight a), .jcd-narrow .free .postbox h3 {
+.wpt-sidebar .free .postbox,
+.wpt-sidebar .free .postbox a:not(.link-highlight a),
+.wpt-sidebar .free .postbox h3 {
 	background: #000;
 	color: #fff;
 }
@@ -392,11 +394,11 @@ label[for='wpt_prepend_rt'], label[for='wpt_prepend_rt2'], label[for='wpt_prepen
 	fill: #fff;
 }
 
-.jcd-narrow .free .postbox .cta a {
+.wpt-sidebar .free .postbox .cta a {
 	font-size: 1.4em;
 }
 
-.jcd-narrow .postbox a:hover, .jcd-narrow .postbox a:focus {
+.wpt-sidebar .postbox a:hover, .wpt-sidebar .postbox a:focus {
 	text-decoration: none; 
 }
 
@@ -414,7 +416,7 @@ label[for='wpt_prepend_rt'], label[for='wpt_prepend_rt2'], label[for='wpt_prepen
 	top: -3px;
 }
 
-.jcd-narrow .free .postbox h3 {
+.wpt-sidebar .free .postbox h3 {
 	background: #fcb000;
 	color: #000;
 	font-size: 1.2rem;
@@ -443,11 +445,11 @@ label[for='wpt_prepend_rt'], label[for='wpt_prepend_rt2'], label[for='wpt_prepen
 }
 
 @media (max-width: 782px) {
-	#wp-to-twitter .jcd-narrow {
+	#wp-to-twitter .wpt-sidebar {
 		width: 100%;
 	}
 
-	#wp-to-twitter .jcd-wide {
+	#wp-to-twitter .wpt-main {
 		width: 100%;
 	}
 }
