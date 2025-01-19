@@ -25,7 +25,7 @@ function wpt_update_bluesky_settings( $auth = false, $post = false ) {
 
 				if ( ! empty( $post['wpt_bluesky_token'] ) ) {
 					$ack  = sanitize_text_field( trim( $post['wpt_bluesky_token'] ) );
-					$user = sanitize_text_field( trim( $post['wpt_bluesky_username'] ) );
+					$user = sanitize_text_field( str_replace( '@', '', trim( $post['wpt_bluesky_username'] ) ) );
 
 					if ( ! $auth ) {
 						// If values are filled with asterisks, do not update; these are masked values.
