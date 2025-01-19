@@ -403,17 +403,11 @@ label[for='wpt_prepend_rt'], label[for='wpt_prepend_rt2'], label[for='wpt_prepen
 }
 
 .inside.resources > div {
-	display: grid;
-	grid-template-columns: repeat( 2, 1fr );
+	display: flex;
+	flex-wrap: wrap;
 	column-gap: 10px;
 	align-items: center;
-	justify-items: start;
-}
-
-.inside.resources > div p:nth-of-type(2) {
-	justify-self: end;
-	position: relative;
-	top: -3px;
+	justify-content: space-between;
 }
 
 .wpt-sidebar .free .postbox h3 {
