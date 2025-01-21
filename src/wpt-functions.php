@@ -789,6 +789,7 @@ function wpt_get_support_form() {
 		$theme_name    = $theme->get( 'Name' );
 		$theme_uri     = $theme->get( 'ThemeURI' );
 		$theme_parent  = $theme->get( 'Template' );
+		$theme_parent  = ( $theme_parent ) ? $theme_parent : __( 'None', 'wp-to-twitter' );
 		$theme_version = $theme->get( 'Version' );
 
 		$admin_email = get_option( 'admin_email' );
