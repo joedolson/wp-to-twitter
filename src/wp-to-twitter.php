@@ -1080,18 +1080,15 @@ function wpt_save_post( $id, $post ) {
 			$post_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
 			update_post_meta( $id, '_wpt_post_this', $post_default );
 		}
-		if ( isset( $_POST['_wpt_omit_services'] ) ) {
-			$services = wpt_check_connections( false, true );
-			// The interface has you choose what you want; the DB represents what's omitted.
-			foreach ( array_keys( $services ) as $service ) {
-				if ( ! in_array( $service, $_POST['_wpt_omit_services'], true ) ) {
-					$omit[] = $service; 
-				}
+		$omit_services = ( isset( $_POST['_wpt_omit_services'] ) ) ? $_POST['_wpt_omit_services'] : array();
+		$services = wpt_check_connections( false, true );
+		// The interface has you choose what you want; the DB represents what's omitted.
+		foreach ( array_keys( $services ) as $service ) {
+			if ( ! in_array( $service, $omit_services, true ) ) {
+				$omit[] = $service; 
 			}
-			update_post_meta( $id, '_wpt_omit_services', $omit );
-		} else {
-			delete_post_meta( $id, '_wpt_omit_services' );
 		}
+		update_post_meta( $id, '_wpt_omit_services', $omit );
 		if ( isset( $_POST['wpt_clear_history'] ) && 'clear' === $_POST['wpt_clear_history'] ) {
 			delete_post_meta( $id, '_wpt_failed' );
 			delete_post_meta( $id, '_jd_wp_twitter' );
