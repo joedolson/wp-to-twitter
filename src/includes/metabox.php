@@ -62,7 +62,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			// Show metabox status buttons.
 			wpt_display_metabox_status_buttons( $is_pro );
 		}
-		wpt_display_metabox_service_picker();
+		wpt_display_metabox_service_picker( $post );
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			$custom_update = get_post_meta( $post->ID, '_jd_twitter', true );
 			?>
@@ -103,7 +103,10 @@ function wpt_add_twitter_inner_box( $post ) {
 			if ( get_option( 'jd_keyword_format' ) === '2' ) {
 				$custom_keyword = get_post_meta( $post->ID, '_yourls_keyword', true );
 				?>
-				<label for='yourls_keyword'><?php esc_html_e( 'YOURLS Custom Keyword', 'wp-to-twitter' ); ?></label> <input type='text' name='_yourls_keyword' id='yourls_keyword' value='<?php echo esc_attr( $custom_keyword ); ?>' />
+				<p>
+					<label for='yourls_keyword'><?php esc_html_e( 'YOURLS Custom Keyword', 'wp-to-twitter' ); ?></label>
+					<input type='text' name='_yourls_keyword' id='yourls_keyword' value='<?php echo esc_attr( $custom_keyword ); ?>' />
+				</p>
 				<?php
 			}
 		} else {
@@ -445,14 +448,32 @@ function wpt_display_status_template( $post, $options ) {
 
 /**
  * Get service selector checkboxes.
+ *
+ * @param WP_Post $post Post object.
  */
-function wpt_display_metabox_service_picker() {
-	$services = wpt_check_connections( false, true );
+function wpt_display_metabox_service_picker( $post ) {
+	$services  = wpt_check_connections( false, true );
+	$omissions = get_post_meta( $post->ID, '_wpt_omit_services', true );
+	?>
+	<fieldset>
+		<legend class="screen-reader-text"><?php esc_html_e( 'Select services', 'wp-to-twitter' ); ?></legend>
+		<ul class="service-selector">
+	<?php
 	foreach ( $services as $service => $connected ) {
 		if ( $connected && wpt_service_enabled( false, $service ) ) {
-			echo $service;
+			$checked = ( is_array( $omissions ) && in_array( $service, $omissions, true ) ) ? false : true;
+			?>
+			<li>
+				<input <?php checked( $checked, true ); ?> type="checkbox" value="<?php esc_attr( $service ); ?>" name="_wpt_omit_services[]" id="wpt_omit_service_<?php echo esc_attr( $service ); ?>">
+				<label for="wpt_omit_service_<?php echo esc_attr( $service ); ?>"><img src='<?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='<?php echo esc_html( ucfirst( $service ) ); ?>' /></label>
+			</li>
+			<?php
 		}
 	}
+	?>
+		</ul>
+	</fieldset>
+	<?php
 }
 /**
  * Generate post now and schedule update buttons.
