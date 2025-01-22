@@ -474,7 +474,7 @@ function wpt_display_metabox_service_picker( $post ) {
 				<input disabled type="checkbox" value="<?php esc_attr( $service ); ?>" name="_wpt_omit_services[]" id="wpt_omit_service_<?php echo esc_attr( $service ); ?>">
 				<label for="wpt_omit_service_<?php echo esc_attr( $service ); ?>"><img src='<?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='<?php echo esc_html( ucfirst( $service ) ); ?>' /></label>
 			</li>
-			<?php		
+			<?php
 		}
 	}
 	?>
