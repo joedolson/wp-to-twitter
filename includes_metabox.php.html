@@ -88,7 +88,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			// Show metabox status buttons.
 			wpt_display_metabox_status_buttons( $is_pro );
 		}
-		wpt_display_metabox_service_picker();
+		wpt_display_metabox_service_picker( $post );
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			$custom_update = get_post_meta( $post->ID, '_jd_twitter', true );
 			?>
@@ -129,7 +129,10 @@ function wpt_add_twitter_inner_box( $post ) {
 			if ( get_option( 'jd_keyword_format' ) === '2' ) {
 				$custom_keyword = get_post_meta( $post->ID, '_yourls_keyword', true );
 				?>
-				&lt;label for='yourls_keyword'>&lt;?php esc_html_e( 'YOURLS Custom Keyword', 'wp-to-twitter' ); ?>&lt;/label> &lt;input type='text' name='_yourls_keyword' id='yourls_keyword' value='&lt;?php echo esc_attr( $custom_keyword ); ?>' />
+				&lt;p>
+					&lt;label for='yourls_keyword'>&lt;?php esc_html_e( 'YOURLS Custom Keyword', 'wp-to-twitter' ); ?>&lt;/label>
+					&lt;input type='text' name='_yourls_keyword' id='yourls_keyword' value='&lt;?php echo esc_attr( $custom_keyword ); ?>' />
+				&lt;/p>
 				&lt;?php
 			}
 		} else {
@@ -471,14 +474,39 @@ function wpt_display_status_template( $post, $options ) {
 
 /**
  * Get service selector checkboxes.
+ *
+ * @param WP_Post $post Post object.
  */
-function wpt_display_metabox_service_picker() {
-	$services = wpt_check_connections( false, true );
+function wpt_display_metabox_service_picker( $post ) {
+	$services  = wpt_check_connections( false, true );
+	$omissions = get_post_meta( $post->ID, '_wpt_omit_services', true );
+	?>
+	&lt;fieldset>
+		&lt;legend class="screen-reader-text">&lt;?php esc_html_e( 'Select services', 'wp-to-twitter' ); ?>&lt;/legend>
+		&lt;ul class="service-selector">
+	&lt;?php
 	foreach ( $services as $service => $connected ) {
 		if ( $connected &amp;&amp; wpt_service_enabled( false, $service ) ) {
-			echo $service;
+			$checked = ( is_array( $omissions ) &amp;&amp; in_array( $service, $omissions, true ) ) ? false : true;
+			?>
+			&lt;li>
+				&lt;input &lt;?php checked( $checked, true ); ?> type="checkbox" value="&lt;?php esc_attr( $service ); ?>" name="_wpt_omit_services[]" id="wpt_omit_service_&lt;?php echo esc_attr( $service ); ?>">
+				&lt;label for="wpt_omit_service_&lt;?php echo esc_attr( $service ); ?>">&lt;img src='&lt;?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='&lt;?php echo esc_html( ucfirst( $service ) ); ?>' />&lt;/label>
+			&lt;/li>
+			&lt;?php
+		} elseif ( $connected &amp;&amp; ! wpt_service_enabled( false, $service ) ) {
+			?>
+			&lt;li class="disabled-service">
+				&lt;input disabled type="checkbox" value="&lt;?php esc_attr( $service ); ?>" name="_wpt_omit_services[]" id="wpt_omit_service_&lt;?php echo esc_attr( $service ); ?>">
+				&lt;label for="wpt_omit_service_&lt;?php echo esc_attr( $service ); ?>">&lt;img src='&lt;?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='&lt;?php echo esc_html( ucfirst( $service ) ); ?>' />&lt;/label>
+			&lt;/li>
+			&lt;?php		
 		}
 	}
+	?>
+		&lt;/ul>
+	&lt;/fieldset>
+	&lt;?php
 }
 /**
  * Generate post now and schedule update buttons.
