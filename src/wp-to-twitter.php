@@ -326,7 +326,7 @@ function wpt_check_recent_tweet( $id, $auth ) {
  */
 function wpt_service_enabled( $post_ID, $service ) {
 	$omit     = get_post_meta( $post_ID, '_wpt_omit_services', true );
-	$omit     = ( $omit ) ? $omit : array();
+	$omit     = ( $omit && is_array( $omit ) ) ? $omit : array();
 	$disabled = get_option( 'wpt_disabled_services', array() );
 	$send_to  = true;
 	if ( in_array( $service, $omit, true ) || in_array( $service, array_keys( $disabled ), true ) ) {
