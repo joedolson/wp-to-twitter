@@ -280,11 +280,11 @@ label[for="wpt_license_key"] {
 #wp-to-twitter  .wpt-pro-tab {
 	background: #fcb000;
 	color: #000;
-	border-color: #000;
+	border-color: #777;
 }
 
 #wp-to-twitter .wpt-pro-tab:hover, #wp-to-twitter .wpt-pro-tab:focus {
-	background: #000;
+	background: #111;
 	color: #fcb000;
 	border-color: #fcb000;
 }
