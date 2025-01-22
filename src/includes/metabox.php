@@ -53,7 +53,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		echo '<div class="wpt-options-metabox">';
 		$user_tweet = apply_filters( 'wpt_user_text', '', $status );
 		// Formulate Template display.
-		$template = wpt_display_status_template( $post, $options );
+		$template = wp_strip_all_tags( wpt_display_status_template( $post, $options ) );
 		if ( $user_tweet ) {
 			// If a user template is defined, replace the existing template.
 			$template = $user_tweet;
