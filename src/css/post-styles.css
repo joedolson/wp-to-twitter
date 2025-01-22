@@ -80,6 +80,10 @@
 	height: auto;
 }
 
+#wp2t .service-selector li.disabled-service img {
+	opacity: .3;
+}
+
 #wp2t h3 {
 	margin: 0;
 }
