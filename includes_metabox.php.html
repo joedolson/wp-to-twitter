@@ -79,7 +79,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		echo '&lt;div class="wpt-options-metabox">';
 		$user_tweet = apply_filters( 'wpt_user_text', '', $status );
 		// Formulate Template display.
-		$template = wpt_display_status_template( $post, $options );
+		$template = wp_strip_all_tags( wpt_display_status_template( $post, $options ) );
 		if ( $user_tweet ) {
 			// If a user template is defined, replace the existing template.
 			$template = $user_tweet;
@@ -88,6 +88,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			// Show metabox status buttons.
 			wpt_display_metabox_status_buttons( $is_pro );
 		}
+		wpt_display_metabox_service_picker();
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			$custom_update = get_post_meta( $post->ID, '_jd_twitter', true );
 			?>
@@ -468,6 +469,17 @@ function wpt_display_status_template( $post, $options ) {
 	return $expanded;
 }
 
+/**
+ * Get service selector checkboxes.
+ */
+function wpt_display_metabox_service_picker() {
+	$services = wpt_check_connections( false, true );
+	foreach ( $services as $service => $connected ) {
+		if ( $connected &amp;&amp; wpt_service_enabled( false, $service ) ) {
+			echo $service;
+		}
+	}
+}
 /**
  * Generate post now and schedule update buttons.
  *
