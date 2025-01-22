@@ -464,7 +464,7 @@ function wpt_display_metabox_service_picker( $post ) {
 			$checked = ( is_array( $omissions ) && in_array( $service, $omissions, true ) ) ? false : true;
 			?>
 			<li>
-				<input <?php checked( $checked, true ); ?> type="checkbox" value="<?php esc_attr( $service ); ?>" name="_wpt_omit_services[]" id="wpt_omit_service_<?php echo esc_attr( $service ); ?>">
+				<input <?php checked( $checked, true ); ?> type="checkbox" value="<?php echo esc_attr( $service ); ?>" name="_wpt_omit_services[]" id="wpt_omit_service_<?php echo esc_attr( $service ); ?>">
 				<label for="wpt_omit_service_<?php echo esc_attr( $service ); ?>"><img src='<?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='<?php echo esc_html( ucfirst( $service ) ); ?>' /></label>
 			</li>
 			<?php
