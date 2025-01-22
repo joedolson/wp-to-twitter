@@ -51,6 +51,39 @@
 	padding: 4px;
 }
 
+#wp2t .service-selector {
+	display: flex;
+	flex-wrap: wrap;
+	column-gap: 20px;
+	align-items: center;
+	margin: 0;
+}
+
+#wp2t .service-selector li {
+	display: grid;
+	justify-items: center;
+	padding: 4px;
+	gap: 4px;
+	margin: 0;
+}
+
+#wp2t .service-selector li input {
+	margin-right: 0;
+}
+
+#wp2t .service-selector li label {
+	order: -1;
+}
+
+#wp2t .service-selector li img {
+	width: 32px;
+	height: auto;
+}
+
+#wp2t h3 {
+	margin: 0;
+}
+
 #wp2t .wpt-error {
 	border-left: 4px solid #b32d2e;
 	padding-left: 4px;
