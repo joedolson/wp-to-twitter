@@ -329,8 +329,10 @@ function wpt_service_enabled( $post_ID = false, $service ) {
 	$omit     = ( $omit && is_array( $omit ) ) ? $omit : array();
 	$disabled = get_option( 'wpt_disabled_services', array() );
 	$send_to  = true;
-	if ( $post_ID && ( in_array( $service, $omit, true ) || in_array( $service, array_keys( $disabled ), true ) ) ) {
-		wpt_mail( ucfirst( $service ) . ' is disabled.', wpt_format_error( $disabled ), $post_ID );
+	if ( in_array( $service, $omit, true ) || in_array( $service, array_keys( $disabled ), true ) ) {
+		if ( $post_ID ) {
+			wpt_mail( ucfirst( $service ) . ' is disabled.', wpt_format_error( $disabled ), $post_ID );
+		}
 		$send_to = false;
 	}
 	/**
