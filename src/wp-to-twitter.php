@@ -324,12 +324,12 @@ function wpt_check_recent_tweet( $id, $auth ) {
  *
  * @return bool
  */
-function wpt_service_enabled( $post_ID, $service ) {
-	$omit     = get_post_meta( $post_ID, '_wpt_omit_services', true );
+function wpt_service_enabled( $post_ID = false, $service ) {
+	$omit     = ( $post_ID ) ? get_post_meta( $post_ID, '_wpt_omit_services', true ) : array();
 	$omit     = ( $omit && is_array( $omit ) ) ? $omit : array();
 	$disabled = get_option( 'wpt_disabled_services', array() );
 	$send_to  = true;
-	if ( in_array( $service, $omit, true ) || in_array( $service, array_keys( $disabled ), true ) ) {
+	if ( $post_ID && ( in_array( $service, $omit, true ) || in_array( $service, array_keys( $disabled ), true ) ) ) {
 		wpt_mail( ucfirst( $service ) . ' is disabled.', wpt_format_error( $disabled ), $post_ID );
 		$send_to = false;
 	}
@@ -339,7 +339,7 @@ function wpt_service_enabled( $post_ID, $service ) {
 	 * @hook wpt_service_enabled
 	 *
 	 * @param {bool}   $send_to True to send to a service.
-	 * @param {int}    $post_ID Post ID.
+	 * @param {int}    $post_ID Post ID. False if checking globally.
 	 * @param {string} $service Service ID.
 	 *
 	 * @return {bool}
