@@ -210,11 +210,25 @@ function wpt_settings_tabs() {
 	$current  = ( isset( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : $default;
 	$pro_text = ( function_exists( 'wpt_pro_exists' ) ) ? __( 'Pro Settings', 'wp-to-twitter' ) : __( 'XPoster PRO', 'wp-to-twitter' );
 
-	$yes         = '&lt;span class="dashicons dashicons-yes" aria-label="Connected">&lt;/span>';
-	$no          = '&lt;span class="dashicons dashicons-no" aria=label="Unconnected">&lt;/span>';
-	$x_connected = ( wtt_oauth_test() ) ? $yes : $no;
-	$m_connected = ( wpt_mastodon_connection() ) ? $yes : $no;
-	$b_connected = ( wpt_bluesky_connection() ) ? $yes : $no;
+	$yes      = '&lt;span class="dashicons dashicons-yes" aria-label="Connected">&lt;/span>';
+	$no       = '&lt;span class="dashicons dashicons-no" aria=label="Unconnected">&lt;/span>';
+	$disabled = '&lt;span class="dashicons dashicons-hidden" aria-label="Disabled">&lt;/span>';
+	if ( wtt_oauth_test() ) {
+		$x_connected = ( wpt_service_enabled( false, 'x' ) ) ? $yes : $disabled;
+	} else {
+		$x_connected = $no;
+	}
+	if ( wpt_mastodon_connection() ) {
+		$m_connected =  ( wpt_service_enabled( false, 'mastodon' ) ) ? $yes : $disabled;
+	} else {
+		$m_connected = $no;
+	}
+	if ( wpt_bluesky_connection() ) {
+		$b_connected = ( wpt_service_enabled( false, 'bluesky' ) ) ? $yes : $disabled;
+	} else {
+		$b_connected = $no;
+	}
+
 	$pages       = array(
 		'connection' => __( 'X', 'wp-to-twitter' ) . $x_connected,
 		'mastodon'   => __( 'Mastodon', 'wp-to-twitter' ) . $m_connected,
