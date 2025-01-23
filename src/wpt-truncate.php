@@ -114,13 +114,14 @@ function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = 
 	$update   = trim( wpt_user_meta_shortcodes( $update, $post['authId'] ) );
 	$encoding = ( 'UTF-8' !== get_option( 'blog_charset' ) && '' !== get_option( 'blog_charset', '' ) ) ? get_option( 'blog_charset' ) : 'UTF-8';
 	$diff     = 0;
-
+	$prepend  = wp_unslash( get_option( 'jd_twit_prepend', '' ) );
+	$append   = wp_unslash( get_option( 'jd_twit_append', '' ) );
 	// Add custom append/prepend fields to status update text.
-	if ( '' !== get_option( 'jd_twit_prepend', '' ) && '' !== $update ) {
-		$update = stripslashes( get_option( 'jd_twit_prepend' ) ) . ' ' . $update;
+	if ( '' !== $prepend  && '' !== $update && ( str_contains( $update, $prepend ) === false ) ) {
+		$update = $prepend . ' ' . $update;
 	}
-	if ( '' !== get_option( 'jd_twit_append', '' ) && '' !== $update ) {
-		$update = $update . ' ' . stripslashes( get_option( 'jd_twit_append' ) );
+	if ( '' !== $append && '' !== $update && ( str_contains( $update, $append ) === false )) {
+		$update = $update . ' ' . $append;
 	}
 
 	// there are no tags in this update. Truncate and return.
