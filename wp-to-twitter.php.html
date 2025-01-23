@@ -501,7 +501,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 
 		return $return;
 	} else {
-		wpt_set_log( 'wpt_status_message', $id, __( 'No API connections found.', 'wp-to-twitter' ), '404' );
+		wpt_set_log( 'wpt_status_message', $id, __( 'This status update has already been sent.', 'wp-to-twitter' ), '404' );
 
 		return false;
 	}
@@ -529,7 +529,7 @@ function wpt_check_service_history( $post_ID, $auth, $template, $connections ) {
 		$check = ( ! $auth ) ? get_option( 'wpt_last_' . $service, '' ) : get_user_meta( $auth, 'wpt_last_' . $service, true );
 		// prevent duplicate status updates. Checks whether this text has already been sent.
 		if ( $check === $status &amp;&amp; '' !== $status ) {
-			wpt_mail( ucfirst( $service ) . 'Status update identical to previous update', "This Update: $status; Check Update: $check; $auth, $post_ID", $post_ID ); // DEBUG.
+			wpt_mail( ucfirst( $service ) . ': Status update identical to previous update', "This Update: $status; Check Update: $check; $auth, $post_ID", $post_ID ); // DEBUG.
 			$error = __( 'This status update is identical to another update recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'All status updates are expected to be unique.', 'wp-to-twitter' );
 			wpt_save_error( $post_ID, $auth, $status, $error, '403-1', time() );
 			wpt_set_log( 'wpt_status_message', $post_ID, $error, '403' );
@@ -1106,18 +1106,15 @@ function wpt_save_post( $id, $post ) {
 			$post_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
 			update_post_meta( $id, '_wpt_post_this', $post_default );
 		}
-		if ( isset( $_POST['_wpt_omit_services'] ) ) {
-			$services = wpt_check_connections( false, true );
-			// The interface has you choose what you want; the DB represents what's omitted.
-			foreach ( array_keys( $services ) as $service ) {
-				if ( ! in_array( $service, $_POST['_wpt_omit_services'], true ) ) {
-					$omit[] = $service; 
-				}
+		$omit_services = ( isset( $_POST['_wpt_omit_services'] ) ) ? $_POST['_wpt_omit_services'] : array();
+		$services = wpt_check_connections( false, true );
+		// The interface has you choose what you want; the DB represents what's omitted.
+		foreach ( array_keys( $services ) as $service ) {
+			if ( ! in_array( $service, $omit_services, true ) ) {
+				$omit[] = $service; 
 			}
-			update_post_meta( $id, '_wpt_omit_services', $omit );
-		} else {
-			delete_post_meta( $id, '_wpt_omit_services' );
 		}
+		update_post_meta( $id, '_wpt_omit_services', $omit );
 		if ( isset( $_POST['wpt_clear_history'] ) &amp;&amp; 'clear' === $_POST['wpt_clear_history'] ) {
 			delete_post_meta( $id, '_wpt_failed' );
 			delete_post_meta( $id, '_jd_wp_twitter' );
