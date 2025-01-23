@@ -475,7 +475,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 
 		return $return;
 	} else {
-		wpt_set_log( 'wpt_status_message', $id, __( 'No API connections found.', 'wp-to-twitter' ), '404' );
+		wpt_set_log( 'wpt_status_message', $id, __( 'This status update has already been sent.', 'wp-to-twitter' ), '404' );
 
 		return false;
 	}
@@ -503,7 +503,7 @@ function wpt_check_service_history( $post_ID, $auth, $template, $connections ) {
 		$check = ( ! $auth ) ? get_option( 'wpt_last_' . $service, '' ) : get_user_meta( $auth, 'wpt_last_' . $service, true );
 		// prevent duplicate status updates. Checks whether this text has already been sent.
 		if ( $check === $status && '' !== $status ) {
-			wpt_mail( ucfirst( $service ) . 'Status update identical to previous update', "This Update: $status; Check Update: $check; $auth, $post_ID", $post_ID ); // DEBUG.
+			wpt_mail( ucfirst( $service ) . ': Status update identical to previous update', "This Update: $status; Check Update: $check; $auth, $post_ID", $post_ID ); // DEBUG.
 			$error = __( 'This status update is identical to another update recently sent to this account.', 'wp-to-twitter' ) . ' ' . __( 'All status updates are expected to be unique.', 'wp-to-twitter' );
 			wpt_save_error( $post_ID, $auth, $status, $error, '403-1', time() );
 			wpt_set_log( 'wpt_status_message', $post_ID, $error, '403' );
