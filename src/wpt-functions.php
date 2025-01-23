@@ -193,7 +193,7 @@ function wpt_settings_tabs() {
 		$x_connected = $no;
 	}
 	if ( wpt_mastodon_connection() ) {
-		$m_connected =  ( wpt_service_enabled( false, 'mastodon' ) ) ? $yes : $disabled;
+		$m_connected = ( wpt_service_enabled( false, 'mastodon' ) ) ? $yes : $disabled;
 	} else {
 		$m_connected = $no;
 	}
@@ -203,7 +203,7 @@ function wpt_settings_tabs() {
 		$b_connected = $no;
 	}
 
-	$pages       = array(
+	$pages = array(
 		'connection' => __( 'X', 'wp-to-twitter' ) . $x_connected,
 		'mastodon'   => __( 'Mastodon', 'wp-to-twitter' ) . $m_connected,
 		'bluesky'    => __( 'Bluesky', 'wp-to-twitter' ) . $b_connected,

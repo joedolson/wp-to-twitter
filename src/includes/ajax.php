@@ -65,6 +65,21 @@ function wpt_ajax_tweet() {
 		$schedule       = $schedule - $offset;
 		$media          = ( '1' === $upload ) ? false : true; // this is correct; the boolean logic is reversed. Blah.
 
+		if ( isset( $_REQUEST['x_text'] ) && ! empty( $_REQUEST['x_text'] ) ) {
+			$template = sanitize_textarea_field( wp_unslash( $_REQUEST['x_text'] ) );
+			update_post_meta( $post_ID, '_wpt_post_template_x', $template );
+		}
+
+		if ( isset( $_REQUEST['mastodon_text'] ) && ! empty( $_REQUEST['mastodon_text'] ) ) {
+			$template = sanitize_textarea_field( wp_unslash( $_REQUEST['mastodon_text'] ) );
+			update_post_meta( $post_ID, '_wpt_post_template_mastodon', $template );
+		}
+
+		if ( isset( $_REQUEST['bluesky_text'] ) && ! empty( $_REQUEST['bluesky_text'] ) ) {
+			$template = sanitize_textarea_field( wp_unslash( $_REQUEST['bluesky_text'] ) );
+			update_post_meta( $post_ID, '_wpt_post_template_bluesky', $template );
+		}
+
 		foreach ( $authors as $auth ) {
 			$auth = ( 'main' === $auth ) ? false : $auth;
 			switch ( $action ) {

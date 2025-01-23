@@ -34,6 +34,26 @@
 		allowed: wptSettings.allowed,
 		counterText: wptSettings.text
 	});
+
+	const variants = $( '.service-selector input' );
+	let status_update = $( '#wpt_custom_tweet' ).val();
+	if ( '' === status_update ) {
+		status_update = $( '.wpt-template code' ).text();
+	}
+	variants.each( function() {
+		$( this ).on( 'change', function() {
+			let status = $( this ).is( ':checked' );
+			let val    = $( this ).val();
+			if ( true === status ) {
+				$( '#wpt_custom_tweet_' + val ).parent( 'p' ).removeClass( 'hidden' );
+				$(  '#wpt_custom_tweet_' + val ).val( status_update );
+			} else {
+				$( '#wpt_custom_tweet_' + val ).parent( 'p' ).addClass( 'hidden' );
+			}
+		});
+		
+	});
+
 	// debugging
 	$( 'button.toggle-debug' ).on( 'click', function() {
 		var next = $( this ).next( 'pre' );

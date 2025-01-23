@@ -23,18 +23,23 @@
 			let time = $('#wpt_set_tweet_time .time').val();
 			let auth = $('#wpt_authorized_users').val();
 
-			let upload = $('input:radio[name=_wpt_image]:checked').val();
-			let image_id = $( 'input[name=_wpt_custom_image]').val();
+			let upload        = $('input:radio[name=_wpt_image]:checked').val();
+			let image_id      = $( 'input[name=_wpt_custom_image]').val();
 			let omit_services = new Array();
 			$.each( $( 'input[name="_wpt_omit_services[]"]:checked' ), function() {
 				omit_services.push( $(this).val() );
 			});
-			console.log( omit_services );
+			let custom_x_update = $( '#wpt_custom_tweet_x' ).val();
+			let custom_mastodon_update = $( '#wpt_custom_tweet_mastodon' ).val();
+			let custom_bluesky_update = $( '#wpt_custom_tweet_bluesky' ).val();
 			let tweet_action = ( $(this).attr('data-action') === 'tweet' ) ? 'tweet' : 'schedule'
 			let data = {
 				'action': wpt_data.action,
 				'tweet_post_id': wpt_data.post_ID,
 				'tweet_text': text,
+				'x_text': custom_x_update,
+				'mastodon_text': custom_mastodon_update,
+				'bluesky_text': custom_bluesky_update,
 				'tweet_schedule': date + ' ' + time,
 				'tweet_action': tweet_action,
 				'tweet_auth': auth,

@@ -64,12 +64,28 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		wpt_display_metabox_service_picker( $post );
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
-			$custom_update = get_post_meta( $post->ID, '_jd_twitter', true );
+			$custom_update          = get_post_meta( $post->ID, '_jd_twitter', true );
+			$custom_x_update        = get_post_meta( $post->ID, '_wpt_post_template_x', true );
+			$custom_mastodon_update = get_post_meta( $post->ID, '_wpt_post_template_mastodon', true );
+			$custom_bluesky_update  = get_post_meta( $post->ID, '_wpt_post_template_bluesky', true );
 			?>
 			<p class='jtw'>
 				<label for="wpt_custom_tweet"><?php esc_html_e( 'Custom Status Update', 'wp-to-twitter' ); ?></label><br/>
 				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_update ) ); ?></textarea>
 			</p>
+			<?php wpt_display_metabox_service_picker( $post, 'variants' ); ?>
+			<p class='jtw<?php echo ( ! $custom_x_update ) ? ' hidden' : ''; ?>'>
+				<label for="wpt_custom_tweet_x"><?php esc_html_e( 'Custom X Update', 'wp-to-twitter' ); ?></label><br/>
+				<textarea class="wpt_tweet_box widefat" name="_wpt_post_template_x" id="wpt_custom_tweet_x" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_x_update ) ); ?></textarea>
+			</p>
+			<p class='jtw<?php echo ( ! $custom_mastodon_update ) ? ' hidden' : ''; ?>'>
+				<label for="wpt_custom_tweet_mastodon"><?php esc_html_e( 'Custom Mastodon Update', 'wp-to-twitter' ); ?></label><br/>
+				<textarea class="wpt_tweet_box widefat" name="_wpt_post_template_mastodon" id="wpt_custom_tweet_mastodon" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_mastodon_update ) ); ?></textarea>
+			</p>
+			<p class='jtw<?php echo ( ! $custom_bluesky_update ) ? ' hidden' : ''; ?>'>
+				<label for="wpt_custom_tweet_bluesky"><?php esc_html_e( 'Custom Bluesky Update', 'wp-to-twitter' ); ?></label><br/>
+				<textarea class="wpt_tweet_box widefat" name="_wpt_post_template_bluesky" id="wpt_custom_tweet_bluesky" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_bluesky_update ) ); ?></textarea>
+			</p>			
 			<div role="alert" class="x-notification notice inline notice-info hidden"><p><?php esc_html_e( 'X length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
 			<div role="alert" class="bluesky-notification notice inline notice-info hidden"><p><?php esc_html_e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
 			<div role="alert" class="mastodon-notification notice inline notice-info hidden"><p><?php esc_html_e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
@@ -451,28 +467,34 @@ function wpt_display_status_template( $post, $options ) {
  *
  * @param WP_Post $post Post object.
  */
-function wpt_display_metabox_service_picker( $post ) {
+function wpt_display_metabox_service_picker( $post, $type = 'omit' ) {
 	$services  = wpt_check_connections( false, true );
 	$omissions = get_post_meta( $post->ID, '_wpt_omit_services', true );
+	$class     = ( 'omit' === $type ) ? 'screen-reader-text' : 'variant-selector';
+	$legend    = ( 'omit' === $type ) ? __( 'Select services', 'wp-to-twitter' ) : __( 'Add update variant', 'wp-to-twitter' );
 	?>
 	<fieldset>
-		<legend class="screen-reader-text"><?php esc_html_e( 'Select services', 'wp-to-twitter' ); ?></legend>
+		<legend class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $legend ); ?></legend>
 		<ul class="service-selector">
 	<?php
 	foreach ( $services as $service => $connected ) {
 		if ( $connected && wpt_service_enabled( false, $service ) ) {
-			$checked = ( is_array( $omissions ) && in_array( $service, $omissions, true ) ) ? false : true;
+			if ( 'omit' === $type ) {
+				$checked = ( is_array( $omissions ) && in_array( $service, $omissions, true ) ) ? false : true;
+			} else {
+				$checked = ( '' === get_post_meta( $post->ID, '_wpt_post_template_' . $service, true ) ) ? false : true;
+			}
 			?>
 			<li>
-				<input <?php checked( $checked, true ); ?> type="checkbox" value="<?php echo esc_attr( $service ); ?>" name="_wpt_omit_services[]" id="wpt_omit_service_<?php echo esc_attr( $service ); ?>">
-				<label for="wpt_omit_service_<?php echo esc_attr( $service ); ?>"><img src='<?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='<?php echo esc_html( ucfirst( $service ) ); ?>' /></label>
+				<input <?php checked( $checked, true ); ?> type="checkbox" value="<?php echo esc_attr( $service ); ?>" name="_wpt_<?php echo esc_attr( $type ); ?>_services[]" id="wpt_<?php echo esc_attr( $type ); ?>_service_<?php echo esc_attr( $service ); ?>">
+				<label for="wpt_<?php echo esc_attr( $type ); ?>_service_<?php echo esc_attr( $service ); ?>"><img src='<?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='<?php echo esc_html( ucfirst( $service ) ); ?>' /></label>
 			</li>
 			<?php
 		} elseif ( $connected && ! wpt_service_enabled( false, $service ) ) {
 			?>
 			<li class="disabled-service">
-				<input disabled type="checkbox" value="<?php esc_attr( $service ); ?>" name="_wpt_omit_services[]" id="wpt_omit_service_<?php echo esc_attr( $service ); ?>">
-				<label for="wpt_omit_service_<?php echo esc_attr( $service ); ?>"><img src='<?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='<?php echo esc_html( ucfirst( $service ) ); ?>' /></label>
+				<input disabled type="checkbox" value="<?php esc_attr( $service ); ?>" name="_wpt_<?php echo esc_attr( $type ); ?>_services[]" id="wpt_<?php echo esc_attr( $type ); ?>_service_<?php echo esc_attr( $service ); ?>">
+				<label for="wpt_<?php echo esc_attr( $type ); ?>_service_<?php echo esc_attr( $service ); ?>"><img src='<?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='<?php echo esc_html( ucfirst( $service ) ); ?>' /></label>
 			</li>
 			<?php
 		}
