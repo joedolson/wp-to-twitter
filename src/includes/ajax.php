@@ -59,8 +59,6 @@ function wpt_ajax_tweet() {
 		$type           = get_post_type( $post_ID );
 		$default        = ( isset( $options[ $type ]['post-edited-text'] ) ) ? $options[ $type ]['post-edited-text'] : '';
 		$sentence       = ( isset( $_REQUEST['tweet_text'] ) && ! empty( $_REQUEST['tweet_text'] ) ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['tweet_text'] ) ) : $default;
-		$sentence       = stripcslashes( trim( $sentence ) );
-		$sentence       = wpt_truncate_status( $sentence, array(), $post_ID, false, $user_ID );
 		$schedule       = ( isset( $_REQUEST['tweet_schedule'] ) ) ? strtotime( sanitize_text_field( wp_unslash( $_REQUEST['tweet_schedule'] ) ) ) : wp_rand( 60, 240 );
 		$print_schedule = date_i18n( get_option( 'date_format' ) . ' @ ' . get_option( 'time_format' ), $schedule );
 		$offset         = ( 60 * 60 * get_option( 'gmt_offset' ) );
