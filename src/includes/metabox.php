@@ -469,7 +469,21 @@ function wpt_display_status_template( $post, $options ) {
  * @param string  $type Which set of checkboxes to fetch.
  */
 function wpt_display_metabox_service_picker( $post, $type = 'omit' ) {
-	$services  = wpt_check_connections( false, true );
+	$services = wpt_check_connections( false, true );
+	$count    = 0;
+	$allowed  = '';
+	foreach ( $services as $service => $connected ) {
+		if ( $connected ) {
+			$allowed = $service;
+			++$count;
+		}
+	}
+	if ( $count <= 1 ) {
+		?>
+		<input type="hidden" value="<?php echo esc_attr( $allowed ); ?>" name="_wpt_omit_services[]">
+		<?php
+		return '';
+	}
 	$omissions = get_post_meta( $post->ID, '_wpt_omit_services', true );
 	$class     = ( 'omit' === $type ) ? 'screen-reader-text' : 'variant-selector';
 	$legend    = ( 'omit' === $type ) ? __( 'Select services', 'wp-to-twitter' ) : __( 'Add update variant', 'wp-to-twitter' );
