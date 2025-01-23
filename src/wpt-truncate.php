@@ -117,10 +117,10 @@ function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = 
 	$prepend  = wp_unslash( get_option( 'jd_twit_prepend', '' ) );
 	$append   = wp_unslash( get_option( 'jd_twit_append', '' ) );
 	// Add custom append/prepend fields to status update text.
-	if ( '' !== $prepend  && '' !== $update && ( str_contains( $update, $prepend ) === false ) ) {
+	if ( '' !== $prepend && '' !== $update && ( str_contains( $update, $prepend ) === false ) ) {
 		$update = $prepend . ' ' . $update;
 	}
-	if ( '' !== $append && '' !== $update && ( str_contains( $update, $append ) === false )) {
+	if ( '' !== $append && '' !== $update && ( str_contains( $update, $append ) === false ) ) {
 		$update = $update . ' ' . $append;
 	}
 
