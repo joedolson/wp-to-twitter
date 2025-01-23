@@ -49,6 +49,8 @@ define( 'WPT_DEBUG_BY_EMAIL', false ); // Email debugging no longer default as o
 define( 'WPT_DEBUG_ADDRESS', get_option( 'admin_email' ) );
 define( 'WPT_FROM', 'From: \"' . get_option( 'blogname' ) . '\" <' . get_option( 'admin_email' ) . '>' );
 
+define( 'WPT_STAGING_MODE', true );
+
 // If current environment tests as staging, enable staging mode.
 if ( function_exists( 'wp_get_environment_type' ) ) {
 	if ( 'staging' === wp_get_environment_type() && ! defined( 'WPT_STAGING_MODE' ) ) {
@@ -402,6 +404,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 		$continue = wpt_test_rate_limit( $id, $auth );
 		if ( ! $continue ) {
 			wpt_mail( 'This post was blocked by XPoster rate limiting.', 'Post ID: ' . $id . '; Account: ' . $auth );
+			wpt_set_log( 'wpt_status_message', $id, __( 'Status update prevented due to XPoster rate limiting.', 'wp-to-twitter' ), '404' );
 
 			return false;
 		}
@@ -410,6 +413,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 	$recent = wpt_check_recent_tweet( $id, $auth );
 	if ( $recent ) {
 		wpt_mail( 'This post was just sent, and this is a duplicate.', 'Post ID: ' . $id . '; Account: ' . $auth );
+		wpt_set_log( 'wpt_status_message', $id, __( 'Status update prevented because it was a duplicate.', 'wp-to-twitter' ), '404' );
 
 		return false;
 	}
@@ -482,7 +486,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 }
 
 /**
- * Check whether a status update has already been sent.
+ * Check whether a status update has already been sent; expands the passed template to create status update to test.
  *
  * @param int      $post_ID Post ID.
  * @param int|bool $auth Author ID or false.
