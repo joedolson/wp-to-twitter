@@ -90,12 +90,28 @@ function wpt_add_twitter_inner_box( $post ) {
 		}
 		wpt_display_metabox_service_picker( $post );
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
-			$custom_update = get_post_meta( $post->ID, '_jd_twitter', true );
+			$custom_update          = get_post_meta( $post->ID, '_jd_twitter', true );
+			$custom_x_update        = get_post_meta( $post->ID, '_wpt_post_template_x', true );
+			$custom_mastodon_update = get_post_meta( $post->ID, '_wpt_post_template_mastodon', true );
+			$custom_bluesky_update  = get_post_meta( $post->ID, '_wpt_post_template_bluesky', true );
 			?>
 			&lt;p class='jtw'>
 				&lt;label for="wpt_custom_tweet">&lt;?php esc_html_e( 'Custom Status Update', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
 				&lt;textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="&lt;?php echo esc_attr( $template ); ?>" rows="2" cols="60">&lt;?php echo esc_textarea( stripslashes( $custom_update ) ); ?>&lt;/textarea>
 			&lt;/p>
+			&lt;?php wpt_display_metabox_service_picker( $post, 'variants' ); ?>
+			&lt;p class='jtw&lt;?php echo ( ! $custom_x_update ) ? ' hidden' : ''; ?>'>
+				&lt;label for="wpt_custom_tweet_x">&lt;?php esc_html_e( 'Custom X Update', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
+				&lt;textarea class="wpt_tweet_box widefat" name="_wpt_post_template_x" id="wpt_custom_tweet_x" placeholder="&lt;?php echo esc_attr( $template ); ?>" rows="2" cols="60">&lt;?php echo esc_textarea( stripslashes( $custom_x_update ) ); ?>&lt;/textarea>
+			&lt;/p>
+			&lt;p class='jtw&lt;?php echo ( ! $custom_mastodon_update ) ? ' hidden' : ''; ?>'>
+				&lt;label for="wpt_custom_tweet_mastodon">&lt;?php esc_html_e( 'Custom Mastodon Update', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
+				&lt;textarea class="wpt_tweet_box widefat" name="_wpt_post_template_mastodon" id="wpt_custom_tweet_mastodon" placeholder="&lt;?php echo esc_attr( $template ); ?>" rows="2" cols="60">&lt;?php echo esc_textarea( stripslashes( $custom_mastodon_update ) ); ?>&lt;/textarea>
+			&lt;/p>
+			&lt;p class='jtw&lt;?php echo ( ! $custom_bluesky_update ) ? ' hidden' : ''; ?>'>
+				&lt;label for="wpt_custom_tweet_bluesky">&lt;?php esc_html_e( 'Custom Bluesky Update', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
+				&lt;textarea class="wpt_tweet_box widefat" name="_wpt_post_template_bluesky" id="wpt_custom_tweet_bluesky" placeholder="&lt;?php echo esc_attr( $template ); ?>" rows="2" cols="60">&lt;?php echo esc_textarea( stripslashes( $custom_bluesky_update ) ); ?>&lt;/textarea>
+			&lt;/p>			
 			&lt;div role="alert" class="x-notification notice inline notice-info hidden">&lt;p>&lt;?php esc_html_e( 'X length limit reached:', 'wp-to-twitter' ); ?> &lt;span>&lt;/span>&lt;/p>&lt;/div>
 			&lt;div role="alert" class="bluesky-notification notice inline notice-info hidden">&lt;p>&lt;?php esc_html_e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> &lt;span>&lt;/span>&lt;/p>&lt;/div>
 			&lt;div role="alert" class="mastodon-notification notice inline notice-info hidden">&lt;p>&lt;?php esc_html_e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> &lt;span>&lt;/span>&lt;/p>&lt;/div>
@@ -477,28 +493,34 @@ function wpt_display_status_template( $post, $options ) {
  *
  * @param WP_Post $post Post object.
  */
-function wpt_display_metabox_service_picker( $post ) {
+function wpt_display_metabox_service_picker( $post, $type = 'omit' ) {
 	$services  = wpt_check_connections( false, true );
 	$omissions = get_post_meta( $post->ID, '_wpt_omit_services', true );
+	$class     = ( 'omit' === $type ) ? 'screen-reader-text' : 'variant-selector';
+	$legend    = ( 'omit' === $type ) ? __( 'Select services', 'wp-to-twitter' ) : __( 'Add update variant', 'wp-to-twitter' );
 	?>
 	&lt;fieldset>
-		&lt;legend class="screen-reader-text">&lt;?php esc_html_e( 'Select services', 'wp-to-twitter' ); ?>&lt;/legend>
+		&lt;legend class="&lt;?php echo esc_attr( $class ); ?>">&lt;?php echo esc_html( $legend ); ?>&lt;/legend>
 		&lt;ul class="service-selector">
 	&lt;?php
 	foreach ( $services as $service => $connected ) {
 		if ( $connected &amp;&amp; wpt_service_enabled( false, $service ) ) {
-			$checked = ( is_array( $omissions ) &amp;&amp; in_array( $service, $omissions, true ) ) ? false : true;
+			if ( 'omit' === $type ) {
+				$checked = ( is_array( $omissions ) &amp;&amp; in_array( $service, $omissions, true ) ) ? false : true;
+			} else {
+				$checked = ( '' === get_post_meta( $post->ID, '_wpt_post_template_' . $service, true ) ) ? false : true;
+			}
 			?>
 			&lt;li>
-				&lt;input &lt;?php checked( $checked, true ); ?> type="checkbox" value="&lt;?php echo esc_attr( $service ); ?>" name="_wpt_omit_services[]" id="wpt_omit_service_&lt;?php echo esc_attr( $service ); ?>">
-				&lt;label for="wpt_omit_service_&lt;?php echo esc_attr( $service ); ?>">&lt;img src='&lt;?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='&lt;?php echo esc_html( ucfirst( $service ) ); ?>' />&lt;/label>
+				&lt;input &lt;?php checked( $checked, true ); ?> type="checkbox" value="&lt;?php echo esc_attr( $service ); ?>" name="_wpt_&lt;?php echo esc_attr( $type ); ?>_services[]" id="wpt_&lt;?php echo esc_attr( $type ); ?>_service_&lt;?php echo esc_attr( $service ); ?>">
+				&lt;label for="wpt_&lt;?php echo esc_attr( $type ); ?>_service_&lt;?php echo esc_attr( $service ); ?>">&lt;img src='&lt;?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='&lt;?php echo esc_html( ucfirst( $service ) ); ?>' />&lt;/label>
 			&lt;/li>
 			&lt;?php
 		} elseif ( $connected &amp;&amp; ! wpt_service_enabled( false, $service ) ) {
 			?>
 			&lt;li class="disabled-service">
-				&lt;input disabled type="checkbox" value="&lt;?php esc_attr( $service ); ?>" name="_wpt_omit_services[]" id="wpt_omit_service_&lt;?php echo esc_attr( $service ); ?>">
-				&lt;label for="wpt_omit_service_&lt;?php echo esc_attr( $service ); ?>">&lt;img src='&lt;?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='&lt;?php echo esc_html( ucfirst( $service ) ); ?>' />&lt;/label>
+				&lt;input disabled type="checkbox" value="&lt;?php esc_attr( $service ); ?>" name="_wpt_&lt;?php echo esc_attr( $type ); ?>_services[]" id="wpt_&lt;?php echo esc_attr( $type ); ?>_service_&lt;?php echo esc_attr( $service ); ?>">
+				&lt;label for="wpt_&lt;?php echo esc_attr( $type ); ?>_service_&lt;?php echo esc_attr( $service ); ?>">&lt;img src='&lt;?php echo esc_url( wpt_get_svg( $service ) ); ?>' alt='&lt;?php echo esc_html( ucfirst( $service ) ); ?>' />&lt;/label>
 			&lt;/li>
 			&lt;?php
 		}

@@ -117,6 +117,10 @@ function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = 
 	if ( empty( $post ) ) {
 		$post = wpt_post_info( $post_ID );
 	}
+	$variant = get_post_meta( $post_ID, '_wpt_post_template_' . $service, true );
+	if ( '' !== $variant ) {
+		$update = $variant;
+	}
 	// create full unconditional post update - prior to truncation.
 	// order matters; arrays have to be ordered the same way.
 	$tags   = array_map( 'wpt_make_tag', wpt_tags() );
