@@ -52,7 +52,7 @@ function wpt_ajax_tweet() {
 		// The interface has you choose what you want; the DB represents what's omitted.
 		foreach ( array_keys( $services ) as $service ) {
 			if ( ! in_array( $service, $omitted, true ) ) {
-				$omit[] = $service; 
+				$omit[] = $service;
 			}
 		}
 		update_post_meta( $post_ID, '_wpt_omit_services', $omit );

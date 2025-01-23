@@ -1081,11 +1081,11 @@ function wpt_save_post( $id, $post ) {
 			update_post_meta( $id, '_wpt_post_this', $post_default );
 		}
 		$omit_services = ( isset( $_POST['_wpt_omit_services'] ) ) ? $_POST['_wpt_omit_services'] : array();
-		$services = wpt_check_connections( false, true );
+		$services      = wpt_check_connections( false, true );
 		// The interface has you choose what you want; the DB represents what's omitted.
 		foreach ( array_keys( $services ) as $service ) {
 			if ( ! in_array( $service, $omit_services, true ) ) {
-				$omit[] = $service; 
+				$omit[] = $service;
 			}
 		}
 		update_post_meta( $id, '_wpt_omit_services', $omit );
