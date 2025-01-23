@@ -47,6 +47,15 @@ function wpt_ajax_tweet() {
 		if ( $image_id ) {
 			update_post_meta( $post_ID, '_wpt_custom_image', $image_id );
 		}
+		$omitted  = ( isset( $_REQUEST['omit'] ) ) ? map_deep( wp_unslash( $_REQUEST['omit'] ), 'sanitize_text_field' ) : array();
+		$services = wpt_check_connections( false, true );
+		// The interface has you choose what you want; the DB represents what's omitted.
+		foreach ( array_keys( $services ) as $service ) {
+			if ( ! in_array( $service, $omitted, true ) ) {
+				$omit[] = $service; 
+			}
+		}
+		update_post_meta( $post_ID, '_wpt_omit_services', $omit );
 		$type           = get_post_type( $post_ID );
 		$default        = ( isset( $options[ $type ]['post-edited-text'] ) ) ? $options[ $type ]['post-edited-text'] : '';
 		$sentence       = ( isset( $_REQUEST['tweet_text'] ) && ! empty( $_REQUEST['tweet_text'] ) ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['tweet_text'] ) ) : $default;
@@ -87,7 +96,7 @@ function wpt_ajax_tweet() {
 			}
 		}
 	} else {
-		echo esc_html__( 'You are not authorized to perform this action', 'wp-to-twitter' );
+		esc_html_e( 'You are not authorized to perform this action', 'wp-to-twitter' );
 	}
 	die;
 }
