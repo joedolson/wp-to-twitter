@@ -466,6 +466,7 @@ function wpt_display_status_template( $post, $options ) {
  * Get service selector checkboxes.
  *
  * @param WP_Post $post Post object.
+ * @param string  $type Which set of checkboxes to fetch.
  */
 function wpt_display_metabox_service_picker( $post, $type = 'omit' ) {
 	$services  = wpt_check_connections( false, true );
@@ -473,7 +474,7 @@ function wpt_display_metabox_service_picker( $post, $type = 'omit' ) {
 	$class     = ( 'omit' === $type ) ? 'screen-reader-text' : 'variant-selector';
 	$legend    = ( 'omit' === $type ) ? __( 'Select services', 'wp-to-twitter' ) : __( 'Add update variant', 'wp-to-twitter' );
 	?>
-	<fieldset>
+	<fieldset class="service-selection-<?php echo esc_attr( $type ); ?>">
 		<legend class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $legend ); ?></legend>
 		<ul class="service-selector">
 	<?php
