@@ -271,6 +271,9 @@ function wpt_show_history( $post_id ) {
 						&lt;li>&lt;input type='hidden' name='_jd_wp_twitter[]' value='&lt;?php echo esc_attr( $previous_tweet ); ?>' />
 					&lt;/li>
 						&lt;?php
+					} else {
+						// If this is empty, remove it.
+						delete_post_meta( $post_id, '_jd_wp_twitter', $previous_tweet );
 					}
 				}
 				?>
@@ -282,7 +285,7 @@ function wpt_show_history( $post_id ) {
 			&lt;h4 class='wpt-failed-updates'>&lt;?php esc_html_e( 'Failed Updates', 'wp-to-twitter' ); ?>&lt;/h4>
 			&lt;ul class="striped">
 				&lt;?php
-				foreach ( $failed_tweets as $key => $failed_tweet ) {
+				foreach ( $failed_tweets as $failed_tweet ) {
 					$has_history = true;
 					if ( ! empty( $failed_tweet ) ) {
 						$ft     = $failed_tweet['sentence'];
