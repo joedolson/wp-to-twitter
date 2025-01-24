@@ -245,6 +245,9 @@ function wpt_show_history( $post_id ) {
 						<li><input type='hidden' name='_jd_wp_twitter[]' value='<?php echo esc_attr( $previous_tweet ); ?>' />
 					</li>
 						<?php
+					} else {
+						// If this is empty, remove it.
+						delete_post_meta( $post_id, '_jd_wp_twitter', $previous_tweet );
 					}
 				}
 				?>
@@ -256,7 +259,7 @@ function wpt_show_history( $post_id ) {
 			<h4 class='wpt-failed-updates'><?php esc_html_e( 'Failed Updates', 'wp-to-twitter' ); ?></h4>
 			<ul class="striped">
 				<?php
-				foreach ( $failed_tweets as $key => $failed_tweet ) {
+				foreach ( $failed_tweets as $failed_tweet ) {
 					$has_history = true;
 					if ( ! empty( $failed_tweet ) ) {
 						$ft     = $failed_tweet['sentence'];

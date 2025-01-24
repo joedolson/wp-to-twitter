@@ -1091,19 +1091,19 @@ function wpt_format_error( $data ) {
  */
 function wpt_text_linkify( $text, $service = 'bluesky' ) {
 	switch ( $service ) {
-		case 'bluesky' :
+		case 'bluesky':
 			$profile_url = 'https://bsky.app/profile';
 			$hash_url    = 'https://bsky.app/hashtag/';
 			break;
-		case 'mastodon' :
+		case 'mastodon':
 			$profile_url = '' . '/@';
 			$hash_url    = '' . '/tags/';
 			break;
-		case 'x' :
+		case 'x':
 			$profile_url = 'https://x.com';
 			$hash_url    = 'https://x.com/search?q=%23';
 			break;
-		default :
+		default:
 			$profile_url = 'https://bsky.app/profile';
 			$hash_url    = 'https://bsky.app/hashtag/';
 	}
