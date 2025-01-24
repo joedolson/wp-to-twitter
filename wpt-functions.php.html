@@ -1105,7 +1105,42 @@ function wpt_format_error( $data ) {
 	}
 
 	return '&lt;ul>' . $output . '&lt;/ul>';
-}</code></pre>
+}
+
+/**
+ * Adds links, mentions, and hashtags to status updates.
+ *
+ * @param string $text A string representing the content of a status update.
+ * @param string $service Service being parsed for. Default Bluesky.
+ *
+ * @return string Linkified tweet content
+ */
+function wpt_text_linkify( $text, $service = 'bluesky' ) {
+	switch ( $service ) {
+		case 'bluesky' :
+			$profile_url = 'https://bsky.app/profile';
+			$hash_url    = 'https://bsky.app/hashtag/';
+			break;
+		case 'mastodon' :
+			$profile_url = '' . '/@';
+			$hash_url    = '' . '/tags/';
+			break;
+		case 'x' :
+			$profile_url = 'https://x.com';
+			$hash_url    = 'https://x.com/search?q=%23';
+			break;
+		default :
+			$profile_url = 'https://bsky.app/profile';
+			$hash_url    = 'https://bsky.app/hashtag/';
+	}
+
+	$text = html_entity_decode( make_clickable( $text ) );
+	$text = preg_replace( '/@(\w+)/', '&lt;a href="' . $profile_url . '/\\1" rel="nofollow">@\\1&lt;/a>', $text );
+	$text = preg_replace( '/#(\w+)/', '&lt;a href="' . $hash_url . '\\1" rel="nofollow">#\\1&lt;/a>', $text );
+
+	return $text;
+}
+</code></pre>
         </article>
     </section>
 

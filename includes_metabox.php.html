@@ -234,7 +234,7 @@ function wpt_show_history( $post_id ) {
 						?>
 						&lt;li>
 							&lt;div class="wpt-status-updated">
-								&lt;?php echo esc_html( $previous_tweet ); ?>
+								&lt;?php echo wp_kses_post( wpt_text_linkify( $previous_tweet, 'bluesky' ) ); ?>
 							&lt;/div>
 							&lt;ul class="wpt-intents">
 						&lt;?php
@@ -282,12 +282,17 @@ function wpt_show_history( $post_id ) {
 			&lt;h4 class='wpt-failed-updates'>&lt;?php esc_html_e( 'Failed Updates', 'wp-to-twitter' ); ?>&lt;/h4>
 			&lt;ul class="striped">
 				&lt;?php
-				foreach ( $failed_tweets as $failed_tweet ) {
+				foreach ( $failed_tweets as $key => $failed_tweet ) {
 					$has_history = true;
 					if ( ! empty( $failed_tweet ) ) {
 						$ft     = $failed_tweet['sentence'];
 						$reason = $failed_tweet['code'];
 						$error  = $failed_tweet['error'];
+						if ( ! $ft ) {
+							// If this is empty, remove it.
+							delete_post_meta( $post_id, '_wpt_failed', $failed_tweet );
+							continue;
+						}
 						?>
 						&lt;li>
 							&lt;code>
