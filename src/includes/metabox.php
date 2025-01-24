@@ -208,7 +208,7 @@ function wpt_show_history( $post_id ) {
 						?>
 						<li>
 							<div class="wpt-status-updated">
-								<?php echo esc_html( $previous_tweet ); ?>
+								<?php echo wp_kses_post( wpt_text_linkify( $previous_tweet, 'bluesky' ) ); ?>
 							</div>
 							<ul class="wpt-intents">
 						<?php
@@ -256,12 +256,17 @@ function wpt_show_history( $post_id ) {
 			<h4 class='wpt-failed-updates'><?php esc_html_e( 'Failed Updates', 'wp-to-twitter' ); ?></h4>
 			<ul class="striped">
 				<?php
-				foreach ( $failed_tweets as $failed_tweet ) {
+				foreach ( $failed_tweets as $key => $failed_tweet ) {
 					$has_history = true;
 					if ( ! empty( $failed_tweet ) ) {
 						$ft     = $failed_tweet['sentence'];
 						$reason = $failed_tweet['code'];
 						$error  = $failed_tweet['error'];
+						if ( ! $ft ) {
+							// If this is empty, remove it.
+							delete_post_meta( $post_id, '_wpt_failed', $failed_tweet );
+							continue;
+						}
 						?>
 						<li>
 							<code>
