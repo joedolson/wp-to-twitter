@@ -44,6 +44,11 @@
 	display: block;
 }
 
+#wp2t .wpt-intents a:hover {
+	outline: 2px solid;
+	background: #fff;
+}
+
 #wp2t .wpt-intents img {
 	width: 20px;
 	height: auto;
