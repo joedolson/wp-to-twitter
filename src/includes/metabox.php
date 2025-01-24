@@ -186,6 +186,7 @@ function wpt_show_history( $post_id ) {
 	$previous_tweets = get_post_meta( $post_id, '_jd_wp_twitter', true );
 	$failed_tweets   = get_post_meta( $post_id, '_wpt_failed' );
 
+	// If only X is enabled, that will be used. Otherwise prefer one of the others.
 	$connections = wpt_check_connections( false, true );
 	if ( $connections['bluesky'] ) {
 		$service = 'bluesky';
