@@ -212,6 +212,15 @@ function wpt_show_history( $post_id ) {
 	$previous_tweets = get_post_meta( $post_id, '_jd_wp_twitter', true );
 	$failed_tweets   = get_post_meta( $post_id, '_wpt_failed' );
 
+	// If only X is enabled, that will be used. Otherwise prefer one of the others.
+	$connections = wpt_check_connections( false, true );
+	if ( $connections['bluesky'] ) {
+		$service = 'bluesky';
+	} elseif ( $connections['mastodon'] ) {
+		$service = 'mastodon';
+	} else {
+		$service = 'x';
+	}
 	if ( ! is_array( $previous_tweets ) &amp;&amp; '' !== $previous_tweets ) {
 		$previous_tweets = array( 0 => $previous_tweets );
 	}
@@ -234,7 +243,7 @@ function wpt_show_history( $post_id ) {
 						?>
 						&lt;li>
 							&lt;div class="wpt-status-updated">
-								&lt;?php echo wp_kses_post( wpt_text_linkify( $previous_tweet, 'bluesky' ) ); ?>
+								&lt;?php echo wp_kses_post( wpt_text_linkify( $previous_tweet, $service ) ); ?>
 							&lt;/div>
 							&lt;ul class="wpt-intents">
 						&lt;?php
@@ -305,7 +314,7 @@ function wpt_show_history( $post_id ) {
 								?>
 							&lt;/code>
 							&lt;div class="wpt-status-updated">
-								&lt;?php echo esc_html( $ft ); ?>
+								&lt;?php echo wp_kses_post( wpt_text_linkify( $ft, $service ) ); ?>
 							&lt;/div>
 							&lt;ul class="wpt-intents">
 						&lt;?php
