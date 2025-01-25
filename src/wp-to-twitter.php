@@ -988,11 +988,11 @@ function wpt_admin_scripts() {
 	$base_url      = 'js/base.min.js';
 	$tabs_url      = 'js/tabs.min.js';
 	if ( SCRIPT_DEBUG ) {
-		$wpt_version   .= '-' . wp_rand( 10000, 99999 );
-		$charcount_url  = 'js/charcount.js';
-		$ajax_url       = 'js/ajax.js';
-		$base_url       = 'js/base.js';
-		$tabs_url       = 'js/tabs.js';
+		$wpt_version  .= '-' . wp_rand( 10000, 99999 );
+		$charcount_url = 'js/charcount.js';
+		$ajax_url      = 'js/ajax.js';
+		$base_url      = 'js/base.js';
+		$tabs_url      = 'js/tabs.js';
 	}
 	wp_register_script( 'wpt.charcount', plugins_url( $charcount_url, __FILE__ ), array( 'jquery' ), $wpt_version, true );
 	if ( 'post' === $current_screen->base || 'xposter-pro_page_wp-to-twitter-schedule' === $current_screen->base ) {
