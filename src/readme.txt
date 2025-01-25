@@ -7,7 +7,7 @@ Tested up to: 6.7
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 4.3.2
+Stable tag: 5.0.0-beta1
 
 Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -58,6 +58,23 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 5.0.0-beta1 =
+
+* Feature: Ability to disable connected services without disconnecting.
+* Feature: Select which services you wish to send a given update to.
+* Feature: Pass custom update text for each connected service.
+* Feature: Define an excerpt length unique to each service.
+* Change: Extend default excerpt length.
+* Change: Always defer template execution until status update is sent.
+* Change: Make character counting messages indicate which service limit is reached.
+* Bug fix: Make AJAX submissions aware of more metabox settings.
+* Improved error handling.
+* Design updates.
+* Move XPoster Pro specific code into XPoster Pro package.
+* More code documentation.
+* Update references to Tweets to be service independent.
+* Significant structural reorganization.
 
 = 4.3.2 =
 

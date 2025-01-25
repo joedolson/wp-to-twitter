@@ -1,6 +1,6 @@
 {
   "name": "wp-to-twitter",
-  "version": "4.3.2",
+  "version": "5.0.0-beta1",
   "private": true,
   "description": "Bluesky/Mastodon WordPress plug-in.",
   "author": "Joe Dolson",
