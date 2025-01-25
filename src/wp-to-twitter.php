@@ -78,7 +78,7 @@ require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-truncate.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php';
 
-define( 'XPOSTER_VERSION', '4.3.2' );
+define( 'XPOSTER_VERSION', '5.0.0-beta1' );
 
 register_activation_hook( __FILE__, 'wpt_check_version' );
 /**
