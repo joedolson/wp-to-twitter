@@ -64,15 +64,15 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/post-info.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/ajax.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-functions.php';
 // Service post handlers.
-require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-twitter.php';
-require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-mastodon.php';
-require_once plugin_dir_path( __FILE__ ) . 'wpt-post-to-bluesky.php';
+require_once plugin_dir_path( __FILE__ ) . 'services/x/post.php';
+require_once plugin_dir_path( __FILE__ ) . 'services/mastodon/post.php';
+require_once plugin_dir_path( __FILE__ ) . 'services/bluesky/post.php';
 // URL Shortening.
 require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-shorteners.php';
 // Service settings.
-require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-x.php';
-require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-mastodon.php';
-require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-bluesky.php';
+require_once plugin_dir_path( __FILE__ ) . 'services/x/settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'services/mastodon/settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'services/bluesky/settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php';
 // Template generation.
 require_once plugin_dir_path( __FILE__ ) . 'wpt-truncate.php';

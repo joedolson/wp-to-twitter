@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
 
-require_once plugin_dir_path( __FILE__ ) . 'classes/class-wpt-bluesky-api.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wpt-bluesky-api.php';
 
 /**
  * Upload media to Bluesky API.
