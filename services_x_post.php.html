@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: services/x/post.php - XPoster Hook Doumentation</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles-docs.css?v=0.1.1">
+</head>
+
+<body>
+
+<div id="main">
+
+    <header><h1 class="page-title">Source: services/x/post.php</h1></header>
+	<main>
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;?php
+/**
+ * Send API queries for a post to X.com
+ *
+ * @category Post from WordPress.
+ * @package  XPoster
+ * @author   Joe Dolson
+ * @license  GPLv2 or later
+ * @link     https://www.xposter.com
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly.
+
+/**
+ * Upload media to Twitter API.
+ *
+ * @param object   $connection Twitter connection.
+ * @param int|bool $auth Connection context.
+ * @param int      $attachment Attachment ID.
+ * @param array    $status Array of posting information.
+ * @param int      $id Post ID.
+ *
+ * @return array
+ */
+function wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id ) {
+	$text = $status['text'];
+	if ( $connection ) {
+		if ( $attachment ) {
+			$allowed = wpt_check_mime_type( $attachment, 'x' );
+			if ( ! $allowed ) {
+				wpt_mail( 'Media upload mime type not accepted by X', get_post_mime_type( $attachment ), $id );
+
+				return $status;
+			}
+			$attachment_data = wpt_image_binary( $attachment, $id );
+			// Return early if fails to fetch image binary.
+			if ( ! $attachment_data ) {
+				return $status;
+			}
+			$media_info = $connection->uploadMedia()->upload( $attachment_data );
+			$status     = array(
+				'text'  => $text,
+				'media' => array(
+					'media_ids' => array(
+						$media_info['media_id_string'],
+					),
+				),
+			);
+			// noweh/twitter-api-v2-php doesn't currently support metadata.
+			$ct       = wpt_oauth_connection( $auth, '1.1' );
+			$media_id = $ct->media(
+				'https://upload.twitter.com/1.1/media/metadata/create.json',
+				array(
+					'auth'       => $auth,
+					'media'      => $media_info['media_id_string'],
+					'attachment' => $attachment,
+				)
+			);
+			wpt_mail( 'Media Uploaded (X)', "$auth, $media_id, $attachment", $id );
+		}
+	}
+	return $status;
+}
+
+/**
+ * Post status to Twitter.
+ *
+ * @param object $connection Connection to Twitter.
+ * @param mixed  $auth Main site or specific author ID.
+ * @param int    $id Post ID.
+ * @param array  $status Array of information sent to Twitter.
+ *
+ * @return array
+ */
+function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
+	/**
+	 * Turn on staging mode. Staging mode is automatically turned on if WPT_STAGING_MODE constant is defined.
+	 *
+	 * @hook wpt_staging_mode
+	 * @param {bool}     $staging_mode True to enable staging mode.
+	 * @param {int|bool} $auth Current author.
+	 * @param {int}      $id Post ID.
+	 * @param {string}   $service Service being put into staging.
+	 *
+	 * @return {bool}
+	 */
+	$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id, 'x' );
+	$notice       = '';
+	if ( ( defined( 'WPT_STAGING_MODE' ) &amp;&amp; true === WPT_STAGING_MODE ) || $staging_mode ) {
+		// if in staging mode, we'll behave as if the update succeeded, but not send it.
+		$connection = true;
+		$success    = true;
+		$http_code  = 200;
+		$notice     = __( 'In Staging Mode:', 'wp-to-twitter' ) . ' ' . $status['text'];
+		$tweet_id   = false;
+	} else {
+		/**
+		 * Filter the approval to send a Tweet.
+		 *
+		 * @hook wpt_do_tweet
+		 * @param {bool}     $do_tweet Return false to cancel this Tweet.
+		 * @param {int|bool} $auth Author.
+		 * @param {int}      $id Post ID.
+		 * @param {string}   $twit Tweet text.
+		 *
+		 * @return {bool}
+		 */
+		$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id, $status['text'] );
+		$tweet_id = false;
+		$success  = false;
+		if ( $do_tweet ) {
+			try {
+				$return     = $connection->tweet()->create()->performRequest( $status, true );
+				$http_code  = 200;
+				$success    = true;
+				$tweet_id   = $return->data->id;
+				$headers    = $return->headers;
+				$rate_limit = array(
+					'rate-limit'    => $headers['x-rate-limit-remaining'],
+					'rate-reset'    => $headers['x-rate-limit-reset'],
+					'rate-24'       => $headers['x-app-limit-24hour-limit'],
+					'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
+				);
+				$notice     = __( 'Sent to X.com', 'wp-to-twitter' );
+				update_option( 'wpt_app_limit', $rate_limit );
+			} catch ( RequestException $e ) {
+				// Get Guzzle exception response.
+				if ( method_exists( $e, 'getResponse' ) ) {
+					$response   = $e->getResponse();
+					$headers    = $response->getHeaders();
+					$rate_limit = array(
+						'rate-limit'    => $headers['x-rate-limit-remaining'],
+						'rate-reset'    => $headers['x-rate-limit-reset'],
+						'rate-24'       => $headers['x-app-limit-24hour-limit'],
+						'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
+					);
+					update_option( 'wpt_app_limit', $rate_limit );
+					$http_code = $response->getStatusCode();
+					$notice    = __( 'Request Exception occurred when sending to X.com', 'wp-to-twitter' );
+					wpt_mail( 'X RequestException', wpt_format_error( $response ), $id );
+				}
+			} catch ( Exception $e ) {
+				if ( method_exists( $e, 'getMessage' ) ) {
+					$error     = json_decode( $e->getMessage() );
+					$http_code = $e->getCode();
+					$notice    = $error->title . ': ' . $error->detail;
+					wpt_mail( 'X Exception', wpt_format_error( $error ), $id );
+				} else {
+					$http_code = 405;
+					$notice    = __( 'Unhandled response', 'wp-to-twitter' );
+				}
+			}
+		} else {
+			$http_code = '000';
+			$notice    = __( 'XPost Canceled by custom filter.', 'wp-to-twitter' );
+		}
+	}
+
+	return array(
+		'return'    => $success,
+		'http'      => $http_code,
+		'notice'    => $notice,
+		'status_id' => $tweet_id,
+		'status'    => $status['text'],
+		'service'   => 'x',
+	);
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+	</main>
+    <footer>
+		<a href="https://docs.joedolson.com/">XPoster User Documentation</a> &bull;
+		<a href="https://github.com/joedolson/wp-to-twiter/">XPoster on GitHub</a> &bull;
+		<a href="https://www.xposterpro.com/">Buy XPoster Pro</a>
+	</footer>
+
+	
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Actions</h3><ul><li><a href="wpt_after_meta_template_box.html">wpt_after_meta_template_box</a></li><li><a href="wpt_insert_post.html">wpt_insert_post</a></li><li><a href="wpt_post_to_service.html">wpt_post_to_service</a></li><li><a href="wpt_tweet_failed.html">wpt_tweet_failed</a></li><li><a href="wpt_tweet_posted.html">wpt_tweet_posted</a></li></ul><h3>Filters</h3><ul><li><a href="wpt_allow_copy_meta.html">wpt_allow_copy_meta</a></li><li><a href="wpt_allowed_post_types.html">wpt_allowed_post_types</a></li><li><a href="wpt_auto_tweet_allowed.html">wpt_auto_tweet_allowed</a></li><li><a href="wpt_custom_shortcode.html">wpt_custom_shortcode</a></li><li><a href="wpt_custom_tag.html">wpt_custom_tag</a></li><li><a href="wpt_custom_truncate.html">wpt_custom_truncate</a></li><li><a href="wpt_default_rate_limit.html">wpt_default_rate_limit</a></li><li><a href="wpt_do_bluesky_post.html">wpt_do_bluesky_post</a></li><li><a href="wpt_do_shortening.html">wpt_do_shortening</a></li><li><a href="wpt_do_toot.html">wpt_do_toot</a></li><li><a href="wpt_do_tweet.html">wpt_do_tweet</a></li><li><a href="wpt_edit_sensitivity.html">wpt_edit_sensitivity</a></li><li><a href="wpt_exclude_post_types.html">wpt_exclude_post_types</a></li><li><a href="wpt_filter_bluesky_status.html">wpt_filter_bluesky_status</a></li><li><a href="wpt_filter_mastodon_status.html">wpt_filter_mastodon_status</a></li><li><a href="wpt_filter_post_data.html">wpt_filter_post_data</a></li><li><a href="wpt_filter_truncated_value.html">wpt_filter_truncated_value</a></li><li><a href="wpt_hash_source.html">wpt_hash_source</a></li><li><a href="wpt_max_length.html">wpt_max_length</a></li><li><a href="wpt_post_attachment.html">wpt_post_attachment</a></li><li><a href="wpt_post_info.html">wpt_post_info</a></li><li><a href="wpt_recent_tweet_threshold.html">wpt_recent_tweet_threshold</a></li><li><a href="wpt_service_enabled.html">wpt_service_enabled</a></li><li><a href="wpt_settings_tabs_pages.html">wpt_settings_tabs_pages</a></li><li><a href="wpt_shorten_link.html">wpt_shorten_link</a></li><li><a href="wpt_should_block_status.html">wpt_should_block_status</a></li><li><a href="wpt_show_last_update.html">wpt_show_last_update</a></li><li><a href="wpt_staging_mode.html">wpt_staging_mode</a></li><li><a href="wpt_tag_default.html">wpt_tag_default</a></li><li><a href="wpt_tags.html">wpt_tags</a></li><li><a href="wpt_tweet_sentence.html">wpt_tweet_sentence</a></li><li><a href="wpt_tweet_this_edit.html">wpt_tweet_this_edit</a></li><li><a href="wpt_twitter_category_descs.html">wpt_twitter_category_descs</a></li><li><a href="wpt_twitter_category_names.html">wpt_twitter_category_names</a></li><li><a href="wpt_upload_image_size.html">wpt_upload_image_size</a></li><li><a href="wpt_upload_media.html">wpt_upload_media</a></li><li><a href="wpt_uploaded_image_alt.html">wpt_uploaded_image_alt</a></li><li><a href="wpt_use_featured_image.html">wpt_use_featured_image</a></li><li><a href="wpt_user_meta_shortcode.html">wpt_user_meta_shortcode</a></li><li><a href="wpt_utm_medium.html">wpt_utm_medium</a></li><li><a href="wpt_utm_source.html">wpt_utm_source</a></li><li><a href="wptt_shorten_link.html">wptt_shorten_link</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

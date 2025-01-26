@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: wpt-post-to-twitter.php - XPoster Hook Doumentation</title>
+    <title>Source: services/mastodon/post.php - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Source: wpt-post-to-twitter.php</h1></header>
+    <header><h1 class="page-title">Source: services/mastodon/post.php</h1></header>
 	<main>
     
 
@@ -26,7 +26,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>&lt;?php
 /**
- * Send API queries for a post to X.com
+ * Send API queries for a post to Mastodon instance.
  *
  * @category Post from WordPress.
  * @package  XPoster
@@ -39,10 +39,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly.
 
+require_once plugin_dir_path( __FILE__ ) . 'class-wpt-mastodon-api.php';
+
 /**
- * Upload media to Twitter API.
+ * Upload media to Mastodon API.
  *
- * @param object   $connection Twitter connection.
+ * @param object   $connection Mastodon connection.
  * @param int|bool $auth Connection context.
  * @param int      $attachment Attachment ID.
  * @param array    $status Array of posting information.
@@ -50,57 +52,64 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array
  */
-function wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id ) {
-	$text = $status['text'];
+function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id ) {
 	if ( $connection ) {
 		if ( $attachment ) {
-			$allowed = wpt_check_mime_type( $attachment, 'x' );
+			$allowed = wpt_check_mime_type( $attachment, 'mastodon' );
 			if ( ! $allowed ) {
-				wpt_mail( 'Media upload mime type not accepted by X', get_post_mime_type( $attachment ), $id );
+				wpt_mail( 'Media upload mime type not accepted by Mastodon', get_post_mime_type( $attachment ), $id );
 
 				return $status;
 			}
-			$attachment_data = wpt_image_binary( $attachment, $id );
-			// Return early if fails to fetch image binary.
+			$alt_text = get_post_meta( $attachment, '_wp_attachment_image_alt', true );
+			/**
+			 * Add alt attributes to uploaded images.
+			 *
+			 * @hook wpt_uploaded_image_alt
+			 *
+			 * @param {string} $alt_text Text stored in media library as alt.
+			 * @param {int}    $attachment Attachment ID.
+			 *
+			 * @return {string}
+			 */
+			$alt_text        = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
+			$attachment_data = wpt_image_binary( $attachment, $id, 'mastodon' );
+			// Return without attempting if fails to fetch image object.
 			if ( ! $attachment_data ) {
 				return $status;
 			}
-			$media_info = $connection->uploadMedia()->upload( $attachment_data );
-			$status     = array(
-				'text'  => $text,
-				'media' => array(
-					'media_ids' => array(
-						$media_info['media_id_string'],
-					),
-				),
+			$request = array(
+				'file'        => $attachment_data,
+				'description' => $alt_text,
 			);
-			// noweh/twitter-api-v2-php doesn't currently support metadata.
-			$ct       = wpt_oauth_connection( $auth, '1.1' );
-			$media_id = $ct->media(
-				'https://upload.twitter.com/1.1/media/metadata/create.json',
-				array(
-					'auth'       => $auth,
-					'media'      => $media_info['media_id_string'],
-					'attachment' => $attachment,
-				)
-			);
-			wpt_mail( 'Media Uploaded (X)', "$auth, $media_id, $attachment", $id );
+
+			$response = $connection->upload_media( $request );
+			if ( isset( $response['id'] ) ) {
+				$media_id              = $response['id'];
+				$status['media_ids[]'] = $media_id;
+
+				wpt_mail( 'Media Uploaded (Mastodon)', "User: $auth, Mastodon Media ID: $media_id, Attachment ID: $attachment" . wpt_format_error( $response ) . wpt_format_error( $request ), $id );
+			} else {
+				wpt_mail( 'Media Upload Failed (Mastodon)', "User: $auth, Attachment ID: $attachment" . wpt_format_error( $response ), $id );
+			}
 		}
 	}
+
 	return $status;
 }
 
 /**
- * Post status to Twitter.
+ * Post status to Mastodon.
  *
- * @param object $connection Connection to Twitter.
+ * @param object $connection Connection to Mastodon.
  * @param mixed  $auth Main site or specific author ID.
  * @param int    $id Post ID.
- * @param array  $status Array of information sent to Twitter.
+ * @param array  $status Array of information sent to Mastodon.
  *
  * @return array
  */
-function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
+function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
+	$notice = '';
 	/**
 	 * Turn on staging mode. Staging mode is automatically turned on if WPT_STAGING_MODE constant is defined.
 	 *
@@ -112,75 +121,59 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 	 *
 	 * @return {bool}
 	 */
-	$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id, 'x' );
-	$notice       = '';
+	$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id, 'mastodon' );
+	$status_text  = $status['text'];
 	if ( ( defined( 'WPT_STAGING_MODE' ) &amp;&amp; true === WPT_STAGING_MODE ) || $staging_mode ) {
 		// if in staging mode, we'll behave as if the update succeeded, but not send it.
 		$connection = true;
 		$success    = true;
 		$http_code  = 200;
-		$notice     = __( 'In Staging Mode:', 'wp-to-twitter' ) . ' ' . $status['text'];
-		$tweet_id   = false;
+		$notice     = __( 'In Staging Mode:', 'wp-to-twitter' ) . ' ' . $status_text;
+		$status_id  = false;
 	} else {
 		/**
-		 * Filter the approval to send a Tweet.
+		 * Filter the approval to send a Mastodon Toot.
 		 *
-		 * @hook wpt_do_tweet
-		 * @param {bool}     $do_tweet Return false to cancel this Tweet.
+		 * @hook wpt_do_toot
+		 * @param {bool}     $do_toot Return false to cancel this Toot.
 		 * @param {int|bool} $auth Author.
 		 * @param {int}      $id Post ID.
-		 * @param {string}   $twit Tweet text.
+		 * @param {string}   $text Status update text.
 		 *
 		 * @return {bool}
 		 */
-		$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id, $status['text'] );
-		$tweet_id = false;
-		$success  = false;
-		if ( $do_tweet ) {
-			try {
-				$return     = $connection->tweet()->create()->performRequest( $status, true );
-				$http_code  = 200;
-				$success    = true;
-				$tweet_id   = $return->data->id;
-				$headers    = $return->headers;
-				$rate_limit = array(
-					'rate-limit'    => $headers['x-rate-limit-remaining'],
-					'rate-reset'    => $headers['x-rate-limit-reset'],
-					'rate-24'       => $headers['x-app-limit-24hour-limit'],
-					'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
-				);
-				$notice     = __( 'Sent to X.com', 'wp-to-twitter' );
-				update_option( 'wpt_app_limit', $rate_limit );
-			} catch ( RequestException $e ) {
-				// Get Guzzle exception response.
-				if ( method_exists( $e, 'getResponse' ) ) {
-					$response   = $e->getResponse();
-					$headers    = $response->getHeaders();
-					$rate_limit = array(
-						'rate-limit'    => $headers['x-rate-limit-remaining'],
-						'rate-reset'    => $headers['x-rate-limit-reset'],
-						'rate-24'       => $headers['x-app-limit-24hour-limit'],
-						'rate-24-reset' => $headers['x-app-limit-24hour-reset'],
-					);
-					update_option( 'wpt_app_limit', $rate_limit );
-					$http_code = $response->getStatusCode();
-					$notice    = __( 'Request Exception occurred when sending to X.com', 'wp-to-twitter' );
-					wpt_mail( 'X RequestException', wpt_format_error( $response ), $id );
-				}
-			} catch ( Exception $e ) {
-				if ( method_exists( $e, 'getMessage' ) ) {
-					$error     = json_decode( $e->getMessage() );
-					$http_code = $e->getCode();
-					$notice    = $error->title . ': ' . $error->detail;
-					wpt_mail( 'X Exception', wpt_format_error( $error ), $id );
-				} else {
-					$http_code = 405;
-					$notice    = __( 'Unhandled response', 'wp-to-twitter' );
-				}
+		$do_post   = apply_filters( 'wpt_do_toot', true, $auth, $id, $status_text );
+		$status_id = false;
+		$success   = false;
+		// Change status array to Mastodon expectation.
+		$status['status'] = $status_text;
+		unset( $status['text'] );
+		/**
+		 * Filter status array for Mastodon.
+		 *
+		 * @hook wpt_filter_mastodon_status
+		 *
+		 * @param {array}    $status Array of parameters sent to Mastodon.
+		 * @param {int}      $post Post ID being tweeted.
+		 * @param {int|bool} $auth Authoring context.
+		 *
+		 * @return {array}
+		 */
+		$status = apply_filters( 'wpt_filter_mastodon_status', $status, $id, $auth );
+		if ( $do_post ) {
+			$return = $connection->post_status( $status );
+			if ( isset( $return['id'] ) ) {
+				$success   = true;
+				$http_code = 200;
+				$status_id = $return['id'];
+				$notice   .= __( 'Sent to Mastodon.', 'wp-to-twitter' );
+			} else {
+				$http_code = 401;
+				$notice   .= __( 'Mastodon status update failed.', 'wp-to-twitter' );
 			}
 		} else {
 			$http_code = '000';
-			$notice    = __( 'XPost Canceled by custom filter.', 'wp-to-twitter' );
+			$notice   .= __( 'Mastodon status update cancelled by custom filter.', 'wp-to-twitter' );
 		}
 	}
 
@@ -188,10 +181,44 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 		'return'    => $success,
 		'http'      => $http_code,
 		'notice'    => $notice,
-		'status_id' => $tweet_id,
-		'status'    => $status['text'],
-		'service'   => 'x',
+		'status_id' => $status_id,
+		'status'    => $status_text,
+		'service'   => 'mastodon',
 	);
+}
+
+/**
+ * Establish an OAuth client to Mastodon.
+ *
+ * @param mixed int|boolean $auth Current author context.
+ * @param array             $verify Array of credentials to validate.
+ *
+ * @return mixed $mastodon or false
+ */
+function wpt_mastodon_connection( $auth = false, $verify = false ) {
+	if ( ! empty( $verify ) ) {
+		$token    = $verify['token'];
+		$instance = $verify['instance'];
+	} else {
+		if ( ! $auth ) {
+			$token    = get_option( 'wpt_mastodon_token' );
+			$instance = get_option( 'wpt_mastodon_instance' );
+		} else {
+			$token    = get_user_meta( $auth, 'wpt_mastodon_token', true );
+			$instance = get_user_meta( $auth, 'wpt_mastodon_instance', true );
+		}
+	}
+	$mastodon = false;
+	if ( $token &amp;&amp; $instance ) {
+		$mastodon = new Wpt_Mastodon_Api( $token, $instance );
+		if ( $verify ) {
+			$verify = $mastodon->verify();
+
+			return $verify;
+		}
+	}
+
+	return $mastodon;
 }
 </code></pre>
         </article>
