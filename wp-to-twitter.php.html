@@ -331,7 +331,6 @@ function wpt_check_recent_tweet( $id, $auth ) {
 			$expire = apply_filters( 'wpt_recent_tweet_threshold', 30 );
 			// if expiration is 0, don't set the transient. We don't want permanent transients.
 			if ( 0 !== $expire ) {
-				wpt_mail( 'Update transient set', "$expire / $auth / $id", $id );
 				if ( false === $auth ) {
 					set_transient( "_wpt_most_recent_tweet_$id", true, $expire );
 				} else {
@@ -438,8 +437,8 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 
 	$recent = wpt_check_recent_tweet( $id, $auth );
 	if ( $recent ) {
-		wpt_mail( 'This post was just sent, and this is a duplicate.', 'Post ID: ' . $id . '; Account: ' . $auth );
-		wpt_set_log( 'wpt_status_message', $id, __( 'Status update prevented because it was a duplicate.', 'wp-to-twitter' ), '404' );
+		// This is a duplicate after less than 30 seconds, which usually means an extra run of the action.
+		// This error used to be logged, but is now exited silently.
 
 		return false;
 	}
