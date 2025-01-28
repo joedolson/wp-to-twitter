@@ -98,7 +98,7 @@ function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = 
 	// create full unconditional post update - prior to truncation.
 	// order matters; arrays have to be ordered the same way.
 	$tags   = array_map( 'wpt_make_tag', wpt_tags() );
-	$values = wpt_create_values( $post, $post_ID, $ref );
+	$values = wpt_create_values( $post, $post_ID, $ref, $service );
 
 	// media file no longer needs accounting in shortening. 9/22/2016.
 	$maxlength = wpt_max_length( $service );
@@ -404,13 +404,16 @@ function wpt_make_tag( $value ) {
 /**
  * Create values. Get the value of tags.
  *
+ * @since 5.0.0 Added $service parameter.
+ *
  * @param array   $post Post array.
  * @param int     $post_ID Post ID.
  * @param boolean $ref Use referential author.
+ * @param string  $service Social media service to send to.
  *
  * @return array of values.
  */
-function wpt_create_values( $post, $post_ID, $ref ) {
+function wpt_create_values( $post, $post_ID, $ref, $service ) {
 	/**
 	 * Run filters that shorten links.
 	 *
@@ -440,11 +443,28 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$tags        = wpt_generate_hash_tags( $post_ID );
 	$date        = trim( (string) $post['postDate'] );
 	$modified    = trim( (string) $post['postModified'] );
-	$account     = get_option( 'wtt_twitter_username', '' );
+	switch ( $service ) {
+		case 'x':
+			$account_field = 'wtt_twitter_username';
+			$user_setting  = 'wp-to-twitter-user-username';
+			$user_field    = 'wtt_twitter_username';
+			break;
+		case 'bluesky':
+			$account_field = 'wpt_bluesky_username';
+			$user_setting  = 'wpt-bluesky-username';
+			$user_field    = 'wpt_bluesky_username';
+			break;
+		case 'mastodon':
+			$account_field = 'wpt_mastodon_username';
+			$user_setting  = 'wpt-mastodon-username';
+			$user_field    = 'wpt_mastodon_username';
+			break;
+	}
+	$account     = get_option( $account_field, '' );
 	// The setting.
-	$user_meta = get_user_meta( $auth, 'wp-to-twitter-user-username', true );
+	$user_meta = get_user_meta( $auth, $user_setting, true );
 	// If connected to service.
-	$user_account = get_user_meta( $auth, 'wtt_twitter_username', true );
+	$user_account = get_user_meta( $auth, $user_field, true );
 	$user_account = ( $user_account ) ? $user_account : $user_meta;
 
 	$account = ( '' !== $account ) ? "@$account" : ''; // value of #account#.
