@@ -411,8 +411,8 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 
 	$recent = wpt_check_recent_tweet( $id, $auth );
 	if ( $recent ) {
-		wpt_mail( 'This post was just sent, and this is a duplicate.', 'Post ID: ' . $id . '; Account: ' . $auth );
-		wpt_set_log( 'wpt_status_message', $id, __( 'Status update prevented because it was a duplicate.', 'wp-to-twitter' ), '404' );
+		// This is a duplicate after less than 30 seconds, which usually means an extra run of the action.
+		// This error used to be logged, but is now exited silently.
 
 		return false;
 	}
