@@ -1109,7 +1109,7 @@ function wpt_text_linkify( $text, $service = 'bluesky' ) {
 	}
 
 	$text = html_entity_decode( make_clickable( $text ) );
-	$text = preg_replace( '/@(\w+)/', '<a href="' . $profile_url . '/\\1" rel="nofollow">@\\1</a>', $text );
+	$text = preg_replace( '/@(\w.+)/', '<a href="' . $profile_url . '/\\1" rel="nofollow">@\\1</a>', $text );
 	$text = preg_replace( '/#(\w+)/', '<a href="' . $hash_url . '\\1" rel="nofollow">#\\1</a>', $text );
 
 	return $text;
