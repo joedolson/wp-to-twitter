@@ -538,8 +538,8 @@ function wpt_update_settings() {
 						<li><code>#longurl#</code>: <?php esc_html_e( 'the unshortened post URL', 'wp-to-twitter' ); ?></li>
 						<li><code>#author#</code>: <?php esc_html_e( 'the post author (@reference if available, otherwise display name)', 'wp-to-twitter' ); ?></li>
 						<li><code>#displayname#</code>: <?php esc_html_e( 'post author\'s display name', 'wp-to-twitter' ); ?></li>
-						<li><code>#account#</code>: <?php esc_html_e( 'the twitter @reference for the account (or the author, if author settings are enabled and set.)', 'wp-to-twitter' ); ?></li>
-						<li><code>#@#</code>: <?php esc_html_e( 'the twitter @reference for the author or blank, if not set', 'wp-to-twitter' ); ?></li>
+						<li><code>#account#</code>: <?php esc_html_e( 'the @reference for the site account of the currently posting service', 'wp-to-twitter' ); ?></li>
+						<li><code>#@#</code>: <?php esc_html_e( 'an @reference for the current author or empty, if not set', 'wp-to-twitter' ); ?></li>
 						<li><code>#tags#</code>: <?php esc_html_e( 'your tags modified into hashtags.', 'wp-to-twitter' ); ?></li>
 						<?php
 						if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {

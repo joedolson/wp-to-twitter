@@ -75,6 +75,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * More code documentation.
 * Update references to Tweets to be service independent.
 * Significant structural reorganization.
+* Change output of #account# and #@# template tags for increased predictability.
 
 = 4.3.2 =
 
