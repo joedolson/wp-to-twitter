@@ -8,7 +8,7 @@
 		}
 		el.addEventListener( 'change', function() {
 			if ( el.checked && el.value == 'yes' ) {
-				wrapper.style.display = 'block';
+				wrapper.style.display = 'grid';
 			} else {
 				wrapper.style.display = 'none';
 			}
@@ -38,7 +38,7 @@
 	const variants = $( '.service-selector input' );
 	let status_update = $( '#wpt_custom_tweet' ).val();
 	if ( '' === status_update ) {
-		status_update = $( '.wpt-template code' ).text();
+		status_update = $( 'pre.wpt-template' ).text();
 	}
 	variants.each( function() {
 		$( this ).on( 'change', function() {

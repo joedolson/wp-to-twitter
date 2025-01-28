@@ -1,3 +1,8 @@
+#wp2t .wpt-options-metabox {
+	display: grid;
+	gap: 10px;
+}
+
 #wp2t .jtw {
     position: relative;
 }
@@ -42,6 +47,17 @@
 
 #wp2t .wpt-intents a {
 	display: block;
+}
+
+#wp2t .wpt-template-wrapper pre,
+#wp2t .wpt-template-wrapper h4 {
+	margin: 0;
+}
+
+#wp2t .wpt-template {
+	text-wrap: auto;
+	background: #f3f3f3;
+	padding: 4px;
 }
 
 #wp2t .wpt-intents a:hover {
@@ -111,8 +127,10 @@
     cursor: pointer;
 }
 
+#side-sortables #wp2t p,
 #side-sortables #wp2t .jtw {
     width: 100%;
+	margin: 0;
 }
 
 #side-sortables #wp2t .jtw textarea {

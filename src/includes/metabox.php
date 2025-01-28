@@ -53,7 +53,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		echo '<div class="wpt-options-metabox">';
 		$user_tweet = apply_filters( 'wpt_user_text', '', $status );
 		// Formulate Template display.
-		$template = wp_strip_all_tags( wpt_display_status_template( $post, $options ) );
+		$template = wp_strip_all_tags( wpt_get_status_template( $post, $options, false ) );
 		if ( $user_tweet ) {
 			// If a user template is defined, replace the existing template.
 			$template = $user_tweet;
@@ -90,9 +90,10 @@ function wpt_add_twitter_inner_box( $post ) {
 			<div role="alert" class="bluesky-notification notice inline notice-info hidden"><p><?php esc_html_e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
 			<div role="alert" class="mastodon-notification notice inline notice-info hidden"><p><?php esc_html_e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
 			<div class="wpt-template-resources wpt-flex">
-				<p class='wpt-template'>
-					<?php esc_html_e( 'Default template:', 'wp-to-twitter' ); ?><br /><code><?php echo esc_html( stripcslashes( $template ) ); ?></code>
-				</p>
+				<div class="wpt-template-wrapper">
+					<h4><?php esc_html_e( 'Default template', 'wp-to-twitter' ); ?></h4>
+					<pre class="wpt-template"><?php echo esc_html( wp_unslash( $template ) ); ?></pre>
+				</div>
 				<div class='wptab' id='notes'>
 					<h3><?php esc_html_e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
 					<ul class="inline-list">
@@ -128,9 +129,9 @@ function wpt_add_twitter_inner_box( $post ) {
 		} else {
 			?>
 			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $template ); ?>' />
-			<p class='wpt-template'>
-				<?php esc_html_e( 'Template:', 'wp-to-twitter' ); ?> <code><?php echo esc_html( stripcslashes( $template ) ); ?></code>
-			</p>
+			<pre class='wpt-template'>
+				<?php echo esc_html( wp_unslash( $template ) ); ?>
+			</pre>
 			<?php
 		}
 		?>
@@ -461,18 +462,19 @@ function wpt_show_post_switch( $post, $options ) {
  *
  * @param WP_Post $post Post object.
  * @param array   $options Post status options.
+ * @param bool    $display Fetching for display or input.
  *
  * @return string
  */
-function wpt_display_status_template( $post, $options ) {
+function wpt_get_status_template( $post, $options, $display = true ) {
 	$status   = $post->post_status;
 	$type     = $post->post_type;
 	$template = ( 'publish' === $status ) ? $options[ $type ]['post-edited-text'] : $options[ $type ]['post-published-text'];
 	$expanded = $template;
-	if ( '' !== get_option( 'jd_twit_prepend', '' ) ) {
+	if ( '' !== get_option( 'jd_twit_prepend', '' ) && $display ) {
 		$expanded = '<em>' . stripslashes( get_option( 'jd_twit_prepend' ) ) . '</em> ' . $expanded;
 	}
-	if ( '' !== get_option( 'jd_twit_append', '' ) ) {
+	if ( '' !== get_option( 'jd_twit_append', '' ) && $display ) {
 		$expanded = $expanded . ' <em>' . stripslashes( get_option( 'jd_twit_append' ) ) . '</em>';
 	}
 
