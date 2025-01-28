@@ -79,7 +79,7 @@ function wpt_add_twitter_inner_box( $post ) {
 		echo '&lt;div class="wpt-options-metabox">';
 		$user_tweet = apply_filters( 'wpt_user_text', '', $status );
 		// Formulate Template display.
-		$template = wp_strip_all_tags( wpt_display_status_template( $post, $options ) );
+		$template = wp_strip_all_tags( wpt_get_status_template( $post, $options, false ) );
 		if ( $user_tweet ) {
 			// If a user template is defined, replace the existing template.
 			$template = $user_tweet;
@@ -116,9 +116,10 @@ function wpt_add_twitter_inner_box( $post ) {
 			&lt;div role="alert" class="bluesky-notification notice inline notice-info hidden">&lt;p>&lt;?php esc_html_e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> &lt;span>&lt;/span>&lt;/p>&lt;/div>
 			&lt;div role="alert" class="mastodon-notification notice inline notice-info hidden">&lt;p>&lt;?php esc_html_e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> &lt;span>&lt;/span>&lt;/p>&lt;/div>
 			&lt;div class="wpt-template-resources wpt-flex">
-				&lt;p class='wpt-template'>
-					&lt;?php esc_html_e( 'Default template:', 'wp-to-twitter' ); ?>&lt;br />&lt;code>&lt;?php echo esc_html( stripcslashes( $template ) ); ?>&lt;/code>
-				&lt;/p>
+				&lt;div class="wpt-template-wrapper">
+					&lt;h4>&lt;?php esc_html_e( 'Default template', 'wp-to-twitter' ); ?>&lt;/h4>
+					&lt;pre class="wpt-template">&lt;?php echo esc_html( wp_unslash( $template ) ); ?>&lt;/pre>
+				&lt;/div>
 				&lt;div class='wptab' id='notes'>
 					&lt;h3>&lt;?php esc_html_e( 'Template Tags', 'wp-to-twitter' ); ?>&lt;/h3>
 					&lt;ul class="inline-list">
@@ -154,9 +155,9 @@ function wpt_add_twitter_inner_box( $post ) {
 		} else {
 			?>
 			&lt;input type="hidden" name='_jd_twitter' value='&lt;?php echo esc_attr( $template ); ?>' />
-			&lt;p class='wpt-template'>
-				&lt;?php esc_html_e( 'Template:', 'wp-to-twitter' ); ?> &lt;code>&lt;?php echo esc_html( stripcslashes( $template ) ); ?>&lt;/code>
-			&lt;/p>
+			&lt;pre class='wpt-template'>
+				&lt;?php echo esc_html( wp_unslash( $template ) ); ?>
+			&lt;/pre>
 			&lt;?php
 		}
 		?>
@@ -487,18 +488,19 @@ function wpt_show_post_switch( $post, $options ) {
  *
  * @param WP_Post $post Post object.
  * @param array   $options Post status options.
+ * @param bool    $display Fetching for display or input.
  *
  * @return string
  */
-function wpt_display_status_template( $post, $options ) {
+function wpt_get_status_template( $post, $options, $display = true ) {
 	$status   = $post->post_status;
 	$type     = $post->post_type;
 	$template = ( 'publish' === $status ) ? $options[ $type ]['post-edited-text'] : $options[ $type ]['post-published-text'];
 	$expanded = $template;
-	if ( '' !== get_option( 'jd_twit_prepend', '' ) ) {
+	if ( '' !== get_option( 'jd_twit_prepend', '' ) &amp;&amp; $display ) {
 		$expanded = '&lt;em>' . stripslashes( get_option( 'jd_twit_prepend' ) ) . '&lt;/em> ' . $expanded;
 	}
-	if ( '' !== get_option( 'jd_twit_append', '' ) ) {
+	if ( '' !== get_option( 'jd_twit_append', '' ) &amp;&amp; $display ) {
 		$expanded = $expanded . ' &lt;em>' . stripslashes( get_option( 'jd_twit_append' ) ) . '&lt;/em>';
 	}
 
