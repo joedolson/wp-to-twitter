@@ -478,7 +478,7 @@ function wpt_create_values( $post, $post_ID, $ref, $service ) {
 	$author       = str_ireplace( '@@', '@', $author );
 
 	if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
-		$reference = ( $ref ) ? $uaccount : '@' . get_option( 'wtt_twitter_username' );
+		$reference = ( $ref ) ? $uaccount : '@' . get_option( $account_field );
 	} else {
 		$reference = '';
 	}
