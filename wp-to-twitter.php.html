@@ -1118,6 +1118,7 @@ function wpt_save_post( $id, $post ) {
 		}
 		$omit_services = ( isset( $_POST['_wpt_omit_services'] ) ) ? $_POST['_wpt_omit_services'] : array();
 		$services      = wpt_check_connections( false, true );
+		$omit          = array();
 		// The interface has you choose what you want; the DB represents what's omitted.
 		foreach ( array_keys( $services ) as $service ) {
 			if ( ! in_array( $service, $omit_services, true ) ) {
