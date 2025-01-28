@@ -426,22 +426,24 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$shortlink = apply_filters( 'wptt_shorten_link', $post['postLink'], $post['postTitle'], $post_ID, false );
 	$shrink    = ( '' !== $post['shortUrl'] && false !== $post['shortUrl'] ) ? $post['shortUrl'] : $shortlink;
 	// generate template variable values.
-	$auth         = $post['authId'];
-	$title        = apply_filters( 'wpt_status', $post['postTitle'], $post_ID, 'title' );
-	$title        = trim( ( ! $title ) ? get_the_title( $post_ID ) : $title );
-	$encoding     = get_option( 'blog_charset', 'UTF-8' );
-	$title        = html_entity_decode( $title, ENT_QUOTES, $encoding );
-	$blogname     = trim( (string) $post['blogTitle'] );
-	$excerpt      = trim( (string) apply_filters( 'wpt_status', $post['postExcerpt'], $post_ID, 'post' ) );
-	$thisposturl  = trim( (string) $shrink );
-	$category     = trim( (string) $post['category'] );
-	$categories   = trim( (string) $post['cats'] );
-	$cat_desc     = trim( (string) $post['cat_desc'] );
-	$tags         = wpt_generate_hash_tags( $post_ID );
-	$date         = trim( (string) $post['postDate'] );
-	$modified     = trim( (string) $post['postModified'] );
-	$account      = get_option( 'wtt_twitter_username', '' );
-	$user_meta    = get_user_meta( $auth, 'wp-to-twitter-user-username', true );
+	$auth        = $post['authId'];
+	$title       = apply_filters( 'wpt_status', $post['postTitle'], $post_ID, 'title' );
+	$title       = trim( ( ! $title ) ? get_the_title( $post_ID ) : $title );
+	$encoding    = get_option( 'blog_charset', 'UTF-8' );
+	$title       = html_entity_decode( $title, ENT_QUOTES, $encoding );
+	$blogname    = trim( (string) $post['blogTitle'] );
+	$excerpt     = trim( (string) apply_filters( 'wpt_status', $post['postExcerpt'], $post_ID, 'post' ) );
+	$thisposturl = trim( (string) $shrink );
+	$category    = trim( (string) $post['category'] );
+	$categories  = trim( (string) $post['cats'] );
+	$cat_desc    = trim( (string) $post['cat_desc'] );
+	$tags        = wpt_generate_hash_tags( $post_ID );
+	$date        = trim( (string) $post['postDate'] );
+	$modified    = trim( (string) $post['postModified'] );
+	$account     = get_option( 'wtt_twitter_username', '' );
+	// The setting.
+	$user_meta = get_user_meta( $auth, 'wp-to-twitter-user-username', true );
+	// If connected to service.
 	$user_account = get_user_meta( $auth, 'wtt_twitter_username', true );
 	$user_account = ( $user_account ) ? $user_account : $user_meta;
 
