@@ -75,6 +75,8 @@ define( 'WPT_DEBUG_BY_EMAIL', false ); // Email debugging no longer default as o
 define( 'WPT_DEBUG_ADDRESS', get_option( 'admin_email' ) );
 define( 'WPT_FROM', 'From: \"' . get_option( 'blogname' ) . '\" &lt;' . get_option( 'admin_email' ) . '>' );
 
+define( 'WPT_STAGING_MODE', true );
+
 // If current environment tests as staging, enable staging mode.
 if ( function_exists( 'wp_get_environment_type' ) ) {
 	if ( 'staging' === wp_get_environment_type() &amp;&amp; ! defined( 'WPT_STAGING_MODE' ) ) {
@@ -510,6 +512,24 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 }
 
 /**
+ * Get the saved custom template for a status update.
+ *
+ * @param int    $post_ID Post ID.
+ * @param string $template Template passed to this post.
+ * @param string $service Service posting to.
+ *
+ * @return string
+ */
+function wpt_get_custom_template( $post_ID, $template, $service ) {
+	$custom_template = get_post_meta( $post_ID, '_wpt_post_template_' . $service, true );
+	if ( $custom_template ) {
+		$template = $custom_template;
+	}
+
+	return $template;
+}
+
+/**
  * Check whether a status update has already been sent; expands the passed template to create status update to test.
  *
  * @param int      $post_ID Post ID.
@@ -526,7 +546,8 @@ function wpt_check_service_history( $post_ID, $auth, $template, $connections ) {
 			$checks[ $service ] = false;
 			continue;
 		}
-		$status = wpt_truncate_status( $template, array(), $post_ID, false, $auth, $service );
+		$template = wpt_get_custom_template( $post_ID, $template, $service );
+		$status   = wpt_truncate_status( $template, array(), $post_ID, false, $auth, $service );
 		// Get last sent to this service.
 		$check = ( ! $auth ) ? get_option( 'wpt_last_' . $service, '' ) : get_user_meta( $auth, 'wpt_last_' . $service, true );
 		// prevent duplicate status updates. Checks whether this text has already been sent.
@@ -1104,6 +1125,24 @@ function wpt_save_post( $id, $post ) {
 			update_post_meta( $id, '_jd_twitter', $twitter );
 		} elseif ( isset( $_POST['_jd_twitter'] ) &amp;&amp; '' === $_POST['_jd_twitter'] ) {
 			delete_post_meta( $id, '_jd_twitter' );
+		}
+		if ( isset( $_POST['_wpt_post_template_x'] ) &amp;&amp; '' !== $_POST['_wpt_post_template_x'] ) {
+			$template = sanitize_textarea_field( wp_unslash( $_POST['_wpt_post_template_x'] ) );
+			update_post_meta( $id, '_wpt_post_template_x', $template );
+		} elseif ( isset( $_POST['_wpt_post_template_x'] ) &amp;&amp; '' === $_POST['_wpt_post_template_x'] ) {
+			delete_post_meta( $id, '_wpt_post_template_x' );
+		}
+		if ( isset( $_POST['_wpt_post_template_bluesky'] ) &amp;&amp; '' !== $_POST['_wpt_post_template_bluesky'] ) {
+			$template = sanitize_textarea_field( wp_unslash( $_POST['_wpt_post_template_bluesky'] ) );
+			update_post_meta( $id, '_wpt_post_template_bluesky', $template );
+		} elseif ( isset( $_POST['_wpt_post_template_bluesky'] ) &amp;&amp; '' === $_POST['_wpt_post_template_bluesky'] ) {
+			delete_post_meta( $id, '_wpt_post_template_bluesky' );
+		}
+		if ( isset( $_POST['_wpt_post_template_mastodon'] ) &amp;&amp; '' !== $_POST['_wpt_post_template_mastodon'] ) {
+			$template = sanitize_textarea_field( wp_unslash( $_POST['_wpt_post_template_mastodon'] ) );
+			update_post_meta( $id, '_wpt_post_template_mastodon', $template );
+		} elseif ( isset( $_POST['_wpt_post_template_mastodon'] ) &amp;&amp; '' === $_POST['_wpt_post_template_mastodon'] ) {
+			delete_post_meta( $id, '_wpt_post_template_mastodon' );
 		}
 		if ( isset( $_POST['_jd_wp_twitter'] ) &amp;&amp; '' !== $_POST['_jd_wp_twitter'] ) {
 			$wp_twitter = sanitize_textarea_field( wp_unslash( $_POST['_jd_wp_twitter'] ) );
