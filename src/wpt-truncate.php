@@ -444,13 +444,7 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$user_meta    = get_user_meta( $auth, 'wp-to-twitter-user-username', true );
 	$user_account = get_user_meta( $auth, 'wtt_twitter_username', true );
 	$user_account = ( $user_account ) ? $user_account : $user_meta;
-	if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
-		if ( 'mainAtTwitter' === get_user_meta( $auth, 'wp-to-twitter-enable-user', true ) ) {
-			$account = $user_account;
-		} else {
-			$account = ( $user_account ) ? $user_account : $account;
-		}
-	}
+
 	$account = ( '' !== $account ) ? "@$account" : ''; // value of #account#.
 	$account = str_ireplace( '@@', '@', $account );
 
