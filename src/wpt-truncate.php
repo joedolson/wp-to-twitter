@@ -534,7 +534,7 @@ function wpt_length_array( $values, $encoding ) {
 /**
  * Parse custom shortcodes
  *
- * @param string  $sentence Tweet template.
+ * @param string  $sentence Status update template.
  * @param integer $post_ID Post ID.
  *
  * @return string $sentence with any custom shortcodes replaced with their appropriate content.
@@ -573,7 +573,7 @@ function wpt_custom_shortcodes( $sentence, $post_ID ) {
 /**
  * Parse user meta shortcodes
  *
- * @param string  $sentence Tweet template.
+ * @param string  $sentence Status update template.
  * @param integer $auth_id Post Author ID.
  *
  * @return string $sentence with any custom shortcodes replaced with their appropriate content.
