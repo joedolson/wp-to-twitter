@@ -455,10 +455,6 @@ function wpt_create_values( $post, $post_ID, $ref ) {
 	$author       = ( '' !== $user_account ) ? "@$user_account" : $display_name; // value of #author#.
 	$author       = str_ireplace( '@@', '@', $author );
 
-	if ( 'on' === get_user_meta( $auth, 'wpt-remove', true ) ) {
-		$account = '';
-	}
-
 	if ( function_exists( 'wpt_pro_exists' ) && true === wpt_pro_exists() ) {
 		$reference = ( $ref ) ? $uaccount : '@' . get_option( 'wtt_twitter_username' );
 	} else {
