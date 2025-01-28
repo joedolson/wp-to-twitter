@@ -460,7 +460,7 @@ function wpt_create_values( $post, $post_ID, $ref, $service ) {
 			$user_field    = 'wpt_mastodon_username';
 			break;
 	}
-	$account     = get_option( $account_field, '' );
+	$account = get_option( $account_field, '' );
 	// The setting.
 	$user_meta = get_user_meta( $auth, $user_setting, true );
 	// If connected to service.
