@@ -82,8 +82,8 @@
 }
 
 #wp2t .service-selector li {
-	display: grid;
-	justify-items: center;
+	display: flex;
+	align-items: center;
 	padding: 4px;
 	gap: 4px;
 	margin: 0;
@@ -91,10 +91,6 @@
 
 #wp2t .service-selector li input {
 	margin-right: 0;
-}
-
-#wp2t .service-selector li label {
-	order: -1;
 }
 
 #wp2t .service-selector li img {
