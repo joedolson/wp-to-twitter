@@ -82,7 +82,7 @@ function wpt_add_twitter_inner_box( $post ) {
 					<pre class="wpt-template"><?php echo esc_html( wp_unslash( $template ) ); ?></pre>
 				</div>
 				<div class='wptab' id='notes'>
-					<h3><?php esc_html_e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
+					<h3><span class="dashicons dashicons-tag" aria-hidden="true"></span><?php esc_html_e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
 					<ul class="inline-list">
 					<?php
 					$tags = wpt_tags();
