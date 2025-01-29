@@ -65,13 +65,13 @@ function wpt_add_twitter_inner_box( $post ) {
 		?>
 		<div class="wpt-options wpt-updates">
 			<?php
-		wpt_display_metabox_service_picker( $post );
-		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
-			$custom_update          = get_post_meta( $post->ID, '_jd_twitter', true );
-			$custom_x_update        = get_post_meta( $post->ID, '_wpt_post_template_x', true );
-			$custom_mastodon_update = get_post_meta( $post->ID, '_wpt_post_template_mastodon', true );
-			$custom_bluesky_update  = get_post_meta( $post->ID, '_wpt_post_template_bluesky', true );
-			?>
+			wpt_display_metabox_service_picker( $post );
+			if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
+				$custom_update          = get_post_meta( $post->ID, '_jd_twitter', true );
+				$custom_x_update        = get_post_meta( $post->ID, '_wpt_post_template_x', true );
+				$custom_mastodon_update = get_post_meta( $post->ID, '_wpt_post_template_mastodon', true );
+				$custom_bluesky_update  = get_post_meta( $post->ID, '_wpt_post_template_bluesky', true );
+				?>
 			<p class='jtw'>
 				<label for="wpt_custom_tweet"><?php esc_html_e( 'Custom Status Update', 'wp-to-twitter' ); ?></label><br/>
 				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_update ) ); ?></textarea>
@@ -98,7 +98,7 @@ function wpt_add_twitter_inner_box( $post ) {
 					</ul>
 				</div>
 			</div>
-			<?php wpt_display_metabox_service_picker( $post, 'variants' ); ?>
+				<?php wpt_display_metabox_service_picker( $post, 'variants' ); ?>
 			<p class='jtw<?php echo ( ! $custom_x_update ) ? ' hidden' : ''; ?>'>
 				<label for="wpt_custom_tweet_x"><?php esc_html_e( 'Custom X Update', 'wp-to-twitter' ); ?></label><br/>
 				<textarea class="wpt_tweet_box widefat" name="_wpt_post_template_x" id="wpt_custom_tweet_x" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_x_update ) ); ?></textarea>
@@ -111,36 +111,36 @@ function wpt_add_twitter_inner_box( $post ) {
 				<label for="wpt_custom_tweet_bluesky"><?php esc_html_e( 'Custom Bluesky Update', 'wp-to-twitter' ); ?></label><br/>
 				<textarea class="wpt_tweet_box widefat" name="_wpt_post_template_bluesky" id="wpt_custom_tweet_bluesky" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_bluesky_update ) ); ?></textarea>
 			</p>
-			<?php
-			/**
-			 * Generate fields after the custom template box in the meta box.
-			 *
-			 * @hook wpt_after_meta_template_box
-			 *
-			 * @param {int} $post_ID Post ID.
-			 */
-			do_action( 'wpt_after_meta_template_box', $post->ID );
-			if ( get_option( 'jd_keyword_format' ) === '2' ) {
-				$custom_keyword = get_post_meta( $post->ID, '_yourls_keyword', true );
-				?>
+				<?php
+				/**
+				 * Generate fields after the custom template box in the meta box.
+				 *
+				 * @hook wpt_after_meta_template_box
+				 *
+				 * @param {int} $post_ID Post ID.
+				 */
+				do_action( 'wpt_after_meta_template_box', $post->ID );
+				if ( get_option( 'jd_keyword_format' ) === '2' ) {
+					$custom_keyword = get_post_meta( $post->ID, '_yourls_keyword', true );
+					?>
 				<p>
 					<label for='yourls_keyword'><?php esc_html_e( 'YOURLS Custom Keyword', 'wp-to-twitter' ); ?></label>
 					<input type='text' name='_yourls_keyword' id='yourls_keyword' value='<?php echo esc_attr( $custom_keyword ); ?>' />
 				</p>
-				<?php
-			}
+					<?php
+				}
 				?>
 			</div>
-			<?php
-		} else {
-			?>
+				<?php
+			} else {
+				?>
 			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $template ); ?>' />
 			<pre class='wpt-template'>
 				<?php echo esc_html( wp_unslash( $template ) ); ?>
 			</pre>
-			<?php
-		}
-		?>
+				<?php
+			}
+			?>
 		<div class='wpt-options wpt-pro'>
 			<div class='wptab' id='custom'>
 			<?php
