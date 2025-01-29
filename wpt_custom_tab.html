@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_post_attachment - XPoster Hook Doumentation</title>
+    <title>Action: wpt_custom_tab - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_post_attachment</h1></header>
+    <header><h1 class="page-title">Action: wpt_custom_tab</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_post_attachment">apply_filters( 'wpt_post_attachment', <span class="signature">$attachment_id, $post_ID )</span><span class="type-signature"> &rarr; {int|bool}</span></h4>
+    <h4 class="name" id="wpt_custom_tab">do_action( 'wpt_custom_tab', <span class="signature">int, string )</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Filter the attachment ID to post with a status update.</p>
+    <p>Display the custom tab container in XPoster Pro.</p>
 </div>
 
 
@@ -77,15 +77,10 @@
 
         <tr>
             
-                <td class="name"><code>$attachment_id</code></td>
+                <td class="name"><code>int</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
             
             </td>
 
@@ -93,22 +88,17 @@
 
             
 
-            <td class="description last"><p>Attachment ID.</p></td>
+            <td class="description last"><p>$post_ID Post ID.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$post_ID</code></td>
+                <td class="name"><code>string</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
             
             </td>
 
@@ -116,7 +106,7 @@
 
             
 
-            <td class="description last"><p>Post ID.</p></td>
+            <td class="description last"><p>$visibility 'visible' or 'hidden'.</p></td>
         </tr>
 
     
@@ -157,7 +147,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wpt-functions.php.html">wpt-functions.php</a>, <a href="wpt-functions.php.html#line735">line 735</a>
+        <a href="includes_metabox.php.html">includes/metabox.php</a>, <a href="includes_metabox.php.html#line143">line 143</a>
     </li></ul></dd>
     
 
@@ -180,27 +170,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">int</span>
-|
-
-<span class="param-type">bool</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
