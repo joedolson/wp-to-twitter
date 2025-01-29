@@ -72,20 +72,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			<p class='jtw'>
 				<label for="wpt_custom_tweet"><?php esc_html_e( 'Custom Status Update', 'wp-to-twitter' ); ?></label><br/>
 				<textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_update ) ); ?></textarea>
-			</p>
-			<?php wpt_display_metabox_service_picker( $post, 'variants' ); ?>
-			<p class='jtw<?php echo ( ! $custom_x_update ) ? ' hidden' : ''; ?>'>
-				<label for="wpt_custom_tweet_x"><?php esc_html_e( 'Custom X Update', 'wp-to-twitter' ); ?></label><br/>
-				<textarea class="wpt_tweet_box widefat" name="_wpt_post_template_x" id="wpt_custom_tweet_x" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_x_update ) ); ?></textarea>
-			</p>
-			<p class='jtw<?php echo ( ! $custom_mastodon_update ) ? ' hidden' : ''; ?>'>
-				<label for="wpt_custom_tweet_mastodon"><?php esc_html_e( 'Custom Mastodon Update', 'wp-to-twitter' ); ?></label><br/>
-				<textarea class="wpt_tweet_box widefat" name="_wpt_post_template_mastodon" id="wpt_custom_tweet_mastodon" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_mastodon_update ) ); ?></textarea>
-			</p>
-			<p class='jtw<?php echo ( ! $custom_bluesky_update ) ? ' hidden' : ''; ?>'>
-				<label for="wpt_custom_tweet_bluesky"><?php esc_html_e( 'Custom Bluesky Update', 'wp-to-twitter' ); ?></label><br/>
-				<textarea class="wpt_tweet_box widefat" name="_wpt_post_template_bluesky" id="wpt_custom_tweet_bluesky" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_bluesky_update ) ); ?></textarea>
-			</p>			
+			</p>		
 			<div role="alert" class="x-notification notice inline notice-info hidden"><p><?php esc_html_e( 'X length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
 			<div role="alert" class="bluesky-notification notice inline notice-info hidden"><p><?php esc_html_e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
 			<div role="alert" class="mastodon-notification notice inline notice-info hidden"><p><?php esc_html_e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> <span></span></p></div>
@@ -108,6 +95,19 @@ function wpt_add_twitter_inner_box( $post ) {
 					</ul>
 				</div>
 			</div>
+			<?php wpt_display_metabox_service_picker( $post, 'variants' ); ?>
+			<p class='jtw<?php echo ( ! $custom_x_update ) ? ' hidden' : ''; ?>'>
+				<label for="wpt_custom_tweet_x"><?php esc_html_e( 'Custom X Update', 'wp-to-twitter' ); ?></label><br/>
+				<textarea class="wpt_tweet_box widefat" name="_wpt_post_template_x" id="wpt_custom_tweet_x" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_x_update ) ); ?></textarea>
+			</p>
+			<p class='jtw<?php echo ( ! $custom_mastodon_update ) ? ' hidden' : ''; ?>'>
+				<label for="wpt_custom_tweet_mastodon"><?php esc_html_e( 'Custom Mastodon Update', 'wp-to-twitter' ); ?></label><br/>
+				<textarea class="wpt_tweet_box widefat" name="_wpt_post_template_mastodon" id="wpt_custom_tweet_mastodon" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_mastodon_update ) ); ?></textarea>
+			</p>
+			<p class='jtw<?php echo ( ! $custom_bluesky_update ) ? ' hidden' : ''; ?>'>
+				<label for="wpt_custom_tweet_bluesky"><?php esc_html_e( 'Custom Bluesky Update', 'wp-to-twitter' ); ?></label><br/>
+				<textarea class="wpt_tweet_box widefat" name="_wpt_post_template_bluesky" id="wpt_custom_tweet_bluesky" placeholder="<?php echo esc_attr( $template ); ?>" rows="2" cols="60"><?php echo esc_textarea( stripslashes( $custom_bluesky_update ) ); ?></textarea>
+			</p>
 			<?php
 			/**
 			 * Generate fields after the custom template box in the meta box.
