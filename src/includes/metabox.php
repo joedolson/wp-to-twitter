@@ -62,6 +62,9 @@ function wpt_add_twitter_inner_box( $post ) {
 			// Show metabox status buttons.
 			wpt_display_metabox_status_buttons( $is_pro );
 		}
+		?>
+		<div class="wpt-options wpt-updates">
+			<?php
 		wpt_display_metabox_service_picker( $post );
 		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
 			$custom_update          = get_post_meta( $post->ID, '_jd_twitter', true );
@@ -126,6 +129,9 @@ function wpt_add_twitter_inner_box( $post ) {
 				</p>
 				<?php
 			}
+				?>
+			</div>
+			<?php
 		} else {
 			?>
 			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $template ); ?>' />
@@ -135,7 +141,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			<?php
 		}
 		?>
-		<div class='wpt-options'>
+		<div class='wpt-options wpt-pro'>
 			<div class='wptab' id='custom'>
 			<?php
 			// XPoster Pro.
@@ -364,7 +370,7 @@ function wpt_meta_box_support( $is_pro = 'free' ) {
 	if ( 'pro' === $is_pro ) {
 		?>
 		<p>
-			<a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php esc_html_e( 'Get Support', 'wp-to-twitter' ); ?></a>
+			<span class="dashicons dashicons-sos" aria-hidden="true"></span><a href="<?php echo esc_url( add_query_arg( 'tab', 'support', admin_url( 'admin.php?page=wp-tweets-pro' ) ) ); ?>#get-support"><?php esc_html_e( 'Get Support', 'wp-to-twitter' ); ?></a>
 		</p>
 		<?php
 	} else {
