@@ -81,6 +81,11 @@
 	justify-content: space-around;
 }
 
+legend.variant-selector {
+	font-size: 1em;
+	font-weight: 600;
+}
+
 #wp2t .service-selector li {
 	display: flex;
 	align-items: center;
@@ -103,8 +108,12 @@
 }
 
 #wp2t h3 {
-	margin: 0 0 .5rem;
+	margin: 0;
 	font-size: .9rem;
+}
+
+#wp2t #notes h3 {
+	margin-bottom: 10px;
 }
 
 #wp2t .wpt-error {
@@ -125,6 +134,11 @@
     cursor: pointer;
 }
 
+.tweet-toggle {
+	width: 100%;
+	text-align: left;
+}
+
 #side-sortables #wp2t p,
 #side-sortables #wp2t .jtw {
     width: 100%;
@@ -143,7 +157,12 @@
 .wpt-options .wptab {
 	display: grid;
 	grid-template-columns: repeat( 3, 1fr );
-	gap: 12px;
+	gap: 10px;
+}
+
+.wpt-pro-reposting {
+	display: grid;
+	gap: 10px;
 }
 
 .free .wpt-options .wptab {
