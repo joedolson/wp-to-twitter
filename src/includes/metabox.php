@@ -159,7 +159,14 @@ function wpt_add_twitter_inner_box( $post ) {
 					if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
 						$selected = ( get_post_meta( $post->ID, '_wpt_authorized_users', true ) ) ? get_post_meta( $post->ID, '_wpt_authorized_users', true ) : array();
 						if ( function_exists( 'wpt_authorized_users' ) ) {
-							wpt_authorized_users( $selected );
+							/**
+							 * Render actions relevant only when multiple users are enabled.
+							 *
+							 * @hook wpt_authors_tab
+							 *
+							 * @param int   $post_ID Post ID.
+							 * @param array $selected Selected users for current post.
+							 */
 							do_action( 'wpt_authors_tab', $post->ID, $selected );
 						}
 					}
