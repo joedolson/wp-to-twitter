@@ -91,13 +91,13 @@ function wpt_add_twitter_inner_box( $post ) {
 		?>
 		&lt;div class="wpt-options wpt-updates">
 			&lt;?php
-		wpt_display_metabox_service_picker( $post );
-		if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
-			$custom_update          = get_post_meta( $post->ID, '_jd_twitter', true );
-			$custom_x_update        = get_post_meta( $post->ID, '_wpt_post_template_x', true );
-			$custom_mastodon_update = get_post_meta( $post->ID, '_wpt_post_template_mastodon', true );
-			$custom_bluesky_update  = get_post_meta( $post->ID, '_wpt_post_template_bluesky', true );
-			?>
+			wpt_display_metabox_service_picker( $post );
+			if ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) {
+				$custom_update          = get_post_meta( $post->ID, '_jd_twitter', true );
+				$custom_x_update        = get_post_meta( $post->ID, '_wpt_post_template_x', true );
+				$custom_mastodon_update = get_post_meta( $post->ID, '_wpt_post_template_mastodon', true );
+				$custom_bluesky_update  = get_post_meta( $post->ID, '_wpt_post_template_bluesky', true );
+				?>
 			&lt;p class='jtw'>
 				&lt;label for="wpt_custom_tweet">&lt;?php esc_html_e( 'Custom Status Update', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
 				&lt;textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="&lt;?php echo esc_attr( $template ); ?>" rows="2" cols="60">&lt;?php echo esc_textarea( stripslashes( $custom_update ) ); ?>&lt;/textarea>
@@ -124,7 +124,7 @@ function wpt_add_twitter_inner_box( $post ) {
 					&lt;/ul>
 				&lt;/div>
 			&lt;/div>
-			&lt;?php wpt_display_metabox_service_picker( $post, 'variants' ); ?>
+				&lt;?php wpt_display_metabox_service_picker( $post, 'variants' ); ?>
 			&lt;p class='jtw&lt;?php echo ( ! $custom_x_update ) ? ' hidden' : ''; ?>'>
 				&lt;label for="wpt_custom_tweet_x">&lt;?php esc_html_e( 'Custom X Update', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
 				&lt;textarea class="wpt_tweet_box widefat" name="_wpt_post_template_x" id="wpt_custom_tweet_x" placeholder="&lt;?php echo esc_attr( $template ); ?>" rows="2" cols="60">&lt;?php echo esc_textarea( stripslashes( $custom_x_update ) ); ?>&lt;/textarea>
@@ -137,36 +137,36 @@ function wpt_add_twitter_inner_box( $post ) {
 				&lt;label for="wpt_custom_tweet_bluesky">&lt;?php esc_html_e( 'Custom Bluesky Update', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
 				&lt;textarea class="wpt_tweet_box widefat" name="_wpt_post_template_bluesky" id="wpt_custom_tweet_bluesky" placeholder="&lt;?php echo esc_attr( $template ); ?>" rows="2" cols="60">&lt;?php echo esc_textarea( stripslashes( $custom_bluesky_update ) ); ?>&lt;/textarea>
 			&lt;/p>
-			&lt;?php
-			/**
-			 * Generate fields after the custom template box in the meta box.
-			 *
-			 * @hook wpt_after_meta_template_box
-			 *
-			 * @param {int} $post_ID Post ID.
-			 */
-			do_action( 'wpt_after_meta_template_box', $post->ID );
-			if ( get_option( 'jd_keyword_format' ) === '2' ) {
-				$custom_keyword = get_post_meta( $post->ID, '_yourls_keyword', true );
-				?>
+				&lt;?php
+				/**
+				 * Generate fields after the custom template box in the meta box.
+				 *
+				 * @hook wpt_after_meta_template_box
+				 *
+				 * @param {int} $post_ID Post ID.
+				 */
+				do_action( 'wpt_after_meta_template_box', $post->ID );
+				if ( get_option( 'jd_keyword_format' ) === '2' ) {
+					$custom_keyword = get_post_meta( $post->ID, '_yourls_keyword', true );
+					?>
 				&lt;p>
 					&lt;label for='yourls_keyword'>&lt;?php esc_html_e( 'YOURLS Custom Keyword', 'wp-to-twitter' ); ?>&lt;/label>
 					&lt;input type='text' name='_yourls_keyword' id='yourls_keyword' value='&lt;?php echo esc_attr( $custom_keyword ); ?>' />
 				&lt;/p>
-				&lt;?php
-			}
+					&lt;?php
+				}
 				?>
 			&lt;/div>
-			&lt;?php
-		} else {
-			?>
+				&lt;?php
+			} else {
+				?>
 			&lt;input type="hidden" name='_jd_twitter' value='&lt;?php echo esc_attr( $template ); ?>' />
 			&lt;pre class='wpt-template'>
 				&lt;?php echo esc_html( wp_unslash( $template ) ); ?>
 			&lt;/pre>
-			&lt;?php
-		}
-		?>
+				&lt;?php
+			}
+			?>
 		&lt;div class='wpt-options wpt-pro'>
 			&lt;div class='wptab' id='custom'>
 			&lt;?php
