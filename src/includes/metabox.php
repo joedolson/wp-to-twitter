@@ -140,7 +140,14 @@ function wpt_add_twitter_inner_box( $post ) {
 			<?php
 			// XPoster Pro.
 			if ( 'pro' === $is_pro && ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
-				wpt_schedule_values( $post->ID );
+				/**
+				 * Display the custom tab container in XPoster Pro.
+				 *
+				 * @hook wpt_custom_tab
+				 *
+				 * @param int    $post_ID Post ID.
+				 * @param string $visibility 'visible' or 'hidden'.
+				 */
 				do_action( 'wpt_custom_tab', $post->ID, 'visible' );
 				if ( current_user_can( 'edit_others_posts' ) ) {
 					if ( '1' === get_option( 'jd_individual_twitter_users' ) ) {
@@ -157,7 +164,7 @@ function wpt_add_twitter_inner_box( $post ) {
 				<p><?php esc_html_e( 'Customizing XPoster options is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
 				<?php
 				if ( 'pro' === $is_pro ) {
-					wpt_schedule_values( $post->ID, 'hidden' );
+					// Documented above.
 					do_action( 'wpt_custom_tab', $post->ID, 'hidden' );
 				}
 			}
