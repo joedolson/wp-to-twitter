@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Filter: wpt_filter_mastodon_status - XPoster Hook Doumentation</title>
+    <title>Action: wpt_authors_tab - XPoster Hook Doumentation</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -15,7 +15,7 @@
 
 <div id="main">
 
-    <header><h1 class="page-title">Filter: wpt_filter_mastodon_status</h1></header>
+    <header><h1 class="page-title">Action: wpt_authors_tab</h1></header>
 	<main>
     
 
@@ -36,14 +36,14 @@
 
     
 
-    <h4 class="name" id="wpt_filter_mastodon_status">apply_filters( 'wpt_filter_mastodon_status', <span class="signature">$status, $post, $auth )</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="wpt_authors_tab">do_action( 'wpt_authors_tab', <span class="signature">int, array )</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>Filter status array for Mastodon.</p>
+    <p>Render actions relevant only when multiple users are enabled.</p>
 </div>
 
 
@@ -77,15 +77,10 @@
 
         <tr>
             
-                <td class="name"><code>$status</code></td>
+                <td class="name"><code>int</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
             
             </td>
 
@@ -93,22 +88,17 @@
 
             
 
-            <td class="description last"><p>Array of parameters sent to Mastodon.</p></td>
+            <td class="description last"><p>$post_ID Post ID.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$post</code></td>
+                <td class="name"><code>array</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
             
             </td>
 
@@ -116,33 +106,7 @@
 
             
 
-            <td class="description last"><p>Post ID being tweeted.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>$auth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-|
-
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Authoring context.</p></td>
+            <td class="description last"><p>$selected Selected users for current post.</p></td>
         </tr>
 
     
@@ -183,7 +147,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services_mastodon_post.php.html">services/mastodon/post.php</a>, <a href="services_mastodon_post.php.html#line125">line 125</a>
+        <a href="includes_metabox.php.html">includes/metabox.php</a>, <a href="includes_metabox.php.html#line161">line 161</a>
     </li></ul></dd>
     
 
@@ -206,24 +170,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
