@@ -35,7 +35,7 @@
 		counterText: wptSettings.text
 	});
 
-	const variants = $( '.service-selector input' );
+	const variants = $( '.service-selection-variants .service-selector input' );
 	let status_update = $( '#wpt_custom_tweet' ).val();
 	if ( '' === status_update ) {
 		status_update = $( 'pre.wpt-template' ).text();
