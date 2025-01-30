@@ -172,28 +172,28 @@ function wpt_check_functions() {
 		if ( $testpost &amp;&amp; ! empty( $testpost ) ) {
 			foreach ( $testpost as $key => $test ) {
 				if ( 'xcom' === $key ) {
-					$message .= '&lt;li>&lt;strong>' . __( 'XPoster successfully submitted a status update to X.com.', 'wp-to-twitter' ) . '&lt;/strong>&lt;/li>';
+					$message .= '&lt;li>' . __( 'XPoster successfully submitted a status update to X.com.', 'wp-to-twitter' ) . '&lt;/li>';
 				}
 				if ( 'mastodon' === $key ) {
-					$message .= '&lt;li>&lt;strong>' . __( 'XPoster successfully submitted a status update to your Mastodon instance.', 'wp-to-twitter' ) . '&lt;/strong>&lt;/li>';
+					$message .= '&lt;li>' . __( 'XPoster successfully submitted a status update to your Mastodon instance.', 'wp-to-twitter' ) . '&lt;/li>';
 				}
 				if ( 'bluesky' === $key ) {
-					$message .= '&lt;li>&lt;strong>' . __( 'XPoster successfully submitted a status update to your Bluesky account.', 'wp-to-twitter' ) . '&lt;/strong>&lt;/li>';
+					$message .= '&lt;li>' . __( 'XPoster successfully submitted a status update to your Bluesky account.', 'wp-to-twitter' ) . '&lt;/li>';
 				}
 			}
 		} else {
 			$error    = wpt_get_log( 'wpt_status_message', 'test' );
-			$message .= '&lt;li class="error">&lt;strong>' . __( 'XPoster failed to submit status updates.', 'wp-to-twitter' ) . '&lt;/strong>&lt;/li>';
+			$message .= '&lt;li class="error">' . __( 'XPoster failed to submit status updates.', 'wp-to-twitter' ) . '&lt;/li>';
 			$message .= "&lt;li class='error'>$error&lt;/li>";
 		}
 	} else {
-		$message .= '&lt;strong>' . __( 'You have not connected WordPress to a supported service.', 'wp-to-twitter' ) . '&lt;/strong> ';
+		$message .= __( 'You have not connected WordPress to a supported service.', 'wp-to-twitter' ) . ' ';
 	}
 	if ( false === $testpost &amp;&amp; false === $shrink ) {
 		$message .= '&lt;li class="error">' . __( "&lt;strong>Your server does not appear to support the required methods for XPoster to function.&lt;/strong> You can try it anyway - these tests aren't perfect.", 'wp-to-twitter' ) . '&lt;/li>';
 	}
 	if ( $testpost &amp;&amp; $shrink ) {
-		$message .= '&lt;li>&lt;strong>' . __( 'Your server should run XPoster successfully.', 'wp-to-twitter' ) . '&lt;/strong>&lt;/li>';
+		$message .= '&lt;li>' . __( 'Your server should run XPoster successfully.', 'wp-to-twitter' ) . '&lt;/li>';
 	}
 	$message .= '&lt;/ul>
 	&lt;/div>';

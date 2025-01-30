@@ -149,7 +149,7 @@ function wpt_attachment_path( $attachment_id, $size = '' ) {
  */
 function wpt_post_with_media( $post_ID ) {
 	$return = false;
-	if ( ! function_exists( 'wpt_pro_exists' ) ) {
+	if ( ! function_exists( 'wpt_pro_exists' ) || ! $post_ID ) {
 		return $return;
 	}
 	$post_info = wpt_post_info( $post_ID );
