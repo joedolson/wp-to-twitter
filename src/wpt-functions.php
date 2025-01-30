@@ -146,28 +146,28 @@ function wpt_check_functions() {
 		if ( $testpost && ! empty( $testpost ) ) {
 			foreach ( $testpost as $key => $test ) {
 				if ( 'xcom' === $key ) {
-					$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to X.com.', 'wp-to-twitter' ) . '</strong></li>';
+					$message .= '<li>' . __( 'XPoster successfully submitted a status update to X.com.', 'wp-to-twitter' ) . '</li>';
 				}
 				if ( 'mastodon' === $key ) {
-					$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to your Mastodon instance.', 'wp-to-twitter' ) . '</strong></li>';
+					$message .= '<li>' . __( 'XPoster successfully submitted a status update to your Mastodon instance.', 'wp-to-twitter' ) . '</li>';
 				}
 				if ( 'bluesky' === $key ) {
-					$message .= '<li><strong>' . __( 'XPoster successfully submitted a status update to your Bluesky account.', 'wp-to-twitter' ) . '</strong></li>';
+					$message .= '<li>' . __( 'XPoster successfully submitted a status update to your Bluesky account.', 'wp-to-twitter' ) . '</li>';
 				}
 			}
 		} else {
 			$error    = wpt_get_log( 'wpt_status_message', 'test' );
-			$message .= '<li class="error"><strong>' . __( 'XPoster failed to submit status updates.', 'wp-to-twitter' ) . '</strong></li>';
+			$message .= '<li class="error">' . __( 'XPoster failed to submit status updates.', 'wp-to-twitter' ) . '</li>';
 			$message .= "<li class='error'>$error</li>";
 		}
 	} else {
-		$message .= '<strong>' . __( 'You have not connected WordPress to a supported service.', 'wp-to-twitter' ) . '</strong> ';
+		$message .= __( 'You have not connected WordPress to a supported service.', 'wp-to-twitter' ) . ' ';
 	}
 	if ( false === $testpost && false === $shrink ) {
 		$message .= '<li class="error">' . __( "<strong>Your server does not appear to support the required methods for XPoster to function.</strong> You can try it anyway - these tests aren't perfect.", 'wp-to-twitter' ) . '</li>';
 	}
 	if ( $testpost && $shrink ) {
-		$message .= '<li><strong>' . __( 'Your server should run XPoster successfully.', 'wp-to-twitter' ) . '</strong></li>';
+		$message .= '<li>' . __( 'Your server should run XPoster successfully.', 'wp-to-twitter' ) . '</li>';
 	}
 	$message .= '</ul>
 	</div>';
