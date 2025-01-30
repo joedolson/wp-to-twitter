@@ -158,7 +158,7 @@ function wpt_check_functions() {
 		} else {
 			$error    = wpt_get_log( 'wpt_status_message', 'test' );
 			$message .= '<li class="error">' . __( 'XPoster failed to submit status updates.', 'wp-to-twitter' ) . '</li>';
-			$message .= "<li class='error'>$error</li>";
+			$message .= ( '' !== $error ) ? "<li class='error'>$error</li>" : '';
 		}
 	} else {
 		$message .= __( 'You have not connected WordPress to a supported service.', 'wp-to-twitter' ) . ' ';
