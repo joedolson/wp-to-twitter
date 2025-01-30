@@ -88,211 +88,216 @@ function wpt_filter_urls( $update, $post_ID ) {
  * @return string New text.
  */
 function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = false, $service = 'x' ) {
-	if ( empty( $post ) ) {
-		$post = wpt_post_info( $post_ID );
-	}
-	$variant = get_post_meta( $post_ID, '_wpt_post_template_' . $service, true );
-	if ( '' !== $variant ) {
-		$update = $variant;
-	}
-	// create full unconditional post update - prior to truncation.
-	// order matters; arrays have to be ordered the same way.
-	$tags   = array_map( 'wpt_make_tag', wpt_tags() );
-	$values = wpt_create_values( $post, $post_ID, $ref, $service );
-
-	// media file no longer needs accounting in shortening. 9/22/2016.
-	$maxlength = wpt_max_length( $service );
-	$length    = $maxlength['base_length'];
-	/**
-	 * Filter a template prior to parsing tags.
-	 *
-	 * @hook wpt_tweet_sentence
-	 *
-	 * @param {string} $update Template for this status update.
-	 * @param {int}    $post_ID Post ID.
-	 *
-	 * @return {string}
-	 */
-	$update   = apply_filters( 'wpt_tweet_sentence', $update, $post_ID );
-	$update   = trim( wpt_custom_shortcodes( $update, $post_ID ) );
-	$update   = trim( wpt_user_meta_shortcodes( $update, $post['authId'] ) );
-	$encoding = ( 'UTF-8' !== get_option( 'blog_charset' ) && '' !== get_option( 'blog_charset', '' ) ) ? get_option( 'blog_charset' ) : 'UTF-8';
-	$diff     = 0;
-	$prepend  = wp_unslash( get_option( 'jd_twit_prepend', '' ) );
-	$append   = wp_unslash( get_option( 'jd_twit_append', '' ) );
-	// Add custom append/prepend fields to status update text.
-	if ( '' !== $prepend && '' !== $update && ( str_contains( $update, $prepend ) === false ) ) {
-		$update = $prepend . ' ' . $update;
-	}
-	if ( '' !== $append && '' !== $update && ( str_contains( $update, $append ) === false ) ) {
-		$update = $update . ' ' . $append;
-	}
-
-	// there are no tags in this update. Truncate and return.
-	if ( ! wpt_has_tags( $update ) ) {
-		$post_update = mb_substr( $update, 0, $length, $encoding );
-		/**
-		 * Filter an update template that does not contain any XPoster template tags.
-		 *
-		 * @hook wpt_custom_truncate
-		 * @param {string} $post_status Text to status update truncated to maximum allowed length.
-		 * @param {string} $update Original passed text.
-		 * @param {int}    $post_ID Post ID.
-		 * @param {bool}   $repost Boolean flag that indicates whether this is being reposted.
-		 * @param {int}    $reference Pass reference (1).
-		 *
-		 * @return {string}
-		 */
-		return apply_filters( 'wpt_custom_truncate', $post_update, $update, $post_ID, $repost, 1 );
-	}
-
-	// Replace the template tags with their corresponding values.
-	$post_update = str_ireplace( $tags, $values, $update );
-
-	// check total length.
-	$str_length = mb_strlen( urldecode( wpt_normalize( $post_update ) ), $encoding );
-
-	// Check whether completed replacement is still within allowed length.
-	if ( $str_length < $length + 1 ) {
-		if ( mb_strlen( wpt_normalize( $post_update ) ) > $length + 1 ) {
-			$post_update = mb_substr( $post_update, 0, $length, $encoding );
-		}
-		/**
-		 * Filter an update template after tags have been parsed but prior to truncating for length.
-		 *
-		 * @hook wpt_custom_truncate
-		 * @param {string} $post_update Text to Tweet truncated to maximum allowed length.
-		 * @param {string} $update Original passed text.
-		 * @param {int}    $post_ID Post ID.
-		 * @param {bool}   $repost Boolean flag that indicates whether this is being reposted.
-		 * @param {int}    $reference Pass reference (2).
-		 *
-		 * @return {string}
-		 */
-		return apply_filters( 'wpt_custom_truncate', $post_update, $update, $post_ID, $repost, 2 ); // return early if all is well.
+	if ( ! $post_ID ) {
+		// If no Post ID, return the update exactly as passed.
+		return $update;
 	} else {
-		$has_excerpt_tag = wpt_has( $update, '#post#' );
-		$has_title_tag   = wpt_has( $update, '#title#' );
-		$has_short_url   = wpt_has( $update, '#url#' );
-		$has_long_url    = wpt_has( $update, '#longurl#' );
+		if ( empty( $post ) ) {
+			$post = wpt_post_info( $post_ID );
+		}
+		$variant = get_post_meta( $post_ID, '_wpt_post_template_' . $service, true );
+		if ( '' !== $variant ) {
+			$update = $variant;
+		}
+		// create full unconditional post update - prior to truncation.
+		// order matters; arrays have to be ordered the same way.
+		$tags   = array_map( 'wpt_make_tag', wpt_tags() );
+		$values = wpt_create_values( $post, $post_ID, $ref, $service );
 
-		$url_strlen     = mb_strlen( urldecode( wpt_normalize( $values['url'] ) ), $encoding );
-		$longurl_strlen = mb_strlen( urldecode( wpt_normalize( $values['longurl'] ) ), $encoding );
+		// media file no longer needs accounting in shortening. 9/22/2016.
+		$maxlength = wpt_max_length( $service );
+		$length    = $maxlength['base_length'];
+		/**
+		 * Filter a template prior to parsing tags.
+		 *
+		 * @hook wpt_tweet_sentence
+		 *
+		 * @param {string} $update Template for this status update.
+		 * @param {int}    $post_ID Post ID.
+		 *
+		 * @return {string}
+		 */
+		$update   = apply_filters( 'wpt_tweet_sentence', $update, $post_ID );
+		$update   = trim( wpt_custom_shortcodes( $update, $post_ID ) );
+		$update   = trim( wpt_user_meta_shortcodes( $update, $post['authId'] ) );
+		$encoding = ( 'UTF-8' !== get_option( 'blog_charset' ) && '' !== get_option( 'blog_charset', '' ) ) ? get_option( 'blog_charset' ) : 'UTF-8';
+		$diff     = 0;
+		$prepend  = wp_unslash( get_option( 'jd_twit_prepend', '' ) );
+		$append   = wp_unslash( get_option( 'jd_twit_append', '' ) );
+		// Add custom append/prepend fields to status update text.
+		if ( '' !== $prepend && '' !== $update && ( str_contains( $update, $prepend ) === false ) ) {
+			$update = $prepend . ' ' . $update;
+		}
+		if ( '' !== $append && '' !== $update && ( str_contains( $update, $append ) === false ) ) {
+			$update = $update . ' ' . $append;
+		}
 
-		// Status update is too long, so we'll have to truncate that sucker.
-		$length_array = wpt_length_array( $values, $encoding );
+		// there are no tags in this update. Truncate and return.
+		if ( ! wpt_has_tags( $update ) ) {
+			$post_update = mb_substr( $update, 0, $length, $encoding );
+			/**
+			 * Filter an update template that does not contain any XPoster template tags.
+			 *
+			 * @hook wpt_custom_truncate
+			 * @param {string} $post_status Text to status update truncated to maximum allowed length.
+			 * @param {string} $update Original passed text.
+			 * @param {int}    $post_ID Post ID.
+			 * @param {bool}   $repost Boolean flag that indicates whether this is being reposted.
+			 * @param {int}    $reference Pass reference (1).
+			 *
+			 * @return {string}
+			 */
+			return apply_filters( 'wpt_custom_truncate', $post_update, $update, $post_ID, $repost, 1 );
+		}
 
-		// X.com's t.co shortener is mandatory. All URLS are max-character value set by X.com. Only true on X.
-		$tco   = ( wpt_is_ssl( $values['url'] ) ) ? $maxlength['https_length'] : $maxlength['http_length'];
-		$order = get_option( 'wpt_truncation_order' );
-		if ( is_array( $order ) ) {
-			asort( $order );
-			$preferred = array();
-			foreach ( $order as $k => $v ) {
-				if ( 'excerpt' === $k ) {
-					$k     = 'post';
-					$value = $length_array['post'];
-				} elseif ( 'blogname' === $k ) {
-					$k     = 'blog';
-					$value = $length_array['blog'];
-				} else {
-					$value = $length_array[ $k ];
-				}
+		// Replace the template tags with their corresponding values.
+		$post_update = str_ireplace( $tags, $values, $update );
 
-				$preferred[ $k ] = $value;
+		// check total length.
+		$str_length = mb_strlen( urldecode( wpt_normalize( $post_update ) ), $encoding );
+
+		// Check whether completed replacement is still within allowed length.
+		if ( $str_length < $length + 1 ) {
+			if ( mb_strlen( wpt_normalize( $post_update ) ) > $length + 1 ) {
+				$post_update = mb_substr( $post_update, 0, $length, $encoding );
 			}
+			/**
+			 * Filter an update template after tags have been parsed but prior to truncating for length.
+			 *
+			 * @hook wpt_custom_truncate
+			 * @param {string} $post_update Text to Tweet truncated to maximum allowed length.
+			 * @param {string} $update Original passed text.
+			 * @param {int}    $post_ID Post ID.
+			 * @param {bool}   $repost Boolean flag that indicates whether this is being reposted.
+			 * @param {int}    $reference Pass reference (2).
+			 *
+			 * @return {string}
+			 */
+			return apply_filters( 'wpt_custom_truncate', $post_update, $update, $post_ID, $repost, 2 ); // return early if all is well.
 		} else {
-			$preferred = $length_array;
-		}
-		if ( $has_short_url ) {
-			$diff = ( ( $url_strlen - $tco ) > 0 ) ? $url_strlen - $tco : 0;
-		} elseif ( $has_long_url ) {
-			$diff = ( ( $longurl_strlen - $tco ) > 0 ) ? $longurl_strlen - $tco : 0;
-		}
-		if ( $str_length > ( $length + 1 + $diff ) ) {
-			foreach ( $preferred as $key => $value ) {
-				// don't truncate content of post excerpt or title if those tags not in use.
-				if ( ! ( 'excerpt' === $key && ! $has_excerpt_tag ) && ! ( 'title' === $key && ! $has_title_tag ) ) {
-					$str_length = mb_strlen( urldecode( wpt_normalize( trim( $post_update ) ) ), $encoding );
-					if ( $str_length > ( $length + 1 + $diff ) ) {
-						$trim      = $str_length - ( $length + 1 + $diff );
-						$old_value = $values[ $key ];
-						// prevent URL from being modified.
-						$post_update = str_ireplace( array( $values['url'], $values['longurl'] ), array( '#url#', '#longurl#' ), $post_update );
+			$has_excerpt_tag = wpt_has( $update, '#post#' );
+			$has_title_tag   = wpt_has( $update, '#title#' );
+			$has_short_url   = wpt_has( $update, '#url#' );
+			$has_long_url    = wpt_has( $update, '#longurl#' );
 
-						// These tag fields should be removed completely, rather than truncated.
-						if ( wpt_remove_tag( $key ) ) {
-							$new_value = '';
-							// These tag fields should have stray characters removed on word boundaries.
-						} elseif ( 'tags' === $key ) {
-							// remove any stray hash characters due to string truncation.
-							if ( mb_strlen( $old_value ) - $trim <= 2 ) {
-								$new_value = '';
-							} else {
-								$new_value = $old_value;
-								while ( ( mb_strlen( $old_value ) - $trim ) < mb_strlen( $new_value ) ) {
-									$new_value = trim( mb_substr( $new_value, 0, mb_strrpos( $new_value, '#', 0, $encoding ) - 1 ) );
-								}
-							}
-							// Just flat out truncate everything else cold.
-						} else {
-							// trim letters.
-							$new_value = mb_substr( $old_value, 0, - ( $trim ), $encoding );
-							// trim rest of last word.
-							$last_space = strrpos( $new_value, ' ' );
-							$new_value  = mb_substr( $new_value, 0, $last_space, $encoding );
-							// If you want to add something like an ellipsis after truncation, use this filter.
+			$url_strlen     = mb_strlen( urldecode( wpt_normalize( $values['url'] ) ), $encoding );
+			$longurl_strlen = mb_strlen( urldecode( wpt_normalize( $values['longurl'] ) ), $encoding );
 
-							/**
-							 * Filter a template tag value after truncation. If a value like an excerpt or post content has been truncated, you can modify the output using this filter.
-							 *
-							 * @hook wpt_filter_truncated_value
-							 * @param {string} $new_value Text truncated to maximum allowed length.
-							 * @param {string} $key Template tag.
-							 * @param {string} $old_value Text prior to truncation.
-							 *
-							 * @return {string}
-							 */
-							$new_value = apply_filters( 'wpt_filter_truncated_value', $new_value, $key, $old_value );
-						}
-						$post_update = str_ireplace( $old_value, $new_value, $post_update );
-						// put URL back before checking length.
-						$post_update = str_ireplace( array( '#url#', '#longurl#' ), array( $values['url'], $values['longurl'] ), $post_update );
+			// Status update is too long, so we'll have to truncate that sucker.
+			$length_array = wpt_length_array( $values, $encoding );
+
+			// X.com's t.co shortener is mandatory. All URLS are max-character value set by X.com. Only true on X.
+			$tco   = ( wpt_is_ssl( $values['url'] ) ) ? $maxlength['https_length'] : $maxlength['http_length'];
+			$order = get_option( 'wpt_truncation_order' );
+			if ( is_array( $order ) ) {
+				asort( $order );
+				$preferred = array();
+				foreach ( $order as $k => $v ) {
+					if ( 'excerpt' === $k ) {
+						$k     = 'post';
+						$value = $length_array['post'];
+					} elseif ( 'blogname' === $k ) {
+						$k     = 'blog';
+						$value = $length_array['blog'];
 					} else {
-						if ( mb_strlen( wpt_normalize( $post_update ), $encoding ) > ( $length + 1 + $diff ) ) {
-							$post_update = mb_substr( $post_update, 0, ( $length + $diff ), $encoding );
+						$value = $length_array[ $k ];
+					}
+
+					$preferred[ $k ] = $value;
+				}
+			} else {
+				$preferred = $length_array;
+			}
+			if ( $has_short_url ) {
+				$diff = ( ( $url_strlen - $tco ) > 0 ) ? $url_strlen - $tco : 0;
+			} elseif ( $has_long_url ) {
+				$diff = ( ( $longurl_strlen - $tco ) > 0 ) ? $longurl_strlen - $tco : 0;
+			}
+			if ( $str_length > ( $length + 1 + $diff ) ) {
+				foreach ( $preferred as $key => $value ) {
+					// don't truncate content of post excerpt or title if those tags not in use.
+					if ( ! ( 'excerpt' === $key && ! $has_excerpt_tag ) && ! ( 'title' === $key && ! $has_title_tag ) ) {
+						$str_length = mb_strlen( urldecode( wpt_normalize( trim( $post_update ) ) ), $encoding );
+						if ( $str_length > ( $length + 1 + $diff ) ) {
+							$trim      = $str_length - ( $length + 1 + $diff );
+							$old_value = $values[ $key ];
+							// prevent URL from being modified.
+							$post_update = str_ireplace( array( $values['url'], $values['longurl'] ), array( '#url#', '#longurl#' ), $post_update );
+
+							// These tag fields should be removed completely, rather than truncated.
+							if ( wpt_remove_tag( $key ) ) {
+								$new_value = '';
+								// These tag fields should have stray characters removed on word boundaries.
+							} elseif ( 'tags' === $key ) {
+								// remove any stray hash characters due to string truncation.
+								if ( mb_strlen( $old_value ) - $trim <= 2 ) {
+									$new_value = '';
+								} else {
+									$new_value = $old_value;
+									while ( ( mb_strlen( $old_value ) - $trim ) < mb_strlen( $new_value ) ) {
+										$new_value = trim( mb_substr( $new_value, 0, mb_strrpos( $new_value, '#', 0, $encoding ) - 1 ) );
+									}
+								}
+								// Just flat out truncate everything else cold.
+							} else {
+								// trim letters.
+								$new_value = mb_substr( $old_value, 0, - ( $trim ), $encoding );
+								// trim rest of last word.
+								$last_space = strrpos( $new_value, ' ' );
+								$new_value  = mb_substr( $new_value, 0, $last_space, $encoding );
+								// If you want to add something like an ellipsis after truncation, use this filter.
+
+								/**
+								 * Filter a template tag value after truncation. If a value like an excerpt or post content has been truncated, you can modify the output using this filter.
+								 *
+								 * @hook wpt_filter_truncated_value
+								 * @param {string} $new_value Text truncated to maximum allowed length.
+								 * @param {string} $key Template tag.
+								 * @param {string} $old_value Text prior to truncation.
+								 *
+								 * @return {string}
+								 */
+								$new_value = apply_filters( 'wpt_filter_truncated_value', $new_value, $key, $old_value );
+							}
+							$post_update = str_ireplace( $old_value, $new_value, $post_update );
+							// put URL back before checking length.
+							$post_update = str_ireplace( array( '#url#', '#longurl#' ), array( $values['url'], $values['longurl'] ), $post_update );
+						} else {
+							if ( mb_strlen( wpt_normalize( $post_update ), $encoding ) > ( $length + 1 + $diff ) ) {
+								$post_update = mb_substr( $post_update, 0, ( $length + $diff ), $encoding );
+							}
 						}
 					}
 				}
 			}
-		}
 
-		// this is needed in case an update needs to be truncated outright and the truncation values aren't in the above.
-		// 1) removes URL 2) checks length of remainder 3) Replaces URL.
-		if ( mb_strlen( wpt_normalize( $post_update ) ) > $length + 1 ) {
-			$update = false;
-			if ( $has_short_url ) {
-				$url = $values['url'];
-				$tag = '#url#';
-			} elseif ( $has_long_url ) {
-				$url = $values['longurl'];
-				$tag = '#longurl#';
-			} else {
-				$post_update = mb_substr( $post_update, 0, ( $length + $diff ), $encoding );
-				$update      = true;
-			}
+			// this is needed in case an update needs to be truncated outright and the truncation values aren't in the above.
+			// 1) removes URL 2) checks length of remainder 3) Replaces URL.
+			if ( mb_strlen( wpt_normalize( $post_update ) ) > $length + 1 ) {
+				$update = false;
+				if ( $has_short_url ) {
+					$url = $values['url'];
+					$tag = '#url#';
+				} elseif ( $has_long_url ) {
+					$url = $values['longurl'];
+					$tag = '#longurl#';
+				} else {
+					$post_update = mb_substr( $post_update, 0, ( $length + $diff ), $encoding );
+					$update      = true;
+				}
 
-			if ( ! $update ) {
-				$temp = str_ireplace( $url, $tag, $post_update );
-				if ( mb_strlen( wpt_normalize( $temp ) ) > ( ( $length + 1 ) - ( $tco - strlen( $tag ) ) ) && $temp !== $post_update ) {
-					if ( false === stripos( $temp, '#url#' ) && false === stripos( $temp, '#longurl#' ) ) {
-						$post_update = trim( mb_substr( $temp, 0, $length, $encoding ) );
-					} else {
-						$post_update = trim( mb_substr( $temp, 0, ( $length - $tco - 1 ), $encoding ) );
+				if ( ! $update ) {
+					$temp = str_ireplace( $url, $tag, $post_update );
+					if ( mb_strlen( wpt_normalize( $temp ) ) > ( ( $length + 1 ) - ( $tco - strlen( $tag ) ) ) && $temp !== $post_update ) {
+						if ( false === stripos( $temp, '#url#' ) && false === stripos( $temp, '#longurl#' ) ) {
+							$post_update = trim( mb_substr( $temp, 0, $length, $encoding ) );
+						} else {
+							$post_update = trim( mb_substr( $temp, 0, ( $length - $tco - 1 ), $encoding ) );
+						}
+						// it's possible to trim off the #url# part in this process. If that happens, put it back.
+						$sub_sentence = ( ! wpt_has( $post_update, $tag ) && ( $has_short_url || $has_long_url ) ) ? $post_update . ' ' . $tag : $post_update;
+						$post_update  = str_ireplace( $tag, $url, $sub_sentence );
 					}
-					// it's possible to trim off the #url# part in this process. If that happens, put it back.
-					$sub_sentence = ( ! wpt_has( $post_update, $tag ) && ( $has_short_url || $has_long_url ) ) ? $post_update . ' ' . $tag : $post_update;
-					$post_update  = str_ireplace( $tag, $url, $sub_sentence );
 				}
 			}
 		}
