@@ -325,7 +325,7 @@ function wpt_check_recent_tweet( $id, $auth ) {
  *
  * @return bool
  */
-function wpt_service_enabled( $post_ID = false, $service ) {
+function wpt_service_enabled( $post_ID = false, $service = 'bluesky' ) {
 	$omit     = ( $post_ID ) ? get_post_meta( $post_ID, '_wpt_omit_services', true ) : array();
 	$omit     = ( $omit && is_array( $omit ) ) ? $omit : array();
 	$disabled = get_option( 'wpt_disabled_services', array() );
