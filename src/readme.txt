@@ -7,7 +7,7 @@ Tested up to: 6.7
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 5.0.0-beta1
+Stable tag: 5.0.0-RC1
 
 Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -59,7 +59,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
-= 5.0.0-beta1 =
+= 5.0.0-RC1 =
 
 * Feature: Ability to disable connected services without disconnecting.
 * Feature: Select which services you wish to send a given update to.
@@ -68,6 +68,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Change: Extend default excerpt length.
 * Change: Always defer template execution until status update is sent.
 * Change: Make character counting messages indicate which service limit is reached.
+* Change: simplify #account# and #@# handlers.
 * Bug fix: Make AJAX submissions aware of more metabox settings.
 * Improved error handling.
 * Design updates.
@@ -76,6 +77,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Update references to Tweets to be service independent.
 * Significant structural reorganization.
 * Change output of #account# and #@# template tags for increased predictability.
+* Code restructure to group service-specific code.
 
 = 4.3.2 =
 
