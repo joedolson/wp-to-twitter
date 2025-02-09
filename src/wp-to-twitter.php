@@ -123,8 +123,7 @@ function xposter_pro_check() {
 		if ( '3.0.0' === $wptp_version ) {
 			deactivate_plugins( 'wp-tweets-pro/wpt-pro-functions.php' );
 		}
-	}
-	if ( $wptp_version && version_compare( $wptp_version, '3.4.0', '<=' ) ) {
+	} elseif ( $wptp_version && version_compare( $wptp_version, '3.4.0', '<=' ) ) {
 		$message = sprintf(
 			// Translators: Plugin name, plugin version unsupported.
 			__( '%1$s has limited compatibility with XPoster Pro %2$s or lower. Some features may not be available.', 'wp-to-twitter' ) . $upgrade_now,
