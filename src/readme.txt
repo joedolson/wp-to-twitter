@@ -157,7 +157,6 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Bug fix: Should not show bearer token message on profile page if user settings not enabled.
 * Text changes: Change references to "Twitter" and "Tweet".
 * Docs: Improve and add some additional hook documentation.
-* 
 
 = 4.1.2 =
 
