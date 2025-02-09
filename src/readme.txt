@@ -211,13 +211,13 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 2. Activate the plugin using the `Plugins` menu in WordPress
 3. Go to Settings > XPoster
 4. Adjust the XPoster Options as you prefer them. 
-5. Create an X.com application at X.com and Configure your OAuth keys
+5. Create a Bluesky, Mastodon, or X application and configure your application with XPoster.
 
 == Frequently Asked Questions ==
 
 = Why are you still calling things Tweets? =
 
-X.com is still slowly re-branding, and I'm not clear what Tweets will ultimately be called. Currently, they're called "Posts" in some contexts, but that's extremely ambiguous in WordPress, so I'm avoiding that terminology for now.
+As of version 5.0.0, I'm not. But if you see something still referencing a Tweet, let me know it! 
 
 = Do I need to pay for an API plan at X.com? =
 
@@ -231,9 +231,8 @@ XPoster has always followed the principle that you are the owner of your own app
 
 1. XPoster Set up.
 2. XPoster Post Meta box.
-3. XPoster post meta box with WP Tweets PRO active.
+3. XPoster post meta box with XPoster PRO active.
 4. XPosterPro settings.
-5. Example X.com Feed (Twenty Nineteen)
-6. Basic XPoster Settings
+5. Basic XPoster Settings
 
 == Upgrade Notice ==
