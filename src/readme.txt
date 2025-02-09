@@ -7,7 +7,7 @@ Tested up to: 6.7
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 5.0.0-RC1
+Stable tag: 5.0.0
 
 Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -59,7 +59,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
-= 5.0.0-RC1 =
+= 5.0.0 =
 
 * Feature: Ability to disable connected services without disconnecting.
 * Feature: Select which services you wish to send a given update to.
