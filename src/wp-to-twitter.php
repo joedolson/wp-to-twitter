@@ -107,7 +107,7 @@ function xposter_pro_check() {
 	global $wptp_version;
 	$plugin_data = get_plugin_data( __FILE__, false );
 	if ( time() < 1743465600 ) {
-		$upgrade_now = ' <a href="https://xposterpro.com/awesome/xposter-pro/?discount=XPOSTERPRO-15">' . esc_html__( 'Upgrade Now - 15% Discount until April 1st!', 'wp-to-twitter' ) . '</a>';
+		$upgrade_now = ' <a href="https://xposterpro.com/awesome/xposter-pro/?discount=XPOSTERPRO-15">' . esc_html__( 'Upgrade Now - 15&#37; Discount until April 1st!', 'wp-to-twitter' ) . '</a>';
 	} else {
 		$upgrade_now = ' <a href="https://xposterpro.com/awesome/xposter-pro/">' . esc_html__( 'Upgrade Now', 'wp-to-twitter' ) . '</a>';
 	}
