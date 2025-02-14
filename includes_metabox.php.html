@@ -108,7 +108,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			&lt;div class="wpt-template-resources wpt-flex">
 				&lt;div class="wpt-template-wrapper">
 					&lt;h4>&lt;?php esc_html_e( 'Default template', 'wp-to-twitter' ); ?>&lt;/h4>
-					&lt;pre class="wpt-template">&lt;?php echo esc_html( wp_unslash( $template ) ); ?>&lt;/pre>
+					&lt;pre class="wpt-template">&lt;?php echo esc_html( wp_unslash( trim( $template ) ) ); ?>&lt;/pre>
 				&lt;/div>
 				&lt;div class='wptab' id='notes'>
 					&lt;h3>&lt;span class="dashicons dashicons-tag" aria-hidden="true">&lt;/span>&lt;?php esc_html_e( 'Template Tags', 'wp-to-twitter' ); ?>&lt;/h3>
@@ -161,12 +161,11 @@ function wpt_add_twitter_inner_box( $post ) {
 			} else {
 				?>
 			&lt;input type="hidden" name='_jd_twitter' value='&lt;?php echo esc_attr( $template ); ?>' />
-			&lt;pre class='wpt-template'>
-				&lt;?php echo esc_html( wp_unslash( $template ) ); ?>
-			&lt;/pre>
+			&lt;pre class='wpt-template'>&lt;?php echo esc_html( wp_unslash( $template ) ); ?>&lt;/pre>
 				&lt;?php
 			}
 			?>
+		&lt;/div>
 		&lt;div class='wpt-options wpt-pro'>
 			&lt;div class='wptab' id='custom'>
 			&lt;?php
@@ -198,7 +197,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			}
 			if ( ! current_user_can( 'wpt_twitter_custom' ) &amp;&amp; ! current_user_can( 'manage_options' ) ) {
 				?>
-				&lt;p>&lt;?php esc_html_e( 'Customizing XPoster options is not allowed for your user role.', 'wp-to-twitter' ); ?>&lt;/p>
+				&lt;p class="wpt-not-allowed">&lt;?php esc_html_e( 'Customizing XPoster options is not allowed for your user role.', 'wp-to-twitter' ); ?>&lt;/p>
 				&lt;?php
 				if ( 'pro' === $is_pro ) {
 					// Documented above.
@@ -207,7 +206,6 @@ function wpt_add_twitter_inner_box( $post ) {
 			}
 			?>
 			&lt;/div>
-		&lt;/div>
 		&lt;/div>
 		&lt;/div>
 		&lt;?php wpt_show_history( $post->ID ); ?>
