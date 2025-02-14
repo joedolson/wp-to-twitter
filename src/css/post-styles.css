@@ -12,6 +12,10 @@
     position: relative;
 }
 
+#wp2t .wpt-not-allowed {
+	margin-bottom: 1rem;
+}
+
 #wp2t .jtw textarea {
     font-size: 1.2em;
 	width: 100%;

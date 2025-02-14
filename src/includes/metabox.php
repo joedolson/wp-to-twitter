@@ -170,7 +170,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			}
 			if ( ! current_user_can( 'wpt_twitter_custom' ) && ! current_user_can( 'manage_options' ) ) {
 				?>
-				<p><?php esc_html_e( 'Customizing XPoster options is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
+				<p class="wpt-not-allowed"><?php esc_html_e( 'Customizing XPoster options is not allowed for your user role.', 'wp-to-twitter' ); ?></p>
 				<?php
 				if ( 'pro' === $is_pro ) {
 					// Documented above.
