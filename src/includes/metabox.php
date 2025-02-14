@@ -82,7 +82,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			<div class="wpt-template-resources wpt-flex">
 				<div class="wpt-template-wrapper">
 					<h4><?php esc_html_e( 'Default template', 'wp-to-twitter' ); ?></h4>
-					<pre class="wpt-template"><?php echo esc_html( wp_unslash( $template ) ); ?></pre>
+					<pre class="wpt-template"><?php echo esc_html( wp_unslash( trim( $template ) ) ); ?></pre>
 				</div>
 				<div class='wptab' id='notes'>
 					<h3><span class="dashicons dashicons-tag" aria-hidden="true"></span><?php esc_html_e( 'Template Tags', 'wp-to-twitter' ); ?></h3>
@@ -135,9 +135,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			} else {
 				?>
 			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $template ); ?>' />
-			<pre class='wpt-template'>
-				<?php echo esc_html( wp_unslash( $template ) ); ?>
-			</pre>
+			<pre class='wpt-template'><?php echo esc_html( wp_unslash( $template ) ); ?></pre>
 				<?php
 			}
 			?>
