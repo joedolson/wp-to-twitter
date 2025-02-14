@@ -139,6 +139,7 @@ function wpt_add_twitter_inner_box( $post ) {
 				<?php
 			}
 			?>
+		</div>
 		<div class='wpt-options wpt-pro'>
 			<div class='wptab' id='custom'>
 			<?php
@@ -179,7 +180,6 @@ function wpt_add_twitter_inner_box( $post ) {
 			}
 			?>
 			</div>
-		</div>
 		</div>
 		</div>
 		<?php wpt_show_history( $post->ID ); ?>
