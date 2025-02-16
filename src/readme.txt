@@ -7,7 +7,7 @@ Tested up to: 6.7
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 5.0.0
+Stable tag: 5.0.1
 
 Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -58,6 +58,12 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 5.0.1 =
+
+* Bug fix: Remove whitespace from status update template shown for non-admins.
+* Bug fix: Improve layout of settings message for non-admins.
+* Bug fix: Incorrectly nested closing `div` broke classic metabox layout for non-admins.
 
 = 5.0.0 =
 

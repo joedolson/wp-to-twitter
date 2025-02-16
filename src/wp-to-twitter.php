@@ -16,7 +16,7 @@
  * Text Domain: wp-to-twitter
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
- * Version:     5.0.0
+ * Version:     5.0.1
  */
 
 /*
@@ -78,7 +78,7 @@ require_once plugin_dir_path( __FILE__ ) . 'wp-to-twitter-manager.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-truncate.php';
 require_once plugin_dir_path( __FILE__ ) . 'wpt-rate-limiting.php';
 
-define( 'XPOSTER_VERSION', '5.0.0' );
+define( 'XPOSTER_VERSION', '5.0.1' );
 
 register_activation_hook( __FILE__, 'wpt_check_version' );
 /**
