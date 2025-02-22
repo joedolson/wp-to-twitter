@@ -479,7 +479,7 @@ function wtt_connect_oauth( $auth = false ) {
 				wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true );
 			} else {
 				?>
-				<input type="checkbox" name="oauth_settings" value="wtt_twitter_disconnect" id="disconnect" /> <label for="disconnect"><?php esc_html_e( 'Disconnect Your Account from X', 'wp-to-twitter' ); ?></label>
+				<input type="checkbox" name="oauth_settings" value="wtt_twitter_disconnect" id="disconnect_x" /> <label for="disconnect_x"><?php esc_html_e( 'Disconnect Your Account from X', 'wp-to-twitter' ); ?></label>
 				<?php
 			}
 			echo ( ! $auth ) ? '</form>' : '';

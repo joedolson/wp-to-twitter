@@ -182,7 +182,7 @@ function wtt_connect_bluesky( $auth = false ) {
 						echo '</form>';
 				} else {
 					?>
-					<input type="checkbox" name="bluesky_settings" value="wtt_bluesky_disconnect" id="disconnect" /> <label for="disconnect"><?php esc_html_e( 'Disconnect Your Account from Bluesky', 'wp-to-twitter' ); ?></label>
+					<input type="checkbox" name="bluesky_settings" value="wtt_bluesky_disconnect" id="disconnect_bluesky" /> <label for="disconnect_bluesky"><?php esc_html_e( 'Disconnect Your Account from Bluesky', 'wp-to-twitter' ); ?></label>
 					<?php
 				}
 				?>

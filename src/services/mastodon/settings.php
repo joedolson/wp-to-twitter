@@ -199,7 +199,7 @@ function wtt_connect_mastodon( $auth = false ) {
 				echo '</form>';
 			} else {
 				?>
-				<input type="checkbox" name="mastodon_settings" value="wtt_mastodon_disconnect" id="disconnect" /> <label for="disconnect"><?php esc_html_e( 'Disconnect Your Account from Mastodon', 'wp-to-twitter' ); ?></label>
+				<input type="checkbox" name="mastodon_settings" value="wtt_mastodon_disconnect" id="disconnect_mastodon" /> <label for="disconnect_mastodon"><?php esc_html_e( 'Disconnect Your Account from Mastodon', 'wp-to-twitter' ); ?></label>
 				<?php
 			}
 			?>
