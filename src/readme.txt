@@ -7,7 +7,7 @@ Tested up to: 6.7
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 5.0.1
+Stable tag: 5.0.2
 
 Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -58,6 +58,13 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 5.0.2 =
+
+* Bug fix: X user connection include an extra nonce, breaking user settings.
+* Bug fix: User styles not enqueued on user edit profile screen.
+* Bug fix: Simplify HTML and fix mis-nested `div`. 
+* Bug fix: Fix duplicate IDs on disconnect checkboxes.
 
 = 5.0.1 =
 
