@@ -50,7 +50,9 @@ function wpt_add_twitter_inner_box( $post ) {
 		wpt_show_metabox_message( $post, $options );
 		// Show switch to flip update status.
 		wpt_show_post_switch( $post, $options );
-		echo '<div class="wpt-options-metabox">';
+		?>
+		<div class="wpt-options-metabox">
+		<?php
 		$user_tweet = apply_filters( 'wpt_user_text', '', $status );
 		// Formulate Template display.
 		$template = wp_strip_all_tags( wpt_get_status_template( $post, $options, false ) );
@@ -129,9 +131,6 @@ function wpt_add_twitter_inner_box( $post ) {
 				</p>
 					<?php
 				}
-				?>
-			</div>
-				<?php
 			} else {
 				?>
 			<input type="hidden" name='_jd_twitter' value='<?php echo esc_attr( $template ); ?>' />
@@ -140,8 +139,6 @@ function wpt_add_twitter_inner_box( $post ) {
 			}
 			?>
 		</div>
-		<div class='wpt-options wpt-pro'>
-			<div class='wptab' id='custom'>
 			<?php
 			// XPoster Pro.
 			if ( 'pro' === $is_pro && ( current_user_can( 'wpt_twitter_custom' ) || current_user_can( 'manage_options' ) ) ) {
@@ -179,7 +176,6 @@ function wpt_add_twitter_inner_box( $post ) {
 				}
 			}
 			?>
-			</div>
 		</div>
 		</div>
 		<?php wpt_show_history( $post->ID ); ?>
