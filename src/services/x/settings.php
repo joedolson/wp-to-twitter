@@ -408,11 +408,11 @@ function wtt_connect_oauth( $auth = false ) {
 			if ( ! $auth ) {
 				?>
 				<p class="submit"><input type="submit" name="submit" class="button-primary" value="<?php esc_html_e( 'Connect to X.com', 'wp-to-twitter' ); ?>" /></p>
+				<?php wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true ); ?>
 				<?php
 			}
 			?>
 			<input type="hidden" name="oauth_settings" value="wtt_oauth_test" class="hidden" />
-			<?php wp_nonce_field( 'wp-to-twitter-nonce', '_wpnonce', true, true ); ?>
 		</div>
 		<?php
 	} elseif ( wtt_oauth_test( $auth ) ) {
