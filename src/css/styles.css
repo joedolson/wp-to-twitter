@@ -208,6 +208,10 @@ label[for="wpt_license_key"] {
 	background: rgba( 0,0,0,.04 );
 }
 
+.wpt-user-services label:not(input + label) {
+	display: block;
+}
+
 @media ( width < 1384px ) {
 	.wpt-user-services {
 		grid-template-columns: repeat( 2, 1fr );
