@@ -1230,6 +1230,7 @@ function wpt_admin_style() {
 		'xposter-pro_page_wp-to-twitter-tweets',
 		'xposter-pro_page_wp-to-twitter-errors',
 		'profile',
+		'user-edit',
 	);
 	if ( in_array( $current_screen->base, $enqueues, true ) ) {
 		wp_enqueue_style( 'wpt-styles', plugins_url( 'css/styles.css', __FILE__ ), array(), $wpt_version );
