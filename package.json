@@ -31,8 +31,8 @@
     "esbuild": "^0.17.10"
   },
   "scripts": {
-    "start": "esbuild base.min=src/js/base.js ajax.min=src/js/ajax.js charcount.min=src/js/charcount.js tabs.min=src/js/tabs.js --bundle --outdir=src/js --target=chrome58,firefox57,safari11,edge16 --watch --sourcemap",
-    "build:js": "esbuild base.min=src/js/base.js ajax.min=src/js/ajax.js charcount.min=src/js/charcount.js tabs.min=src/js/tabs.js --bundle --outdir=src/js --target=chrome58,firefox57,safari11,edge16 --minify",
+    "start": "esbuild base.min=src/js/base.js ajax.min=src/js/ajax.js charcount.min=src/js/charcount.js tabs.min=src/js/tabs.js --bundle --outdir=src/js --target=chrome58,firefox57,safari11,edge18 --watch --sourcemap",
+    "build:js": "esbuild base.min=src/js/base.js ajax.min=src/js/ajax.js charcount.min=src/js/charcount.js tabs.min=src/js/tabs.js --bundle --outdir=src/js --target=chrome58,firefox57,safari11,edge18 --minify",
     "presetup": "find .scripts -type f -exec chmod +x {} \\;",
     "build:docs": "rm -rf docs/ && jsdoc -c hookdoc-conf.json",
     "format-php": "wp-env run composer run-script format",
