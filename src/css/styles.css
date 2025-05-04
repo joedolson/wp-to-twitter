@@ -368,12 +368,12 @@ label[for='wpt_prepend_rt'], label[for='wpt_prepend_rt2'], label[for='wpt_prepen
 	margin: 1em 0 !important;
 }
 
-.nav-tab-wrapper {
+#wp-to-twitter .nav-tab-wrapper {
 	padding-left: 10px;
 	border-bottom: 1px solid #ccc;
 }
 
-.nav-tab-wrapper .nav-tab {
+#wp-to-twitter .nav-tab-wrapper .nav-tab {
 	font-weight: 700;
 	font-size: 1.1em;
 }
