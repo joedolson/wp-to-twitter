@@ -1,7 +1,3 @@
-#wp-to-twitter .jd-settings {
-	clear: both;
-}
-
 #wp-to-twitter form .error p {
 	background: none;
 	border: none;
@@ -363,11 +359,6 @@ label[for='wpt_prepend_rt'], label[for='wpt_prepend_rt2'], label[for='wpt_prepen
 	padding: 4px;
 }
 
-.wpt-button {
-	text-align: center;
-	margin: 1em 0 !important;
-}
-
 #wp-to-twitter .nav-tab-wrapper {
 	padding-left: 10px;
 	border-bottom: 1px solid #ccc;
@@ -376,15 +367,6 @@ label[for='wpt_prepend_rt'], label[for='wpt_prepend_rt2'], label[for='wpt_prepen
 #wp-to-twitter .nav-tab-wrapper .nav-tab {
 	font-weight: 700;
 	font-size: 1.1em;
-}
-
-.wpt-button .cta a {
-	padding: 1em;
-	font-size: 1.2em;
-	background: #c24822;
-	color: #fff;
-	text-decoration: none;
-	display: inline-block;
 }
 
 #wpt_settings_page iframe {
