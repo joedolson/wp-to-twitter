@@ -33,7 +33,6 @@
 
         function calculate(obj) {
             var count   = $(obj).val().length;
-			console.log( count );
 			var allowed = options.allowed;
 			// Service specific limits.
 			var xAllowed        = options.x_limit;
