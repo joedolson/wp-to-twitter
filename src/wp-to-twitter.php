@@ -431,7 +431,7 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 	} // exit silently if not authorized.
 
 	// Check if this update has already been sent to a given service.
-	$check = wpt_check_service_history( $id, $auth, $template, $connections );
+	$check = wpt_prepare_post( $id, $auth, $template, $connections );
 
 	// if has media, must have a valid attachment.
 	$media      = ( null === $media ) ? wpt_post_with_media( $id ) : $media;
@@ -513,7 +513,7 @@ function wpt_get_custom_template( $post_ID, $template, $service ) {
  *
  * @return array Array of statuses by service or false, if blocked.
  */
-function wpt_check_service_history( $post_ID, $auth, $template, $connections ) {
+function wpt_prepare_post( $post_ID, $auth, $template, $connections ) {
 	$checks = array();
 	foreach ( $connections as $service => $connected ) {
 		if ( ! $connected || ! wpt_service_enabled( $post_ID, $service ) ) {
