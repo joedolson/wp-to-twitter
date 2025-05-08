@@ -229,6 +229,7 @@ legend.variant-selector {
 
 .wpt_log {
 	padding: .5rem 0;
+	word-break: break-word;
 }
 
 .tweet-buttons .wpt-buttons {
