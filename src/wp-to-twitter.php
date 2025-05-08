@@ -1038,7 +1038,7 @@ function wpt_admin_scripts() {
 				'mastodon_limit' => $config['mastodon'],
 				'bluesky_limit'  => $config['bluesky'],
 				'is_ssl'         => ( wpt_is_ssl( home_url() ) ) ? 'true' : 'false',
-				'text'           => __( 'Characters left: ', 'wp-to-twitter' ),
+				'text'           => __( 'Length:', 'wp-to-twitter' ),
 				'updated'        => __( 'Custom status template updated', 'wp-to-twitter' ),
 			)
 		);
