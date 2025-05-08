@@ -87,7 +87,7 @@
             } else {
                 $(obj).next().removeClass(options.cssExceeded);
             }
-            $(obj).next().html(options.counterText + available);
+            $(obj).next().html(options.counterText + ' ' + length);
         };
 
         this.each(function () {
