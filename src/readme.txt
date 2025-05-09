@@ -59,6 +59,15 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 5.0.3 =
+
+* Bug fix: Remove some unused CSS.
+* Bug fix: CSS issue conflicting with other plugins. Props @reiniggen.
+* Bug fix: Ensure that exact template passed is used in cases where testing a template is needed.
+* Bug fix: Missing service length limits in character counter options.
+* Bug fix: Wrap text in displayed log after AJAX post.
+* Change: Display characters used rather than characters left in character counter.
+
 = 5.0.2 =
 
 * Bug fix: X user connection include an extra nonce, breaking user settings.
