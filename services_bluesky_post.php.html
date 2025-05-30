@@ -82,8 +82,8 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 			$alt_text   = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
 			$path       = wpt_attachment_path( $attachment, 'large' );
 			$image_data = wp_get_attachment_image_src( $attachment, 'large' );
-			$ratio     = array(
-				'width' => $image_data[1],
+			$ratio      = array(
+				'width'  => $image_data[1],
 				'height' => $image_data[2],
 			);
 			$mimetype   = mime_content_type( $path );
