@@ -59,6 +59,10 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 == Changelog ==
 
+= 5.0.4 =
+
+* Support change for Bluesky images (XPoster Pro).
+
 = 5.0.3 =
 
 * Bug fix: Remove some unused CSS.
