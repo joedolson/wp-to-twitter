@@ -7,7 +7,7 @@ Tested up to: 6.8
 Requires PHP: 7.4
 License: GPLv2 or later
 Text Domain: wp-to-twitter
-Stable tag: 5.0.3
+Stable tag: 5.0.4
 
 Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -62,6 +62,8 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 5.0.4 =
 
 * Support change for Bluesky images (XPoster Pro).
+* Remove obsolete custom plugin update notice.
+* Highlight premium features in metabox.
 
 = 5.0.3 =
 
