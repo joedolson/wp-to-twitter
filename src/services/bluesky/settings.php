@@ -5,7 +5,7 @@
  * @category Bluesky
  * @package  XPoster
  * @author   Joe Dolson
- * @license  GPLv2 or later
+ * @license  GPLv3
  * @link     https://www.xposterpro.com
  */
 
