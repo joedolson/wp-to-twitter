@@ -9,10 +9,10 @@ Automatically send your posts as Bluesky or Mastodon status updates.
 * Donate link: https://www.joedolson.com/donate/
 * Tags: accessibility, WordPress
 * Requires at least: 6.4
-* Tested up to: 6.8
+* Tested up to: 6.9
 * Stable tag: `5.0.4`
-* License: GPLv3  
-* License URI: http://www.gnu.org/licenses/gpl-2.0.html  
+* License: GPLv3
+* License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 This is the development environment for XPoster.
 
@@ -22,7 +22,7 @@ Support questions should be sent via the Support form that appears on the Help s
 
 Bugs or feature development contributions should be made through the [GitHub repository](https://github.com/joedolson/wp-to-twitter/issues)
 
-## Authors 
+## Authors
 
 * [Joe Dolson](https://www.joedolson.com)
 
