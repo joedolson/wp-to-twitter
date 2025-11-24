@@ -260,7 +260,7 @@ function wpt_view_rate_limits() {
 					$dashicon      = ( $count >= $limit ) ? "&lt;span class='dashicons dashicons-no' aria-hidden='true'>&lt;/span>" : "&lt;span class='dashicons dashicons-yes' aria-hidden='true'>&lt;/span>";
 					?>
 					&lt;li class='&lt;?php echo esc_attr( $rate_limiting ); ?>'>
-						&lt;?php wp_kses_post( $dashicon . $term_label ); ?>:
+						&lt;?php echo wp_kses_post( $dashicon . $term_label ); ?>:
 					&lt;?php
 					// Translators: Number of tweets sent, number allowed.
 					echo wp_kses_post( sprintf( _n( '%1$s update sent, %2$s allowed.', '%1$s updates sent, %2$s allowed.', $count, 'wp-to-twitter' ), "&lt;strong>$count&lt;/strong>", "&lt;strong>$limit&lt;/strong>" ) );
