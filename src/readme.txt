@@ -7,7 +7,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 License: GPLv3
 Text Domain: wp-to-twitter
-Stable tag: 5.0.4
+Stable tag: 5.0.5
 
 Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -62,7 +62,9 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 5.0.5 =
 
 * Docs: Apparently, you can't use the letter "X" in your app name on Twitter. Who knows whether that's temporary or not.
-*
+* Style fixes: Misaligned styles in support links.
+* Bug fix: Missing echo in rate limiting. Props @DAnn2012.
+* Update compatibility for WordPress 6.9.
 
 = 5.0.4 =
 

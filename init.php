@@ -16,7 +16,7 @@
  * Text Domain: wp-to-twitter
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
- * Version:     5.0.4
+ * Version:     5.0.5
  */
 
 /*
