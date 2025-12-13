@@ -33,3 +33,4 @@ Contributors listed only since moving development to GitHub. [Github Contributor
 * [Robert Korulczyk](https://github.com/rob006)
 * [mt8.biz](https://github.com/mt8)
 * [Toru Miki](https://github.com/waviaei)
+* [DAnn2012](https://github.com/DAnn2012)
