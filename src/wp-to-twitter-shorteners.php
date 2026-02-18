@@ -186,9 +186,9 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 					// remote YOURLS installation.
 					$yourlstoken = trim( get_option( 'yourlstoken' ) );
 					$yourlslogin = trim( get_option( 'yourlslogin' ) );
-					$yourlsurl   = stripcslashes( get_option( 'yourlsurl' ) );
+					$yourlsurl   = wp_unslash( get_option( 'yourlsurl' ) );
 					if ( $yourlstoken && $yourlsurl ) {
-						$token     = stripcslashes( $yourlstoken );
+						$token     = wp_unslash( $yourlstoken );
 						$yourlsurl = esc_url( $yourlsurl );
 						if ( $token ) {
 							$args = array(
