@@ -892,7 +892,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			if ( isset( $_POST['_jd_twitter'] ) &amp;&amp; ! empty( $_POST['_jd_twitter'] ) ) {
 				$ct = sanitize_textarea_field( wp_unslash( $_POST['_jd_twitter'] ) );
 			}
-			$custom_tweet = ( '' !== $ct ) ? stripcslashes( trim( $ct ) ) : '';
+			$custom_tweet = ( '' !== $ct ) ? wp_unslash( trim( $ct ) ) : '';
 			// if ops is set and equals 'publish', this is being edited. Otherwise, it's a new post.
 			if ( 0 === $new ) {
 				// if this is an old post and editing updates are enabled.
@@ -915,7 +915,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				}
 				wpt_mail( '4b: Post action is edit', 'This event was a post edit action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
 				if ( '1' === (string) $post_type_settings[ $post_type ]['post-edited-update'] || $post_this ) {
-					$nptext = stripcslashes( $post_type_settings[ $post_type ]['post-edited-text'] );
+					$nptext = wp_unslash( $post_type_settings[ $post_type ]['post-edited-text'] );
 					if ( ! $nptext ) {
 						wpt_mail( '4b: Edited post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
 					}
@@ -925,7 +925,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 			} else {
 				wpt_mail( '4c: Post action is publish', 'This event was a post publish action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
 				if ( '1' === (string) $post_type_settings[ $post_type ]['post-published-update'] || $post_this ) {
-					$nptext = stripcslashes( $post_type_settings[ $post_type ]['post-published-text'] );
+					$nptext = wp_unslash( $post_type_settings[ $post_type ]['post-published-text'] );
 					if ( ! $nptext ) {
 						wpt_mail( '4c: Published post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
 					}
@@ -970,7 +970,7 @@ function wpt_post_update_link( $link_id ) {
 		$thislinkname        = $bookmark->link_name;
 		$thispostlink        = $bookmark->link_url;
 		$thislinkdescription = $bookmark->link_description;
-		$sentence            = stripcslashes( get_option( 'newlink-published-text' ) );
+		$sentence            = wp_unslash( get_option( 'newlink-published-text' ) );
 		$sentence            = str_ireplace( '#title#', $thislinkname, $sentence );
 		$sentence            = str_ireplace( '#description#', $thislinkdescription, $sentence );
 
