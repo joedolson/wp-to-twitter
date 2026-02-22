@@ -61,8 +61,8 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 
 = 5.0.6 =
 
-* Bug fix: Connection admin notice could not be dismissed.
-* Bug fix: `code` tags were being escaped in Mastodon instructions.
+* Bug fix: Connection admin notice could not be dismissed. Props @ipstenu.
+* Bug fix: `code` tags were being escaped in Mastodon instructions. Props @ipstenu.
 * Change: Replace `stripcslashes` with `wp_unslash`.
 
 = 5.0.5 =
