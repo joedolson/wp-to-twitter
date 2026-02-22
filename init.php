@@ -4,7 +4,7 @@
  *
  * @package     XPoster
  * @author      Joe Dolson
- * @copyright   2008-2025 Joe Dolson
+ * @copyright   2008-2026 Joe Dolson
  * @license     GPL-2.0+
  *
  * @wordpress-plugin
@@ -16,11 +16,11 @@
  * Text Domain: wp-to-twitter
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/license/gpl-2.0.txt
- * Version:     5.0.5
+ * Version:     5.0.6
  */
 
 /*
-	Copyright 2008-2025  Joe Dolson (email : joe@joedolson.com)
+	Copyright 2008-2026  Joe Dolson (email : joe@joedolson.com)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by

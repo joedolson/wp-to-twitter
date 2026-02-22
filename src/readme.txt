@@ -7,7 +7,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 License: GPLv3
 Text Domain: wp-to-twitter
-Stable tag: 5.0.5
+Stable tag: 5.0.6
 
 Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -58,6 +58,12 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 5.0.6 =
+
+* Bug fix: Connection admin notice could not be dismissed.
+* Bug fix: `code` tags were being escaped in Mastodon instructions.
+* Change: Replace `stripcslashes` with `wp_unslash`.
 
 = 5.0.5 =
 
