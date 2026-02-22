@@ -1534,14 +1534,15 @@ function wpt_dismiss_connection() {
 	global $current_screen;
 	if ( $current_screen &amp;&amp; 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
 		$nonce   = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : false;
-		$verify  = wp_verify_nonce( $nonce, 'wpt-dismiss' );
+		$verify  = wp_verify_nonce( $nonce, 'wpt_dismiss' );
 		$dismiss = isset( $_GET['dismiss'] ) &amp;&amp; 'connection' === $_GET['dismiss'] ? true : false;
+
 		if ( $verify &amp;&amp; $dismiss ) {
 			update_option( 'wpt_ignore_connection', 'true' );
 		}
 	}
 }
-add_action( 'admin_init', 'wpt_dismiss_connection' );
+add_action( 'current_screen', 'wpt_dismiss_connection' );
 
 /**
  * Display notices if update services are not connected.
@@ -1577,11 +1578,11 @@ function wpt_needs_connection() {
 		if ( $x || $mastodon || $bluesky ) {
 			$class          = 'xposter-connection dismissible';
 			$args           = array(
-				'dismiss'  => 'connection',
-				'_wpnonce' => wp_create_nonce( 'wpt_dismiss' ),
+				'dismiss'        => 'connection',
+				'_wpnonce'       => wp_create_nonce( 'wpt_dismiss' ),
 			);
 			$dismiss_url    = add_query_arg( $args, admin_url( 'admin.php?page=wp-tweets-pro' ) );
-			$is_dismissible = ' &lt;a href="' . esc_url( $dismiss_url ) . '" class="button button-secondary">' . __( 'Ignore', 'wp-to-twitter' ) . '&lt;/a>';
+			$is_dismissible = ' &lt;a href="' . esc_url( $dismiss_url ) . '" class="button button-primary">' . __( 'Ignore', 'wp-to-twitter' ) . '&lt;/a>';
 		}
 		if ( $message ) {
 			wp_admin_notice(
@@ -1589,6 +1590,7 @@ function wpt_needs_connection() {
 				array(
 					'type'               => 'error',
 					'additional_classes' => array( $class ),
+					'paragraph_wrap'     => false,
 				)
 			);
 		}
