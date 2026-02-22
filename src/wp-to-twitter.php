@@ -1508,14 +1508,15 @@ function wpt_dismiss_connection() {
 	global $current_screen;
 	if ( $current_screen && 'toplevel_page_wp-tweets-pro' === $current_screen->id ) {
 		$nonce   = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : false;
-		$verify  = wp_verify_nonce( $nonce, 'wpt-dismiss' );
+		$verify  = wp_verify_nonce( $nonce, 'wpt_dismiss' );
 		$dismiss = isset( $_GET['dismiss'] ) && 'connection' === $_GET['dismiss'] ? true : false;
+
 		if ( $verify && $dismiss ) {
 			update_option( 'wpt_ignore_connection', 'true' );
 		}
 	}
 }
-add_action( 'admin_init', 'wpt_dismiss_connection' );
+add_action( 'current_screen', 'wpt_dismiss_connection' );
 
 /**
  * Display notices if update services are not connected.
