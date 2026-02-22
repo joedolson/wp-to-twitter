@@ -1551,11 +1551,11 @@ function wpt_needs_connection() {
 		if ( $x || $mastodon || $bluesky ) {
 			$class          = 'xposter-connection dismissible';
 			$args           = array(
-				'dismiss'  => 'connection',
-				'_wpnonce' => wp_create_nonce( 'wpt_dismiss' ),
+				'dismiss'        => 'connection',
+				'_wpnonce'       => wp_create_nonce( 'wpt_dismiss' ),
 			);
 			$dismiss_url    = add_query_arg( $args, admin_url( 'admin.php?page=wp-tweets-pro' ) );
-			$is_dismissible = ' <a href="' . esc_url( $dismiss_url ) . '" class="button button-secondary">' . __( 'Ignore', 'wp-to-twitter' ) . '</a>';
+			$is_dismissible = ' <a href="' . esc_url( $dismiss_url ) . '" class="button button-primary">' . __( 'Ignore', 'wp-to-twitter' ) . '</a>';
 		}
 		if ( $message ) {
 			wp_admin_notice(
@@ -1563,6 +1563,7 @@ function wpt_needs_connection() {
 				array(
 					'type'               => 'error',
 					'additional_classes' => array( $class ),
+					'paragraph_wrap'     => false,
 				)
 			);
 		}
