@@ -105,7 +105,7 @@ function wpt_set_log( $data, $id, $message, $http = '200' ) {
 			'http'    => (string) $http,
 		);
 		delete_transient( $id . '_' . $data );
-		set_transient( $id . '_' . $data, $message );
+		set_transient( $id . '_' . $data, $message, 300 );
 	}
 	delete_transient( $data . '_last' );
 	set_transient( $data . '_last', array( $id, $message ), 300 );
