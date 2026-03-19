@@ -106,6 +106,26 @@ function wpt_get_log( $data, $id ) {
 }
 
 /**
+ * Clean up status update logs. Run once on admin load.
+ *
+ * @param int $id Post ID.
+ */
+function wpt_clean_logs( $id ) {
+	$cleaned = get_option( 'wpt_logs_cleaned', 'false' );
+	if ( 'false' === $cleaned ) {
+		// one-time bulk remove logs that missed transient expiration.
+		global $wpdb;
+		$query = $wpdb->get_results( $wpdb->prepare( 'SELECT option_id FROM ' . $wpdb->options . ' WHERE option_name LIKE %s', '%wpt_status_message%' ) );
+
+		foreach ( $query as $result ) {
+			$wpdb->delete( $wpdb->options, array( 'option_id' => $result->option_id ), array( '%d' ) );
+		}
+		update_option( 'wpt_logs_cleaned', 'true' );
+	}
+}
+add_action( 'admin_init', 'wpt_clean_logs' );
+
+/**
  * Test function to see whether options are functioning.
  */
 function wpt_check_functions() {
