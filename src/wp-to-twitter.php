@@ -49,11 +49,16 @@ define( 'WPT_DEBUG_BY_EMAIL', false ); // Email debugging no longer default as o
 define( 'WPT_DEBUG_ADDRESS', get_option( 'admin_email' ) );
 define( 'WPT_FROM', 'From: \"' . get_option( 'blogname' ) . '\" <' . get_option( 'admin_email' ) . '>' );
 
+$staging = get_option( 'wpt_staging_mode', false );
 // If current environment tests as staging, enable staging mode.
 if ( function_exists( 'wp_get_environment_type' ) ) {
-	if ( 'staging' === wp_get_environment_type() && ! defined( 'WPT_STAGING_MODE' ) ) {
-		define( 'WPT_STAGING_MODE', true );
+	if ( 'staging' === wp_get_environment_type() ) {
+		$staging = true;
 	}
+}
+// Because WPT_STAGING_MODE has previously supported external declaration, need to keep that support.
+if ( ! defined( 'WPT_STAGING_MODE' ) ) {
+	define( 'WPT_STAGING_MODE', $staging );
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'vendor_prefixed/vendor/scoper-autoload.php';
@@ -1425,7 +1430,7 @@ function wpt_post_update_xmlrpc( $id ) {
 
 add_action( 'admin_notices', 'wpt_debugging_enabled', 10 );
 /**
- * Show notice if X.com debugging is enabled.
+ * Show notice if XPoster debugging is enabled.
  */
 function wpt_debugging_enabled() {
 	if ( current_user_can( 'manage_options' ) && WPT_DEBUG ) {
@@ -1434,6 +1439,22 @@ function wpt_debugging_enabled() {
 			$message,
 			array(
 				'type' => 'error',
+			)
+		);
+	}
+}
+
+add_action( 'admin_notices', 'wpt_staging_enabled', 10 );
+/**
+ * Show notice if XPoster staging mode is enabled.
+ */
+function wpt_staging_enabled() {
+	if ( current_user_can( 'manage_options' ) && WPT_STAGING_MODE ) {
+		$message = __( '<strong>XPoster</strong> staging mode is enabled. Updates will report as sent, but will not be sent.', 'wp-to-twitter' );
+		wp_admin_notice(
+			$message,
+			array(
+				'type' => 'info',
 			)
 		);
 	}
