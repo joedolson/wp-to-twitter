@@ -254,6 +254,7 @@ function wpt_updated_settings() {
 
 		update_option( 'wp_debug_oauth', ( isset( $_POST['wp_debug_oauth'] ) ) ? 1 : 0 );
 		update_option( 'wpt_debug_tweets', ( isset( $_POST['wpt_debug_tweets'] ) ) ? 1 : 0 );
+		update_option( 'wpt_staging_mode', ( isset( $_POST['wpt_staging_mode'] ) ) ? 1 : 0 );
 		$wpt_truncation_order = isset( $_POST['wpt_truncation_order'] ) ? map_deep( wp_unslash( $_POST['wpt_truncation_order'] ), 'sanitize_text_field' ) : array();
 		update_option( 'wpt_truncation_order', $wpt_truncation_order );
 		$message .= __( 'XPoster Advanced Options Updated', 'wp-to-twitter' ) . '. ' . $extend;
@@ -800,8 +801,8 @@ function wpt_update_settings() {
 									&lt;?php
 								}
 								?>
-								
-								
+
+
 								&lt;/ul>
 							&lt;/fieldset>
 						&lt;/div>
@@ -886,6 +887,10 @@ function wpt_update_settings() {
 								&lt;/li>
 								&lt;li>
 									&lt;input type="checkbox" name="wpt_debug_tweets" id="wpt_debug_tweets" value="1" &lt;?php checked( 'checked', wpt_checkbox( 'wpt_debug_tweets' ) ); ?> /> &lt;label for="wpt_debug_tweets">&lt;?php esc_html_e( 'Enable XPoster Debugging', 'wp-to-twitter' ); ?>&lt;/label>
+								&lt;/li>
+								&lt;li>
+									&lt;input type="checkbox" aria-describedby="wpt_staging_mode_note" name="wpt_staging_mode" id="wpt_staging_mode" value="1" &lt;?php checked( 'checked', wpt_checkbox( 'wpt_staging_mode' ) ); ?> /> &lt;label for="wpt_staging_mode">&lt;?php esc_html_e( 'Enable XPoster Staging Mode', 'wp-to-twitter' ); ?>&lt;/label>&lt;br />
+									&lt;span id="wpt_staging_mode_note">&lt;?php esc_html_e( 'In staging mode, updates are not sent, but will provide feedback as if they were.', 'wp-to-twitter' ); ?>&lt;/span>
 								&lt;/li>
 							&lt;/ul>
 						&lt;/fieldset>
@@ -1163,7 +1168,7 @@ function wpt_auto_tweet() {
 	$allow = ( '0' === get_option( 'wpt_auto_tweet_allowed', '0' ) ) ? false : true;
 	?>
 	&lt;p class='wpt_auto_tweet_allowed'>
-		&lt;input type='checkbox' value='1' &lt;?php checked( $allow, true ); ?> id='wpt_auto_tweet_allowed' name='wpt_auto_tweet_allowed' aria-describedby='auto_tweet_note' /> &lt;label for='wpt_auto_tweet_allowed'>&lt;?php esc_html_e( 'Allow status updates from Post Importers', 'wp-to-twitter' ); ?>&lt;/label> 
+		&lt;input type='checkbox' value='1' &lt;?php checked( $allow, true ); ?> id='wpt_auto_tweet_allowed' name='wpt_auto_tweet_allowed' aria-describedby='auto_tweet_note' /> &lt;label for='wpt_auto_tweet_allowed'>&lt;?php esc_html_e( 'Allow status updates from Post Importers', 'wp-to-twitter' ); ?>&lt;/label>
 		&lt;?php
 		if ( $allow ) {
 			?>
