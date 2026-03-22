@@ -7,7 +7,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 License: GPLv3
 Text Domain: wp-to-twitter
-Stable tag: 5.0.6
+Stable tag: 5.0.7
 
 Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -58,6 +58,14 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 5.0.7 =
+
+* Add: One-time clean up action to wipe excess transient status messages in logs.
+* Bug fix: Fix missing transient expiration in status messages logging.
+* Bug fix: Update rate limit keys in headers from X.com.
+* Bug fix: Remove '@' sign in Bluesky account link.
+* Feature: Add setting to enable staging mode for debugging and testing.
 
 = 5.0.6 =
 
