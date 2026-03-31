@@ -1307,8 +1307,8 @@ function wpt_in_post_type( $id ) {
  * @return array|bool
  */
 function wpt_allowed_post_types( $post_type = false ) {
-	$post_type_settings = get_option( 'wpt_post_types' );
-	$post_types         = array_keys( $post_type_settings );
+	$post_type_settings = (array) get_option( 'wpt_post_types' );
+	$post_types = array_keys( $post_type_settings );
 	if ( $post_type ) {
 		return in_array( $post_type, $post_types, true ) ? true : false;
 	}
