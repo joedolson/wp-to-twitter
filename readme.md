@@ -9,8 +9,8 @@ Automatically send your posts as Bluesky or Mastodon status updates.
 * Donate link: https://www.joedolson.com/donate/
 * Tags: accessibility, WordPress
 * Requires at least: 6.4
-* Tested up to: 6.9
-* Stable tag: `5.0.7`
+* Tested up to: 7.0
+* Stable tag: `5.0.8`
 * License: GPLv3
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
