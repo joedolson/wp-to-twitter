@@ -41,11 +41,11 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		 * Make modifications to URLs prior to shortening.
 		 *
 		 * @hook wpt_shorten_link
-		 * @param {string} $url Full permalink URL to post.
-		 * @param {string} $shortener Shortener selected in settings.
-		 * @param {int}    $post_ID Post ID.
+		 * @param string $url Full permalink URL to post.
+		 * @param string $shortener Shortener selected in settings.
+		 * @param int    $post_ID Post ID.
 		 *
-		 * @return {string}
+		 * @return string
 		 */
 		$url = apply_filters( 'wpt_shorten_link', $url, $shortener, $post_ID );
 		if ( false === $testmode ) {
@@ -77,9 +77,9 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				 *
 				 * @hook wpt_utm_medium
 				 *
-				 * @param {string} $medium Default 'twitter'.
+				 * @param string $medium Default 'twitter'.
 				 *
-				 * @return {string}
+				 * @return string
 				 */
 				$medium = urlencode( trim( apply_filters( 'wpt_utm_medium', 'twitter' ) ) );
 				/**
@@ -87,9 +87,9 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 				 *
 				 * @hook wpt_utm_source
 				 *
-				 * @param {string} $source Default 'twitter'.
+				 * @param string $source Default 'twitter'.
 				 *
-				 * @return {string}
+				 * @return string
 				 */
 				$source   = urlencode( trim( apply_filters( 'wpt_utm_source', 'twitter' ) ) );
 				$tracking = apply_filters(
@@ -117,14 +117,14 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		 * Apply a custom shortener to your status update. Return false to allow the settings to parse the URL or a URL to shortcircuit plugin settings.
 		 *
 		 * @hook wpt_do_shortening
-		 * @param {bool}   $shrink False prior to shortening.
-		 * @param {string} $shortener Shortener selected in settings.
-		 * @param {string} $url Full permalink URL to post.
-		 * @param {string} $post_title Title of source post.
-		 * @param {int}    $post_ID Post ID.
-		 * @param {bool}   $testmode True if running a test of XPoster.
+		 * @param bool   $shrink False prior to shortening.
+		 * @param string $shortener Shortener selected in settings.
+		 * @param string $url Full permalink URL to post.
+		 * @param string $post_title Title of source post.
+		 * @param int    $post_ID Post ID.
+		 * @param bool   $testmode True if running a test of XPoster.
 		 *
-		 * @return {string}
+		 * @return string
 		 */
 		$shrink = apply_filters( 'wpt_do_shortening', false, $shortener, $url, $post_title, $post_ID, $testmode );
 		if ( $shrink !== $url ) {
@@ -433,10 +433,10 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 		/**
 		 * Filter available shorteners.
 		 *
-		 * @param {array} $shorteners Array of shorteners by ID.
-		 * @param {int}   $shortener Selected shortener.
+		 * @param array $shorteners Array of shorteners by ID.
+		 * @param int   $shortener Selected shortener.
 		 *
-		 * @return {array}
+		 * @return array
 		 */
 		$shorteners = apply_filters( 'wpt_shorteners', $shorteners, $shortener );
 

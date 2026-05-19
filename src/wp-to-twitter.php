@@ -304,9 +304,9 @@ function wpt_check_recent_tweet( $id, $auth ) {
 			 * This value does flood control, to prevent a runaway process from sending multiple status updates. Default `30` seconds.
 			 *
 			 * @hook wpt_recent_tweet_threshold
-			 * @param {int} $expire Integer representing seconds. How long the transient will exist.
+			 * @param int $expire Integer representing seconds. How long the transient will exist.
 			 *
-			 * @return {int}
+			 * @return int
 			 */
 			$expire = apply_filters( 'wpt_recent_tweet_threshold', 30 );
 			// if expiration is 0, don't set the transient. We don't want permanent transients.
@@ -347,11 +347,11 @@ function wpt_service_enabled( $post_ID = false, $service = 'bluesky' ) {
 	 *
 	 * @hook wpt_service_enabled
 	 *
-	 * @param {bool}   $send_to True to send to a service.
-	 * @param {int}    $post_ID Post ID. False if checking globally.
-	 * @param {string} $service Service ID.
+	 * @param bool   $send_to True to send to a service.
+	 * @param int    $post_ID Post ID. False if checking globally.
+	 * @param string $service Service ID.
 	 *
-	 * @return {bool}
+	 * @return bool
 	 */
 	return apply_filters( 'wpt_service_enabled', $send_to, $post_ID, $service );
 }
@@ -588,9 +588,9 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 		 *
 		 * @since 3.6.0
 		 *
-		 * @param {object} $connection The current OAuth connection.
-		 * @param {int}    $id Post ID for status update.
-		 * @param {string} $error Error message returned.
+		 * @param object $connection The current OAuth connection.
+		 * @param int    $id Post ID for status update.
+		 * @param string $error Error message returned.
 		 */
 		do_action( 'wpt_tweet_failed', $connection, $id, $notice );
 		wpt_set_log( 'wpt_status_message', $id, $notice, $http_code );
@@ -600,8 +600,8 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 		 *
 		 * @hook wpt_tweet_posted
 		 *
-		 * @param {object} $connection The current OAuth connection.
-		 * @param {int}    $id Post ID for status update.
+		 * @param object $connection The current OAuth connection.
+		 * @param int    $id Post ID for status update.
 		 */
 		do_action( 'wpt_tweet_posted', $connection, $id );
 		// Log the Status ID of the first status update on this post.
@@ -817,10 +817,10 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 		 *
 		 * @hook wpt_should_block_status
 		 *
-		 * @param {bool}  $filter Always false by default.
-		 * @param {array} $post_info Array of post data.
+		 * @param bool  $filter Always false by default.
+		 * @param array $post_info Array of post data.
 		 *
-		 * @return {bool} True to block post.
+		 * @return bool True to block post.
 		 */
 		$filter = apply_filters( 'wpt_should_block_status', false, $post_info );
 		if ( true === $filter ) {
@@ -833,10 +833,10 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 		 *
 		 * @hook wpt_filter_post_data
 		 *
-		 * @param {bool} $filter True if this post should not have a status update sent.
-		 * @param {array} $post POST global.
+		 * @param bool $filter True if this post should not have a status update sent.
+		 * @param array $post POST global.
 		 *
-		 * @return {bool}
+		 * @return bool
 		 */
 		$filter = apply_filters( 'wpt_filter_post_data', false, $_POST );
 		if ( $filter ) {
@@ -881,11 +881,11 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 					 *
 					 * @hook wpt_tweet_this_edit
 					 *
-					 * @param {string} $post_this 'yes' or 'no'.
-					 * @param {array}  $_POST POST global.
-					 * @param {int}    $post_ID Post ID.
+					 * @param string $post_this 'yes' or 'no'.
+					 * @param array  $_POST POST global.
+					 * @param int    $post_ID Post ID.
 					 *
-					 * @return {string} 'yes' to continue with posting.
+					 * @return string 'yes' to continue with posting.
 					 */
 					$post_this = apply_filters( 'wpt_tweet_this_edit', $post_this, $_POST, $post_ID );
 					if ( 'yes' !== $post_this ) {
@@ -921,10 +921,10 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				 *
 				 * @hook wpt_post_to_service
 				 *
-				 * @param {int}      $post_ID Post ID.
-				 * @param {array}    $post_info Array of post info for templates.
-				 * @param {string}   $template Template in use.
-				 * @param {bool}     $media Whether media should be included.
+				 * @param int      $post_ID Post ID.
+				 * @param array    $post_info Array of post info for templates.
+				 * @param string   $template Template in use.
+				 * @param bool     $media Whether media should be included.
 				 */
 				do_action( 'wpt_post_to_service', $post_ID, $post_info, $template );
 				wpt_post_to_service( $template, false, $post_ID );
@@ -958,12 +958,12 @@ function wpt_post_update_link( $link_id ) {
 		 *
 		 * @hook wptt_shorten_link
 		 *
-		 * @param {string} $thispostlink The passed bookmark link.
-		 * @param {string} $thislinkname The provided link title.
-		 * @param {bool}   $post_ID False, because links don't have post IDs.
-		 * @param {bool}   $test 'link' to indicate a link is being shortened.
+		 * @param string $thispostlink The passed bookmark link.
+		 * @param string $thislinkname The provided link title.
+		 * @param bool   $post_ID False, because links don't have post IDs.
+		 * @param bool   $test 'link' to indicate a link is being shortened.
 		 *
-		 * @return {string}
+		 * @return string
 		 */
 		$shrink = apply_filters( 'wptt_shorten_link', $thispostlink, $thislinkname, false, 'link' );
 		if ( false === stripos( $sentence, '#url#' ) ) {
@@ -1155,8 +1155,8 @@ function wpt_save_post( $id, $post ) {
 		 *
 		 * @hook wpt_insert_post
 		 *
-		 * @param {array} $_POST Unaltered POST data.
-		 * @param {int}   $id Post ID
+		 * @param array $_POST Unaltered POST data.
+		 * @param int   $id Post ID
 		 */
 		do_action( 'wpt_insert_post', $_POST, $id );
 		// only send debug data if post meta is updated.
@@ -1299,10 +1299,10 @@ function wpt_allowed_post_types( $post_type = false ) {
 	 * Return array of post types that can be sent as status updates.
 	 *
 	 * @hook wpt_allowed_post_types
-	 * @param {array} $types Array of post type names enabled for status updates either when editing or publishing.
-	 * @param {array} $post_type_settings Multidimensional array of post types and post type settings.
+	 * @param array $types Array of post type names enabled for status updates either when editing or publishing.
+	 * @param array $post_type_settings Multidimensional array of post types and post type settings.
 	 *
-	 * @return {array}
+	 * @return array
 	 */
 	return apply_filters( 'wpt_allowed_post_types', $allowed_types, $post_type_settings );
 }
@@ -1337,10 +1337,10 @@ function wpt_auto_tweet_allowed( $post_id ) {
 	 * Return true if auto tweeting of old posts is enabled.
 	 *
 	 * @hook wpt_auto_tweet_allowed
-	 * @param {bool} $return true if enabled.
-	 * @param {int}  $post_id Post ID.
+	 * @param bool $return true if enabled.
+	 * @param int  $post_id Post ID.
 	 *
-	 * @return {bool}
+	 * @return bool
 	 */
 	return apply_filters( 'wpt_auto_tweet_allowed', $return, $post_id );
 }
