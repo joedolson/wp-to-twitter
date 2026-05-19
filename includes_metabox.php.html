@@ -103,7 +103,7 @@ function wpt_add_twitter_inner_box( $post ) {
 			&lt;p class='jtw'>
 				&lt;label for="wpt_custom_tweet">&lt;?php esc_html_e( 'Custom Status Update', 'wp-to-twitter' ); ?>&lt;/label>&lt;br/>
 				&lt;textarea class="wpt_tweet_box widefat" name="_jd_twitter" id="wpt_custom_tweet" placeholder="&lt;?php echo esc_attr( $template ); ?>" rows="2" cols="60">&lt;?php echo esc_textarea( stripslashes( $custom_update ) ); ?>&lt;/textarea>
-			&lt;/p>		
+			&lt;/p>
 			&lt;div role="alert" class="x-notification notice inline notice-info hidden">&lt;p>&lt;?php esc_html_e( 'X length limit reached:', 'wp-to-twitter' ); ?> &lt;span>&lt;/span>&lt;/p>&lt;/div>
 			&lt;div role="alert" class="bluesky-notification notice inline notice-info hidden">&lt;p>&lt;?php esc_html_e( 'Bluesky length limit reached:', 'wp-to-twitter' ); ?> &lt;span>&lt;/span>&lt;/p>&lt;/div>
 			&lt;div role="alert" class="mastodon-notification notice inline notice-info hidden">&lt;p>&lt;?php esc_html_e( 'Mastodon length limit reached:', 'wp-to-twitter' ); ?> &lt;span>&lt;/span>&lt;/p>&lt;/div>
@@ -145,7 +145,7 @@ function wpt_add_twitter_inner_box( $post ) {
 				 *
 				 * @hook wpt_after_meta_template_box
 				 *
-				 * @param {int} $post_ID Post ID.
+				 * @param int $post_ID Post ID.
 				 */
 				do_action( 'wpt_after_meta_template_box', $post->ID );
 				if ( get_option( 'jd_keyword_format' ) === '2' ) {

@@ -165,12 +165,12 @@ function wpt_check_functions() {
 	 *
 	 * @hook wptt_shorten_link
 	 *
-	 * @param {string}   $testurl Unshortened test URL.
-	 * @param {string}   $title Title text to use for URL shortener.
+	 * @param string   $testurl Unshortened test URL.
+	 * @param string   $title Title text to use for URL shortener.
 	 * @param {int|bool} $post_ID Post ID. Default false.
-	 * @param {bool}     $testing In testing mode. Default true.
+	 * @param bool     $testing In testing mode. Default true.
 	 *
-	 * @return {string}
+	 * @return string
 	 */
 	$shrink = apply_filters( 'wptt_shorten_link', $testurl, $title, false, true );
 	if ( false === $shrink ) {
@@ -265,10 +265,10 @@ function wpt_settings_tabs() {
 	 *
 	 * @hook wpt_settings_tabs_pages
 	 *
-	 * @param {array}  $pages Array of pages with `[ 'key' => 'title' ]`.
-	 * @param {string} $current Array key of current page.
+	 * @param array  $pages Array of pages with `[ 'key' => 'title' ]`.
+	 * @param string $current Array key of current page.
 	 *
-	 * @return {array}
+	 * @return array
 	 */
 	$pages     = apply_filters( 'wpt_settings_tabs_pages', $pages, $current );
 	$admin_url = admin_url( 'admin.php?page=wp-tweets-pro' );
@@ -310,9 +310,9 @@ function wpt_show_last_update() {
 	 *
 	 * @hook wpt_show_last_update
 	 *
-	 * @param {bool} $show true to show; false to hide.
+	 * @param bool $show true to show; false to hide.
 	 *
-	 * @return {bool}
+	 * @return bool
 	 */
 	if ( apply_filters( 'wpt_show_last_update', true ) ) {
 		$log = wpt_get_log( 'wpt_status_message', 'last' );
@@ -720,9 +720,9 @@ function wpt_post_is_new( $modified, $postdate ) {
 	 *
 	 * @hook wpt_edit_sensitivity
 	 *
-	 * @param {int} $sensitivity Integer representing seconds. Default 10.
+	 * @param int $sensitivity Integer representing seconds. Default 10.
 	 *
-	 * @return {int}
+	 * @return int
 	 */
 	$modifier  = apply_filters( 'wpt_edit_sensitivity', 10 ); // alter time in seconds to modified date.
 	$mod_date  = strtotime( $modified );
@@ -748,10 +748,10 @@ function wpt_post_attachment( $post_ID ) {
 	 *
 	 * @hook wpt_use_featured_image
 	 *
-	 * @param {bool} $use True to use the featured image.
-	 * @param {int}  $post_ID Post ID.
+	 * @param bool $use True to use the featured image.
+	 * @param int  $post_ID Post ID.
 	 *
-	 * @return {bool}
+	 * @return bool
 	 */
 	$use_featured_image = apply_filters( 'wpt_use_featured_image', true, $post_ID );
 	if ( has_post_thumbnail( $post_ID ) &amp;&amp; $use_featured_image ) {
@@ -783,8 +783,8 @@ function wpt_post_attachment( $post_ID ) {
 	 *
 	 * @hook wpt_post_attachment
 	 *
-	 * @param {int} $attachment_id Attachment ID.
-	 * @param {int} $post_ID Post ID.
+	 * @param int $attachment_id Attachment ID.
+	 * @param int $post_ID Post ID.
 	 *
 	 * @return {int|bool}
 	 */
@@ -1052,9 +1052,9 @@ function wpt_delete_copied_meta( $new_id, $post ) {
 	 *
 	 * @hook wpt_allow_copy_meta
 	 *
-	 * @param {bool} $disable True to allow meta to be copied. Default false.
+	 * @param bool $disable True to allow meta to be copied. Default false.
 	 *
-	 * @return {bool}
+	 * @return bool
 	 */
 	$disable = apply_filters( 'wpt_allow_copy_meta', false );
 	if ( $disable ) {

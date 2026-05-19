@@ -105,12 +105,12 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 	 * Turn on staging mode. Staging mode is automatically turned on if WPT_STAGING_MODE constant is defined.
 	 *
 	 * @hook wpt_staging_mode
-	 * @param {bool}     $staging_mode True to enable staging mode.
+	 * @param bool     $staging_mode True to enable staging mode.
 	 * @param {int|bool} $auth Current author.
-	 * @param {int}      $id Post ID.
-	 * @param {string}   $service Service being put into staging.
+	 * @param int      $id Post ID.
+	 * @param string   $service Service being put into staging.
 	 *
-	 * @return {bool}
+	 * @return bool
 	 */
 	$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id, 'x' );
 	$notice       = '';
@@ -126,12 +126,12 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 		 * Filter the approval to send a Tweet.
 		 *
 		 * @hook wpt_do_tweet
-		 * @param {bool}     $do_tweet Return false to cancel this Tweet.
+		 * @param bool     $do_tweet Return false to cancel this Tweet.
 		 * @param {int|bool} $auth Author.
-		 * @param {int}      $id Post ID.
-		 * @param {string}   $twit Tweet text.
+		 * @param int      $id Post ID.
+		 * @param string   $twit Tweet text.
 		 *
-		 * @return {bool}
+		 * @return bool
 		 */
 		$do_tweet = apply_filters( 'wpt_do_tweet', true, $auth, $id, $status['text'] );
 		$tweet_id = false;

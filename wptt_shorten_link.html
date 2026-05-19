@@ -36,7 +36,7 @@
 
     
 
-    <h4 class="name" id="wptt_shorten_link">apply_filters( 'wptt_shorten_link', <span class="signature">$thispostlink, $thislinkname, $post_ID, $test )</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="wptt_shorten_link">apply_filters( 'wptt_shorten_link', <span class="signature">string, string, bool, bool )</span><span class="type-signature"></span></h4>
 
     
 
@@ -77,15 +77,10 @@
 
         <tr>
             
-                <td class="name"><code>$thispostlink</code></td>
+                <td class="name"><code>string</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
             
             </td>
 
@@ -93,22 +88,17 @@
 
             
 
-            <td class="description last"><p>The passed bookmark link.</p></td>
+            <td class="description last"><p>$thispostlink The passed bookmark link.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$thislinkname</code></td>
+                <td class="name"><code>string</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
             
             </td>
 
@@ -116,22 +106,17 @@
 
             
 
-            <td class="description last"><p>The provided link title.</p></td>
+            <td class="description last"><p>$thislinkname The provided link title.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$post_ID</code></td>
+                <td class="name"><code>bool</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
             
             </td>
 
@@ -139,22 +124,17 @@
 
             
 
-            <td class="description last"><p>False, because links don't have post IDs.</p></td>
+            <td class="description last"><p>$post_ID False, because links don't have post IDs.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$test</code></td>
+                <td class="name"><code>bool</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
             
             </td>
 
@@ -162,7 +142,7 @@
 
             
 
-            <td class="description last"><p>'link' to indicate a link is being shortened.</p></td>
+            <td class="description last"><p>$test 'link' to indicate a link is being shortened.</p></td>
         </tr>
 
     
@@ -229,19 +209,11 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <p>string</p>
+</div>
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
 
     
 
@@ -275,7 +247,7 @@
 
     
 
-    <h4 class="name" id="wptt_shorten_link">apply_filters( 'wptt_shorten_link', <span class="signature">$testurl, $title, $post_ID, $testing )</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="wptt_shorten_link">apply_filters( 'wptt_shorten_link', <span class="signature">string, string, $post_ID, bool )</span><span class="type-signature"></span></h4>
 
     
 
@@ -316,15 +288,10 @@
 
         <tr>
             
-                <td class="name"><code>$testurl</code></td>
+                <td class="name"><code>string</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
             
             </td>
 
@@ -332,22 +299,17 @@
 
             
 
-            <td class="description last"><p>Unshortened test URL.</p></td>
+            <td class="description last"><p>$testurl Unshortened test URL.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$title</code></td>
+                <td class="name"><code>string</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
             
             </td>
 
@@ -355,7 +317,7 @@
 
             
 
-            <td class="description last"><p>Title text to use for URL shortener.</p></td>
+            <td class="description last"><p>$title Title text to use for URL shortener.</p></td>
         </tr>
 
     
@@ -388,15 +350,10 @@
 
         <tr>
             
-                <td class="name"><code>$testing</code></td>
+                <td class="name"><code>bool</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
             
             </td>
 
@@ -404,7 +361,7 @@
 
             
 
-            <td class="description last"><p>In testing mode. Default true.</p></td>
+            <td class="description last"><p>$testing In testing mode. Default true.</p></td>
         </tr>
 
     
@@ -471,19 +428,11 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <p>string</p>
+</div>
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
 
     
 
@@ -517,7 +466,7 @@
 
     
 
-    <h4 class="name" id="wptt_shorten_link">apply_filters( 'wptt_shorten_link', <span class="signature">$permalink, $title, $post_ID, $test )</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="wptt_shorten_link">apply_filters( 'wptt_shorten_link', <span class="signature">string, string, int, bool )</span><span class="type-signature"></span></h4>
 
     
 
@@ -558,15 +507,10 @@
 
         <tr>
             
-                <td class="name"><code>$permalink</code></td>
+                <td class="name"><code>string</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
             
             </td>
 
@@ -574,22 +518,17 @@
 
             
 
-            <td class="description last"><p>The post permalink.</p></td>
+            <td class="description last"><p>$permalink The post permalink.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$title</code></td>
+                <td class="name"><code>string</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
             
             </td>
 
@@ -597,22 +536,17 @@
 
             
 
-            <td class="description last"><p>The post title.</p></td>
+            <td class="description last"><p>$title The post title.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$post_ID</code></td>
+                <td class="name"><code>int</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
             
             </td>
 
@@ -620,22 +554,17 @@
 
             
 
-            <td class="description last"><p>The post ID.</p></td>
+            <td class="description last"><p>$post_ID The post ID.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>$test</code></td>
+                <td class="name"><code>bool</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
             
             </td>
 
@@ -643,7 +572,7 @@
 
             
 
-            <td class="description last"><p>False because this is not a test cycle.</p></td>
+            <td class="description last"><p>$test False because this is not a test cycle.</p></td>
         </tr>
 
     
@@ -710,19 +639,11 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <p>string</p>
+</div>
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
 
     
 

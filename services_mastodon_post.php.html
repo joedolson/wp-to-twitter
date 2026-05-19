@@ -67,10 +67,10 @@ function wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $i
 			 *
 			 * @hook wpt_uploaded_image_alt
 			 *
-			 * @param {string} $alt_text Text stored in media library as alt.
-			 * @param {int}    $attachment Attachment ID.
+			 * @param string $alt_text Text stored in media library as alt.
+			 * @param int    $attachment Attachment ID.
 			 *
-			 * @return {string}
+			 * @return string
 			 */
 			$alt_text        = apply_filters( 'wpt_uploaded_image_alt', $alt_text, $attachment );
 			$attachment_data = wpt_image_binary( $attachment, $id, 'mastodon' );
@@ -114,12 +114,12 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 	 * Turn on staging mode. Staging mode is automatically turned on if WPT_STAGING_MODE constant is defined.
 	 *
 	 * @hook wpt_staging_mode
-	 * @param {bool}     $staging_mode True to enable staging mode.
+	 * @param bool     $staging_mode True to enable staging mode.
 	 * @param {int|bool} $auth Current author.
-	 * @param {int}      $id Post ID.
-	 * @param {string}   $service Service being put into staging.
+	 * @param int      $id Post ID.
+	 * @param string   $service Service being put into staging.
 	 *
-	 * @return {bool}
+	 * @return bool
 	 */
 	$staging_mode = apply_filters( 'wpt_staging_mode', false, $auth, $id, 'mastodon' );
 	$status_text  = $status['text'];
@@ -135,12 +135,12 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		 * Filter the approval to send a Mastodon Toot.
 		 *
 		 * @hook wpt_do_toot
-		 * @param {bool}     $do_toot Return false to cancel this Toot.
+		 * @param bool     $do_toot Return false to cancel this Toot.
 		 * @param {int|bool} $auth Author.
-		 * @param {int}      $id Post ID.
-		 * @param {string}   $text Status update text.
+		 * @param int      $id Post ID.
+		 * @param string   $text Status update text.
 		 *
-		 * @return {bool}
+		 * @return bool
 		 */
 		$do_post   = apply_filters( 'wpt_do_toot', true, $auth, $id, $status_text );
 		$status_id = false;
@@ -153,11 +153,11 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		 *
 		 * @hook wpt_filter_mastodon_status
 		 *
-		 * @param {array}    $status Array of parameters sent to Mastodon.
-		 * @param {int}      $post Post ID being tweeted.
+		 * @param array    $status Array of parameters sent to Mastodon.
+		 * @param int      $post Post ID being tweeted.
 		 * @param {int|bool} $auth Authoring context.
 		 *
-		 * @return {array}
+		 * @return array
 		 */
 		$status = apply_filters( 'wpt_filter_mastodon_status', $status, $id, $auth );
 		if ( $do_post ) {
