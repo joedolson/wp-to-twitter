@@ -38,6 +38,9 @@ function wpt_post_info( $post_ID ) {
 	$categories = get_the_category( $post_ID );
 	$cats       = array();
 	$cat_descs  = array();
+	$cat_names  = array();
+
+	$category_descriptions = array();
 	if ( is_array( $categories ) ) {
 		if ( count( $categories ) > 0 ) {
 			$category = $categories[0]->cat_name;
@@ -101,7 +104,7 @@ function wpt_post_info( $post_ID ) {
 	 * @hook wpt_post_info
 	 *
 	 * @param array   $values Existing values.
-	 * @param {integer} $post_ID Post ID.
+	 * @param integer $post_ID Post ID.
 	 *
 	 * @return array  $values
 	 */
@@ -134,7 +137,7 @@ function wpt_short_url( $post_id ) {
  *
  * @param int $post_ID Post ID.
  *
- * @return Link to use for this URL.
+ * @return string Link to use for this URL.
  */
 function wpt_link( $post_ID ) {
 	$ex_link       = false;

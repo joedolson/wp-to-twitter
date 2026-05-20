@@ -22,7 +22,7 @@ require __DIR__ . '/classes/class-wpt-normalizer.php';
  * @param string $sub1 Array key if applicable.
  * @param string $sub2 Array key if applicable.
  *
- * @return Checked or unchecked.
+ * @return string Checked or unchecked.
  */
 function wpt_checkbox( $field, $sub1 = false, $sub2 = '' ) {
 	if ( $sub1 ) {
@@ -52,7 +52,7 @@ function wpt_checkbox( $field, $sub1 = false, $sub2 = '' ) {
  * @param string $value Value to verify against.
  * @param string $type Select or checkbox.
  *
- * @return Selected or unselected/ checked or unchecked.
+ * @return string Selected or unselected/ checked or unchecked.
  */
 function wpt_selected( $field, $value, $type = 'select' ) {
 	if ( get_option( $field ) === $value ) {
@@ -141,7 +141,7 @@ function wpt_check_functions() {
 	 *
 	 * @param string   $testurl Unshortened test URL.
 	 * @param string   $title Title text to use for URL shortener.
-	 * @param {int|bool} $post_ID Post ID. Default false.
+	 * @param int|bool $post_ID Post ID. Default false.
 	 * @param bool     $testing In testing mode. Default true.
 	 *
 	 * @return string
@@ -476,7 +476,7 @@ function wpt_show_debug() {
  * @param string    $method Query method.
  * @throws Exception JSON error string.
  *
- * @return JSON object.
+ * @return string JSON object.
  */
 function wpt_remote_json( $url, $args = true, $method = 'GET' ) {
 	$input = wpt_fetch_url( $url, $method );
@@ -519,7 +519,7 @@ function wpt_remote_json( $url, $args = true, $method = 'GET' ) {
  *
  * @param string $url URL.
  *
- * @return URL if passes, false otherwise.
+ * @return string|bool URL if passes, false otherwise.
  */
 function wpt_is_valid_url( $url ) {
 	if ( is_string( $url ) ) {
@@ -577,7 +577,7 @@ if ( ! function_exists( 'mb_substr_split_unicode' ) ) {
 	 * @param string $str String.
 	 * @param int    $split_pos Position to split on.
 	 *
-	 * @return split output.
+	 * @return int split output.
 	 */
 	function mb_substr_split_unicode( $str, $split_pos ) {
 		if ( 0 === $split_pos ) {
@@ -655,7 +655,7 @@ if ( ! function_exists( 'mb_strrpos' ) ) {
  * @param string $value Value to check.
  * @param string $type Type of field.
  *
- * @return checked string.
+ * @return string checked string.
  */
 function wtt_option_selected( $field, $value, $type = 'checkbox' ) {
 	switch ( $type ) {
@@ -760,7 +760,7 @@ function wpt_post_attachment( $post_ID ) {
 	 * @param int $attachment_id Attachment ID.
 	 * @param int $post_ID Post ID.
 	 *
-	 * @return {int|bool}
+	 * @return int|bool
 	 */
 	$attachment_id = apply_filters( 'wpt_post_attachment', $attachment_id, $post_ID );
 	$meta          = wp_get_attachment_metadata( $attachment_id );
