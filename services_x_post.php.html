@@ -106,7 +106,7 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 	 *
 	 * @hook wpt_staging_mode
 	 * @param bool     $staging_mode True to enable staging mode.
-	 * @param {int|bool} $auth Current author.
+	 * @param int|bool $auth Current author.
 	 * @param int      $id Post ID.
 	 * @param string   $service Service being put into staging.
 	 *
@@ -127,7 +127,7 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 		 *
 		 * @hook wpt_do_tweet
 		 * @param bool     $do_tweet Return false to cancel this Tweet.
-		 * @param {int|bool} $auth Author.
+		 * @param int|bool $auth Author.
 		 * @param int      $id Post ID.
 		 * @param string   $twit Tweet text.
 		 *
