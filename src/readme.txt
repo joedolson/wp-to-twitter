@@ -64,6 +64,7 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 * Update CSS for WordPress 7.0
 * Change tested to.
 * Update hook docs format.
+* Clean up a few potentially undefined $vars.
 
 = 5.0.8 =
 
