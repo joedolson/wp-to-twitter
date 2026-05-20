@@ -1248,7 +1248,7 @@ function wpt_admin_style() {
  * @param array  $links Array of links.
  * @param string $file Current file name.
  *
- * @return link new array.
+ * @return array new array.
  */
 function wpt_plugin_action( $links, $file ) {
 	if ( plugin_basename( __DIR__ . '/wp-to-twitter.php' ) === $file || 'wp-to-twitter/init.php' === $file ) {
@@ -1440,9 +1440,9 @@ function wpt_post_update_instant( $id, $post, $updated, $post_before ) {
 /**
  * Status updates on XMLRPC posts.
  *
- * @param integer $id Post ID.
+ * @param int $id Post ID.
  *
- * @return post ID.
+ * @return int post ID.
  */
 function wpt_post_update_xmlrpc( $id ) {
 	set_transient( '_wpt_twit_xmlrpc', $id, 10 );

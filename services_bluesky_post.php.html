@@ -162,7 +162,7 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
 	 *
 	 * @hook wpt_staging_mode
 	 * @param bool     $staging_mode True to enable staging mode.
-	 * @param {int|bool} $auth Current author.
+	 * @param int|bool $auth Current author.
 	 * @param int      $id Post ID.
 	 * @param string   $service Service being put into staging.
 	 *
@@ -183,7 +183,7 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
 		 *
 		 * @hook wpt_do_bluesky_post
 		 * @param bool     $do_post Return false to cancel this post.
-		 * @param {int|bool} $auth Author.
+		 * @param int|bool $auth Author.
 		 * @param int      $id Post ID.
 		 * @param string   $text Status update text.
 		 *
@@ -208,7 +208,7 @@ function wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image ) {
 		 *
 		 * @param array    $status Array of parameters sent to Bluesky.
 		 * @param int      $post Post ID being tweeted.
-		 * @param {int|bool} $auth Authoring context.
+		 * @param int|bool $auth Authoring context.
 		 *
 		 * @return array
 		 */
