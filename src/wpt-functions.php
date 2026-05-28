@@ -476,7 +476,7 @@ function wpt_show_debug() {
  * @param string    $method Query method.
  * @throws Exception JSON error string.
  *
- * @return string JSON object.
+ * @return mixed JSON object.
  */
 function wpt_remote_json( $url, $args = true, $method = 'GET' ) {
 	$input = wpt_fetch_url( $url, $method );
