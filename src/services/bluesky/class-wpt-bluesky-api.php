@@ -123,6 +123,7 @@ class Wpt_Bluesky_Api {
 		if ( ! empty( $mentions ) ) {
 			$new_facets = array();
 			foreach ( $mentions as $mention ) {
+				$handle   = $mention['handle'];
 				$post     = array(
 					'handle' => trim( str_replace( '@', '', $handle ) ),
 				);
