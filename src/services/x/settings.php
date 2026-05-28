@@ -56,9 +56,9 @@ function wtt_oauth_test( $auth = false, $context = '' ) {
 /**
  * Get user verification hash.
  *
- * @param mixed int $auth Current author.
+ * @param int|false $auth Current author.
  *
- * @return author hash.
+ * @return string author hash.
  */
 function wpt_get_user_verification( $auth ) {
 	if ( get_option( 'jd_individual_twitter_users' ) !== '1' ) {
@@ -138,8 +138,8 @@ function wtt_oauth_credentials_to_hash( $auth = false ) {
 /**
  * Update OAuth settings.
  *
- * @param mixed int/boolean   $auth Author.
- * @param mixed array/boolean $post POST data.
+ * @param int|boolean   $auth Author.
+ * @param array|boolean $post POST data.
  */
 function wpt_update_oauth_settings( $auth = false, $post = false ) {
 	if ( isset( $post['oauth_settings'] ) ) {
