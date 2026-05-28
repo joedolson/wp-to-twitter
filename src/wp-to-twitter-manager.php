@@ -274,9 +274,7 @@ function wpt_updated_settings() {
 
 	// Check whether the server has supported for needed functions.
 	if ( isset( $_POST['submit-type'] ) && 'check-support' === $_POST['submit-type'] ) {
-		$service = ( isset( $_POST['bluesky'] ) ) ? 'bluesky' : 'xcom';
-		$service = ( isset( $_POST['mastodon'] ) ) ? 'mastodon' : $service;
-		$message = wpt_check_functions( $service );
+		$message = wpt_check_functions();
 	}
 
 	if ( $message ) {
@@ -506,7 +504,7 @@ function wpt_update_settings() {
 									<input type="checkbox" name="jd_twit_blogroll" id="jd_twit_blogroll" value="1" <?php checked( 'checked', wpt_checkbox( 'jd_twit_blogroll' ) ); ?> />
 									<label for="jd_twit_blogroll"><strong><?php esc_html_e( 'Send status update when you post a link', 'wp-to-twitter' ); ?></strong></label><br/>
 									<label for="newlink-published-text"><?php esc_html_e( 'Text for new link updates:', 'wp-to-twitter' ); ?></label>
-									<input aria-describedby="newlink-published-text-label" type="text" class="wpt-template" name="newlink-published-text" id="newlink-published-text" class="widefat" maxlength="120" value="<?php echo esc_attr( stripslashes( get_option( 'newlink-published-text' ) ) ); ?>"/><br/><span id="newlink-published-text-label"><?php echo wp_kses_post( 'Available shortcodes: <code>#url#</code>, <code>#title#</code>, and <code>#description#</code>.', 'wp-to-twitter' ); ?></span>
+									<input aria-describedby="newlink-published-text-label" type="text" class="wpt-template" name="newlink-published-text" id="newlink-published-text" class="widefat" maxlength="120" value="<?php echo esc_attr( stripslashes( get_option( 'newlink-published-text' ) ) ); ?>"/><br/><span id="newlink-published-text-label"><?php echo wp_kses_post( __( 'Available shortcodes: <code>#url#</code>, <code>#title#</code>, and <code>#description#</code>.', 'wp-to-twitter' ) ); ?></span>
 								</p>
 							</fieldset>
 						</div>
@@ -1094,7 +1092,6 @@ function wpt_service_length( $service ) {
 	$language = get_locale();
 	switch ( $language ) {
 		case 'zh_CN':
-		case 'zh_HK':
 		case 'zh_HK':
 		case 'ja':
 		case 'ko_KR':
