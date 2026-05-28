@@ -136,6 +136,7 @@ function wpt_send_post_to_mastodon( $connection, $auth, $id, $status ) {
 		$status = apply_filters( 'wpt_filter_mastodon_status', $status, $id, $auth );
 		if ( $do_post ) {
 			$return = $connection->post_status( $status );
+			wpt_mail( 'Mastodon Connection Data', print_r( $return, 1 ), $id );
 			if ( isset( $return['id'] ) ) {
 				$success   = true;
 				$http_code = 200;
