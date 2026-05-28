@@ -310,6 +310,7 @@ function wpt_truncate_status( $update, $post, $post_ID, $repost = false, $ref = 
 				} else {
 					$post_update = mb_substr( $post_update, 0, ( $length + $diff ), $encoding );
 					$update      = true;
+					$tag         = '';
 				}
 
 				if ( ! $update ) {
@@ -474,6 +475,10 @@ function wpt_create_values( $post, $post_ID, $ref, $service ) {
 	$tags        = wpt_generate_hash_tags( $post_ID );
 	$date        = trim( (string) $post['postDate'] );
 	$modified    = trim( (string) $post['postModified'] );
+
+	$account_field = false;
+	$user_setting  = false;
+	$user_field    = false;
 	switch ( $service ) {
 		case 'x':
 			$account_field = 'wtt_twitter_username';
@@ -491,11 +496,11 @@ function wpt_create_values( $post, $post_ID, $ref, $service ) {
 			$user_field    = 'wpt_mastodon_username';
 			break;
 	}
-	$account = get_option( $account_field, '' );
+	$account = ( $account_field ) ? get_option( $account_field, '' ) : '';
 	// The setting.
-	$user_meta = get_user_meta( $auth, $user_setting, true );
+	$user_meta = ( $user_setting ) ? get_user_meta( $auth, $user_setting, true ) : '';
 	// If connected to service.
-	$user_account = get_user_meta( $auth, $user_field, true );
+	$user_account = ( $user_field ) ? get_user_meta( $auth, $user_field, true ) : '';
 	$user_account = ( $user_account ) ? $user_account : $user_meta;
 
 	$account = ( '' !== $account ) ? "@$account" : ''; // value of #account#.
@@ -564,9 +569,10 @@ function wpt_create_values( $post, $post_ID, $ref, $service ) {
  * @param array  $values All values.
  * @param string $encoding Current encoding.
  *
- * @return array.
+ * @return array
  */
 function wpt_length_array( $values, $encoding ) {
+	$array = array();
 	foreach ( $values as $key => $value ) {
 		$array[ $key ] = mb_strlen( wpt_normalize( $value ), $encoding );
 	}

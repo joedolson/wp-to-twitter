@@ -371,7 +371,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 * @param string $short_url Shortened URL.
 	 * @param int    $remote Remote or local install.
 	 *
-	 * @return long url.
+	 * @return string long url.
 	 */
 	function wpt_expand_yourl( $short_url, $remote ) {
 		if ( 6 === (int) $remote ) {
@@ -775,7 +775,7 @@ if ( ! function_exists( 'wpt_shorten_url' ) ) {
 	 *
 	 * @param array $post POST data.
 	 *
-	 * @return message.
+	 * @return string message.
 	 */
 	function wpt_select_shortener( $post ) {
 		$message = '';
