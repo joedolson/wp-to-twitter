@@ -1263,7 +1263,7 @@ if ( function_exists( 'wp_after_insert_post' ) ) {
 function wpt_in_post_type( $id ) {
 	$post_types = wpt_allowed_post_types();
 	$type       = get_post_type( $id );
-	if ( in_array( $type, $post_types, true ) ) {
+	if ( is_array( $post_types ) && in_array( $type, $post_types, true ) ) {
 		return true;
 	}
 	if ( WPT_DEBUG ) {
