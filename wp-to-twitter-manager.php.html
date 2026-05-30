@@ -352,7 +352,7 @@ function wpt_update_settings() {
 	&lt;div class="wrap" id="wp-to-twitter">
 	&lt;?php
 	if ( defined( 'WPT_STAGING_MODE' ) &amp;&amp; true === WPT_STAGING_MODE ) {
-		echo "&lt;div class='updated notice'>&lt;p>" . esc_html__( 'XPoster is in staging mode. Status updates will be reported as if successfully sent, but will not be posted.', 'wp-to-twitter' ) . '&lt;/p>&lt;/div>';
+		echo "&lt;div class='notice notice-info'>&lt;p>" . esc_html__( 'XPoster is in staging mode. Status updates will be reported as if successfully sent, but will not be posted.', 'wp-to-twitter' ) . '&lt;/p>&lt;/div>';
 	}
 	wpt_updated_settings();
 	wpt_show_last_update();
