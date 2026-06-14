@@ -273,7 +273,7 @@ function wpt_updated_settings() {
 		 * @param string $message Response after saving settings.
 		 * @param array  $post POST data, unsanitized.
 		 */
-		$message  = apply_filters( 'wpt_settings', $message, $_POST );
+		$message = apply_filters( 'wpt_settings', $message, $_POST );
 	}
 
 	if ( isset( $_POST['wpt_shortener_update'] ) && 'true' === $_POST['wpt_shortener_update'] ) {
