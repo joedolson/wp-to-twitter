@@ -265,6 +265,14 @@ function wpt_updated_settings() {
 		update_option( 'jd_twit_blogroll', ( isset( $_POST['jd_twit_blogroll'] ) ) ? 1 : '' );
 		$message  = wpt_select_shortener( map_deep( wp_unslash( $_POST ), 'sanitize_text_field' ) );
 		$message .= __( 'XPoster Options Updated', 'wp-to-twitter' );
+		/**
+		 * Filter the printed message after updating XPoster settings.
+		 *
+		 * @hook wpt_settings
+		 *
+		 * @param string $message Response after saving settings.
+		 * @param array  $post POST data, unsanitized.
+		 */
 		$message  = apply_filters( 'wpt_settings', $message, $_POST );
 	}
 
