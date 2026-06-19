@@ -336,7 +336,7 @@ function wtt_connect_oauth( $auth = false ) {
 		sprintf(
 			// translators: URL for more information.
 			__(
-				'As of February 6th, 2026, <a href="%s">X.com no longer offers a free tier</a>. Add a funding mechanism to continue using X.com.',
+				'As of February 6th, 2026, <a href="%s">X.com no longer offers a free tier</a>. Add a funding mechanism at X to continue using X.com.',
 				'wp-to-twitter'
 			),
 			'https://xposterpro.com/connecting-xposter-and-x-com/'
