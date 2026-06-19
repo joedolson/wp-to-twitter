@@ -7,7 +7,7 @@ Tested up to: 7.0
 Requires PHP: 7.4
 License: GPLv3
 Text Domain: wp-to-twitter
-Stable tag: 5.0.9
+Stable tag: 5.1.0
 
 Posts to Bluesky, Mastodon or X when you update your WordPress blog or add a link, with your chosen URL shortening service.
 
@@ -58,6 +58,18 @@ Translating my plug-ins is always appreciated. Work on XPoster translations at <
 Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master/wp-to-twitter">GitHub repository of plug-in extensions</a>.
 
 == Changelog ==
+
+= 5.1.0 =
+
+* Bug fix: 400 error returned by BlueSky if no URL resolved in external URI.
+* Update GuzzleHTTP.
+* Add debugging routes to catch connection data.
+* Verify post types are an array before evaluating.
+* Don't overwrite mentions when parsing handles in Bluesky mentions.
+* Fix an untranslatable string.
+* Updates to function docs.
+* Define some variables that could potentially be undefined.
+* Remove code on dead paths.
 
 = 5.0.9 =
 
