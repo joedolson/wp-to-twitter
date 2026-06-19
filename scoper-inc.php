@@ -93,4 +93,4 @@ return array(
 	'expose-classes'          => array(),
 	'expose-functions'        => array(),
 	'expose-constants'        => array(),
-	];
+);

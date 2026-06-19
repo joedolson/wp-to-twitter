@@ -16,6 +16,7 @@
         "wp-coding-standards/wpcs": "^3.0.0",
         "wp-phpunit/wp-phpunit": "^5.8",
         "yoast/phpunit-polyfills": "^1.0",
+		"humbug/php-scoper": "^0.17.5",
         "szepeviktor/phpstan-wordpress": "^1.1",
         "phpstan/extension-installer": "^1.1"
     },
