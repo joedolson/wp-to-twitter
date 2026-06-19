@@ -89,10 +89,11 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 				);
 			} else {
 				$card    = wpt_card_data( $id, 'og' );
+				$url     = ( get_the_permalink( $id ) ) ? get_the_permalink( $id ) : home_url();
 				$request = array(
 					'$type'    => 'app.bsky.embed.external',
 					'external' => array(
-						'uri'         => get_the_permalink( $id ),
+						'uri'         => $url,
 						'title'       => $card['title'],
 						'description' => $card['description'],
 						'thumb'       => $blob['blob'],
@@ -102,10 +103,11 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 			wpt_mail( 'Media Uploaded (Bluesky)', "$auth, $attachment" . PHP_EOL . wpt_format_error( $blob ), $id );
 		}
 		if ( ! $attachment && 'card' === $request_type ) {
+			$url     = ( get_the_permalink( $id ) ) ? get_the_permalink( $id ) : home_url();
 			$request = array(
 				'$type'    => 'app.bsky.embed.external',
 				'external' => array(
-					'uri'         => get_the_permalink( $id ),
+					'uri'         => $url,
 					'title'       => $card['title'],
 					'description' => $card['description'],
 				),
