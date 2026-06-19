@@ -141,7 +141,7 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 				}
 			} catch ( Exception $e ) {
 				if ( method_exists( $e, 'getMessage' ) ) {
-					$error     = json_decode( $e->getMessage() );
+					$error = json_decode( $e->getMessage() );
 					if ( $error ) {
 						$http_code = $e->getCode();
 						$notice    = $error->title . ': ' . $error->detail;
