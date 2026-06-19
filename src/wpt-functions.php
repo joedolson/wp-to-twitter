@@ -165,14 +165,20 @@ function wpt_check_functions() {
 		$testpost = wpt_post_to_service( "This is a test of XPoster. $shrink ($rand)" );
 		if ( $testpost && ! empty( $testpost ) ) {
 			foreach ( $testpost as $key => $test ) {
-				if ( 'xcom' === $key ) {
-					$message .= '<li>' . __( 'XPoster successfully submitted a status update to X.com.', 'wp-to-twitter' ) . '</li>';
+				if ( 'xcom' === $key && $test['http'] === 200 ) {
+					$message .= '<li class="success">' . __( 'XPoster successfully submitted a status update to X.com.', 'wp-to-twitter' ) . '</li>';
+				} elseif ( 'bluesky' === $key ) {
+					$message .= '<li class="error">' . __( 'XPoster failed to submit a status update to X.com.', 'wp-to-twitter' ) . '</li>';
 				}
-				if ( 'mastodon' === $key ) {
-					$message .= '<li>' . __( 'XPoster successfully submitted a status update to your Mastodon instance.', 'wp-to-twitter' ) . '</li>';
+				if ( 'mastodon' === $key && $test['http'] === 200  ) {
+					$message .= '<li class="success">' . __( 'XPoster successfully submitted a status update to your Mastodon instance.', 'wp-to-twitter' ) . '</li>';
+				} elseif ( 'mastodon' === $key ) {
+					$message .= '<li class="error">' . __( 'XPoster failed to submit a status update to Mastodon.', 'wp-to-twitter' ) . '</li>';
 				}
-				if ( 'bluesky' === $key ) {
-					$message .= '<li>' . __( 'XPoster successfully submitted a status update to your Bluesky account.', 'wp-to-twitter' ) . '</li>';
+				if ( 'bluesky' === $key && $test['http'] === 200  ) {
+					$message .= '<li class="success">' . __( 'XPoster successfully submitted a status update to your Bluesky account.', 'wp-to-twitter' ) . '</li>';
+				} elseif ( 'bluesky' === $key ) {
+					$message .= '<li class="error">' . __( 'XPoster failed to submit a status update to Bluesky.', 'wp-to-twitter' ) . '</li>';
 				}
 			}
 		} else {
