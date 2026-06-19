@@ -25,7 +25,7 @@ return array(
 	// will be generated instead.
 	//
 	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#prefix.
-	'prefix' => 'WpToTwitter_Vendor',
+	'prefix'                  => 'WpToTwitter_Vendor',
 
 	// By default when running php-scoper add-prefix, it will prefix all relevant code found in the current working
 	// directory. You can however define which files should be scoped by defining a collection of Finders in the
@@ -34,7 +34,7 @@ return array(
 	// This configuration entry is completely ignored when using Box.
 	//
 	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#finders-and-paths.
-	'finders' => array(
+	'finders'                 => array(
 		Finder::create()
 			->files()
 			->ignoreVCS( true )
@@ -60,7 +60,7 @@ return array(
 	// Paths are relative to the configuration file unless if they are already absolute
 	//
 	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#patchers.
-	'exclude-files' => array(),
+	'exclude-files'           => array(),
 
 	// When scoping PHP files, there will be scenarios where some of the code being scoped indirectly references the
 	// original namespace. These will include, for example, strings or string manipulations. PHP-Scoper has limited
@@ -68,7 +68,7 @@ return array(
 	// heart contents.
 	//
 	// For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#patchers.
-	'patchers' => array(
+	'patchers'                => array(
 		static function ( string $filePath, string $prefix, string $contents ): string { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 			// Change the contents here.
 
@@ -79,10 +79,10 @@ return array(
 	// List of symbols to consider internal i.e. to leave untouched.
 	//
 	// For more information see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#excluded-symbols.
-	'exclude-namespaces' => array(),
-	'exclude-classes'    => array(),
-	'exclude-functions'  => array(),
-	'exclude-constants'  => array(),
+	'exclude-namespaces'      => array(),
+	'exclude-classes'         => array(),
+	'exclude-functions'       => array(),
+	'exclude-constants'       => array(),
 
 	// List of symbols to expose.
 	// For more information see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#exposed-symbols.
