@@ -367,9 +367,10 @@ function wpt_service_enabled( $post_ID = false, $service = 'bluesky' ) {
  * @return boolean|array False if blocked, array of statuses if attempted.
  */
 function wpt_post_to_service( $template, $auth = false, $id = false, $media = null ) {
-	$return = wpt_post_to_twitter( $template, $auth, $id, $media );
-	if ( $return && is_array( $return ) ) {
-		$info      = array_pop( $return );
+	$results = wpt_post_to_twitter( $template, $auth, $id, $media );
+	$return  = $results;
+	if ( $results && is_array( $results ) ) {
+		$info      = array_pop( $results );
 		$status    = isset( $info['status'] ) ? $info['status'] : '';
 		$notice    = isset( $info['notice'] ) ? $info['notice'] : '';
 		$http_code = isset( $info['http'] ) ? $info['http'] : '';
