@@ -372,14 +372,14 @@ function wtt_connect_oauth( $auth = false ) {
 						<li><?php esc_html_e( 'Click "Next" to move to the Keys & Tokens step.', 'wp-to-twitter' ); ?></li>
 					</ul>
 				</li>
-				<li><?php esc_html_e( 'Copy your API Key and API Key secret.', 'wp-to-twitter' ); ?>
+				<li><?php esc_html_e( 'Copy your Consumer Key and Consumer Key secret.', 'wp-to-twitter' ); ?>
 				<div class="tokens auth-fields">
 				<p>
-					<label for="wtt_app_consumer_key"><?php esc_html_e( 'API Key', 'wp-to-twitter' ); ?></label>
+					<label for="wtt_app_consumer_key"><?php esc_html_e( 'Consumer Key', 'wp-to-twitter' ); ?></label>
 					<input type="text" size="45" name="wtt_app_consumer_key" id="wtt_app_consumer_key" value="<?php echo esc_attr( wpt_mask_attr( $ack ) ); ?>" />
 				</p>
 				<p>
-					<label for="wtt_app_consumer_secret"><?php esc_html_e( 'API Key Secret', 'wp-to-twitter' ); ?></label>
+					<label for="wtt_app_consumer_secret"><?php esc_html_e( 'Consumer Key Secret', 'wp-to-twitter' ); ?></label>
 					<input type="text" size="45" name="wtt_app_consumer_secret" id="wtt_app_consumer_secret" value="<?php echo esc_attr( wpt_mask_attr( $acs ) ); ?>" />
 				</p>
 				</div>
