@@ -88,7 +88,7 @@ function wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id
 					),
 				);
 			} else {
-				$card    = wpt_card_data( $id, 'og' );
+				$card    = ( function_exists( 'wpt_card_data' ) ) ? wpt_card_data( $id, 'og' ) : false;
 				$url     = ( get_the_permalink( $id ) ) ? get_the_permalink( $id ) : home_url();
 				$request = array(
 					'$type'    => 'app.bsky.embed.external',
