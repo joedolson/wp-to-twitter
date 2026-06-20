@@ -142,9 +142,14 @@ function wpt_send_post_to_twitter( $connection, $auth, $id, $status ) {
 			} catch ( Exception $e ) {
 				if ( method_exists( $e, 'getMessage' ) ) {
 					$error = json_decode( $e->getMessage() );
+					$json  = true;
+					if ( ! $error ) {
+						$error = $e->getMessage();
+						$json  = false;
+					}
 					if ( $error ) {
 						$http_code = $e->getCode();
-						$notice    = $error->title . ': ' . $error->detail;
+						$notice    = ( $json ) ? $error->title . ': ' . $error->detail : $error;
 					} else {
 						$http_code = 400;
 						$notice    = 'X Exception thrown, but JSON expanded to null value.';
