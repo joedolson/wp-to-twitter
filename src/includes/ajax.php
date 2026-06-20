@@ -46,6 +46,7 @@ function wpt_ajax_tweet() {
 		}
 		$omitted  = ( isset( $_REQUEST['omit'] ) ) ? map_deep( wp_unslash( $_REQUEST['omit'] ), 'sanitize_text_field' ) : array();
 		$services = wpt_check_connections( false, true );
+		$omit     = array();
 		// The interface has you choose what you want; the DB represents what's omitted.
 		foreach ( array_keys( $services ) as $service ) {
 			if ( ! in_array( $service, $omitted, true ) ) {
