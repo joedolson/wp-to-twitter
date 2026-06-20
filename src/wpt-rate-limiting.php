@@ -222,9 +222,9 @@ function wpt_view_rate_limits() {
 			?>
 			<li><h4><a href='https://x.com/$author'>@<?php echo esc_html( $author ); ?></a>:</h4><ul>
 				<?php
-				foreach ( $term as $id => $value ) {
+				foreach ( $term as $key => $value ) {
 					$count         = count( $value );
-					$term_array    = explode( '+', $id );
+					$term_array    = explode( '+', $key );
 					$t             = $term_array[0];
 					$x             = $term_array[1];
 					$limit         = wpt_get_rate_limit( $t );
