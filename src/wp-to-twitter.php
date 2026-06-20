@@ -232,18 +232,18 @@ function xposter_activate() {
 /**
  * Save error messages for status updates.
  *
- * @param int    $id Post ID.
+ * @param int    $post_ID Post ID.
  * @param int    $auth Current author.
  * @param string $twit Update text.
  * @param string $error Error string from service.
  * @param int    $http_code Http code from service.
  * @param string $ts Current timestamp.
  */
-function wpt_save_error( $id, $auth, $twit, $error, $http_code, $ts ) {
+function wpt_save_error( $post_ID, $auth, $twit, $error, $http_code, $ts ) {
 	$http_code = (int) $http_code;
 	if ( 200 !== $http_code ) {
 		add_post_meta(
-			$id,
+			$post_ID,
 			'_wpt_failed',
 			array(
 				'author'    => $auth,
@@ -255,7 +255,7 @@ function wpt_save_error( $id, $auth, $twit, $error, $http_code, $ts ) {
 		);
 	} else {
 		if ( '1' === get_option( 'wpt_rate_limiting' ) ) {
-			wpt_log_success( $auth, $ts, $id );
+			wpt_log_success( $auth, $ts, $post_ID );
 		}
 	}
 }
@@ -263,38 +263,38 @@ function wpt_save_error( $id, $auth, $twit, $error, $http_code, $ts ) {
 /**
  * Save a record of a successful status update.
  *
- * @param int    $id Post ID.
+ * @param int    $post_ID Post ID.
  * @param string $twit Status update text.
  * @param int    $http_code HTTP Code returned by query.
  */
-function wpt_save_success( $id, $twit, $http_code ) {
+function wpt_save_success( $post_ID, $twit, $http_code ) {
 	if ( 200 === $http_code ) {
-		$jwt = get_post_meta( $id, '_jd_wp_twitter', true );
+		$jwt = get_post_meta( $post_ID, '_jd_wp_twitter', true );
 		if ( ! is_array( $jwt ) ) {
 			$jwt = array();
 		}
 		$jwt[] = urldecode( $twit );
-		update_post_meta( $id, '_jd_wp_twitter', $jwt );
+		update_post_meta( $post_ID, '_jd_wp_twitter', $jwt );
 	}
 }
 
 /**
  * Checks whether XPoster has sent a tweet on this post to this author within the last 30 seconds and blocks duplicates.
  *
- * @param int $id Post ID.
+ * @param int $post_ID Post ID.
  * @param int $auth Author.
  *
  * @uses filter wpt_recent_tweet_threshold
  * @return boolean true to send status update, false to block.
  */
-function wpt_check_recent_tweet( $id, $auth ) {
-	if ( ! $id ) {
+function wpt_check_recent_tweet( $post_ID, $auth ) {
+	if ( ! $post_ID ) {
 		return false;
 	} else {
 		if ( false === $auth ) {
-			$transient = get_transient( "_wpt_most_recent_tweet_$id" );
+			$transient = get_transient( "_wpt_most_recent_tweet_$post_ID" );
 		} else {
-			$transient = get_transient( '_wpt_' . $auth . "_most_recent_tweet_$id" );
+			$transient = get_transient( '_wpt_' . $auth . "_most_recent_tweet_$post_ID" );
 		}
 		if ( $transient ) {
 			return true;
@@ -312,9 +312,9 @@ function wpt_check_recent_tweet( $id, $auth ) {
 			// if expiration is 0, don't set the transient. We don't want permanent transients.
 			if ( 0 !== $expire ) {
 				if ( false === $auth ) {
-					set_transient( "_wpt_most_recent_tweet_$id", true, $expire );
+					set_transient( "_wpt_most_recent_tweet_$post_ID", true, $expire );
 				} else {
-					set_transient( '_wpt_' . $auth . "_most_recent_tweet_$id", true, $expire );
+					set_transient( '_wpt_' . $auth . "_most_recent_tweet_$post_ID", true, $expire );
 				}
 			}
 		}
@@ -361,21 +361,21 @@ function wpt_service_enabled( $post_ID = false, $service = 'bluesky' ) {
  *
  * @param string       $template Template for status update to be sent to service.
  * @param int          $auth Author ID.
- * @param int          $id Post ID.
- * @param null|boolean $media Whether to upload media attached to the post specified in $id. Default null, using default post settings.
+ * @param int          $post_ID Post ID.
+ * @param null|boolean $media Whether to upload media attached to the post specified in $post_ID. Default null, using default post settings.
  *
  * @return boolean|array False if blocked, array of statuses if attempted.
  */
-function wpt_post_to_service( $template, $auth = false, $id = false, $media = null ) {
-	$results = wpt_post_to_twitter( $template, $auth, $id, $media );
+function wpt_post_to_service( $template, $auth = false, $post_ID = false, $media = null ) {
+	$results = wpt_post_to_twitter( $template, $auth, $post_ID, $media );
 	$return  = $results;
 	if ( $results && is_array( $results ) ) {
 		$info      = array_pop( $results );
 		$status    = isset( $info['status'] ) ? $info['status'] : '';
 		$notice    = isset( $info['notice'] ) ? $info['notice'] : '';
 		$http_code = isset( $info['http'] ) ? $info['http'] : '';
-		wpt_save_error( $id, $auth, $status, $notice, $http_code, time() );
-		wpt_save_success( $id, $status, $http_code );
+		wpt_save_error( $post_ID, $auth, $status, $notice, $http_code, time() );
+		wpt_save_success( $post_ID, $status, $http_code );
 	}
 
 	return $return;
@@ -386,20 +386,20 @@ function wpt_post_to_service( $template, $auth = false, $id = false, $media = nu
  *
  * @param string       $template Template for status update to be sent to service.
  * @param int          $auth Author ID.
- * @param int          $id Post ID.
- * @param null|boolean $media Whether to upload media attached to the post specified in $id. Default null, using default post settings.
+ * @param int          $post_ID Post ID.
+ * @param null|boolean $media Whether to upload media attached to the post specified in $post_ID. Default null, using default post settings.
  *
  * @return boolean|array False if blocked, array of statuses if attempted.
  */
-function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = null ) {
+function wpt_post_to_twitter( $template, $auth = false, $post_ID = false, $media = null ) {
 	// If an ID is set but the post is not currently present or published, ignore.
 	$return = array();
-	if ( $id ) {
-		$status = get_post_status( $id );
+	if ( $post_ID ) {
+		$status = get_post_status( $post_ID );
 		if ( ! $status || 'publish' !== $status ) {
 			$error = __( 'This post is no longer published or has been deleted', 'wp-to-twitter' );
-			wpt_save_error( $id, $auth, $template, $error, '404', time() );
-			wpt_set_log( 'wpt_status_message', $id, $error, '404' );
+			wpt_save_error( $post_ID, $auth, $template, $error, '404', time() );
+			wpt_set_log( 'wpt_status_message', $post_ID, $error, '404' );
 
 			return false;
 		}
@@ -407,16 +407,16 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 	$error = false;
 	if ( '1' === get_option( 'wpt_rate_limiting' ) ) {
 		// check whether this post needs to be rate limited.
-		$continue = wpt_test_rate_limit( $id, $auth );
+		$continue = wpt_test_rate_limit( $post_ID, $auth );
 		if ( ! $continue ) {
-			wpt_mail( 'This post was blocked by XPoster rate limiting.', 'Post ID: ' . $id . '; Account: ' . $auth );
-			wpt_set_log( 'wpt_status_message', $id, __( 'Status update prevented due to XPoster rate limiting.', 'wp-to-twitter' ), '404' );
+			wpt_mail( 'This post was blocked by XPoster rate limiting.', 'Post ID: ' . $post_ID . '; Account: ' . $auth );
+			wpt_set_log( 'wpt_status_message', $post_ID, __( 'Status update prevented due to XPoster rate limiting.', 'wp-to-twitter' ), '404' );
 
 			return false;
 		}
 	}
 
-	$recent = wpt_check_recent_tweet( $id, $auth );
+	$recent = wpt_check_recent_tweet( $post_ID, $auth );
 	if ( $recent ) {
 		// This is a duplicate after less than 30 seconds, which usually means an extra run of the action.
 		// This error used to be logged, but is now exited silently.
@@ -430,62 +430,62 @@ function wpt_post_to_twitter( $template, $auth = false, $id = false, $media = nu
 	$check_bluesky  = $connections['bluesky'];
 	if ( ! $check_twitter && ! $check_mastodon && ! $check_bluesky ) {
 		$error = __( 'This account is not authorized to post to any services.', 'wp-to-twitter' );
-		wpt_save_error( $id, $auth, $template, $error, '401', time() );
-		wpt_set_log( 'wpt_status_message', $id, $error, '401' );
+		wpt_save_error( $post_ID, $auth, $template, $error, '401', time() );
+		wpt_set_log( 'wpt_status_message', $post_ID, $error, '401' );
 
 		return false;
 	} // exit silently if not authorized.
 
 	// Check if this update has already been sent to a given service.
-	$check = wpt_prepare_post( $id, $auth, $template, $connections );
+	$check = wpt_prepare_post( $post_ID, $auth, $template, $connections );
 
 	// if has media, must have a valid attachment.
-	$media      = ( null === $media ) ? wpt_post_with_media( $id ) : $media;
-	$attachment = ( $media ) ? wpt_post_attachment( $id ) : false;
+	$media      = ( null === $media ) ? wpt_post_with_media( $post_ID ) : $media;
+	$attachment = ( $media ) ? wpt_post_attachment( $post_ID ) : false;
 	$connection = false;
-	if ( $check['x'] && $check_twitter && wpt_service_enabled( $id, 'x' ) ) {
+	if ( $check['x'] && $check_twitter && wpt_service_enabled( $post_ID, 'x' ) ) {
 		$text       = $check['x'];
 		$status     = array(
 			'text' => $text,
 		);
 		$connection = $check_twitter;
-		$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $id );
-		$response   = wpt_send_post_to_twitter( $connection, $auth, $id, $status );
-		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
+		$status     = wpt_upload_twitter_media( $connection, $auth, $attachment, $status, $post_ID );
+		$response   = wpt_send_post_to_twitter( $connection, $auth, $post_ID, $status );
+		wpt_post_submit_handler( $connection, $response, $post_ID, $auth, $text );
 		$return['xcom'] = $response;
-		wpt_mail( 'Share Connection Status: X', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
+		wpt_mail( 'Share Connection Status: X', "$text, $auth, $media, " . wpt_format_error( $response ), $post_ID );
 	}
-	if ( $check['mastodon'] && $check_mastodon && wpt_service_enabled( $id, 'mastodon' ) ) {
+	if ( $check['mastodon'] && $check_mastodon && wpt_service_enabled( $post_ID, 'mastodon' ) ) {
 		$text       = $check['mastodon'];
 		$status     = array(
 			'text' => $text,
 		);
 		$connection = $check_mastodon;
-		$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $id );
-		$response   = wpt_send_post_to_mastodon( $connection, $auth, $id, $status );
-		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
+		$status     = wpt_upload_mastodon_media( $connection, $auth, $attachment, $status, $post_ID );
+		$response   = wpt_send_post_to_mastodon( $connection, $auth, $post_ID, $status );
+		wpt_post_submit_handler( $connection, $response, $post_ID, $auth, $text );
 		$return['mastodon'] = $response;
-		wpt_mail( 'Share Connection Status: Mastodon', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
+		wpt_mail( 'Share Connection Status: Mastodon', "$text, $auth, $post_ID, $media, " . wpt_format_error( $response ), $post_ID );
 	}
-	if ( $check['bluesky'] && $check_bluesky && wpt_service_enabled( $id, 'bluesky' ) ) {
+	if ( $check['bluesky'] && $check_bluesky && wpt_service_enabled( $post_ID, 'bluesky' ) ) {
 		$text         = $check['bluesky'];
 		$status       = array(
 			'text' => $text,
 		);
 		$connection   = $check_bluesky;
-		$request_type = ( wpt_post_with_media( $id ) ) ? 'upload' : 'card';
-		$attachment   = ( $attachment ) ? $attachment : wpt_post_attachment( $id );
-		$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $id, $request_type );
-		$response     = wpt_send_post_to_bluesky( $connection, $auth, $id, $status, $image );
-		wpt_post_submit_handler( $connection, $response, $id, $auth, $text );
+		$request_type = ( wpt_post_with_media( $post_ID ) ) ? 'upload' : 'card';
+		$attachment   = ( $attachment ) ? $attachment : wpt_post_attachment( $post_ID );
+		$image        = wpt_upload_bluesky_media( $connection, $auth, $attachment, $status, $post_ID, $request_type );
+		$response     = wpt_send_post_to_bluesky( $connection, $auth, $post_ID, $status, $image );
+		wpt_post_submit_handler( $connection, $response, $post_ID, $auth, $text );
 		$return['bluesky'] = $response;
-		wpt_mail( 'Share Connection Status: Bluesky', "$text, $auth, $id, $media, " . wpt_format_error( $response ), $id );
+		wpt_mail( 'Share Connection Status: Bluesky', "$text, $auth, $media, " . wpt_format_error( $response ), $post_ID );
 	}
 	if ( ! empty( $return ) ) {
 
 		return $return;
 	} else {
-		wpt_set_log( 'wpt_status_message', $id, __( 'This status update has already been sent.', 'wp-to-twitter' ), '404' );
+		wpt_set_log( 'wpt_status_message', $post_ID, __( 'This status update has already been sent.', 'wp-to-twitter' ), '404' );
 
 		return false;
 	}
@@ -555,13 +555,13 @@ function wpt_prepare_post( $post_ID, $auth, $template, $connections ) {
  *
  * @param object   $connection API connection.
  * @param array    $response Array of response data from API.
- * @param int      $id Post ID.
+ * @param int      $post_ID Post ID.
  * @param int|bool $auth Author context.
  * @param string   $twit Posted status text.
  *
  * @return array Array with response info.
  */
-function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
+function wpt_post_submit_handler( $connection, $response, $post_ID, $auth, $twit ) {
 	$return      = $response['return'];
 	$http_code   = $response['http'];
 	$notice      = $response['notice'];
@@ -569,7 +569,7 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 	$tweet_id    = ( 'x' === $service ) ? $response['status_id'] : false;
 	$mastodon_id = ( 'mastodon' === $service ) ? $response['status_id'] : false;
 	$bluesky_id  = ( 'bluesky' === $service ) ? $response['status_id'] : false;
-	wpt_mail( "Status Update Response: $http_code / $service", $notice, $id ); // DEBUG.
+	wpt_mail( "Status Update Response: $http_code / $service", $notice, $post_ID ); // DEBUG.
 	// only save last status if successful.
 	if ( 200 === $http_code ) {
 		$services = array( 'x', 'mastodon', 'bluesky' );
@@ -590,11 +590,11 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 		 * @since 3.6.0
 		 *
 		 * @param object $connection The current OAuth connection.
-		 * @param int    $id Post ID for status update.
+		 * @param int    $post_ID Post ID for status update.
 		 * @param string $error Error message returned.
 		 */
-		do_action( 'wpt_tweet_failed', $connection, $id, $notice );
-		wpt_set_log( 'wpt_status_message', $id, $notice, $http_code );
+		do_action( 'wpt_tweet_failed', $connection, $post_ID, $notice );
+		wpt_set_log( 'wpt_status_message', $post_ID, $notice, $http_code );
 	} else {
 		/**
 		 * Executes an action after a status is posted successfully.
@@ -602,25 +602,25 @@ function wpt_post_submit_handler( $connection, $response, $id, $auth, $twit ) {
 		 * @hook wpt_tweet_posted
 		 *
 		 * @param object $connection The current OAuth connection.
-		 * @param int    $id Post ID for status update.
+		 * @param int    $post_ID Post ID for status update.
 		 */
-		do_action( 'wpt_tweet_posted', $connection, $id );
+		do_action( 'wpt_tweet_posted', $connection, $post_ID );
 		// Log the Status ID of the first status update on this post.
-		$has_tweet_id = get_post_meta( $id, '_wpt_tweet_id', true );
+		$has_tweet_id = get_post_meta( $post_ID, '_wpt_tweet_id', true );
 		if ( ! $has_tweet_id && $tweet_id ) {
-			update_post_meta( $id, '_wpt_tweet_id', $tweet_id );
+			update_post_meta( $post_ID, '_wpt_tweet_id', $tweet_id );
 		}
 		// Log the Status ID of the first Mastodon update on this post.
-		$has_mastodon_id = get_post_meta( $id, '_wpt_status_id', true );
+		$has_mastodon_id = get_post_meta( $post_ID, '_wpt_status_id', true );
 		if ( ! $has_mastodon_id && $mastodon_id ) {
-			update_post_meta( $id, '_wpt_status_id', $mastodon_id );
+			update_post_meta( $post_ID, '_wpt_status_id', $mastodon_id );
 		}
 		// Log the Status ID of the first Bluesky update on this post.
-		$has_bluesky_id = get_post_meta( $id, '_wpt_bluesky_id', true );
+		$has_bluesky_id = get_post_meta( $post_ID, '_wpt_bluesky_id', true );
 		if ( ! $has_bluesky_id && $bluesky_id ) {
-			update_post_meta( $id, '_wpt_bluesky_id', $bluesky_id );
+			update_post_meta( $post_ID, '_wpt_bluesky_id', $bluesky_id );
 		}
-		wpt_set_log( 'wpt_status_message', $id, $notice );
+		wpt_set_log( 'wpt_status_message', $post_ID, $notice );
 	}
 
 	return $response;
@@ -1082,14 +1082,14 @@ function wpt_admin_scripts() {
 /**
  * Post the Custom Update & custom Update data into the post meta table
  *
- * @param integer $id Post ID.
+ * @param integer $post_ID Post ID.
  * @param object  $post Post object.
  *
  * @return bool
  */
-function wpt_save_post( $id, $post ) {
-	if ( empty( $_POST ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $id ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! wpt_in_post_type( $id ) ) {
-		return $id;
+function wpt_save_post( $post_ID, $post ) {
+	if ( empty( $_POST ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $post_ID ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! wpt_in_post_type( $post_ID ) ) {
+		return $post_ID;
 	}
 	if ( isset( $_POST['wp_to_twitter_meta'] ) ) {
 		$nonce = ( isset( $_POST['wp_to_twitter_nonce'] ) ) ? sanitize_text_field( wp_unslash( $_POST['wp_to_twitter_nonce'] ) ) : false;
@@ -1098,42 +1098,42 @@ function wpt_save_post( $id, $post ) {
 		}
 		if ( isset( $_POST['_yourls_keyword'] ) ) {
 			$yourls = sanitize_text_field( wp_unslash( $_POST['_yourls_keyword'] ) );
-			update_post_meta( $id, '_yourls_keyword', $yourls );
+			update_post_meta( $post_ID, '_yourls_keyword', $yourls );
 		}
 		if ( isset( $_POST['_jd_twitter'] ) && '' !== $_POST['_jd_twitter'] ) {
 			$twitter = sanitize_textarea_field( wp_unslash( $_POST['_jd_twitter'] ) );
-			update_post_meta( $id, '_jd_twitter', $twitter );
+			update_post_meta( $post_ID, '_jd_twitter', $twitter );
 		} elseif ( isset( $_POST['_jd_twitter'] ) && '' === $_POST['_jd_twitter'] ) {
-			delete_post_meta( $id, '_jd_twitter' );
+			delete_post_meta( $post_ID, '_jd_twitter' );
 		}
 		if ( isset( $_POST['_wpt_post_template_x'] ) && '' !== $_POST['_wpt_post_template_x'] ) {
 			$template = sanitize_textarea_field( wp_unslash( $_POST['_wpt_post_template_x'] ) );
-			update_post_meta( $id, '_wpt_post_template_x', $template );
+			update_post_meta( $post_ID, '_wpt_post_template_x', $template );
 		} elseif ( isset( $_POST['_wpt_post_template_x'] ) && '' === $_POST['_wpt_post_template_x'] ) {
-			delete_post_meta( $id, '_wpt_post_template_x' );
+			delete_post_meta( $post_ID, '_wpt_post_template_x' );
 		}
 		if ( isset( $_POST['_wpt_post_template_bluesky'] ) && '' !== $_POST['_wpt_post_template_bluesky'] ) {
 			$template = sanitize_textarea_field( wp_unslash( $_POST['_wpt_post_template_bluesky'] ) );
-			update_post_meta( $id, '_wpt_post_template_bluesky', $template );
+			update_post_meta( $post_ID, '_wpt_post_template_bluesky', $template );
 		} elseif ( isset( $_POST['_wpt_post_template_bluesky'] ) && '' === $_POST['_wpt_post_template_bluesky'] ) {
-			delete_post_meta( $id, '_wpt_post_template_bluesky' );
+			delete_post_meta( $post_ID, '_wpt_post_template_bluesky' );
 		}
 		if ( isset( $_POST['_wpt_post_template_mastodon'] ) && '' !== $_POST['_wpt_post_template_mastodon'] ) {
 			$template = sanitize_textarea_field( wp_unslash( $_POST['_wpt_post_template_mastodon'] ) );
-			update_post_meta( $id, '_wpt_post_template_mastodon', $template );
+			update_post_meta( $post_ID, '_wpt_post_template_mastodon', $template );
 		} elseif ( isset( $_POST['_wpt_post_template_mastodon'] ) && '' === $_POST['_wpt_post_template_mastodon'] ) {
-			delete_post_meta( $id, '_wpt_post_template_mastodon' );
+			delete_post_meta( $post_ID, '_wpt_post_template_mastodon' );
 		}
 		if ( isset( $_POST['_jd_wp_twitter'] ) && '' !== $_POST['_jd_wp_twitter'] ) {
 			$wp_twitter = sanitize_textarea_field( wp_unslash( $_POST['_jd_wp_twitter'] ) );
-			update_post_meta( $id, '_jd_wp_twitter', $wp_twitter );
+			update_post_meta( $post_ID, '_jd_wp_twitter', $wp_twitter );
 		}
 		if ( isset( $_POST['_wpt_post_this'] ) ) {
 			$post_this = ( 'no' === $_POST['_wpt_post_this'] ) ? 'no' : 'yes';
-			update_post_meta( $id, '_wpt_post_this', $post_this );
+			update_post_meta( $post_ID, '_wpt_post_this', $post_this );
 		} else {
 			$post_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
-			update_post_meta( $id, '_wpt_post_this', $post_default );
+			update_post_meta( $post_ID, '_wpt_post_this', $post_default );
 		}
 		$omit_services = ( isset( $_POST['_wpt_omit_services'] ) ) ? $_POST['_wpt_omit_services'] : array();
 		$services      = wpt_check_connections( false, true );
@@ -1144,12 +1144,12 @@ function wpt_save_post( $id, $post ) {
 				$omit[] = $service;
 			}
 		}
-		update_post_meta( $id, '_wpt_omit_services', $omit );
+		update_post_meta( $post_ID, '_wpt_omit_services', $omit );
 		if ( isset( $_POST['wpt_clear_history'] ) && 'clear' === $_POST['wpt_clear_history'] ) {
-			delete_post_meta( $id, '_wpt_failed' );
-			delete_post_meta( $id, '_jd_wp_twitter' );
-			delete_post_meta( $id, '_wpt_short_url' );
-			delete_post_meta( $id, '_wp_jd_twitter' );
+			delete_post_meta( $post_ID, '_wpt_failed' );
+			delete_post_meta( $post_ID, '_jd_wp_twitter' );
+			delete_post_meta( $post_ID, '_wpt_short_url' );
+			delete_post_meta( $post_ID, '_wp_jd_twitter' );
 		}
 		/**
 		 * Runs when post data is inserted.
@@ -1157,20 +1157,20 @@ function wpt_save_post( $id, $post ) {
 		 * @hook wpt_insert_post
 		 *
 		 * @param array $_POST Unaltered POST data.
-		 * @param int   $id Post ID
+		 * @param int   $post_ID Post ID
 		 */
-		do_action( 'wpt_insert_post', $_POST, $id );
+		do_action( 'wpt_insert_post', $_POST, $post_ID );
 		// only send debug data if post meta is updated.
-		wpt_mail( 'Post Meta Processed', 'XPoster post meta was updated' . "\n\n" . wpt_format_error( map_deep( $_POST, 'sanitize_textarea_field' ) ), $id ); // DEBUG.
+		wpt_mail( 'Post Meta Processed', 'XPoster post meta was updated' . "\n\n" . wpt_format_error( map_deep( $_POST, 'sanitize_textarea_field' ) ), $post_ID ); // DEBUG.
 
 		if ( isset( $_POST['wpt-delete-debug'] ) && 'true' === $_POST['wpt-delete-debug'] ) {
-			delete_post_meta( $id, '_wpt_debug_log' );
+			delete_post_meta( $post_ID, '_wpt_debug_log' );
 		}
 		if ( isset( $_POST['wpt-delete-all-debug'] ) && 'true' === $_POST['wpt-delete-all-debug'] ) {
 			delete_post_meta_by_key( '_wpt_debug_log' );
 		}
 	}
-	return $id;
+	return $post_ID;
 }
 
 add_action( 'init', 'wpt_old_admin_redirect' );
@@ -1257,18 +1257,18 @@ if ( function_exists( 'wp_after_insert_post' ) ) {
 /**
  * Check whether a given post is in an allowed post type and has an update template configured.
  *
- * @param integer $id Post ID.
+ * @param integer $post_ID Post ID.
  *
  * @return boolean True if post is allowed, false otherwise.
  */
-function wpt_in_post_type( $id ) {
+function wpt_in_post_type( $post_ID ) {
 	$post_types = wpt_allowed_post_types();
-	$type       = get_post_type( $id );
+	$type       = get_post_type( $post_ID );
 	if ( is_array( $post_types ) && in_array( $type, $post_types, true ) ) {
 		return true;
 	}
 	if ( WPT_DEBUG ) {
-		wpt_mail( '0: Not an updated post type', 'This post type is not enabled for status updates: ' . $type, $id );
+		wpt_mail( '0: Not an updated post type', 'This post type is not enabled for status updates: ' . $type, $post_ID );
 	}
 
 	return false;
@@ -1315,12 +1315,12 @@ add_action( 'future_to_publish', 'wpt_future_to_publish', 16 );
  * @param object $post Post object.
  */
 function wpt_future_to_publish( $post ) {
-	$id = $post->ID;
-	if ( wp_is_post_autosave( $id ) || wp_is_post_revision( $id ) || ! wpt_in_post_type( $id ) ) {
+	$post_ID = $post->ID;
+	if ( wp_is_post_autosave( $post_ID ) || wp_is_post_revision( $post_ID ) || ! wpt_in_post_type( $post_ID ) ) {
 		return;
 	}
-	wpt_mail( 'Transitioning future to publish', $id );
-	wpt_post_update_future( $id );
+	wpt_mail( 'Transitioning future to publish', $post_ID );
+	wpt_post_update_future( $post_ID );
 }
 
 /**
@@ -1349,21 +1349,21 @@ function wpt_auto_tweet_allowed( $post_id ) {
 /**
  * Handle updating posts published directly. As of 12/10/2020, supports new wp_after_insert_post to improve support when used with block editor.
  *
- * @param int     $id Post ID.
+ * @param int     $post_ID Post ID.
  * @param object  $post Post object.
  * @param boolean $updated True if updated, false if inserted.
  * @param object  $post_before The post prior to this update, or null for new posts.
  */
-function wpt_do_post_update( $id, $post = null, $updated = null, $post_before = null ) {
-	if ( ( empty( $_POST ) && ! wpt_auto_tweet_allowed( $id ) ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $id ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX && ! wpt_auto_tweet_allowed( $id ) ) || ! wpt_in_post_type( $id ) ) {
-		return $id;
+function wpt_do_post_update( $post_ID, $post = null, $updated = null, $post_before = null ) {
+	if ( ( empty( $_POST ) && ! wpt_auto_tweet_allowed( $post_ID ) ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $post_ID ) || isset( $_POST['_inline_edit'] ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX && ! wpt_auto_tweet_allowed( $post_ID ) ) || ! wpt_in_post_type( $post_ID ) ) {
+		return $post_ID;
 	}
 
-	$post = ( null === $post ) ? get_post( $id ) : $post;
+	$post = ( null === $post ) ? get_post( $post_ID ) : $post;
 	if ( 'publish' !== $post->post_status ) {
-		return $id;
+		return $post_ID;
 	}
-	wpt_post_update_instant( $id, $post, $updated, $post_before );
+	wpt_post_update_instant( $post_ID, $post, $updated, $post_before );
 }
 add_action( 'xmlrpc_publish_post', 'wpt_post_update_xmlrpc' );
 add_action( 'publish_phone', 'wpt_post_update_xmlrpc' );
@@ -1371,62 +1371,62 @@ add_action( 'publish_phone', 'wpt_post_update_xmlrpc' );
 /**
  * For future posts, check transients to see whether this post has already been published. Prevents duplicate status update attempts in older versions of WP.
  *
- * @param integer $id Post ID.
+ * @param integer $post_ID Post ID.
  */
-function wpt_post_update_future( $id ) {
-	set_transient( '_wpt_post_update_future', $id, 10 );
+function wpt_post_update_future( $post_ID ) {
+	set_transient( '_wpt_post_update_future', $post_ID, 10 );
 	// instant action has already run for this post.
 	// prevent running actions twice (need both for older WP).
-	if ( get_transient( '_wpt_post_update_instant' ) && (int) get_transient( '_wpt_twit_instant' ) === $id ) {
+	if ( get_transient( '_wpt_post_update_instant' ) && (int) get_transient( '_wpt_twit_instant' ) === $post_ID ) {
 		delete_transient( '_wpt_post_update_instant' );
 
 		return;
 	}
 
-	wpt_post_update( $id, 'future' );
+	wpt_post_update( $post_ID, 'future' );
 }
 
 /**
  * For immediate posts, check transients to see whether this post has already been published. Prevents duplicate status update attempts in older versions of WP or cases where a future action is being run after the initial action.
  *
- * @param int     $id Post ID.
+ * @param int     $post_ID Post ID.
  * @param object  $post Post object.
  * @param boolean $updated True if updated, false if inserted.
  * @param object  $post_before The post prior to this update, or null for new posts.
  */
-function wpt_post_update_instant( $id, $post, $updated, $post_before ) {
-	set_transient( '_wpt_twit_instant', $id, 10 );
+function wpt_post_update_instant( $post_ID, $post, $updated, $post_before ) {
+	set_transient( '_wpt_twit_instant', $post_ID, 10 );
 	// future action has already run for this post.
-	if ( get_transient( '_wpt_twit_future' ) && (int) get_transient( '_wpt_twit_future' ) === $id ) {
+	if ( get_transient( '_wpt_twit_future' ) && (int) get_transient( '_wpt_twit_future' ) === $post_ID ) {
 		delete_transient( '_wpt_twit_future' );
 
 		return;
 	}
 	// xmlrpc action has already run for this post.
-	if ( get_transient( '_wpt_twit_xmlrpc' ) && (int) get_transient( '_wpt_twit_xmlrpc' ) === $id ) {
+	if ( get_transient( '_wpt_twit_xmlrpc' ) && (int) get_transient( '_wpt_twit_xmlrpc' ) === $post_ID ) {
 		delete_transient( '_wpt_twit_xmlrpc' );
 
 		return;
 	}
 
-	wpt_post_update( $id, 'instant', $post, $updated, $post_before );
+	wpt_post_update( $post_ID, 'instant', $post, $updated, $post_before );
 }
 
 /**
  * Status updates on XMLRPC posts.
  *
- * @param int $id Post ID.
+ * @param int $post_ID Post ID.
  *
  * @return int post ID.
  */
-function wpt_post_update_xmlrpc( $id ) {
-	set_transient( '_wpt_twit_xmlrpc', $id, 10 );
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || wp_is_post_revision( $id ) || ! wpt_in_post_type( $id ) ) {
-		return $id;
+function wpt_post_update_xmlrpc( $post_ID ) {
+	set_transient( '_wpt_twit_xmlrpc', $post_ID, 10 );
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || wp_is_post_revision( $post_ID ) || ! wpt_in_post_type( $post_ID ) ) {
+		return $post_ID;
 	}
-	wpt_mail( 'Status update sent on XMLRPC published post', $id );
-	wpt_post_update( $id, 'xmlrpc' );
-	return $id;
+	wpt_mail( 'Status update sent on XMLRPC published post', $post_ID );
+	wpt_post_update( $post_ID, 'xmlrpc' );
+	return $post_ID;
 }
 
 add_action( 'admin_notices', 'wpt_debugging_enabled', 10 );

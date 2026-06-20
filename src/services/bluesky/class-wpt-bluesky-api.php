@@ -129,8 +129,8 @@ class Wpt_Bluesky_Api {
 				);
 				$did      = add_query_arg( $post, 'https://bsky.social/xrpc/com.atproto.identity.resolveHandle' );
 				$response = json_decode( wp_remote_get( $did )['body'] );
-				$id       = ( property_exists( $response, 'did' ) ) ? $response->did : false;
-				if ( ! $id ) {
+				$did      = ( property_exists( $response, 'did' ) ) ? $response->did : false;
+				if ( ! $did ) {
 					continue;
 				}
 				$new_facets[] = array(
@@ -141,7 +141,7 @@ class Wpt_Bluesky_Api {
 					'features' => array(
 						array(
 							'$type' => 'app.bsky.richtext.facet#mention',
-							'did'   => $id,
+							'did'   => $did,
 						),
 					),
 				);

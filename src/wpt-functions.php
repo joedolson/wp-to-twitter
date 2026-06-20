@@ -64,13 +64,13 @@ function wpt_selected( $field, $value, $type = 'select' ) {
 /**
  * Insert a status update record into logs.
  *
- * @param string $data Option key.
- * @param int    $id Post ID.
- * @param string $message Log message.
- * @param string $http HTTP code for this message.
+ * @param string     $data Option key.
+ * @param int|string $post_ID Post ID or the string 'test'.
+ * @param string     $message Log message.
+ * @param string     $http HTTP code for this message.
  */
-function wpt_set_log( $data, $id, $message, $http = '200' ) {
-	if ( 'test' === $id ) {
+function wpt_set_log( $data, $post_ID, $message, $http = '200' ) {
+	if ( 'test' === $post_ID ) {
 		delete_transient( $data );
 		set_transient( $data, $message, 300 );
 	} else {
@@ -78,28 +78,28 @@ function wpt_set_log( $data, $id, $message, $http = '200' ) {
 			'message' => $message,
 			'http'    => (string) $http,
 		);
-		delete_transient( $id . '_' . $data );
-		set_transient( $id . '_' . $data, $message, 300 );
+		delete_transient( $post_ID . '_' . $data );
+		set_transient( $post_ID . '_' . $data, $message, 300 );
 	}
 	delete_transient( $data . '_last' );
-	set_transient( $data . '_last', array( $id, $message ), 300 );
+	set_transient( $data . '_last', array( $post_ID, $message ), 300 );
 }
 
 /**
  * Get information from status update logs.
  *
- * @param string $data Option key.
- * @param int    $id Post ID.
+ * @param string     $data Option key.
+ * @param int|string $post_ID Post ID or string representing type of global log.
  *
  * @return string|array message.
  */
-function wpt_get_log( $data, $id ) {
-	if ( 'test' === $id ) {
+function wpt_get_log( $data, $post_ID ) {
+	if ( 'test' === $post_ID ) {
 		$log = get_transient( $data );
-	} elseif ( 'last' === $id ) {
+	} elseif ( 'last' === $post_ID ) {
 		$log = get_transient( $data . '_last' );
 	} else {
-		$log = get_transient( $id . '_' . $data );
+		$log = get_transient( $post_ID . '_' . $data );
 	}
 
 	return $log;
@@ -108,9 +108,9 @@ function wpt_get_log( $data, $id ) {
 /**
  * Clean up status update logs. Run once on admin load.
  *
- * @param int $id Post ID.
+ * @param int $post_ID Post ID.
  */
-function wpt_clean_logs( $id ) {
+function wpt_clean_logs( $post_ID ) {
 	$cleaned = get_option( 'wpt_logs_cleaned', 'false' );
 	if ( 'false' === $cleaned ) {
 		// one-time bulk remove logs that missed transient expiration.
@@ -389,12 +389,12 @@ function wpt_check_caps( $role, $cap ) {
  * @param string $name Display name for capability.
  */
 function wpt_cap_checkbox( $role, $cap, $name ) {
-	$id       = 'wpt_caps_' . $role . '_' . $cap;
+	$input_id = 'wpt_caps_' . $role . '_' . $cap;
 	$has_caps = wpt_check_caps( $role, $cap );
 	?>
 	<li>
-		<input type='checkbox' id='<?php echo esc_attr( $id ); ?>' name='wpt_caps[<?php echo esc_attr( $role ); ?>][<?php echo esc_attr( $cap ); ?>]' value='on'<?php checked( 'checked', $has_caps ); ?> />
-		<label for='<?php echo esc_attr( $id ); ?>'><?php echo esc_html( $name ); ?></label>
+		<input type='checkbox' id='<?php echo esc_attr( $input_id ); ?>' name='wpt_caps[<?php echo esc_attr( $role ); ?>][<?php echo esc_attr( $cap ); ?>]' value='on'<?php checked( 'checked', $has_caps ); ?> />
+		<label for='<?php echo esc_attr( $input_id ); ?>'><?php echo esc_html( $name ); ?></label>
 	</li>
 	<?php
 }
@@ -409,7 +409,7 @@ function wpt_cap_checkbox( $role, $cap, $name ) {
  */
 function wpt_mail( $subject, $body, $post_ID = false, $override = false ) {
 	$body .= ' Active Filter:' . current_filter();
-	if ( ( WPT_DEBUG ) ) {
+	if ( ( WPT_DEBUG || $override ) ) {
 		if ( WPT_DEBUG_BY_EMAIL ) {
 			wp_mail( WPT_DEBUG_ADDRESS, $subject, $body, WPT_FROM );
 		} else {
@@ -441,7 +441,6 @@ function wpt_debug_log( $subject, $body, $post_ID ) {
 function wpt_show_debug() {
 	global $post_ID;
 	if ( WPT_DEBUG ) {
-		$records   = '';
 		$debug_log = get_post_meta( $post_ID, '_wpt_debug_log' );
 
 		if ( ! empty( $debug_log ) ) {
