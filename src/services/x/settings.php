@@ -5,7 +5,7 @@
  * @category OAuth
  * @package  XPoster
  * @author   Joe Dolson
- * @license  GPLv3
+ * @license  GPLv2
  * @link     https://www.xposterpro.com
  */
 

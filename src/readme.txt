@@ -5,7 +5,7 @@ Tags: bluesky, post, social, sharing, mastodon
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-License: GPLv3
+License: GPLv2
 Text Domain: wp-to-twitter
 Stable tag: 5.1.0
 
