@@ -54,11 +54,11 @@ function wpt_update_mastodon_settings( $auth = false, $post = false ) {
 					wp_die( 'Oops, please try again.' );
 				}
 
-				$ack         = isset( $post['wpt_mastodon_token'] ) ? sanitize_text_field( trim( $post['wpt_mastodon_token'] ) ) : '';
-				$acs         = isset( $post['wpt_mastodon_instance'] ) ? wpt_normalize_mastodon_instance( $post['wpt_mastodon_instance'] ) : '';
-				$is_masked   = ( false !== stripos( $ack, '***' ) );
-				$stored_ack  = ( ! $auth ) ? get_option( 'wpt_mastodon_token', '' ) : get_user_meta( $auth, 'wpt_mastodon_token', true );
-				$stored_acs  = ( ! $auth ) ? get_option( 'wpt_mastodon_instance', '' ) : get_user_meta( $auth, 'wpt_mastodon_instance', true );
+				$ack        = isset( $post['wpt_mastodon_token'] ) ? sanitize_text_field( trim( $post['wpt_mastodon_token'] ) ) : '';
+				$acs        = isset( $post['wpt_mastodon_instance'] ) ? wpt_normalize_mastodon_instance( $post['wpt_mastodon_instance'] ) : '';
+				$is_masked  = ( false !== stripos( $ack, '***' ) );
+				$stored_ack = ( ! $auth ) ? get_option( 'wpt_mastodon_token', '' ) : get_user_meta( $auth, 'wpt_mastodon_token', true );
+				$stored_acs = ( ! $auth ) ? get_option( 'wpt_mastodon_instance', '' ) : get_user_meta( $auth, 'wpt_mastodon_instance', true );
 
 				if ( ! $auth ) {
 					if ( '' !== $acs ) {
