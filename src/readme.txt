@@ -62,6 +62,8 @@ Check out my <a href="https://github.com/joedolson/plugin-extensions/tree/master
 = 5.1.0 =
 
 * Bug fix: 400 error returned by BlueSky if no URL resolved in external URI.
+* Change: Make $post_this status non-persistent, so the "Don't Post/Post" value is not retained permanently.
+* Change: Update post status classification to account for previous post object values.
 * Update GuzzleHTTP.
 * Add debugging routes to catch connection data.
 * Verify post types are an array before evaluating.
