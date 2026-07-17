@@ -894,7 +894,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 					}
 				}
 				wpt_mail( '4b: Post action is edit', 'This event was a post edit action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
-				if ( '1' === (string) $post_type_settings[ $post_type ]['post-edited-update'] || $post_this ) {
+				if ( '1' === (string) $post_type_settings[ $post_type ]['post-edited-update'] || 'yes' === $post_this ) {
 					$nptext = wp_unslash( $post_type_settings[ $post_type ]['post-edited-text'] );
 					if ( ! $nptext ) {
 						wpt_mail( '4b: Edited post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
@@ -904,7 +904,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				}
 			} else {
 				wpt_mail( '4c: Post action is publish', 'This event was a post publish action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
-				if ( '1' === (string) $post_type_settings[ $post_type ]['post-published-update'] || $post_this ) {
+				if ( '1' === (string) $post_type_settings[ $post_type ]['post-published-update'] || 'yes' === $post_this ) {
 					$nptext = wp_unslash( $post_type_settings[ $post_type ]['post-published-text'] );
 					if ( ! $nptext ) {
 						wpt_mail( '4c: Published post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
@@ -928,12 +928,42 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				 * @param bool     $media Whether media should be included.
 				 */
 				do_action( 'wpt_post_to_service', $post_ID, $post_info, $template );
-				wpt_post_to_service( $template, false, $post_ID );
+				$results = wpt_post_to_service( $template, false, $post_ID );
+				if ( wpt_status_was_sent( $results ) ) {
+					// _wpt_post_this is an instruction for the current save and should not persist.
+					delete_post_meta( $post_ID, '_wpt_post_this' );
+				}
 			}
 		}
 	}
 
 	return $post_ID;
+}
+
+/**
+ * Test whether any service reports a successful send for this update.
+ *
+ * @param bool|array $results Return value from wpt_post_to_service().
+ *
+ * @return bool
+ */
+function wpt_status_was_sent( $results ) {
+	if ( ! is_array( $results ) || empty( $results ) ) {
+		return false;
+	}
+
+	foreach ( $results as $service => $result ) {
+		if ( ! is_array( $result ) ) {
+			continue;
+		}
+		$sent = isset( $result['return'] ) ? (bool) $result['return'] : false;
+		$http = isset( $result['http'] ) ? (string) $result['http'] : '';
+		if ( $sent || '200' === $http ) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**
