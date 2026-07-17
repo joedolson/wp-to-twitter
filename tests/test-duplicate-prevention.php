@@ -73,4 +73,21 @@ class Tests_WP_To_Twitter_Duplicate_Prevention extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'x', $checks );
 		$this->assertFalse( $checks['x'] );
 	}
+
+	/**
+	 * If rendered status does not match the last sent value, the service should be allowed.
+	 */
+	public function test_prepare_post_allows_non_identical_last_sent_status() {
+		$post_id  = $this->create_published_post();
+		$template = 'New post: #title# #url#';
+		$services = array( 'x' => true );
+
+		update_option( 'wpt_last_x', 'This is a different prior status' );
+
+		$checks = wpt_prepare_post( $post_id, false, $template, $services );
+
+		$this->assertArrayHasKey( 'x', $checks );
+		$this->assertNotFalse( $checks['x'] );
+		$this->assertSame( wpt_truncate_status( $template, array(), $post_id, false, false, 'x' ), $checks['x'] );
+	}
 }
