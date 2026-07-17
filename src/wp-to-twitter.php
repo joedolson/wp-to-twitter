@@ -778,6 +778,53 @@ function wpt_bulk_edit_posts( $updated ) {
 add_action( 'bulk_edit_posts', 'wpt_bulk_edit_posts' );
 
 /**
+ * Generate the option key used for a post-processing lock.
+ *
+ * @param int $post_ID Post ID.
+ *
+ * @return string
+ */
+function wpt_post_lock_key( $post_ID ) {
+	return 'wpt_processing_lock_' . (int) $post_ID;
+}
+
+/**
+ * Acquire a short-lived lock for status processing on a post.
+ *
+ * @param int $post_ID Post ID.
+ * @param int $ttl Lock lifetime in seconds.
+ *
+ * @return bool
+ */
+function wpt_acquire_post_lock( $post_ID, $ttl = 120 ) {
+	$key  = wpt_post_lock_key( $post_ID );
+	$now  = time();
+	$lock = get_option( $key, 0 );
+
+	if ( empty( $lock ) ) {
+		// add_option is atomic in the options table and avoids read-then-write races.
+		return add_option( $key, $now, '', false );
+	}
+
+	if ( (int) $lock < ( $now - $ttl ) ) {
+		delete_option( $key );
+
+		return add_option( $key, $now, '', false );
+	}
+
+	return false;
+}
+
+/**
+ * Release the lock for status processing on a post.
+ *
+ * @param int $post_ID Post ID.
+ */
+function wpt_release_post_lock( $post_ID ) {
+	delete_option( wpt_post_lock_key( $post_ID ) );
+}
+
+/**
  * Classify a status update event as a first publish or an edit.
  *
  * Prefer explicit status transition data when available, and only fall back to
@@ -836,6 +883,14 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	if ( wp_is_post_autosave( $post_ID ) || wp_is_post_revision( $post_ID ) ) {
 		return $post_ID;
 	}
+
+	if ( ! wpt_acquire_post_lock( $post_ID ) ) {
+		wpt_mail( 'Status update lock active', 'Concurrent status processing skipped for post.', $post_ID );
+
+		return $post_ID;
+	}
+
+	try {
 	$post_this = get_post_meta( $post_ID, '_wpt_post_this', true );
 	$newpost   = false;
 	$oldpost   = false;
@@ -967,7 +1022,10 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 		}
 	}
 
-	return $post_ID;
+		return $post_ID;
+	} finally {
+		wpt_release_post_lock( $post_ID );
+	}
 }
 
 /**
@@ -1437,7 +1495,7 @@ function wpt_post_update_future( $post_ID ) {
 	set_transient( '_wpt_post_update_future', $post_ID, 10 );
 	// instant action has already run for this post.
 	// prevent running actions twice (need both for older WP).
-	if ( get_transient( '_wpt_post_update_instant' ) && (int) get_transient( '_wpt_twit_instant' ) === $post_ID ) {
+	if ( get_transient( '_wpt_post_update_instant' ) && (int) get_transient( '_wpt_post_update_instant' ) === $post_ID ) {
 		delete_transient( '_wpt_post_update_instant' );
 
 		return;
@@ -1455,16 +1513,16 @@ function wpt_post_update_future( $post_ID ) {
  * @param object  $post_before The post prior to this update, or null for new posts.
  */
 function wpt_post_update_instant( $post_ID, $post, $updated, $post_before ) {
-	set_transient( '_wpt_twit_instant', $post_ID, 10 );
+	set_transient( '_wpt_post_update_instant', $post_ID, 10 );
 	// future action has already run for this post.
-	if ( get_transient( '_wpt_twit_future' ) && (int) get_transient( '_wpt_twit_future' ) === $post_ID ) {
-		delete_transient( '_wpt_twit_future' );
+	if ( get_transient( '_wpt_post_update_future' ) && (int) get_transient( '_wpt_post_update_future' ) === $post_ID ) {
+		delete_transient( '_wpt_post_update_future' );
 
 		return;
 	}
 	// xmlrpc action has already run for this post.
-	if ( get_transient( '_wpt_twit_xmlrpc' ) && (int) get_transient( '_wpt_twit_xmlrpc' ) === $post_ID ) {
-		delete_transient( '_wpt_twit_xmlrpc' );
+	if ( get_transient( '_wpt_post_update_xmlrpc' ) && (int) get_transient( '_wpt_post_update_xmlrpc' ) === $post_ID ) {
+		delete_transient( '_wpt_post_update_xmlrpc' );
 
 		return;
 	}
@@ -1480,7 +1538,7 @@ function wpt_post_update_instant( $post_ID, $post, $updated, $post_before ) {
  * @return int post ID.
  */
 function wpt_post_update_xmlrpc( $post_ID ) {
-	set_transient( '_wpt_twit_xmlrpc', $post_ID, 10 );
+	set_transient( '_wpt_post_update_xmlrpc', $post_ID, 10 );
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || wp_is_post_revision( $post_ID ) || ! wpt_in_post_type( $post_ID ) ) {
 		return $post_ID;
 	}
