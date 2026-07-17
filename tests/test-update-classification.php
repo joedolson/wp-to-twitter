@@ -57,7 +57,7 @@ class Tests_WP_To_Twitter_Update_Classification extends WP_UnitTestCase {
 	 * @param string $template Template used for sending.
 	 */
 	public function capture_send_attempt( $post_id, $post_info, $template ) {
-		$this->send_attempts++;
+		++$this->send_attempts;
 	}
 
 	/**
@@ -70,6 +70,7 @@ class Tests_WP_To_Twitter_Update_Classification extends WP_UnitTestCase {
 				'post_type'   => 'post',
 			)
 		);
+
 		$post_info = wpt_post_info( $post_id );
 		$before    = get_post( $post_id );
 
@@ -86,8 +87,9 @@ class Tests_WP_To_Twitter_Update_Classification extends WP_UnitTestCase {
 				'post_type'   => 'post',
 			)
 		);
-		$post_info = wpt_post_info( $post_id );
-		$before    = new stdClass();
+
+		$post_info           = wpt_post_info( $post_id );
+		$before              = new stdClass();
 		$before->post_status = 'draft';
 
 		$this->assertSame( 'publish', wpt_classify_post_update( $post_id, 'instant', $post_info, true, $before ) );
@@ -103,6 +105,7 @@ class Tests_WP_To_Twitter_Update_Classification extends WP_UnitTestCase {
 				'post_type'   => 'post',
 			)
 		);
+
 		$post_info = wpt_post_info( $post_id );
 
 		$this->assertSame( 'publish', wpt_classify_post_update( $post_id, 'future', $post_info, true, null ) );
@@ -118,8 +121,8 @@ class Tests_WP_To_Twitter_Update_Classification extends WP_UnitTestCase {
 				'post_type'   => 'post',
 			)
 		);
-		$post_info = wpt_post_info( $post_id );
 
+		$post_info          = wpt_post_info( $post_id );
 		$_POST['edit_date'] = '1';
 
 		$this->assertSame( 'publish', wpt_classify_post_update( $post_id, 'instant', $post_info, null, null ) );
@@ -136,6 +139,7 @@ class Tests_WP_To_Twitter_Update_Classification extends WP_UnitTestCase {
 				'post_title'  => 'Published post',
 			)
 		);
+
 		$before = get_post( $post_id );
 
 		wpt_post_update( $post_id, 'instant', get_post( $post_id ), true, $before );
@@ -154,7 +158,8 @@ class Tests_WP_To_Twitter_Update_Classification extends WP_UnitTestCase {
 				'post_title'  => 'Newly published post',
 			)
 		);
-		$before = new stdClass();
+
+		$before              = new stdClass();
 		$before->post_status = 'draft';
 
 		wpt_post_update( $post_id, 'instant', get_post( $post_id ), true, $before );
