@@ -161,52 +161,74 @@ function wpt_update_oauth_settings( $auth = false, $post = false ) {
 						}
 					}
 				}
-				if ( ! empty( $post['wtt_app_consumer_key'] )
-					&& ! empty( $post['wtt_app_consumer_secret'] )
-					&& ! empty( $post['wtt_oauth_token'] )
-					&& ! empty( $post['wtt_oauth_token_secret'] )
-					&& ! empty( $post['wtt_bearer_token'] )
-				) {
-					$ack = sanitize_text_field( trim( $post['wtt_app_consumer_key'] ) );
-					$acs = sanitize_text_field( trim( $post['wtt_app_consumer_secret'] ) );
-					$ot  = sanitize_text_field( trim( $post['wtt_oauth_token'] ) );
-					$ots = sanitize_text_field( trim( $post['wtt_oauth_token_secret'] ) );
-					$bt  = sanitize_text_field( trim( $post['wtt_bearer_token'] ) );
+				$ack_input = isset( $post['wtt_app_consumer_key'] ) ? sanitize_text_field( trim( $post['wtt_app_consumer_key'] ) ) : '';
+				$acs_input = isset( $post['wtt_app_consumer_secret'] ) ? sanitize_text_field( trim( $post['wtt_app_consumer_secret'] ) ) : '';
+				$ot_input  = isset( $post['wtt_oauth_token'] ) ? sanitize_text_field( trim( $post['wtt_oauth_token'] ) ) : '';
+				$ots_input = isset( $post['wtt_oauth_token_secret'] ) ? sanitize_text_field( trim( $post['wtt_oauth_token_secret'] ) ) : '';
+				$bt_input  = isset( $post['wtt_bearer_token'] ) ? sanitize_text_field( trim( $post['wtt_bearer_token'] ) ) : '';
 
-					if ( ! $auth ) {
-						// If values are filled with asterisks, do not update; these are masked values.
-						if ( stripos( $ack, '***' ) === false ) {
-							update_option( 'app_consumer_key', $ack );
-						}
-						if ( stripos( $acs, '***' ) === false ) {
-							update_option( 'app_consumer_secret', $acs );
-						}
-						if ( stripos( $ot, '***' ) === false ) {
-							update_option( 'oauth_token', $ot );
-						}
-						if ( stripos( $ots, '***' ) === false ) {
-							update_option( 'oauth_token_secret', $ots );
-						}
-						if ( stripos( $bt, '***' ) === false ) {
-							update_option( 'bearer_token', $bt );
-						}
-					} else {
-						if ( stripos( $ack, '***' ) === false ) {
-							update_user_meta( $auth, 'app_consumer_key', $ack );
-						}
-						if ( stripos( $acs, '***' ) === false ) {
-							update_user_meta( $auth, 'app_consumer_secret', $acs );
-						}
-						if ( stripos( $ot, '***' ) === false ) {
-							update_user_meta( $auth, 'oauth_token', $ot );
-						}
-						if ( stripos( $ots, '***' ) === false ) {
-							update_user_meta( $auth, 'oauth_token_secret', $ots );
-						}
-						if ( stripos( $bt, '***' ) === false ) {
-							update_user_meta( $auth, 'bearer_token', $bt );
-						}
+				if ( ! $auth ) {
+					$ack_stored = get_option( 'app_consumer_key', '' );
+					$acs_stored = get_option( 'app_consumer_secret', '' );
+					$ot_stored  = get_option( 'oauth_token', '' );
+					$ots_stored = get_option( 'oauth_token_secret', '' );
+					$bt_stored  = get_option( 'bearer_token', '' );
+
+					if ( '' !== $ack_input && stripos( $ack_input, '***' ) === false ) {
+						update_option( 'app_consumer_key', $ack_input );
+						$ack_stored = $ack_input;
 					}
+					if ( '' !== $acs_input && stripos( $acs_input, '***' ) === false ) {
+						update_option( 'app_consumer_secret', $acs_input );
+						$acs_stored = $acs_input;
+					}
+					if ( '' !== $ot_input && stripos( $ot_input, '***' ) === false ) {
+						update_option( 'oauth_token', $ot_input );
+						$ot_stored = $ot_input;
+					}
+					if ( '' !== $ots_input && stripos( $ots_input, '***' ) === false ) {
+						update_option( 'oauth_token_secret', $ots_input );
+						$ots_stored = $ots_input;
+					}
+					if ( '' !== $bt_input && stripos( $bt_input, '***' ) === false ) {
+						update_option( 'bearer_token', $bt_input );
+						$bt_stored = $bt_input;
+					}
+				} else {
+					$ack_stored = get_user_meta( $auth, 'app_consumer_key', true );
+					$acs_stored = get_user_meta( $auth, 'app_consumer_secret', true );
+					$ot_stored  = get_user_meta( $auth, 'oauth_token', true );
+					$ots_stored = get_user_meta( $auth, 'oauth_token_secret', true );
+					$bt_stored  = get_user_meta( $auth, 'bearer_token', true );
+
+					if ( '' !== $ack_input && stripos( $ack_input, '***' ) === false ) {
+						update_user_meta( $auth, 'app_consumer_key', $ack_input );
+						$ack_stored = $ack_input;
+					}
+					if ( '' !== $acs_input && stripos( $acs_input, '***' ) === false ) {
+						update_user_meta( $auth, 'app_consumer_secret', $acs_input );
+						$acs_stored = $acs_input;
+					}
+					if ( '' !== $ot_input && stripos( $ot_input, '***' ) === false ) {
+						update_user_meta( $auth, 'oauth_token', $ot_input );
+						$ot_stored = $ot_input;
+					}
+					if ( '' !== $ots_input && stripos( $ots_input, '***' ) === false ) {
+						update_user_meta( $auth, 'oauth_token_secret', $ots_input );
+						$ots_stored = $ots_input;
+					}
+					if ( '' !== $bt_input && stripos( $bt_input, '***' ) === false ) {
+						update_user_meta( $auth, 'bearer_token', $bt_input );
+						$bt_stored = $bt_input;
+					}
+				}
+
+				if ( ! empty( $ack_stored )
+					&& ! empty( $acs_stored )
+					&& ! empty( $ot_stored )
+					&& ! empty( $ots_stored )
+					&& ! empty( $bt_stored )
+				) {
 					$message    = 'failed';
 					$connection = wpt_oauth_connection( $auth, '1.1' );
 					if ( $connection ) {
