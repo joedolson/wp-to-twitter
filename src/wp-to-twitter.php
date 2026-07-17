@@ -891,136 +891,136 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 	}
 
 	try {
-	$post_this = get_post_meta( $post_ID, '_wpt_post_this', true );
-	$newpost   = false;
-	$oldpost   = false;
-	$template  = '';
-	$nptext    = '';
-	if ( '0' === get_option( 'jd_tweet_default' ) ) {
-		// If post this value is not set or equals 'yes'.
-		$send_update  = ( 'no' !== $post_this ) ? true : false;
-		$text_default = 'no';
-	} else {
-		// If post this is set and is equal to yes.
-		$send_update  = ( 'yes' === $post_this ) ? true : false;
-		$text_default = 'yes';
-	}
-	wpt_mail( '1: Status Update should send: ' . $post_this, "Default: $text_default; Publication method: $type", $post_ID ); // DEBUG.
-	if ( $send_update ) {
-		$post_info       = wpt_post_info( $post_ID );
-		$debug_post_info = $post_info;
-		unset( $debug_post_info['post_content'] );
-		unset( $debug_post_info['postContent'] );
-		wpt_mail( '2: XPoster Post Info (post content omitted)', wpt_format_error( $debug_post_info ), $post_ID ); // DEBUG.
-		/**
-		 * Apply filters against this post to determine whether it should be allowed to be sent.
-		 *
-		 * @hook wpt_should_block_status
-		 *
-		 * @param bool  $filter Always false by default.
-		 * @param array $post_info Array of post data.
-		 *
-		 * @return bool True to block post.
-		 */
-		$filter = apply_filters( 'wpt_should_block_status', false, $post_info );
-		if ( true === $filter ) {
-			wpt_mail( '3: Post blocked by XPoster Pro custom filters', 'No additional data available', $post_ID );
+		$post_this = get_post_meta( $post_ID, '_wpt_post_this', true );
+		$newpost   = false;
+		$oldpost   = false;
+		$template  = '';
+		$nptext    = '';
+		if ( '0' === get_option( 'jd_tweet_default' ) ) {
+			// If post this value is not set or equals 'yes'.
+			$send_update  = ( 'no' !== $post_this ) ? true : false;
+			$text_default = 'no';
+		} else {
+			// If post this is set and is equal to yes.
+			$send_update  = ( 'yes' === $post_this ) ? true : false;
+			$text_default = 'yes';
+		}
+		wpt_mail( '1: Status Update should send: ' . $post_this, "Default: $text_default; Publication method: $type", $post_ID ); // DEBUG.
+		if ( $send_update ) {
+			$post_info       = wpt_post_info( $post_ID );
+			$debug_post_info = $post_info;
+			unset( $debug_post_info['post_content'] );
+			unset( $debug_post_info['postContent'] );
+			wpt_mail( '2: XPoster Post Info (post content omitted)', wpt_format_error( $debug_post_info ), $post_ID ); // DEBUG.
+			/**
+			 * Apply filters against this post to determine whether it should be allowed to be sent.
+			 *
+			 * @hook wpt_should_block_status
+			 *
+			 * @param bool  $filter Always false by default.
+			 * @param array $post_info Array of post data.
+			 *
+			 * @return bool True to block post.
+			 */
+			$filter = apply_filters( 'wpt_should_block_status', false, $post_info );
+			if ( true === $filter ) {
+				wpt_mail( '3: Post blocked by XPoster Pro custom filters', 'No additional data available', $post_ID );
 
-			return false;
-		}
-		/**
-		 * Return true to block this post based on POST data. Default false.
-		 *
-		 * @hook wpt_filter_post_data
-		 *
-		 * @param bool $filter True if this post should not have a status update sent.
-		 * @param array $post POST global.
-		 *
-		 * @return bool
-		 */
-		$filter = apply_filters( 'wpt_filter_post_data', false, $_POST );
-		if ( $filter ) {
-			return false;
-		}
-		// can't catch posts that were set to a past date as a draft, then published.
-		$post_type          = $post_info['postType'];
-		$post_type_settings = get_option( 'wpt_post_types' );
-		$post_action        = wpt_classify_post_update( $post_ID, $type, $post_info, $updated, $post_before );
-		if ( wpt_allowed_post_types( $post_type ) ) {
-			// identify whether limited by category/taxonomy.
-			$continue = wpt_category_limit( $post_type, $post_info, $post_ID );
-			if ( false === $continue ) {
-				wpt_mail( '4b: XPoster Pro: Limited by term filters', 'This post was limited by a taxonomy/term filter', $post_ID );
 				return false;
 			}
-			// create status update and ID whether current action is edit or new.
-			$ct = get_post_meta( $post_ID, '_jd_twitter', true );
-			if ( isset( $_POST['_jd_twitter'] ) && ! empty( $_POST['_jd_twitter'] ) ) {
-				$ct = sanitize_textarea_field( wp_unslash( $_POST['_jd_twitter'] ) );
+			/**
+			 * Return true to block this post based on POST data. Default false.
+			 *
+			 * @hook wpt_filter_post_data
+			 *
+			 * @param bool $filter True if this post should not have a status update sent.
+			 * @param array $post POST global.
+			 *
+			 * @return bool
+			 */
+			$filter = apply_filters( 'wpt_filter_post_data', false, $_POST );
+			if ( $filter ) {
+				return false;
 			}
-			$custom_tweet = ( '' !== $ct ) ? wp_unslash( trim( $ct ) ) : '';
-			if ( 'edit' === $post_action ) {
-				// if this is an old post and editing updates are enabled.
-				if ( '1' === get_option( 'jd_tweet_default_edit' ) ) {
+			// can't catch posts that were set to a past date as a draft, then published.
+			$post_type          = $post_info['postType'];
+			$post_type_settings = get_option( 'wpt_post_types' );
+			$post_action        = wpt_classify_post_update( $post_ID, $type, $post_info, $updated, $post_before );
+			if ( wpt_allowed_post_types( $post_type ) ) {
+				// identify whether limited by category/taxonomy.
+				$continue = wpt_category_limit( $post_type, $post_info, $post_ID );
+				if ( false === $continue ) {
+					wpt_mail( '4b: XPoster Pro: Limited by term filters', 'This post was limited by a taxonomy/term filter', $post_ID );
+					return false;
+				}
+				// create status update and ID whether current action is edit or new.
+				$ct = get_post_meta( $post_ID, '_jd_twitter', true );
+				if ( isset( $_POST['_jd_twitter'] ) && ! empty( $_POST['_jd_twitter'] ) ) {
+					$ct = sanitize_textarea_field( wp_unslash( $_POST['_jd_twitter'] ) );
+				}
+				$custom_tweet = ( '' !== $ct ) ? wp_unslash( trim( $ct ) ) : '';
+				if ( 'edit' === $post_action ) {
+					// if this is an old post and editing updates are enabled.
+					if ( '1' === get_option( 'jd_tweet_default_edit' ) ) {
+						/**
+						 * Filter whether a post defaults to send updates on edit.
+						 *
+						 * @hook wpt_tweet_this_edit
+						 *
+						 * @param string $post_this 'yes' or 'no'.
+						 * @param array  $_POST POST global.
+						 * @param int    $post_ID Post ID.
+						 *
+						 * @return string 'yes' to continue with posting.
+						 */
+						$post_this = apply_filters( 'wpt_tweet_this_edit', $post_this, $_POST, $post_ID );
+						if ( 'yes' !== $post_this ) {
+							return false;
+						}
+					}
+					wpt_mail( '4b: Post action is edit', 'This event was a post edit action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
+					if ( '1' === (string) $post_type_settings[ $post_type ]['post-edited-update'] || 'yes' === $post_this ) {
+						$nptext = wp_unslash( $post_type_settings[ $post_type ]['post-edited-text'] );
+						if ( ! $nptext ) {
+							wpt_mail( '4b: Edited post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
+						}
+
+						$oldpost = true;
+					}
+				} else {
+					wpt_mail( '4c: Post action is publish', 'This event was a post publish action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
+					if ( '1' === (string) $post_type_settings[ $post_type ]['post-published-update'] || 'yes' === $post_this ) {
+						$nptext = wp_unslash( $post_type_settings[ $post_type ]['post-published-text'] );
+						if ( ! $nptext ) {
+							wpt_mail( '4c: Published post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
+						}
+
+						$newpost = true;
+					}
+				}
+				if ( $newpost || $oldpost ) {
+					$template = ( '' !== $custom_tweet ) ? $custom_tweet : $nptext;
+				}
+				if ( '' !== $template ) {
 					/**
-					 * Filter whether a post defaults to send updates on edit.
+					 * Execute an action when a status update is executed.
 					 *
-					 * @hook wpt_tweet_this_edit
+					 * @hook wpt_post_to_service
 					 *
-					 * @param string $post_this 'yes' or 'no'.
-					 * @param array  $_POST POST global.
-					 * @param int    $post_ID Post ID.
-					 *
-					 * @return string 'yes' to continue with posting.
+					 * @param int      $post_ID Post ID.
+					 * @param array    $post_info Array of post info for templates.
+					 * @param string   $template Template in use.
+					 * @param bool     $media Whether media should be included.
 					 */
-					$post_this = apply_filters( 'wpt_tweet_this_edit', $post_this, $_POST, $post_ID );
-					if ( 'yes' !== $post_this ) {
-						return false;
+					do_action( 'wpt_post_to_service', $post_ID, $post_info, $template );
+					$results = wpt_post_to_service( $template, false, $post_ID );
+					if ( wpt_status_was_sent( $results ) ) {
+						// _wpt_post_this is an instruction for the current save and should not persist.
+						delete_post_meta( $post_ID, '_wpt_post_this' );
 					}
-				}
-				wpt_mail( '4b: Post action is edit', 'This event was a post edit action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
-				if ( '1' === (string) $post_type_settings[ $post_type ]['post-edited-update'] || 'yes' === $post_this ) {
-					$nptext = wp_unslash( $post_type_settings[ $post_type ]['post-edited-text'] );
-					if ( ! $nptext ) {
-						wpt_mail( '4b: Edited post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
-					}
-
-					$oldpost = true;
-				}
-			} else {
-				wpt_mail( '4c: Post action is publish', 'This event was a post publish action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
-				if ( '1' === (string) $post_type_settings[ $post_type ]['post-published-update'] || 'yes' === $post_this ) {
-					$nptext = wp_unslash( $post_type_settings[ $post_type ]['post-published-text'] );
-					if ( ! $nptext ) {
-						wpt_mail( '4c: Published post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
-					}
-
-					$newpost = true;
-				}
-			}
-			if ( $newpost || $oldpost ) {
-				$template = ( '' !== $custom_tweet ) ? $custom_tweet : $nptext;
-			}
-			if ( '' !== $template ) {
-				/**
-				 * Execute an action when a status update is executed.
-				 *
-				 * @hook wpt_post_to_service
-				 *
-				 * @param int      $post_ID Post ID.
-				 * @param array    $post_info Array of post info for templates.
-				 * @param string   $template Template in use.
-				 * @param bool     $media Whether media should be included.
-				 */
-				do_action( 'wpt_post_to_service', $post_ID, $post_info, $template );
-				$results = wpt_post_to_service( $template, false, $post_ID );
-				if ( wpt_status_was_sent( $results ) ) {
-					// _wpt_post_this is an instruction for the current save and should not persist.
-					delete_post_meta( $post_ID, '_wpt_post_this' );
 				}
 			}
 		}
-	}
 
 		return $post_ID;
 	} finally {
