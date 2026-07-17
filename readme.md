@@ -16,6 +16,8 @@ Automatically send your posts as Bluesky or Mastodon status updates.
 
 This is the development environment for XPoster.
 
+Expected status update behavior is documented in [TEST_MATRIX.md](TEST_MATRIX.md).
+
 ## Contact
 
 Support questions should be sent via the Support form that appears on the Help screen within the plug-in.

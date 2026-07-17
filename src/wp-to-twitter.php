@@ -778,6 +778,50 @@ function wpt_bulk_edit_posts( $updated ) {
 add_action( 'bulk_edit_posts', 'wpt_bulk_edit_posts' );
 
 /**
+ * Classify a status update event as a first publish or an edit.
+ *
+ * Prefer explicit status transition data when available, and only fall back to
+ * timestamp heuristics for legacy workflows that do not provide prior post state.
+ *
+ * @param int         $post_ID Post ID.
+ * @param string      $type Publishing context: instant, future, xmlrpc.
+ * @param array       $post_info Array of post information.
+ * @param bool|null   $updated True if updated, false if inserted.
+ * @param object|null $post_before Previous post object, if available.
+ *
+ * @return string publish|edit
+ */
+function wpt_classify_post_update( $post_ID, $type, $post_info, $updated = null, $post_before = null ) {
+	if ( 'future' === $type || 'future' === get_post_meta( $post_ID, 'wpt_publishing', true ) ) {
+		wpt_mail( '4a: Post is a scheduled post', 'See Post Info data', $post_ID );
+		delete_post_meta( $post_ID, 'wpt_publishing' );
+
+		return 'publish';
+	}
+
+	if ( is_object( $post_before ) && isset( $post_before->post_status ) ) {
+		if ( 'publish' !== $post_before->post_status ) {
+			return 'publish';
+		}
+
+		return 'edit';
+	}
+
+	if ( false === $updated ) {
+		return 'publish';
+	}
+
+	$new = wpt_post_is_new( $post_info['_postModified'], $post_info['_postDate'] );
+
+	// Backdated first publish from classic flows can present as an edit unless edit_date is set.
+	if ( 0 === $new && isset( $_POST['edit_date'] ) && '1' === $_POST['edit_date'] && ! isset( $_POST['save'] ) ) {
+		return 'publish';
+	}
+
+	return ( 1 === $new ) ? 'publish' : 'edit';
+}
+
+/**
  * Set up a status update to be sent.
  *
  * @param int     $post_ID Post ID.
@@ -843,23 +887,10 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 		if ( $filter ) {
 			return false;
 		}
-		if ( 'future' === $type || 'future' === get_post_meta( $post_ID, 'wpt_publishing', true ) ) {
-			$new = 1; // if this is a future action, then it should be published regardless of relationship.
-			wpt_mail( '4a: Post is a scheduled post', 'See Post Info data', $post_ID );
-			delete_post_meta( $post_ID, 'wpt_publishing' );
-		} else {
-			// if the post modified date and the post date are the same, this is new.
-			// true if first date before or equal to last date.
-			$new = wpt_post_is_new( $post_info['_postModified'], $post_info['_postDate'] );
-		}
-		// post is not previously published but has been backdated.
-		// (post date is edited, but save option is 'publish').
-		if ( 0 === $new && ( isset( $_POST['edit_date'] ) && '1' === $_POST['edit_date'] && ! isset( $_POST['save'] ) ) ) {
-			$new = 1;
-		}
 		// can't catch posts that were set to a past date as a draft, then published.
 		$post_type          = $post_info['postType'];
 		$post_type_settings = get_option( 'wpt_post_types' );
+		$post_action        = wpt_classify_post_update( $post_ID, $type, $post_info, $updated, $post_before );
 		if ( wpt_allowed_post_types( $post_type ) ) {
 			// identify whether limited by category/taxonomy.
 			$continue = wpt_category_limit( $post_type, $post_info, $post_ID );
@@ -873,8 +904,7 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 				$ct = sanitize_textarea_field( wp_unslash( $_POST['_jd_twitter'] ) );
 			}
 			$custom_tweet = ( '' !== $ct ) ? wp_unslash( trim( $ct ) ) : '';
-			// if ops is set and equals 'publish', this is being edited. Otherwise, it's a new post.
-			if ( 0 === $new ) {
+			if ( 'edit' === $post_action ) {
 				// if this is an old post and editing updates are enabled.
 				if ( '1' === get_option( 'jd_tweet_default_edit' ) ) {
 					/**
