@@ -100,7 +100,7 @@ function wpt_ajax_tweet() {
 					);
 					break;
 			}
-			$log     = wpt_get_log( 'wpt_status_message', $post_ID );
+			$log = wpt_get_log( 'wpt_status_message', $post_ID );
 			if ( $notice ) {
 				$message = $notice;
 			} else {
