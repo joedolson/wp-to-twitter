@@ -28,7 +28,13 @@ class Tests_WP_To_Twitter_Status_Update_Settings extends WP_UnitTestCase {
 		parent::setUp();
 
 		if ( ! post_type_exists( self::CUSTOM_POST_TYPE ) ) {
-			register_post_type( self::CUSTOM_POST_TYPE, array( 'public' => true, 'label' => 'XPoster CPT' ) );
+			register_post_type(
+				self::CUSTOM_POST_TYPE,
+				array(
+					'public' => true,
+					'label'  => 'XPoster CPT'
+				)
+			);
 		}
 
 		update_option(
@@ -407,7 +413,7 @@ class Tests_WP_To_Twitter_Status_Update_Settings extends WP_UnitTestCase {
 	}
 
 	/**
-	 * wpt_bulk_edit_posts() should send updates only when the "process bulk edits" option is enabled.
+	 * Test: wpt_bulk_edit_posts() should send updates only when the "process bulk edits" option is enabled.
 	 */
 	public function test_wpt_bulk_edit_posts_sends_when_inline_edits_enabled() {
 		update_option( 'wpt_inline_edits', '1' );
@@ -421,7 +427,7 @@ class Tests_WP_To_Twitter_Status_Update_Settings extends WP_UnitTestCase {
 	}
 
 	/**
-	 * wpt_bulk_edit_posts() should do nothing when the "process bulk edits" option is disabled.
+	 * Test: wpt_bulk_edit_posts() should do nothing when the "process bulk edits" option is disabled.
 	 */
 	public function test_wpt_bulk_edit_posts_does_nothing_when_inline_edits_disabled() {
 		update_option( 'wpt_inline_edits', '0' );
