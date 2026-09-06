@@ -2,7 +2,7 @@
 
 Automatically send your posts as Bluesky or Mastodon status updates.
 
-![Code Linting](https://github.com/joedolson/wp-to-twitter/actions/workflows/main.yml/badge.svg) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)](https://www.gnu.org/license/gpl-2.0.html)
+![Code Linting](https://github.com/joedolson/wp-to-twitter/actions/workflows/main.yml/badge.svg) [![PHP Unit Tests](https://github.com/joedolson/wp-to-twitter/actions/workflows/phpunit.yml/badge.svg)](https://github.com/joedolson/wp-to-twitter/actions/workflows/phpunit.yml) [![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)](https://www.gnu.org/license/gpl-2.0.html)
 
 ## XPoster Build Environment
 
