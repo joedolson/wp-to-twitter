@@ -32,7 +32,7 @@ class Tests_WP_To_Twitter_Status_Update_Settings extends WP_UnitTestCase {
 				self::CUSTOM_POST_TYPE,
 				array(
 					'public' => true,
-					'label'  => 'XPoster CPT'
+					'label'  => 'XPoster CPT',
 				)
 			);
 		}
