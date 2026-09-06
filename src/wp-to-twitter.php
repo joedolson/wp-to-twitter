@@ -979,7 +979,9 @@ function wpt_post_update( $post_ID, $type = 'instant', $post = null, $updated = 
 						}
 					}
 					wpt_mail( '4b: Post action is edit', 'This event was a post edit action.' . "\n" . 'Modified Date: ' . $post_info['_postModified'] . "\n\n" . 'Publication date:' . $post_info['_postDate'], $post_ID ); // DEBUG.
-					if ( '1' === (string) $post_type_settings[ $post_type ]['post-edited-update'] || 'yes' === $post_this ) {
+					// The edit setting is the gate; per-post override can force a send ('yes') or suppress one ('no').
+					$edit_update_enabled = '1' === (string) $post_type_settings[ $post_type ]['post-edited-update'];
+					if ( ( $edit_update_enabled && 'no' !== $post_this ) || ( ! $edit_update_enabled && 'yes' === $post_this ) ) {
 						$nptext = wp_unslash( $post_type_settings[ $post_type ]['post-edited-text'] );
 						if ( ! $nptext ) {
 							wpt_mail( '4b: Edited post template is empty.', 'Post Type: ' . $post_type, $post_ID ); // DEBUG.
@@ -1250,7 +1252,9 @@ function wpt_save_post( $post_ID, $post ) {
 			$post_this = ( 'no' === $_POST['_wpt_post_this'] ) ? 'no' : 'yes';
 			update_post_meta( $post_ID, '_wpt_post_this', $post_this );
 		} else {
-			$post_default = ( '1' === get_option( 'jd_tweet_default' ) ) ? 'no' : 'yes';
+			// No explicit choice submitted (e.g. quick/bulk edit); default per publish vs. edit context rather than the global new-post default.
+			$post_type_settings = (array) get_option( 'wpt_post_types' );
+			$post_default       = wpt_get_post_update_status( $post, $post_type_settings );
 			update_post_meta( $post_ID, '_wpt_post_this', $post_default );
 		}
 		$omit_services = ( isset( $_POST['_wpt_omit_services'] ) ) ? $_POST['_wpt_omit_services'] : array();
